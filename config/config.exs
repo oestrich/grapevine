@@ -7,13 +7,14 @@ use Mix.Config
 
 # General application configuration
 config :gossip,
+  namespace: Web,
   ecto_repos: [Gossip.Repo]
 
 # Configures the endpoint
-config :gossip, GossipWeb.Endpoint,
+config :gossip, Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
-  render_errors: [view: GossipWeb.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Gossip.PubSub,
            adapter: Phoenix.PubSub.PG2]
 

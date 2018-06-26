@@ -11,7 +11,7 @@ defmodule Gossip.Application do
       # Start the Ecto repository
       supervisor(Gossip.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(GossipWeb.Endpoint, []),
+      supervisor(Web.Endpoint, []),
       # Start your own worker by calling: Gossip.Worker.start_link(arg1, arg2, arg3)
       # worker(Gossip.Worker, [arg1, arg2, arg3]),
     ]
@@ -25,7 +25,7 @@ defmodule Gossip.Application do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    GossipWeb.Endpoint.config_change(changed, removed)
+    Web.Endpoint.config_change(changed, removed)
     :ok
   end
 end

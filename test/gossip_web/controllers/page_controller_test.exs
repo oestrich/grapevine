@@ -1,5 +1,5 @@
-defmodule GossipWeb.PageControllerTest do
-  use GossipWeb.ConnCase
+defmodule Web.PageControllerTest do
+  use Web.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

@@ -1,4 +1,4 @@
-defmodule GossipWeb.ErrorHelpers do
+defmodule Web.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -36,9 +36,9 @@ defmodule GossipWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(GossipWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Web.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(GossipWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Web.Gettext, "errors", msg, opts)
     end
   end
 end
