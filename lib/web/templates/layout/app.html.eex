@@ -12,14 +12,30 @@
   </head>
 
   <body id="body">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <div class="container">
-        <%= link("Gossip", to: page_path(@conn, :index), class: "navbar-brand") %>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </nav>
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+          <%= link("Gossip", to: page_path(@conn, :index), class: "navbar-brand") %>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarLinks">
+            <ul class="navbar-nav mr-auto">
+              <%= if Map.get(assigns, :current_game) do %>
+                <li class="nav-item">
+                  <%= link(@current_game.name, to: "#", class: "nav-link") %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link("Register Your Game", to: registration_path(@conn, :new), class: "nav-link") %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
 
     <main>
       <div class="container">
