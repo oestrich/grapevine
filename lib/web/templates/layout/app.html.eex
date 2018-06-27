@@ -11,25 +11,33 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
-  <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+  <body id="body">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <div class="container">
+        <%= link("Gossip", to: page_path(@conn, :index), class: "navbar-brand") %>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <main>
+      <div class="container">
+        <%= if flash = get_flash(@conn, :info) do %>
+          <div class="alert alert-primary" role="alert">
+            <%= flash %>
+          </div>
+        <% end %>
+        <%= if flash = get_flash(@conn, :error) do %>
+          <div class="alert alert-danger" role="alert">
+            <%= flash %>
+          </div>
+        <% end %>
 
-      <main role="main">
         <%= render @view_module, @view_template, assigns %>
-      </main>
+      </div>
+    </main>
 
-    </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
