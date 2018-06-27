@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3><%= @current_game.name %> Settings</h3>
+
+    <dl>
+      <dd>Client ID</dd>
+      <dl><%= @current_game.client_id %></dl>
+
+      <dd>Client Secret</dd>
+      <dl><%= @current_game.client_secret %></dl>
+    </dl>
+  </div>
+</div>

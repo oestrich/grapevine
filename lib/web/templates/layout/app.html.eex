@@ -24,7 +24,7 @@
             <ul class="navbar-nav mr-auto">
               <%= if Map.get(assigns, :current_game) do %>
                 <li class="nav-item">
-                  <%= link(@current_game.name, to: "#", class: "nav-link") %>
+                  <%= link(@current_game.name, to: config_path(@conn, :show), class: "nav-link") %>
                 </li>
               <% else %>
                 <li class="nav-item">

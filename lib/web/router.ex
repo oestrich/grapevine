@@ -17,7 +17,9 @@ defmodule Web.Router do
   scope "/", Web do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get("/", PageController, :index)
+
+    resources("/config", ConfigController, only: [:show], singleton: true)
 
     resources("/register", RegistrationController, only: [:new, :create])
   end
