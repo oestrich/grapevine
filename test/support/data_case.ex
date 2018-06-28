@@ -22,6 +22,7 @@ defmodule Gossip.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Gossip.DataCase
+      import Gossip.TestHelpers
     end
   end
 

@@ -19,4 +19,22 @@ defmodule Gossip.GamesTest do
       assert game.client_secret
     end
   end
+
+  describe "verifying a password" do
+    setup do
+      %{game: create_game(%{password: "password"})}
+    end
+
+    test "when valid", %{game: game} do
+      assert {:ok, _game} = Games.validate_login(game.email, "password")
+    end
+
+    test "when invalid", %{game: game} do
+      assert {:error, :invalid} = Games.validate_login(game.email, "passw0rd")
+    end
+
+    test "when bad email" do
+      assert {:error, :invalid} = Games.validate_login("unknown@email.com", "passw0rd")
+    end
+  end
 end

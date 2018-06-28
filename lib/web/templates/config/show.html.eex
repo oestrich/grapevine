@@ -4,10 +4,10 @@
 
     <dl>
       <dd>Client ID</dd>
-      <dl><%= @current_game.client_id %></dl>
+      <dl><code><%= @current_game.client_id %></code></dl>
 
       <dd>Client Secret</dd>
-      <dl><%= @current_game.client_secret %></dl>
+      <dl><code><%= @current_game.client_secret %></code></dl>
     </dl>
   </div>
 </div>

@@ -26,6 +26,7 @@ defmodule Gossip.Games.Game do
     |> hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)
+    |> unique_constraint(:name)
     |> unique_constraint(:email)
   end
 

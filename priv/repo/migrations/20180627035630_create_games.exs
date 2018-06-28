@@ -14,6 +14,7 @@ defmodule Gossip.Repo.Migrations.CreateGames do
       timestamps()
     end
 
+    create index(:games, :name, unique: true)
     create index(:games, :email, unique: true)
   end
 end

@@ -22,5 +22,7 @@ defmodule Web.Router do
     resources("/config", ConfigController, only: [:show], singleton: true)
 
     resources("/register", RegistrationController, only: [:new, :create])
+
+    resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
   end
 end

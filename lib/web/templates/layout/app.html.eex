@@ -26,12 +26,18 @@
                 <li class="nav-item">
                   <%= link(@current_game.name, to: config_path(@conn, :show), class: "nav-link") %>
                 </li>
+                <li class="nav-item">
+                  <%= link("Sign Out", to: session_path(@conn, :delete), method: :delete, class: "nav-link") %>
+                </li>
               <% else %>
                 <li class="nav-item">
-                  <%= link("Register Your Game", to: registration_path(@conn, :new), class: "nav-link") %>
+                  <%= link("Sign In", to: session_path(@conn, :new), class: "nav-link") %>
                 </li>
               <% end %>
             </ul>
+            <%= if !Map.get(assigns, :current_game) do %>
+              <%= link("Register Your Game", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
+            <% end %>
           </div>
         </div>
       </nav>
