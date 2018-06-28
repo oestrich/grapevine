@@ -63,4 +63,30 @@ defmodule Gossip.Games do
         {:error, :invalid}
     end
   end
+
+  @doc """
+  Validate a socket
+  """
+  @spec validate_socket(String.t(), String.t()) :: {:ok, Game.t()} | {:error, :invalid}
+  def validate_socket(client_id, client_secret) do
+    with {:ok, client_id} <- Ecto.UUID.cast(client_id),
+         {:ok, client_secret} <- Ecto.UUID.cast(client_secret) do
+      case Repo.get_by(Game, client_id: client_id) do
+        nil ->
+          {:error, :invalid}
+
+        game ->
+          case game.client_secret == client_secret do
+            true ->
+              {:ok, game}
+
+            false ->
+              {:error, :invalid}
+          end
+      end
+    else
+      :error ->
+        {:error, :invalid}
+    end
+  end
 end

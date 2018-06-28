@@ -37,4 +37,22 @@ defmodule Gossip.GamesTest do
       assert {:error, :invalid} = Games.validate_login("unknown@email.com", "passw0rd")
     end
   end
+
+  describe "verifying a client id and secret" do
+    setup do
+      %{game: create_game()}
+    end
+
+    test "when valid", %{game: game} do
+      assert {:ok, _game} = Games.validate_socket(game.client_id, game.client_secret)
+    end
+
+    test "when bad secret", %{game: game} do
+      assert {:error, :invalid} = Games.validate_socket(game.client_id, "bad")
+    end
+
+    test "when bad id", %{game: game} do
+      assert {:error, :invalid} = Games.validate_socket("bad", game.client_id)
+    end
+  end
 end
