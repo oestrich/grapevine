@@ -3,11 +3,15 @@ defmodule Web.SocketHandler do
 
   alias Web.Socket.Implementation
 
+  @heartbeat_interval 30_000
+
   def init(_, _req, _opts) do
     {:upgrade, :protocol, :cowboy_websocket}
   end
 
   def websocket_init(_type, req, _opts) do
+    :timer.send_interval(@heartbeat_interval, :heartbeat)
+
     {:ok, req, %{status: "inactive"}}
   end
 
@@ -31,6 +35,10 @@ defmodule Web.SocketHandler do
     }
 
     {:reply, {:text, Poison.encode!(message)}, req, state}
+  end
+
+  def websocket_info(:heartbeat, req, state) do
+    {:reply, {:text, Poison.encode!(%{event: "heartbeat"})}, req, state}
   end
 
   def websocket_info(_message, req, state) do

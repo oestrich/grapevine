@@ -53,3 +53,11 @@ Server Sends
 ```json
 {"event": "messages/broadcast", "payload": {"message": "Hello everyone!", "game": "ExVenture", "name": "Player"}}
 ```
+
+### Heartbeat
+
+Server sends every ~30 seconds:
+
+```json
+{"event": "heartbeat"}
+```

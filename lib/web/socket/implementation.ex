@@ -27,8 +27,7 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  def receive(state, frame) do
-    IO.inspect frame
+  def receive(state, _frame) do
     {:ok, %{status: "unknown"}, state}
   end
 end
