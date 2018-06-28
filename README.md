@@ -28,3 +28,28 @@ MIX_ENV=test mix ecto.create
 MIX_ENV=test mix ecto.migrate
 mix test
 ```
+## WebSocket Protocol
+
+### Sign-in
+
+Client sends:
+
+```json
+{"type": "authenticate", "client-id": "client id", "client-secret": "client secret"}
+```
+
+### Post a New Message
+
+Client Sends
+
+```json
+{"type": "messages/new", "message": "Hello everyone!", "name": "Player"}
+```
+
+### Receive a Broadcast
+
+Server Sends
+
+```json
+{"type": "messages/broadcast", "message": "Hello everyone!", "game": "ExVenture", "name": "Player"}
+```
