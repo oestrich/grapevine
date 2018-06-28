@@ -18,6 +18,15 @@ defmodule Web.Socket.Implementation do
     end
   end
 
+  def receive(state = %{status: "active"}, %{"event" => "messages/new", "payload" => payload}) do
+    case Map.fetch(payload, "channel") do
+      {:ok, channel} ->
+        payload = Map.put(payload, "game", state.game.name)
+        Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
+        {:ok, state}
+    end
+  end
+
   def receive(state, frame) do
     IO.inspect frame
     {:ok, %{status: "unknown"}, state}

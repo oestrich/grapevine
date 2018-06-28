@@ -16,6 +16,9 @@ defmodule Web.SocketHandler do
          {:ok, response, state} <- Implementation.receive(state, message) do
       {:reply, {:text, Poison.encode!(response)}, req, state}
     else
+      {:ok, state} ->
+        {:ok, req, state}
+
       _ ->
         {:reply, {:text, Poison.encode!(%{status: "unknown"})}, req, state}
     end
@@ -30,7 +33,7 @@ defmodule Web.SocketHandler do
     {:reply, {:text, Poison.encode!(message)}, req, state}
   end
 
-  def websocket_info(message, req, state) do
+  def websocket_info(_message, req, state) do
     {:reply, {:text, "error"}, req, state}
   end
 
