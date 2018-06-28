@@ -21,7 +21,7 @@
           </button>
 
           <div class="collapse navbar-collapse" id="navbarLinks">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ml-auto">
               <%= if Map.get(assigns, :current_game) do %>
                 <li class="nav-item">
                   <%= link(@current_game.name, to: config_path(@conn, :show), class: "nav-link") %>
