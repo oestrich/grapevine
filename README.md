@@ -35,7 +35,7 @@ mix test
 Client sends:
 
 ```json
-{"type": "authenticate", "client-id": "client id", "client-secret": "client secret"}
+{"event": "authenticate", "payload": {"client-id": "client id", "client-secret": "client secret"}}
 ```
 
 ### Post a New Message
@@ -43,7 +43,7 @@ Client sends:
 Client Sends
 
 ```json
-{"type": "messages/new", "message": "Hello everyone!", "name": "Player"}
+{"event": "messages/new", "payload": {"message": "Hello everyone!", "name": "Player"}}
 ```
 
 ### Receive a Broadcast
@@ -51,5 +51,5 @@ Client Sends
 Server Sends
 
 ```json
-{"type": "messages/broadcast", "message": "Hello everyone!", "game": "ExVenture", "name": "Player"}
+{"event": "messages/broadcast", "payload": {"message": "Hello everyone!", "game": "ExVenture", "name": "Player"}}
 ```
