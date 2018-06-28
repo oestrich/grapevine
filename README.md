@@ -43,7 +43,7 @@ Client sends:
 Client Sends
 
 ```json
-{"event": "messages/new", "payload": {"message": "Hello everyone!", "name": "Player"}}
+{"event": "messages/new", "payload": {"channel": "gossip", "name": "Player", "message": "Hello everyone!"}}
 ```
 
 ### Receive a Broadcast
