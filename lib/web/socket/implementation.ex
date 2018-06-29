@@ -21,7 +21,13 @@ defmodule Web.Socket.Implementation do
   def receive(state = %{status: "active"}, %{"event" => "messages/new", "payload" => payload}) do
     case Map.fetch(payload, "channel") do
       {:ok, channel} ->
-        payload = Map.put(payload, "game", state.game.name)
+        payload =
+          payload
+          |> Map.put("id", UUID.uuid4())
+          |> Map.put("game", state.game.name)
+          |> Map.put("game_id", state.game.client_id)
+          |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
+
         Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
         {:ok, state}
     end
