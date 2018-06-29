@@ -3,7 +3,7 @@ defmodule Web.SocketHandler do
 
   alias Web.Socket.Implementation
 
-  @heartbeat_interval 30_000
+  @heartbeat_interval 15_000
 
   def init(_, _req, _opts) do
     {:upgrade, :protocol, :cowboy_websocket}

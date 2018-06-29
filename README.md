@@ -56,7 +56,7 @@ Server Sends
 
 ### Heartbeat
 
-Server sends every ~30 seconds:
+Server sends every ~15 seconds:
 
 ```json
 {"event": "heartbeat"}
