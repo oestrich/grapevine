@@ -3,6 +3,8 @@ defmodule Web.SocketHandler do
 
   alias Web.Socket.Implementation
 
+  require Logger
+
   @heartbeat_interval 15_000
 
   def init(_, _req, _opts) do
@@ -11,6 +13,8 @@ defmodule Web.SocketHandler do
 
   def websocket_init(_type, req, _opts) do
     :timer.send_interval(@heartbeat_interval, :heartbeat)
+
+    Logger.info("Socket starting")
 
     {:ok, req, %{status: "inactive"}}
   end
