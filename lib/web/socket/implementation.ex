@@ -10,6 +10,7 @@ defmodule Web.Socket.Implementation do
           |> Map.put(:game, game)
 
         listen_to_channels(game)
+        notify_of_subscribed_channels(game)
 
         {:ok, %{event: "authenticate", status: "success"}, state}
 
@@ -39,8 +40,21 @@ defmodule Web.Socket.Implementation do
 
   defp listen_to_channels(game) do
     game.channels
-    |> Enum.map(fn channel ->
+    |> Enum.each(fn channel ->
       Web.Endpoint.subscribe("channels:#{channel.name}")
     end)
+  end
+
+  defp notify_of_subscribed_channels(game) do
+    channels = game.channels |> Enum.map(&(&1.name))
+
+    event = %{
+      event: "channels/subscribed",
+      payload: %{
+        channels: channels,
+      },
+    }
+
+    send(self(), {:broadcast, event})
   end
 end
