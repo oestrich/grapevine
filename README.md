@@ -54,6 +54,14 @@ Server Sends
 {"event": "messages/broadcast", "payload": {"message": "Hello everyone!", "game": "ExVenture", "name": "Player"}}
 ```
 
+### Receive subscribed channels
+
+Server sends after authentication
+
+```json
+{"event": "channels/subscribed", "payload": {"channels": ["gossip"]}}
+```
+
 ### Heartbeat
 
 Server sends every ~15 seconds:
