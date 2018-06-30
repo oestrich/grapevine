@@ -1,13 +1,38 @@
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <h3><%= @current_game.name %> Settings</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <h3><%= @current_game.name %> Settings</h3>
 
-    <dl>
-      <dd>Client ID</dd>
-      <dl><code><%= @current_game.client_id %></code></dl>
+        <dl>
+          <dd>Client ID</dd>
+          <dl><code><%= @current_game.client_id %></code></dl>
 
-      <dd>Client Secret</dd>
-      <dl><code><%= @current_game.client_secret %></code></dl>
-    </dl>
+          <dd>Client Secret</dd>
+          <dl><code><%= @current_game.client_secret %></code></dl>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Channel Subscriptions</h3>
+
+        <%= form_tag(subscription_path(@conn, :update), [as: :game, method: :put]) do %>
+          <input type="hidden" name="game[subscriptions][]" value=""/>
+
+          <div class="form-group">
+            <%= Enum.map(Channels.all(), fn channel -> %>
+              <label>
+                <input type="checkbox" name="game[subscriptions][]" value="<%= channel.id %>" <%= channel_checked?(@current_game, channel) %>/>
+                <%= channel.name %>
+              </label>
+            <% end) %>
+          </div>
+
+          <%= submit("Save Subscriptions", class: "btn btn-primary") %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

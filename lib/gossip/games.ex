@@ -35,8 +35,12 @@ defmodule Gossip.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, game}
+        {:ok, preload(game)}
     end
+  end
+
+  defp preload(game) do
+    Repo.preload(game, [:subscribed_channels, :channels])
   end
 
   @doc """
@@ -78,7 +82,7 @@ defmodule Gossip.Games do
         game ->
           case game.client_secret == client_secret do
             true ->
-              {:ok, game}
+              {:ok, preload(game)}
 
             false ->
               {:error, :invalid}

@@ -9,7 +9,7 @@ defmodule Web.Socket.Implementation do
           |> Map.put(:status, "active")
           |> Map.put(:game, game)
 
-        Web.Endpoint.subscribe("channels:gossip")
+        listen_to_channels(game)
 
         {:ok, %{event: "authenticate", status: "success"}, state}
 
@@ -35,5 +35,12 @@ defmodule Web.Socket.Implementation do
 
   def receive(state, _frame) do
     {:ok, %{status: "unknown"}, state}
+  end
+
+  defp listen_to_channels(game) do
+    game.channels
+    |> Enum.map(fn channel ->
+      Web.Endpoint.subscribe("channels:#{channel.name}")
+    end)
   end
 end

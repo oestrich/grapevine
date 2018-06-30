@@ -21,6 +21,8 @@ defmodule Web.Router do
 
     resources("/config", ConfigController, only: [:show], singleton: true)
 
+    put("/config/subscriptions", SubscriptionController, :update)
+
     resources("/register", RegistrationController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
