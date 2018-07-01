@@ -38,8 +38,9 @@ After connecting to the websocket, you must authenticate before performing any o
 {
   "event": "authenticate",
   "payload": {
-    "client-id": "client id",
-    "client-secret": "client secret"
+    "client_id": "client id",
+    "client_secret": "client secret",
+    "user_agent": "ExVenture 0.23.0"
   }
 }
 ```

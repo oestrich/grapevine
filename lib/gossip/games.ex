@@ -72,24 +72,46 @@ defmodule Gossip.Games do
   Validate a socket
   """
   @spec validate_socket(String.t(), String.t()) :: {:ok, Game.t()} | {:error, :invalid}
-  def validate_socket(client_id, client_secret) do
+  def validate_socket(client_id, client_secret, user_agent_params \\ %{}) do
     with {:ok, client_id} <- Ecto.UUID.cast(client_id),
-         {:ok, client_secret} <- Ecto.UUID.cast(client_secret) do
-      case Repo.get_by(Game, client_id: client_id) do
-        nil ->
-          {:error, :invalid}
-
-        game ->
-          case game.client_secret == client_secret do
-            true ->
-              {:ok, preload(game)}
-
-            false ->
-              {:error, :invalid}
-          end
-      end
+         {:ok, client_secret} <- Ecto.UUID.cast(client_secret),
+         {:ok, game} <- get_game(client_id),
+         {:ok, game} <- validate_secret(game, client_secret) do
+      record_user_agent(game, user_agent_params)
     else
       :error ->
+        {:error, :invalid}
+    end
+  end
+
+  defp get_game(client_id) do
+    case Repo.get_by(Game, client_id: client_id) do
+      nil ->
+        {:error, :invalid}
+
+      game ->
+        {:ok, game}
+    end
+  end
+
+  defp validate_secret(game, client_secret) do
+    case game.client_secret == client_secret do
+      true ->
+        {:ok, game}
+
+      false ->
+        {:error, :invalid}
+    end
+  end
+
+  defp record_user_agent(game, user_agent_params) do
+    changeset = game |> Game.user_agent_changeset(user_agent_params)
+
+    case changeset |> Repo.update() do
+      {:ok, game} ->
+        {:ok, preload(game)}
+
+      {:error, _} ->
         {:error, :invalid}
     end
   end

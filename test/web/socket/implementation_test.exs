@@ -12,8 +12,8 @@ defmodule Web.Socket.ImplementationTest do
       frame = %{
         "event" => "authenticate",
         "payload" => %{
-          "client-id" => game.client_id,
-          "client-secret" => game.client_secret,
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
         },
       }
 
@@ -29,8 +29,8 @@ defmodule Web.Socket.ImplementationTest do
       frame = %{
         "event" => "authenticate",
         "payload" => %{
-          "client-id" => game.client_id,
-          "client-secret" => "bad",
+          "client_id" => game.client_id,
+          "client_secret" => "bad",
         },
       }
 

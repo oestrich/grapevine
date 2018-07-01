@@ -2,7 +2,7 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Games
 
   def receive(state = %{status: "inactive"}, %{"event" => "authenticate", "payload" => payload}) do
-    case Games.validate_socket(Map.get(payload, "client-id"), Map.get(payload, "client-secret")) do
+    case Games.validate_socket(Map.get(payload, "client_id"), Map.get(payload, "client_secret"), payload) do
       {:ok, game} ->
         state =
           state

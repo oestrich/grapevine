@@ -54,5 +54,10 @@ defmodule Gossip.GamesTest do
     test "when bad id", %{game: game} do
       assert {:error, :invalid} = Games.validate_socket("bad", game.client_id)
     end
+
+    test "saves the user agent if available", %{game: game} do
+      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"user_agent" => "ExVenture 0.23.0"})
+      assert game.user_agent == "ExVenture 0.23.0"
+    end
   end
 end

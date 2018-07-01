@@ -9,6 +9,7 @@ defmodule Gossip.Games.Game do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
     field(:password_hash, :string)
+    field(:user_agent, :string)
 
     field(:token, Ecto.UUID)
     field(:client_id, Ecto.UUID)
@@ -33,6 +34,10 @@ defmodule Gossip.Games.Game do
     |> validate_confirmation(:password)
     |> unique_constraint(:name)
     |> unique_constraint(:email)
+  end
+
+  def user_agent_changeset(struct, params) do
+    cast(struct, params, [:user_agent])
   end
 
   defp hash_password(changeset) do
