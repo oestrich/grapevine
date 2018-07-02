@@ -25,6 +25,16 @@ defmodule Gossip.Channels do
     Repo.all(Channel)
   end
 
+  def get(channel) do
+    case Repo.get_by(Channel, name: channel) do
+      nil ->
+        {:error, :not_found}
+
+      channel ->
+        {:ok, channel}
+    end
+  end
+
   @doc """
   Update a game's channel subscriptions
   """

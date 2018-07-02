@@ -79,7 +79,7 @@ defmodule Gossip.Games do
          {:ok, game} <- validate_secret(game, client_secret) do
       record_user_agent(game, user_agent_params)
     else
-      :error ->
+      _ ->
         {:error, :invalid}
     end
   end

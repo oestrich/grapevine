@@ -1,0 +1,9 @@
+<%= Enum.map(Channels.all(), fn channel -> %>
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title"><%= channel.name %></h5>
+      <p class="card-text"><%= channel.description %></p>
+      <%= link("Open", to: chat_path(@conn, :show, channel.name), class: "btn btn-primary") %>
+    </div>
+  </div>
+<% end) %>

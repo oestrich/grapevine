@@ -19,11 +19,13 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
-    get("/docs", PageController, :docs)
+    resources("/chat", ChatController, only: [:index, :show])
 
     resources("/config", ConfigController, only: [:show], singleton: true)
 
     put("/config/subscriptions", SubscriptionController, :update)
+
+    get("/docs", PageController, :docs)
 
     resources("/register", RegistrationController, only: [:new, :create])
 
