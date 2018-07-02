@@ -1,3 +1,5 @@
+<h2><%= @channel.name %></h2>
+
 <div id="channel-<%= @channel.name %>" data-channel="<%= @channel.name %>" class="terminal channel">
 </div>
 
