@@ -1,3 +1,12 @@
 main {
   padding-top: 3em;
 }
+
+h4 a {
+  display: none;
+  color: black;
+}
+
+h4:hover a {
+  display: inline;
+}

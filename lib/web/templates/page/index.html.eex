@@ -1,7 +1,13 @@
-<div class="row">
-  <div class="col-md-6 text-center text-md-left">
-    <h1 class="mb-3">Gossip</h1>
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3">Gossip</h1>
 
     <p>Welcome to Gossip, the MUD chat network.</p>
+
+    <p>
+      <%= link(to: page_path(@conn, :docs), class: "btn btn-primary btn-lg") do %>
+      Learn more &raquo;
+      <% end %>
+    </p>
   </div>
 </div>

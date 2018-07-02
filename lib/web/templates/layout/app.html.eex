@@ -9,6 +9,7 @@
 
     <title>Gossip - MUD Chat Network</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   </head>
 
   <body id="body">
@@ -22,6 +23,9 @@
 
           <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <%= link("Docs", to: page_path(@conn, :docs), class: "nav-link") %>
+              </li>
               <%= if Map.get(assigns, :current_game) do %>
                 <li class="nav-item">
                   <%= link(@current_game.name, to: config_path(@conn, :show), class: "nav-link") %>

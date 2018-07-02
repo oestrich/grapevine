@@ -19,6 +19,8 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
+    get("/docs", PageController, :docs)
+
     resources("/config", ConfigController, only: [:show], singleton: true)
 
     put("/config/subscriptions", SubscriptionController, :update)

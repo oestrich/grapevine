@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+<h2>Docs</h2>
+
+<p>Thanks for checking out Gossip.</p>
+
+<p>Before continuing, you should <%= link("create an account", to: registration_path(@conn, :new)) %> or <%= link("sign in", to: session_path(@conn, :new)) %>.</p>
+
+<h3 id="config">Game Configuration</h3>
+
+<p>Once you have an account, visit your <%= link("configuration page", to: config_path(@conn, :show)) %>. This will show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+
+<p>You also subscribe to the channels you want your game to pay attention to. Right now Gossip has the following channels:<p>
+
+<ul>
+  <%= Enum.map(Channels.all(), fn channel -> %>
+    <li><code><%= channel.name %></code></li>
+  <% end) %>
+</ul>
+
+<p>You will only recieve messages for channels you are subscribed to.</p>
+
+<h3 id="connecting">Connecting</h3>
+
+<p>Once you have your Client ID and Client Secret, you can start connecting to the Gossip network. Point your websocket client at:</p>
+
+<pre><code><%= socket_url() %></code></pre>
+
+<p>Once you are connected, you must send an <code>authenticate</code> message to authenticate your connection.</p>
+
+<h3 id="events">Events</h3>
+
+<p>Below is a list of events you can send or may receive from the socket.</p>
+
+<h4 id="authenticate">
+  authenticate
+  <%= link(to: "#authenticate") do %>
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>This event authorizes the connection and afterwards you will start to receive new broadcasts. <code>user_agent</code> is optional but suggested.</p>
+
+<pre>{
+  "event": "authenticate",
+  "payload": {
+    "client_id": "client id",
+    "client_secret": "client secret",
+    "user_agent": "ExVenture 0.23.0"
+  }
+}</pre>
+
+<p>You will receive a response from this with a sucess or failure message.</p>
+
+<pre>{
+  "event": "authenticate",
+  "status": "success"
+}</pre>
+
+<h4 id="channels-subscribed">
+  channels/subscribed
+  <%= link(to: "#channels-subscribed") do %>
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>After signing in you will receive this message letting you know which channels you are subscribed to. This can be useful if you listen to more than one channel and want to be more dynamic.</p>
+
+<pre>{
+  "event": "channels/subscribed",
+  "payload": {
+    "channels": ["gossip"]
+  }
+}</pre>
+
+<h4 id="messages-broadcast">
+  messages/broadcast
+  <%= link(to: "#messages-broadcast") do %>
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>When a channel you are subscribed to receives a new message you will get a broadcast.</p>
+
+<pre>{
+  "event": "messages/broadcast",
+  "payload": {
+    "id": "0ce4e854-72d5-4ebe-91f4-055b9595147b",
+    "channel": "gossip",
+    "message": "Hello everyone!",
+    "game": "ExVenture",
+    "name": "Player"
+  }
+}</pre>
+
+<h4 id="messages-new">
+  messages/new
+  <%= link(to: "#messages-new") do %>
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>To send a new message, use this event. <code>channel</code> must be a channel you are subscribed to. All of the fields in the <code>payload</code> are required.</p>
+
+<p>You will not get a broadcast message back for messages you send.</p>
+
+<pre>{
+  "event": "messages/new",
+  "payload": {
+    "channel": "gossip",
+    "name": "Player",
+    "message": "Hello everyone!"
+  }
+}</pre>
+  </div>
+</div>
