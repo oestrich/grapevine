@@ -1,4 +1,4 @@
-defmodule Web.ConfigView do
+defmodule Web.GameView do
   use Web, :view
 
   alias Gossip.Channels

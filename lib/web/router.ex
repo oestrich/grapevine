@@ -21,11 +21,11 @@ defmodule Web.Router do
 
     resources("/chat", ChatController, only: [:index, :show])
 
-    resources("/config", ConfigController, only: [:show], singleton: true)
-
-    put("/config/subscriptions", SubscriptionController, :update)
-
     get("/docs", PageController, :docs)
+
+    resources("/games", GameController, only: [:index])
+
+    put("/games/:id/subscriptions", SubscriptionController, :update)
 
     resources("/register", RegistrationController, only: [:new, :create])
 

@@ -13,9 +13,10 @@ defmodule Web.SessionController do
 
   def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
     case Accounts.validate_login(email, password) do
-      {:ok, game} ->
+      {:ok, user} ->
         conn
-        |> put_session(:game_token, game.token)
+        |> put_flash(:info, "You have signed in.")
+        |> put_session(:user_token, user.token)
         |> redirect(to: page_path(conn, :index))
 
       {:error, :invalid} ->

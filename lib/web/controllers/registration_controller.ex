@@ -13,10 +13,10 @@ defmodule Web.RegistrationController do
 
   def create(conn, %{"user" => params}) do
     case Accounts.register(params) do
-      {:ok, game} ->
+      {:ok, user} ->
         conn
         |> put_flash(:info, "Your game has been registered! Welcome!")
-        |> put_session(:game_token, game.token)
+        |> put_session(:user_token, user.token)
         |> redirect(to: page_path(conn, :index))
 
       {:error, changeset} ->
