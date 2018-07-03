@@ -1,6 +1,6 @@
 defmodule Gossip.Accounts do
   @moduledoc """
-  Context for games
+  Context for accounts
   """
 
   alias Gossip.Accounts.User
