@@ -10,13 +10,13 @@ defmodule Gossip.Accounts do
   @type token :: String.t()
 
   @doc """
-  Start a new game
+  Start a new user
   """
   @spec new() :: Ecto.Changeset.t()
   def new(), do: %User{} |> User.changeset(%{})
 
   @doc """
-  Register a new game
+  Register a new user
   """
   @spec register(user_params()) :: {:ok, User.t()}
   def register(params) do
@@ -26,7 +26,7 @@ defmodule Gossip.Accounts do
   end
 
   @doc """
-  Find a game by the token
+  Find a user by the token
   """
   @spec from_token(token()) :: {:ok, User.t()} | {:error, :not_found}
   def from_token(token) do
@@ -34,13 +34,13 @@ defmodule Gossip.Accounts do
       nil ->
         {:error, :not_found}
 
-      game ->
-        {:ok, preload(game)}
+      user ->
+        {:ok, preload(user)}
     end
   end
 
   defp preload(user) do
-    Repo.preload(user, [games: [:subscribed_channels, :channels]])
+    Repo.preload(user, [users: [:subscribed_channels, :channels]])
   end
 
   @doc """
@@ -53,15 +53,15 @@ defmodule Gossip.Accounts do
         Comeonin.Bcrypt.dummy_checkpw()
         {:error, :invalid}
 
-      game ->
-        check_password(game, password)
+      user ->
+        check_password(user, password)
     end
   end
 
-  defp check_password(game, password) do
-    case Comeonin.Bcrypt.checkpw(password, game.password_hash) do
+  defp check_password(user, password) do
+    case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
       true ->
-        {:ok, game}
+        {:ok, user}
 
       false ->
         {:error, :invalid}
