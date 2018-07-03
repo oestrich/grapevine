@@ -1,23 +1,23 @@
 defmodule Web.RegistrationController do
   use Web, :controller
 
-  alias Gossip.Games
+  alias Gossip.Accounts
 
   def new(conn, _params) do
-    changeset = Games.new()
+    changeset = Accounts.new()
 
     conn
     |> assign(:changeset, changeset)
     |> render("new.html")
   end
 
-  def create(conn, %{"game" => params}) do
-    case Games.register(params) do
-      {:ok, game} ->
+  def create(conn, %{"user" => params}) do
+    case Accounts.register(params) do
+      {:ok, user} ->
         conn
         |> put_flash(:info, "Your game has been registered! Welcome!")
-        |> put_session(:game_token, game.token)
-        |> redirect(to: page_path(conn, :index))
+        |> put_session(:user_token, user.token)
+        |> redirect(to: game_path(conn, :index))
 
       {:error, changeset} ->
         conn

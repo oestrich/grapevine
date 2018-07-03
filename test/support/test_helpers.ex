@@ -1,4 +1,5 @@
 defmodule Gossip.TestHelpers do
+  alias Gossip.Accounts
   alias Gossip.Channels
   alias Gossip.Games
 
@@ -13,15 +14,24 @@ defmodule Gossip.TestHelpers do
     channel
   end
 
-  def create_game(attributes \\ %{}) do
+  def create_user(attributes \\ %{}) do
     attributes = Map.merge(%{
-      name: "A MUD",
       email: "admin@example.com",
       password: "password",
       password_confirmation: "password",
     }, attributes)
 
-    {:ok, game} = Games.register(attributes)
+    {:ok, game} = Accounts.register(attributes)
+
+    game
+  end
+
+  def create_game(user, attributes \\ %{}) do
+    attributes = Map.merge(%{
+      name: "A MUD",
+    }, attributes)
+
+    {:ok, game} = Games.register(user, attributes)
 
     game
   end

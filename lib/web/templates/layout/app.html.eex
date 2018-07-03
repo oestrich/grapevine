@@ -29,9 +29,9 @@
               <li class="nav-item">
                 <%= link("Docs", to: page_path(@conn, :docs), class: "nav-link") %>
               </li>
-              <%= if Map.get(assigns, :current_game) do %>
+              <%= if Map.get(assigns, :current_user) do %>
                 <li class="nav-item">
-                  <%= link(@current_game.name, to: config_path(@conn, :show), class: "nav-link") %>
+                  <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
                 </li>
                 <li class="nav-item">
                   <%= link("Sign Out", to: session_path(@conn, :delete), method: :delete, class: "nav-link") %>
@@ -42,8 +42,8 @@
                 </li>
               <% end %>
             </ul>
-            <%= if !Map.get(assigns, :current_game) do %>
-              <%= link("Register Your Game", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
+            <%= if !Map.get(assigns, :current_user) do %>
+              <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
             <% end %>
           </div>
         </div>

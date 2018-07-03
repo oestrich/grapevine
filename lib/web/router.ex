@@ -7,7 +7,7 @@ defmodule Web.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Web.Plugs.FetchGame
+    plug Web.Plugs.FetchUser
   end
 
   pipeline :api do
@@ -21,11 +21,11 @@ defmodule Web.Router do
 
     resources("/chat", ChatController, only: [:index, :show])
 
-    resources("/config", ConfigController, only: [:show], singleton: true)
-
-    put("/config/subscriptions", SubscriptionController, :update)
-
     get("/docs", PageController, :docs)
+
+    resources("/games", GameController, only: [:index, :create])
+
+    put("/games/:id/subscriptions", SubscriptionController, :update)
 
     resources("/register", RegistrationController, only: [:new, :create])
 

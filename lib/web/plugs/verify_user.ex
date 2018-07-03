@@ -1,6 +1,6 @@
-defmodule Web.Plugs.VerifyGame do
+defmodule Web.Plugs.VerifyUser do
   @moduledoc """
-  Verify a game is in the session
+  Verify a user is in the session
   """
 
   import Phoenix.Controller
@@ -11,7 +11,7 @@ defmodule Web.Plugs.VerifyGame do
 
   def call(conn, _opts) do
     case conn.assigns do
-      %{current_game: current_game} when current_game != nil ->
+      %{current_user: current_user} when current_user != nil ->
         conn
 
       _ ->

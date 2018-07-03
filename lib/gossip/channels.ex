@@ -5,6 +5,7 @@ defmodule Gossip.Channels do
 
   alias Gossip.Channels.Channel
   alias Gossip.Channels.SubscribedChannel
+  alias Gossip.Games.Game
   alias Gossip.Repo
 
   @doc """
@@ -38,17 +39,22 @@ defmodule Gossip.Channels do
   @doc """
   Update a game's channel subscriptions
   """
-  def subscribe_to_channels(game, channel_ids) do
-    game = Repo.preload(game, :subscribed_channels)
+  def subscribe_to_channels(user, game_id, channel_ids) do
+    case Repo.get_by(Game, user_id: user.id, id: game_id) do
+      nil ->
+        :error
+      game ->
+        game = Repo.preload(game, :subscribed_channels)
 
-    channel_ids = Enum.map(channel_ids, &to_integer/1)
-    subscribed_ids = Enum.map(game.subscribed_channels, &(&1.channel_id))
+        channel_ids = Enum.map(channel_ids, &to_integer/1)
+        subscribed_ids = Enum.map(game.subscribed_channels, &(&1.channel_id))
 
-    subscribe_to_channels(game, channel_ids, subscribed_ids)
-    unsubscribe_to_channels(game, channel_ids, subscribed_ids)
+        _subscribe_to_channels(game, channel_ids, subscribed_ids)
+        unsubscribe_to_channels(game, channel_ids, subscribed_ids)
 
-    game = Repo.preload(game, :subscribed_channels, [force: true])
-    {:ok, game}
+        game = Repo.preload(game, :subscribed_channels, [force: true])
+        {:ok, game}
+    end
   end
 
   defp to_integer(channel_id) when is_binary(channel_id) do
@@ -57,7 +63,7 @@ defmodule Gossip.Channels do
 
   defp to_integer(channel_id), do: channel_id
 
-  defp subscribe_to_channels(game, channel_ids, subscribed_ids) do
+  defp _subscribe_to_channels(game, channel_ids, subscribed_ids) do
     channel_ids
     |> Enum.reject(&Enum.member?(subscribed_ids, &1))
     |> Enum.map(&create_subscription(game, &1))

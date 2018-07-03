@@ -18,54 +18,12 @@ defmodule Gossip.Games do
   @doc """
   Register a new game
   """
-  @spec register(game_params()) :: {:ok, Game.t()}
-  def register(params) do
-    %Game{}
+  @spec register(User.t(), game_params()) :: {:ok, Game.t()}
+  def register(user, params) do
+    user
+    |> Ecto.build_assoc(:games)
     |> Game.changeset(params)
     |> Repo.insert()
-  end
-
-  @doc """
-  Find a game by the token
-  """
-  @spec from_token(token()) :: {:ok, Game.t()} | {:error, :not_found}
-  def from_token(token) do
-    case Repo.get_by(Game, token: token) do
-      nil ->
-        {:error, :not_found}
-
-      game ->
-        {:ok, preload(game)}
-    end
-  end
-
-  defp preload(game) do
-    Repo.preload(game, [:subscribed_channels, :channels])
-  end
-
-  @doc """
-  Validate a login
-  """
-  @spec validate_login(String.t(), String.t()) :: {:ok, Game.t()} | {:error, :invalid}
-  def validate_login(email, password) do
-    case Repo.get_by(Game, email: email) do
-      nil ->
-        Comeonin.Bcrypt.dummy_checkpw()
-        {:error, :invalid}
-
-      game ->
-        check_password(game, password)
-    end
-  end
-
-  defp check_password(game, password) do
-    case Comeonin.Bcrypt.checkpw(password, game.password_hash) do
-      true ->
-        {:ok, game}
-
-      false ->
-        {:error, :invalid}
-    end
   end
 
   @doc """
@@ -114,5 +72,9 @@ defmodule Gossip.Games do
       {:error, _} ->
         {:error, :invalid}
     end
+  end
+
+  defp preload(game) do
+    Repo.preload(game, [:subscribed_channels, :channels])
   end
 end
