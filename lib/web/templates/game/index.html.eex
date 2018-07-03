@@ -7,6 +7,12 @@
         <%= text_input(f, :name, class: "form-control") %>
       </div>
 
+      <div class="form-group">
+        <%= label(f, :short_name, "Short Name") %>
+        <%= text_input(f, :short_name, class: "form-control", maxlength: 15) %>
+        <span class="help-block">This is the name seen in chats and should be alphanumeric.</span>
+      </div>
+
       <%= submit("Create Game", class: "btn btn-default") %>
     <% end) %>
   </div>
@@ -18,6 +24,9 @@
           <h3><%= game.name %> Settings</h3>
 
           <dl>
+            <dd>Short Name</dd>
+            <dl><%= game.short_name %></dl>
+
             <dd>Client ID</dd>
             <dl><code><%= game.client_id %></code></dl>
 

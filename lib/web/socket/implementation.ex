@@ -25,7 +25,7 @@ defmodule Web.Socket.Implementation do
         payload =
           payload
           |> Map.put("id", UUID.uuid4())
-          |> Map.put("game", state.game.name)
+          |> Map.put("game", state.game.short_name)
           |> Map.put("game_id", state.game.client_id)
           |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
 

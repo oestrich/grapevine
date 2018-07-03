@@ -29,6 +29,7 @@ defmodule Gossip.TestHelpers do
   def create_game(user, attributes \\ %{}) do
     attributes = Map.merge(%{
       name: "A MUD",
+      short_name: "AM",
     }, attributes)
 
     {:ok, game} = Games.register(user, attributes)

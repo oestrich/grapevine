@@ -9,6 +9,7 @@ defmodule Gossip.GamesTest do
 
       {:ok, game} = Games.register(user, %{
         name: "A MUD",
+        short_name: "AM",
       })
 
       assert game.name == "A MUD"
