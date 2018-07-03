@@ -40,7 +40,7 @@ defmodule Gossip.Accounts do
   end
 
   defp preload(user) do
-    Repo.preload(user, [users: [:subscribed_channels, :channels]])
+    Repo.preload(user, [games: [:subscribed_channels, :channels]])
   end
 
   @doc """
