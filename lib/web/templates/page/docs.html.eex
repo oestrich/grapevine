@@ -8,7 +8,7 @@
 
 <h3 id="config">Game Configuration</h3>
 
-<p>Once you have an account, visit your <%= link("configuration page", to: game_path(@conn, :index)) %>. This will show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+<p>Once you have an account, visit your <%= link("configuration page", to: game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
 
 <p>You also subscribe to the channels you want your game to pay attention to. Right now Gossip has the following channels:<p>
 
