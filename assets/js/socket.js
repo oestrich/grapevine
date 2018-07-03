@@ -17,7 +17,7 @@ export default class ChatSocket {
     .receive("error", resp => { console.log("Unable to join", resp) });
 
     this.channel.on("messages/broadcast", data => {
-      let message = `<span class="blue">${data.name}@${data.game}</span> says, <span class="green">"${data.message}"</span>`;
+      let message = `<span class="blue">${data.name}@${data.game}</span> says, <span class="green">"${data.message}"</span><br/>`;
 
       let fragment = document.createDocumentFragment();
       let span = document.createElement('span');
