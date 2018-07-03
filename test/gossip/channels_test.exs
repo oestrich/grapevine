@@ -5,7 +5,8 @@ defmodule Gossip.ChannelsTest do
 
   describe "subscribing to channels" do
     setup do
-      game = create_game()
+      user = create_user()
+      game = create_game(user)
       channel = create_channel()
 
       %{game: game, channel: channel}

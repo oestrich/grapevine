@@ -5,7 +5,7 @@ defmodule Web.Socket.ImplementationTest do
 
   describe "authenticating" do
     setup do
-      %{state: %{status: "inactive"}, game: create_game()}
+      %{state: %{status: "inactive"}, game: create_game(create_user())}
     end
 
     test "validating authentication", %{state: state, game: game} do
@@ -43,7 +43,8 @@ defmodule Web.Socket.ImplementationTest do
 
   describe "post a new message" do
     setup do
-      game = create_game()
+      user = create_user()
+      game = create_game(user)
 
       state = %{
         status: "active",

@@ -1,18 +1,18 @@
 defmodule Web.SessionController do
   use Web, :controller
 
-  alias Gossip.Games
+  alias Gossip.Accounts
 
   def new(conn, _params) do
-    changeset = Games.new()
+    changeset = Accounts.new()
 
     conn
     |> assign(:changeset, changeset)
     |> render("new.html")
   end
 
-  def create(conn, %{"game" => %{"email" => email, "password" => password}}) do
-    case Games.validate_login(email, password) do
+  def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
+    case Accounts.validate_login(email, password) do
       {:ok, game} ->
         conn
         |> put_session(:game_token, game.token)

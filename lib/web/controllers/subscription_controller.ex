@@ -3,7 +3,7 @@ defmodule Web.SubscriptionController do
 
   alias Gossip.Channels
 
-  plug Web.Plugs.VerifyGame
+  plug Web.Plugs.VerifyUser
 
   def update(conn, %{"game" => %{"subscriptions" => channel_ids}}) do
     %{current_game: game} = conn.assigns
