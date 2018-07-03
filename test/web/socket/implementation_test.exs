@@ -68,7 +68,7 @@ defmodule Web.Socket.ImplementationTest do
 
       assert {:ok, _state} = Implementation.receive(state, frame)
 
-      game_name = game.name
+      game_name = game.short_name
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
     end
   end
