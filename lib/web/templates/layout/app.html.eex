@@ -43,7 +43,7 @@
               <% end %>
             </ul>
             <%= if !Map.get(assigns, :current_user) do %>
-              <%= link("Register Your Game", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
+              <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
             <% end %>
           </div>
         </div>

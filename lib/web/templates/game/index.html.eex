@@ -1,7 +1,19 @@
 <div class="row">
-  <div class="col-md-6 offset-md-3">
+  <div class="col-md-3">
+    <h3>Create a new Game</h3>
+    <%= form_for(@changeset, game_path(@conn, :create), fn f -> %>
+      <div class="form-group">
+        <%= label(f, :name) %>
+        <%= text_input(f, :name, class: "form-control") %>
+      </div>
+
+      <%= submit("Create Game", class: "btn btn-default") %>
+    <% end) %>
+  </div>
+
+  <div class="col-md-8 offset-md-1">
     <%= Enum.map(@current_user.games, fn game -> %>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-12">
           <h3><%= game.name %> Settings</h3>
 
@@ -31,10 +43,12 @@
               <% end) %>
             </div>
 
-            <%= submit("Save Subscriptions", class: "btn btn-primary") %>
+            <%= submit("Save Subscriptions", class: "btn btn-default") %>
           <% end %>
         </div>
       </div>
+
+      <hr />
     <% end) %>
   </div>
 </div>

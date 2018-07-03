@@ -25,7 +25,7 @@ defmodule Gossip.Games.Game do
     |> validate_required([:name, :user_id])
     |> ensure(:client_id, UUID.uuid4())
     |> ensure(:client_secret, UUID.uuid4())
-    |> unique_constraint(:email)
+    |> unique_constraint(:name)
   end
 
   def user_agent_changeset(struct, params) do
