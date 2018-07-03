@@ -15,7 +15,7 @@ export default class ChatSocket {
     this.channel.join().receive("ok", resp => { this.append("Connected") });
 
     this.channel.on("messages/broadcast", data => {
-      let message = `<span class="blue">${data.name}@${data.game}</span> says, <span class="green">"${data.message}"</span><br/>`;
+      let message = `<span class="blue">${data.name}@${data.game}</span> says, <span class="green">"${data.message}"</span>`;
       this.append(message);
     });
   }
@@ -23,7 +23,7 @@ export default class ChatSocket {
   append(message) {
     let fragment = document.createDocumentFragment();
     let span = document.createElement('span');
-    span.innerHTML = message;
+    span.innerHTML = message + "<br />";
     fragment.appendChild(span);
 
     this.channelElement.appendChild(fragment);
