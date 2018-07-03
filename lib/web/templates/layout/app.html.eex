@@ -67,6 +67,14 @@
       </div>
     </main>
 
+    <footer>
+      <div class="container">
+        <p class="text-muted">
+          <%= link("Gossip Project", to: "https://github.com/oestrich/gossip", target: "_blank") %>
+        </p>
+      </div>
+    </footer>
+
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
