@@ -73,6 +73,30 @@
   }
 }</pre>
 
+<h4 id="heartbeat">
+  heartbeat
+  <%= link(to: "#heartbeat") do %>
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>Once you are authenticated, the server will start sending heartbeat events.</p>
+
+<pre>{
+  "event": "heartbeat",
+}</pre>
+
+<p>When you receive a heartbeat, you must respond to it with a heartbeat of your own. This should include a list of your players that are online.</p>
+
+<pre>{
+  "event": "heartbeat",
+  "payload": {
+    "players": ["player"]
+  }
+}</pre>
+
+<p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
+
 <h4 id="messages-broadcast">
   messages/broadcast
   <%= link(to: "#messages-broadcast") do %>
