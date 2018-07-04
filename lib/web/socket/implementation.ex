@@ -8,6 +8,7 @@ defmodule Web.Socket.Implementation do
   require Logger
 
   alias Gossip.Games
+  alias Gossip.Presence
 
   def heartbeat(state) do
     case state do
@@ -32,6 +33,7 @@ defmodule Web.Socket.Implementation do
         notify_of_subscribed_channels(game)
 
         Logger.info("Authenticated #{game.name}")
+        Presence.update_game(state.game, Map.get(payload, "players", []))
 
         {:ok, %{event: "authenticate", status: "success"}, state}
 
@@ -57,6 +59,8 @@ defmodule Web.Socket.Implementation do
 
   def receive(state = %{status: "active"}, event = %{"event" => "heartbeat"}) do
     Logger.debug("HEARTBEAT: #{inspect(event["payload"])}")
+    payload = Map.get(event, "payload", %{})
+    Presence.update_game(state.game, Map.get(payload, "players", []))
     state = Map.put(state, :heartbeat_count, 0)
     {:ok, state}
   end
