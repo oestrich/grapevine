@@ -9,8 +9,8 @@ Gossip is a MUD chat network.
 ## Requirements
 
 - PostgreSQL 10
-- Elixir 1.6
-- Erlang 20
+- Elixir 1.6.6
+- Erlang 21.0.2.
 - node.js 8.6
 
 ## Setup
