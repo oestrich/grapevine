@@ -34,7 +34,7 @@
               </li>
               <%= if Map.get(assigns, :current_user) do %>
                 <li class="nav-item">
-                  <%= link("Your Games", to: game_path(@conn, :index), class: "nav-link") %>
+                  <%= link("Your Games", to: user_game_path(@conn, :index), class: "nav-link") %>
                 </li>
                 <li class="nav-item">
                   <%= link("Sign Out", to: session_path(@conn, :delete), method: :delete, class: "nav-link") %>
