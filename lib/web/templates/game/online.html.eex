@@ -1,0 +1,18 @@
+<div class="card-columns">
+  <%= Enum.map(@games, fn {game, players, _timestamp} -> %>
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h4 class="card-title"><%= game.name %></h4>
+        <p class="card-text">Online</p>
+        <%= unless Enum.empty?(players) do %>
+          <h5>Players (<%= Enum.count(players) %>)</h5>
+          <ul>
+            <%= Enum.map(players, fn player -> %>
+              <li><%= player %></li>
+            <% end) %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  <% end) %>
+</div>
