@@ -72,4 +72,45 @@ defmodule Web.Socket.ImplementationTest do
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
     end
   end
+
+  describe "heartbeats" do
+    setup [:basic_setup]
+
+    test "sending heartbeats", %{state: state} do
+      {:ok, response, state} = Implementation.heartbeat(state)
+
+      assert response == %{event: "heartbeat"}
+      assert state.heartbeat_count == 1
+    end
+
+    test "sending heartbeats - out of counts", %{state: state} do
+      state = %{state | heartbeat_count: 3}
+      assert {:disconnect, _state} = Implementation.heartbeat(state)
+    end
+
+    test "receive a heartbeat", %{state: state} do
+      frame = %{
+        "event" => "heartbeat",
+        "payload" => %{
+          "connected_users" => ["player"],
+        },
+      }
+
+      {:ok, state} = Implementation.receive(state, frame)
+
+      assert state.heartbeat_count == 0
+    end
+  end
+
+  def basic_setup(_) do
+    user = create_user()
+    game = create_game(user)
+
+    state = %Web.Socket.State{
+      status: "active",
+      game: game,
+    }
+
+    %{state: state, game: game}
+  end
 end

@@ -1,5 +1,24 @@
 defmodule Web.Socket.Implementation do
+  @moduledoc """
+  WebSocket Implementation
+
+  Contains server code for the websocket handler
+  """
+
+  require Logger
+
   alias Gossip.Games
+
+  def heartbeat(state) do
+    case state do
+      %{heartbeat_count: count} when count >= 3 ->
+        {:disconnect, state}
+
+      _ ->
+        state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
+        {:ok, %{event: "heartbeat"}, state}
+    end
+  end
 
   def receive(state = %{status: "inactive"}, %{"event" => "authenticate", "payload" => payload}) do
     case Games.validate_socket(Map.get(payload, "client_id"), Map.get(payload, "client_secret"), payload) do
@@ -32,6 +51,12 @@ defmodule Web.Socket.Implementation do
         Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
         {:ok, state}
     end
+  end
+
+  def receive(state = %{status: "active"}, %{"event" => "heartbeat", "payload" => payload}) do
+    Logger.info("HEARTBEAT: #{inspect(payload)}")
+    state = Map.put(state, :heartbeat_count, 0)
+    {:ok, state}
   end
 
   def receive(state, _frame) do

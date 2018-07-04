@@ -2,6 +2,7 @@ defmodule Web.SocketHandler do
   @behaviour :cowboy_websocket_handler
 
   alias Web.Socket.Implementation
+  alias Web.Socket.State
 
   require Logger
 
@@ -16,7 +17,7 @@ defmodule Web.SocketHandler do
 
     Logger.info("Socket starting")
 
-    {:ok, req, %{status: "inactive"}}
+    {:ok, req, %State{status: "inactive"}}
   end
 
   def websocket_handle({:text, message}, req, state) do
@@ -64,7 +65,13 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info(:heartbeat, req, state) do
-    {:reply, {:text, Poison.encode!(%{event: "heartbeat"})}, req, state}
+    case Implementation.heartbeat(state) do
+      {:ok, response, state} ->
+        {:reply, {:text, Poison.encode!(response)}, req, state}
+
+      {:disconnect, state} ->
+        {:stop, state}
+    end
   end
 
   def websocket_info(_message, req, state) do
