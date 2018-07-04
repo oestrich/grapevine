@@ -70,7 +70,8 @@ defmodule Web.SocketHandler do
         {:reply, {:text, Poison.encode!(response)}, req, state}
 
       {:disconnect, state} ->
-        {:stop, state}
+        Logger.warn("Disconnecting the socket")
+        {:reply, {:close, 4000, "goodbye"}, req, state}
     end
   end
 

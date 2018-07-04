@@ -31,6 +31,8 @@ defmodule Web.Socket.Implementation do
         listen_to_channels(game)
         notify_of_subscribed_channels(game)
 
+        Logger.info("Authenticated #{game.name}")
+
         {:ok, %{event: "authenticate", status: "success"}, state}
 
       {:error, :invalid} ->
@@ -53,8 +55,8 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  def receive(state = %{status: "active"}, %{"event" => "heartbeat", "payload" => payload}) do
-    Logger.info("HEARTBEAT: #{inspect(payload)}")
+  def receive(state = %{status: "active"}, event = %{"event" => "heartbeat"}) do
+    Logger.debug("HEARTBEAT: #{inspect(event["payload"])}")
     state = Map.put(state, :heartbeat_count, 0)
     {:ok, state}
   end

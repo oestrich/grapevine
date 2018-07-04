@@ -92,7 +92,7 @@ defmodule Web.Socket.ImplementationTest do
       frame = %{
         "event" => "heartbeat",
         "payload" => %{
-          "connected_users" => ["player"],
+          "players" => ["player"],
         },
       }
 
