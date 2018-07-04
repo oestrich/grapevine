@@ -30,7 +30,7 @@
                 <%= link("Docs", to: page_path(@conn, :docs), class: "nav-link") %>
               </li>
               <li class="nav-item">
-                <%= link("Games", to: game_path(@conn, :online), class: "nav-link") %>
+                <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
               </li>
               <%= if Map.get(assigns, :current_user) do %>
                 <li class="nav-item">
