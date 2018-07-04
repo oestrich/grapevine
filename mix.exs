@@ -36,6 +36,7 @@ defmodule Gossip.Mixfile do
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:cowboy, "~> 1.0"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:distillery, "~> 1.4", runtime: false},
       {:gettext, "~> 0.11"},
       {:phoenix, "~> 1.3.3"},

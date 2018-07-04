@@ -1,4 +1,8 @@
 defmodule Web.SocketHandler do
+  @moduledoc """
+  Cowboy WebSocket handler
+  """
+
   @behaviour :cowboy_websocket_handler
 
   alias Web.Socket.Implementation
@@ -38,7 +42,7 @@ defmodule Web.SocketHandler do
   end
 
   # Ignore broadcasts from the same client id
-  def websocket_info(%Phoenix.Socket.Broadcast{event: "messages/broadcast"} = message, req, state) do
+  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "messages/broadcast"}, req, state) do
     client_id = state.game.client_id
 
     case Map.get(message.payload, "game_id") do
@@ -55,7 +59,7 @@ defmodule Web.SocketHandler do
     end
   end
 
-  def websocket_info(%Phoenix.Socket.Broadcast{} = message, req, state) do
+  def websocket_info(message = %Phoenix.Socket.Broadcast{}, req, state) do
     message = %{
       event: message.event,
       payload: message.payload,

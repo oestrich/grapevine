@@ -58,7 +58,7 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "heartbeat"}) do
-    Logger.debug("HEARTBEAT: #{inspect(event["payload"])}")
+    Logger.debug(fn -> "HEARTBEAT: #{inspect(event["payload"])}" end)
     payload = Map.get(event, "payload", %{})
     Presence.update_game(state.game, Map.get(payload, "players", []))
     state = Map.put(state, :heartbeat_count, 0)

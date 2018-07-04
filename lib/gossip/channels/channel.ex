@@ -1,4 +1,8 @@
 defmodule Gossip.Channels.Channel do
+  @moduledoc """
+  Channel schema
+  """
+
   use Gossip.Schema
 
   schema "channels" do

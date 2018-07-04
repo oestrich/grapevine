@@ -1,4 +1,8 @@
 defmodule Gossip.Channels.SubscribedChannel do
+  @moduledoc """
+  Join table for Games subscribing to Channels
+  """
+
   use Gossip.Schema
 
   alias Gossip.Channels.Channel

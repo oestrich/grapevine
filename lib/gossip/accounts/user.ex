@@ -1,4 +1,8 @@
 defmodule Gossip.Accounts.User do
+  @moduledoc """
+  User schema
+  """
+
   use Gossip.Schema
 
   alias Gossip.Games.Game
