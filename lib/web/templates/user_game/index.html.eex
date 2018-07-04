@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-3">
+    <h3>Create a new Game</h3>
+    <%= form_for(@changeset, user_game_path(@conn, :create), fn f -> %>
+      <div class="form-group">
+        <%= label(f, :name) %>
+        <%= text_input(f, :name, class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <%= label(f, :short_name, "Short Name") %>
+        <%= text_input(f, :short_name, class: "form-control", maxlength: 15) %>
+        <span class="help-block">This is the name seen in chats and should be alphanumeric.</span>
+      </div>
+
+      <%= submit("Create Game", class: "btn btn-secondary") %>
+    <% end) %>
+  </div>
+
+  <div class="col-md-8 offset-md-1">
+    <%= Enum.map(@current_user.games, fn game -> %>
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <h3><%= game.name %> Settings</h3>
+
+          <dl>
+            <dd>Short Name</dd>
+            <dl><%= game.short_name %></dl>
+
+            <dd>Client ID</dd>
+            <dl><code><%= game.client_id %></code></dl>
+
+            <dd>Client Secret</dd>
+            <dl><code><%= game.client_secret %></code></dl>
+          </dl>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Channel Subscriptions</h3>
+
+          <%= form_tag(subscription_path(@conn, :update, game.id), [as: :game, method: :put]) do %>
+            <input type="hidden" name="game[subscriptions][]" value=""/>
+
+            <div class="form-group">
+              <%= Enum.map(Channels.all(), fn channel -> %>
+                <label>
+                  <input type="checkbox" name="game[subscriptions][]" value="<%= channel.id %>" <%= channel_checked?(game, channel) %>/>
+                  <%= channel.name %>
+                </label>
+              <% end) %>
+            </div>
+
+            <%= submit("Save Subscriptions", class: "btn btn-secondary") %>
+          <% end %>
+        </div>
+      </div>
+
+      <hr />
+    <% end) %>
+  </div>
+</div>

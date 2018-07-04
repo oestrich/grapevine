@@ -6,6 +6,6 @@ defmodule Web.GameController do
   def index(conn, _params) do
     conn
     |> assign(:games, Presence.online_games())
-    |> render("online.html")
+    |> render("index.html")
   end
 end

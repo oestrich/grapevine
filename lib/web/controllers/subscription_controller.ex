@@ -14,12 +14,12 @@ defmodule Web.SubscriptionController do
       {:ok, _game} ->
         conn
         |> put_flash(:info, "Subscriptions updated!")
-        |> redirect(to: game_path(conn, :index))
+        |> redirect(to: user_game_path(conn, :index))
 
       :error ->
         conn
         |> put_flash(:info, "Could not update subscriptions.")
-        |> redirect(to: game_path(conn, :index))
+        |> redirect(to: user_game_path(conn, :index))
     end
   end
 end
