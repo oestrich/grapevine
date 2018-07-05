@@ -33,8 +33,8 @@
 <p>Below is a list of events you can send or may receive from the socket.</p>
 
 <h4 id="authenticate">
-  authenticate
   <%= link(to: "#authenticate") do %>
+    authenticate
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -57,9 +57,11 @@
   "status": "success"
 }</pre>
 
+<hr />
+
 <h4 id="channels-subscribed">
-  channels/subscribed
   <%= link(to: "#channels-subscribed") do %>
+    channels/subscribed
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -73,9 +75,11 @@
   }
 }</pre>
 
+<hr />
+
 <h4 id="heartbeat">
-  heartbeat
   <%= link(to: "#heartbeat") do %>
+    heartbeat
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -97,9 +101,11 @@
 
 <p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
 
+<hr />
+
 <h4 id="messages-broadcast">
-  messages/broadcast
   <%= link(to: "#messages-broadcast") do %>
+    messages/broadcast
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -117,9 +123,11 @@
   }
 }</pre>
 
+<hr />
+
 <h4 id="messages-new">
-  messages/new
   <%= link(to: "#messages-new") do %>
+    messages/new
     <i class="fas fa-link"></i>
   <% end %>
 </h4>

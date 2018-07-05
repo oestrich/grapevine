@@ -3,12 +3,20 @@ main {
 }
 
 h4 a {
-  display: none;
+  color: black;
+  text-decoration: underline;
+}
+
+h4 a i {
+  display: none !important;
+}
+
+h4 a:hover {
   color: black;
 }
 
-h4:hover a {
-  display: inline;
+h4:hover a i {
+  display: inline !important;
 }
 
 .terminal {
