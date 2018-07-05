@@ -21,7 +21,10 @@
     <%= Enum.map(@current_user.games, fn game -> %>
       <div class="row mt-3">
         <div class="col-md-12">
-          <h3><%= game.name %> Settings</h3>
+          <h3 class="game-title">
+            <%= game.name %> Settings
+            <%= link("Edit", to: game_path(@conn, :edit, game.id)) %>
+          </h3>
 
           <dl>
             <dd>Short Name</dd>

@@ -23,9 +23,9 @@ defmodule Web.Router do
 
     get("/docs", PageController, :docs)
 
-    resources("/games", UserGameController, only: [:index, :create])
+    resources("/games", GameController, only: [:index, :edit, :update])
 
-    get("/games/online", GameController, :index)
+    resources("/games/mine", UserGameController, only: [:index, :create])
 
     put("/games/:id/subscriptions", SubscriptionController, :update)
 

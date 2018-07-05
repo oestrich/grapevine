@@ -17,11 +17,31 @@ defmodule Gossip.Games do
   def new(), do: %Game{} |> Game.changeset(%{})
 
   @doc """
+  Start to a edit game
+  """
+  @spec edit(Game.t()) :: Ecto.Changeset.t()
+  def edit(game), do: game |> Game.changeset(%{})
+
+  @doc """
   Fetch a game
   """
   @spec get(id()) :: Game.t()
   def get(game_id) do
     case Repo.get(Game, game_id) do
+      nil ->
+        {:error, :not_found}
+
+      game ->
+        {:ok, game}
+    end
+  end
+
+  @doc """
+  Fetch a game based on the user
+  """
+  @spec get(User.t(), id()) :: Game.t()
+  def get(user, game_id) do
+    case Repo.get_by(Game, user_id: user.id, id: game_id) do
       nil ->
         {:error, :not_found}
 
@@ -39,6 +59,16 @@ defmodule Gossip.Games do
     |> Ecto.build_assoc(:games)
     |> Game.changeset(params)
     |> Repo.insert()
+  end
+
+  @doc """
+  Update a game
+  """
+  @spec update(Game.t(), game_params()) :: {:ok, Game.t()}
+  def update(game, params) do
+    game
+    |> Game.changeset(params)
+    |> Repo.update()
   end
 
   @doc """

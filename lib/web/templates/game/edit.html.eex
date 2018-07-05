@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-4 offset-md-4">
+    <h3>Create a new Game</h3>
+
+    <%= form_for(@changeset, game_path(@conn, :update, @game.id), fn f -> %>
+      <div class="form-group">
+        <%= label(f, :name) %>
+        <%= text_input(f, :name, class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <%= label(f, :short_name, "Short Name") %>
+        <%= text_input(f, :short_name, class: "form-control") %>
+        <span class="help-block">This is the name seen in chats and should be alphanumeric.</span>
+      </div>
+
+      <%= submit("Update Game", class: "btn btn-secondary") %>
+    <% end) %>
+  </div>
+</div>
