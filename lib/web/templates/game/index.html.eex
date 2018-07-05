@@ -3,7 +3,7 @@
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h4 class="card-title"><%= game.name %></h4>
-        <p class="card-text">Online</p>
+        <p class="card-text"><%= game.user_agent %></p>
         <%= unless Enum.empty?(players) do %>
           <h5>Players (<%= Enum.count(players) %>)</h5>
           <ul>
@@ -11,6 +11,9 @@
               <li><%= player %></li>
             <% end) %>
           </ul>
+        <% end %>
+        <%= if game.homepage_url do %>
+          <%= link("Homepage", to: game.homepage_url, class: "card-link") %>
         <% end %>
       </div>
     </div>
