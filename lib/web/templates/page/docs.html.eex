@@ -4,7 +4,9 @@
 
 <p>Thanks for checking out Gossip.</p>
 
-<p>Before continuing, you should <%= link("create an account", to: registration_path(@conn, :new)) %> or <%= link("sign in", to: session_path(@conn, :new)) %>.</p>
+<%= if !Map.get(assigns, :current_user) do %>
+  <p>Before continuing, you should <%= link("create an account", to: registration_path(@conn, :new)) %> or <%= link("sign in", to: session_path(@conn, :new)) %>.</p>
+<% end %>
 
 <h3 id="config">Game Configuration</h3>
 
