@@ -41,13 +41,18 @@
   <% end %>
 </h4>
 
-<p>This event authorizes the connection and afterwards you will start to receive new broadcasts. <code>user_agent</code> is optional but suggested.</p>
+<p>This event authorizes the connection and afterwards you will start to receive new broadcasts.</p>
+
+<p><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</p>
+
+<p><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</p>
 
 <pre>{
   "event": "authenticate",
   "payload": {
     "client_id": "client id",
     "client_secret": "client secret",
+    "supports": ["channels"],
     "user_agent": "ExVenture 0.23.0"
   }
 }</pre>

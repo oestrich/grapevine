@@ -6,7 +6,8 @@ defmodule Web.Socket.State do
   @doc """
   - status: "active" or "inactive"
   - game: the connected game when active
+  - supports: list of features the socket supporst
   - hearbeat_count: the count of heartbeats with no response
   """
-  defstruct [:status, :game, heartbeat_count: 0]
+  defstruct [:status, :game, :supports, heartbeat_count: 0]
 end

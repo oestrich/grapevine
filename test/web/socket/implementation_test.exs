@@ -14,6 +14,7 @@ defmodule Web.Socket.ImplementationTest do
         "payload" => %{
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
+          "supports" => ["channels"],
         },
       }
 
@@ -31,10 +32,58 @@ defmodule Web.Socket.ImplementationTest do
         "payload" => %{
           "client_id" => game.client_id,
           "client_secret" => "bad",
+          "supports" => ["channels"],
         },
       }
 
-      {:ok, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Implementation.receive(state, frame)
+
+      assert response.status == "failure"
+      assert state.status == "inactive"
+    end
+
+    test "no supports in the payload", %{state: state, game: game} do
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
+        },
+      }
+
+      {:disconnect, response, state} = Implementation.receive(state, frame)
+
+      assert response.status == "failure"
+      assert state.status == "inactive"
+    end
+
+    test "must support channels", %{state: state, game: game} do
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
+          "supports" => [],
+        },
+      }
+
+      {:disconnect, response, state} = Implementation.receive(state, frame)
+
+      assert response.status == "failure"
+      assert state.status == "inactive"
+    end
+
+    test "trying to support something non-existant", %{state: state, game: game} do
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
+          "supports" => ["channels", "other"],
+        },
+      }
+
+      {:disconnect, response, state} = Implementation.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"

@@ -32,6 +32,11 @@ defmodule Web.SocketHandler do
       {:ok, state} ->
         {:ok, req, state}
 
+      {:disconnect, response, state} ->
+        send(self(), {:disconnect})
+
+        {:reply, {:text, Poison.encode!(response)}, req, state}
+
       _ ->
         {:reply, {:text, Poison.encode!(%{status: "unknown"})}, req, state}
     end
@@ -75,8 +80,12 @@ defmodule Web.SocketHandler do
 
       {:disconnect, state} ->
         Logger.warn("Disconnecting the socket")
-        {:reply, {:close, 4000, "goodbye"}, req, state}
+        {:reply, {:close, 4001, "goodbye"}, req, state}
     end
+  end
+
+  def websocket_info({:disconnect}, req, state) do
+    {:reply, {:close, 4000, "goodbye"}, req, state}
   end
 
   def websocket_info(_message, req, state) do
