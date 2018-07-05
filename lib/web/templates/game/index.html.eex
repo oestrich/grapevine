@@ -1,3 +1,9 @@
+<h2>Connected Games</h2>
+
+<%= if Enum.empty?(@games) do %>
+  <p>No games are online currently</p>
+<% end %>
+
 <div class="card-columns">
   <%= Enum.map(@games, fn {game, players, _timestamp} -> %>
     <div class="card" style="width: 18rem;">
