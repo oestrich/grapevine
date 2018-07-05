@@ -29,7 +29,7 @@
         <div class="col-md-12">
           <h3 class="game-title">
             <%= game.name %> Settings
-            <%= link("Edit", to: game_path(@conn, :edit, game.id)) %>
+            <%= link("Edit", to: game_path(@conn, :edit, game.id), class: "btn btn-default") %>
           </h3>
 
           <dl>
@@ -59,7 +59,9 @@
                 None
               <% end %>
             </dl>
-          </dl>
+          </dd>
+
+          <p><%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, game.id), method: :post, class: "btn btn-warning", data: [confirm: "Are you sure?"]) %></p>
         </div>
       </div>
 

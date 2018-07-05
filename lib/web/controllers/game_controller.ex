@@ -4,7 +4,7 @@ defmodule Web.GameController do
   alias Gossip.Games
   alias Gossip.Presence
 
-  plug Web.Plugs.VerifyUser when action in [:edit, :update]
+  plug Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate]
 
   def index(conn, _params) do
     conn
@@ -37,6 +37,22 @@ defmodule Web.GameController do
       conn
       |> put_flash(:info, "Game updated!")
       |> redirect(to: user_game_path(conn, :index))
+    end
+  end
+
+  def regenerate(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    case Games.regenerate_client_tokens(user, id) do
+      {:ok, _game} ->
+        conn
+        |> put_flash(:info, "Game updated!")
+        |> redirect(to: user_game_path(conn, :index))
+
+      {:error, _} ->
+        conn
+        |> put_flash(:error, "An error occurred, please try again.")
+        |> redirect(to: user_game_path(conn, :index))
     end
   end
 end

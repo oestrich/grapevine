@@ -38,6 +38,13 @@ defmodule Gossip.Games.Game do
     |> unique_constraint(:short_name)
   end
 
+  def regenerate_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:client_id, UUID.uuid4())
+    |> put_change(:client_secret, UUID.uuid4())
+  end
+
   def user_agent_changeset(struct, params) do
     cast(struct, params, [:user_agent])
   end

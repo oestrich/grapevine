@@ -24,6 +24,7 @@ defmodule Web.Router do
     get("/docs", PageController, :docs)
 
     resources("/games", GameController, only: [:index, :edit, :update])
+    post("/games/:id/regenerate", GameController, :regenerate)
 
     resources("/games/mine", UserGameController, only: [:index, :create])
 

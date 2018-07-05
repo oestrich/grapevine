@@ -40,4 +40,18 @@ defmodule Gossip.GamesTest do
       assert game.user_agent == "ExVenture 0.23.0"
     end
   end
+
+  describe "regenerate client id and secret" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "changes the keys", %{user: user, game: game} do
+      {:ok, updated_game} = Games.regenerate_client_tokens(user, game.id)
+
+      assert updated_game.client_id != game.client_id
+      assert updated_game.client_secret != game.client_secret
+    end
+  end
 end

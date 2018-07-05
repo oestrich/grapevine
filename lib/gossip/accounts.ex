@@ -3,7 +3,10 @@ defmodule Gossip.Accounts do
   Context for accounts
   """
 
+  import Ecto.Query
+
   alias Gossip.Accounts.User
+  alias Gossip.Games.Game
   alias Gossip.Repo
 
   @type user_params :: map()
@@ -40,7 +43,9 @@ defmodule Gossip.Accounts do
   end
 
   defp preload(user) do
-    Repo.preload(user, [games: [:subscribed_channels, :channels]])
+    user
+    |> Repo.preload([games: from(g in Game, order_by: [g.id])])
+    |> Repo.preload([games: [:subscribed_channels, :channels]])
   end
 
   @doc """

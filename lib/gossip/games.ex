@@ -72,6 +72,22 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Update a game
+  """
+  @spec regenerate_client_tokens(User.t(), id()) :: {:ok, Game.t()}
+  def regenerate_client_tokens(user, id) do
+    case Repo.get_by(Game, user_id: user.id, id: id) do
+      nil ->
+        {:error, :not_found}
+
+      game ->
+        game
+        |> Game.regenerate_changeset()
+        |> Repo.update()
+    end
+  end
+
+  @doc """
   Validate a socket
   """
   @spec validate_socket(String.t(), String.t()) :: {:ok, Game.t()} | {:error, :invalid}
