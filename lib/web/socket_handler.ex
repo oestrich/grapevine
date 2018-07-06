@@ -57,6 +57,7 @@ defmodule Web.SocketHandler do
       _ ->
         message = %{
           event: message.event,
+          ref: UUID.uuid4(),
           payload: Map.delete(message.payload, "game_id"),
         }
 

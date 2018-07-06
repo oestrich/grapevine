@@ -196,5 +196,15 @@
   "event": "messages/new",
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
 }</pre>
+
+<h3 id="socket-errors">Socket Error Code</h3>
+
+<dl>
+  <dt>4000</dt>
+  <dd>Authentication failed</dd>
+
+  <dt>4001</dt>
+  <dd>Heartbeat failure</dd>
+</dl>
   </div>
 </div>
