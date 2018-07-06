@@ -3,6 +3,8 @@ defmodule Gossip.Channels do
   Context for channels
   """
 
+  import Ecto.Query
+
   alias Gossip.Channels.Channel
   alias Gossip.Repo
 
@@ -38,7 +40,9 @@ defmodule Gossip.Channels do
   """
   @spec all() :: [Channel.t()]
   def all() do
-    Repo.all(Channel)
+    Channel
+    |> where([c], c.hidden == false)
+    |> Repo.all()
   end
 
   def get(channel) do

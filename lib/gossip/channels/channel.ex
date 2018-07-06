@@ -8,6 +8,7 @@ defmodule Gossip.Channels.Channel do
   schema "channels" do
     field(:name, :string)
     field(:description, :string)
+    field(:hidden, :boolean)
 
     timestamps()
   end
