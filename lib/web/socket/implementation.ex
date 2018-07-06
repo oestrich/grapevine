@@ -43,6 +43,34 @@ defmodule Web.Socket.Implementation do
     end
   end
 
+  def receive(state = %{status: "active"}, %{"event" => "channels/subscribe", "payload" => payload}) do
+    with {:ok, channel} <- Map.fetch(payload, "channel") do
+      channel = Channels.ensure_channel(channel)
+      state = Map.put(state, :channels, [channel | state.channels])
+
+      Web.Endpoint.subscribe("channels:#{channel}")
+
+      {:ok, state}
+    else
+      _ ->
+        {:ok, state}
+    end
+  end
+
+  def receive(state = %{status: "active"}, %{"event" => "channels/unsubscribe", "payload" => payload}) do
+    with {:ok, channel} <- Map.fetch(payload, "channel") do
+      channels = List.delete(state.channels, channel)
+      state = Map.put(state, :channels, channels)
+
+      Web.Endpoint.unsubscribe("channels:#{channel}")
+
+      {:ok, state}
+    else
+      _ ->
+        {:ok, state}
+    end
+  end
+
   def receive(state = %{status: "active"}, %{"event" => "messages/new", "payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- check_channel_subscribed_to(state, channel)do

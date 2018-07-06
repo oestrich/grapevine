@@ -142,6 +142,45 @@ defmodule Web.Socket.ImplementationTest do
     end
   end
 
+  describe "changing subscriptions" do
+    setup do
+      user = create_user()
+      game = create_game(user)
+
+      state = %{
+        status: "active",
+        game: game,
+        channels: ["gossip"],
+      }
+
+      %{state: state, game: game}
+    end
+
+    test "subscribe to a new channel", %{state: state} do
+      frame = %{
+        "event" => "channels/subscribe",
+        "payload" => %{
+          "channel" => "general",
+        },
+      }
+
+      assert {:ok, state} = Implementation.receive(state, frame)
+      assert state.channels == ["general", "gossip"]
+    end
+
+    test "unsubscribe to a channel", %{state: state} do
+      frame = %{
+        "event" => "channels/unsubscribe",
+        "payload" => %{
+          "channel" => "gossip",
+        },
+      }
+
+      assert {:ok, state} = Implementation.receive(state, frame)
+      assert state.channels == []
+    end
+  end
+
   describe "heartbeats" do
     setup [:basic_setup]
 
