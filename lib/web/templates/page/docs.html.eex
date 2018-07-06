@@ -10,7 +10,7 @@
 
 <h3 id="config">Game Configuration</h3>
 
-<p>Once you have an account, visit your <%= link("configuration page", to: game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+<p>Once you have an account, visit your <%= link("configuration page", to: user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
 
 <p>You also subscribe to the channels you want your game to pay attention to. Right now Gossip has the following channels:<p>
 
@@ -29,6 +29,15 @@
 <pre><code><%= socket_url() %></code></pre>
 
 <p>Once you are connected, you must send an <code>authenticate</code> message to authenticate your connection.</p>
+
+<h3 id="citizen">Expectations of a Connecting Game</h3>
+
+<p>If you are connecting to the Gossip network, please know that you connect under the following assumptions:</p>
+
+<ol>
+  <li>Gossip <em>will</em> go down sometime while you are connected. Most likely for a new deploy. Make sure your game does not crash because of this.</li>
+  <li>Similarly, you should reconnect back to Gossip when it comes back online.</li>
+</ol>
 
 <h3 id="events">Events</h3>
 
