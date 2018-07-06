@@ -76,7 +76,6 @@ defmodule Web.Socket.Implementation do
          {:ok, channel} <- check_channel_subscribed_to(state, channel)do
       payload =
         payload
-        |> Map.put("id", UUID.uuid4())
         |> Map.put("game", state.game.short_name)
         |> Map.put("game_id", state.game.client_id)
         |> Map.take(["id", "channel", "game", "game_id", "name", "message"])

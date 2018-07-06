@@ -143,7 +143,6 @@
 <pre>{
   "event": "messages/broadcast",
   "payload": {
-    "id": "0ce4e854-72d5-4ebe-91f4-055b9595147b",
     "channel": "gossip",
     "message": "Hello everyone!",
     "game": "ExVenture",
