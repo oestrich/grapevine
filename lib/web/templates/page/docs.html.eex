@@ -45,7 +45,7 @@
 
 <p><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</p>
 
-<p><code>channels</code> is required. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</p>
+<p><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</p>
 
 <p><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</p>
 
