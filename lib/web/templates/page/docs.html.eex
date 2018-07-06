@@ -106,9 +106,17 @@
 
 <pre>{
   "event": "channels/subscribe",
+  "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b",
   "payload": {
     "channel": "gossip",
   }
+}</pre>
+
+<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+
+<pre>{
+  "event": "channels/subscribe",
+  "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b"
 }</pre>
 
 <hr />
@@ -124,9 +132,17 @@
 
 <pre>{
   "event": "channels/unsubscribe",
+  "ref": "e4d07334-4a4b-44ba-94dc-2b937160a466",
   "payload": {
     "channel": "gossip",
   }
+}</pre>
+
+<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+
+<pre>{
+  "event": "channels/unsubscribe",
+  "ref": "e4d07334-4a4b-44ba-94dc-2b937160a466"
 }</pre>
 
 <hr />
@@ -142,6 +158,7 @@
 
 <pre>{
   "event": "messages/broadcast",
+  "ref": "89036074-446f-41ab-b87a-44ef1f962f2e",
   "payload": {
     "channel": "gossip",
     "message": "Hello everyone!",
@@ -165,11 +182,19 @@
 
 <pre>{
   "event": "messages/new",
+  "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
   "payload": {
     "channel": "gossip",
     "name": "Player",
     "message": "Hello everyone!"
   }
+}</pre>
+
+<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+
+<pre>{
+  "event": "messages/new",
+  "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
 }</pre>
   </div>
 </div>

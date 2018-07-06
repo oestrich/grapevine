@@ -43,35 +43,35 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  def receive(state = %{status: "active"}, %{"event" => "channels/subscribe", "payload" => payload}) do
+  def receive(state = %{status: "active"}, event = %{"event" => "channels/subscribe", "payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel") do
       channel = Channels.ensure_channel(channel)
       state = Map.put(state, :channels, [channel | state.channels])
 
       Web.Endpoint.subscribe("channels:#{channel}")
 
-      {:ok, state}
+      {:ok, maybe_respond(event), state}
     else
       _ ->
-        {:ok, state}
+        {:ok, maybe_respond(event), state}
     end
   end
 
-  def receive(state = %{status: "active"}, %{"event" => "channels/unsubscribe", "payload" => payload}) do
+  def receive(state = %{status: "active"}, event = %{"event" => "channels/unsubscribe", "payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel") do
       channels = List.delete(state.channels, channel)
       state = Map.put(state, :channels, channels)
 
       Web.Endpoint.unsubscribe("channels:#{channel}")
 
-      {:ok, state}
+      {:ok, maybe_respond(event), state}
     else
       _ ->
-        {:ok, state}
+        {:ok, maybe_respond(event), state}
     end
   end
 
-  def receive(state = %{status: "active"}, %{"event" => "messages/new", "payload" => payload}) do
+  def receive(state = %{status: "active"}, event = %{"event" => "messages/new", "payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- check_channel_subscribed_to(state, channel)do
       payload =
@@ -81,10 +81,11 @@ defmodule Web.Socket.Implementation do
         |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
 
       Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
-      {:ok, state}
+
+      {:ok, maybe_respond(event), state}
     else
       _ ->
-        {:ok, state}
+        {:ok, maybe_respond(event), state}
     end
   end
 
@@ -183,6 +184,16 @@ defmodule Web.Socket.Implementation do
 
       false ->
         {:error, :not_subscribed}
+    end
+  end
+
+  defp maybe_respond(event) do
+    case Map.has_key?(event, "ref") do
+      true ->
+        Map.take(event, ["event", "ref"])
+
+      false ->
+        :skip
     end
   end
 end

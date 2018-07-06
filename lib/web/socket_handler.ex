@@ -27,7 +27,7 @@ defmodule Web.SocketHandler do
   def websocket_handle({:text, message}, req, state) do
     with {:ok, message} <- Poison.decode(message),
          {:ok, response, state} <- Implementation.receive(state, message) do
-      {:reply, {:text, Poison.encode!(response)}, req, state}
+      respond(state, req, response)
     else
       {:ok, state} ->
         {:ok, req, state}
@@ -94,5 +94,13 @@ defmodule Web.SocketHandler do
 
   def websocket_terminate(_reason, _req, _state) do
     :ok
+  end
+
+  defp respond(state, req, :skip) do
+    {:ok, req, state}
+  end
+
+  defp respond(state, req, response) do
+    {:reply, {:text, Poison.encode!(response)}, req, state}
   end
 end

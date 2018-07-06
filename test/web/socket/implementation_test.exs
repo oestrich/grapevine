@@ -117,7 +117,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
 
       game_name = game.short_name
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
@@ -135,7 +135,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
 
       game_name = game.short_name
       refute_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}, 50
@@ -164,7 +164,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Implementation.receive(state, frame)
       assert state.channels == ["general", "gossip"]
     end
 
@@ -176,7 +176,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Implementation.receive(state, frame)
       assert state.channels == []
     end
   end
