@@ -44,26 +44,33 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state = %{status: "active"}, %{"event" => "messages/new", "payload" => payload}) do
-    case Map.fetch(payload, "channel") do
-      {:ok, channel} ->
-        payload =
-          payload
-          |> Map.put("id", UUID.uuid4())
-          |> Map.put("game", state.game.short_name)
-          |> Map.put("game_id", state.game.client_id)
-          |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
+    with {:ok, channel} <- Map.fetch(payload, "channel"),
+         {:ok, channel} <- check_channel_subscribed_to(state, channel)do
+      payload =
+        payload
+        |> Map.put("id", UUID.uuid4())
+        |> Map.put("game", state.game.short_name)
+        |> Map.put("game_id", state.game.client_id)
+        |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
 
-          Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
-          {:ok, state}
+      Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
+      {:ok, state}
+    else
+      _ ->
+        {:ok, state}
     end
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "heartbeat"}) do
-    Logger.debug(fn -> "HEARTBEAT: #{inspect(event["payload"])}" end)
-      payload = Map.get(event, "payload", %{})
-      Presence.update_game(state.game, Map.get(payload, "players", []))
-      state = Map.put(state, :heartbeat_count, 0)
-      {:ok, state}
+    Logger.debug(fn ->
+      "HEARTBEAT: #{inspect(event["payload"])}"
+    end)
+
+    payload = Map.get(event, "payload", %{})
+    Presence.update_game(state.game, Map.get(payload, "players", []))
+    state = Map.put(state, :heartbeat_count, 0)
+
+    {:ok, state}
   end
 
   def receive(state, _frame) do
@@ -116,26 +123,39 @@ defmodule Web.Socket.Implementation do
   end
 
   defp finalize_auth(state, game, payload, supports) do
+    channels = Map.get(payload, "channels", [])
+    players = Map.get(payload, "players", [])
+
     state =
       state
       |> Map.put(:status, "active")
       |> Map.put(:game, game)
       |> Map.put(:supports, supports)
+      |> Map.put(:channels, channels)
 
-    listen_to_channels(payload)
+    listen_to_channels(channels)
 
     Logger.info("Authenticated #{game.name}")
-    Presence.update_game(state.game, Map.get(payload, "players", []))
+    Presence.update_game(state.game, players)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
   end
 
-  defp listen_to_channels(payload) do
-    payload
-    |> Map.get("channels", [])
+  defp listen_to_channels(channels) do
+    channels
     |> Enum.map(&Channels.ensure_channel/1)
     |> Enum.each(fn channel ->
       Web.Endpoint.subscribe("channels:#{channel}")
     end)
+  end
+
+  defp check_channel_subscribed_to(state, channel) do
+    case channel in state.channels do
+      true ->
+        {:ok, channel}
+
+      false ->
+        {:error, :not_subscribed}
+    end
   end
 end

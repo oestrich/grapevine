@@ -99,6 +99,7 @@ defmodule Web.Socket.ImplementationTest do
       state = %{
         status: "active",
         game: game,
+        channels: ["gossip"],
       }
 
       %{state: state, game: game}
@@ -120,6 +121,24 @@ defmodule Web.Socket.ImplementationTest do
 
       game_name = game.short_name
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
+    end
+
+    test "does not broadcast the message if you are not subscribed", %{state: state, game: game} do
+      Web.Endpoint.subscribe("channels:gossip")
+
+      frame = %{
+        "event" => "messages/new",
+        "payload" => %{
+          "channel" => "general",
+          "name" => "Player",
+          "message" => "Hello!",
+        },
+      }
+
+      assert {:ok, _state} = Implementation.receive(state, frame)
+
+      game_name = game.short_name
+      refute_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}, 50
     end
   end
 
