@@ -7,6 +7,7 @@ defmodule Web.Socket.Implementation do
 
   require Logger
 
+  alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
 
@@ -121,8 +122,7 @@ defmodule Web.Socket.Implementation do
       |> Map.put(:game, game)
       |> Map.put(:supports, supports)
 
-    listen_to_channels(game)
-    notify_of_subscribed_channels(game)
+    listen_to_channels(payload)
 
     Logger.info("Authenticated #{game.name}")
     Presence.update_game(state.game, Map.get(payload, "players", []))
@@ -130,23 +130,12 @@ defmodule Web.Socket.Implementation do
     {:ok, %{event: "authenticate", status: "success"}, state}
   end
 
-  defp listen_to_channels(game) do
-    game.channels
+  defp listen_to_channels(payload) do
+    payload
+    |> Map.get("channels", [])
+    |> Enum.map(&Channels.ensure_channel/1)
     |> Enum.each(fn channel ->
-      Web.Endpoint.subscribe("channels:#{channel.name}")
+      Web.Endpoint.subscribe("channels:#{channel}")
     end)
-  end
-
-  defp notify_of_subscribed_channels(game) do
-    channels = game.channels |> Enum.map(&(&1.name))
-
-    event = %{
-      event: "channels/subscribed",
-      payload: %{
-        channels: channels,
-      },
-    }
-
-    send(self(), {:broadcast, event})
   end
 end

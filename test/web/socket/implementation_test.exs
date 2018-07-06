@@ -15,6 +15,7 @@ defmodule Web.Socket.ImplementationTest do
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
           "supports" => ["channels"],
+          "channels" => ["gossip"],
         },
       }
 

@@ -45,6 +45,8 @@
 
 <p><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</p>
 
+<p><code>channels</code> is required. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</p>
+
 <p><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</p>
 
 <pre>{
@@ -53,6 +55,7 @@
     "client_id": "client id",
     "client_secret": "client secret",
     "supports": ["channels"],
+    "channels": ["gossip"],
     "user_agent": "ExVenture 0.23.0"
   }
 }</pre>
@@ -62,24 +65,6 @@
 <pre>{
   "event": "authenticate",
   "status": "success"
-}</pre>
-
-<hr />
-
-<h4 id="channels-subscribed">
-  <%= link(to: "#channels-subscribed") do %>
-    channels/subscribed
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
-
-<p>After signing in you will receive this message letting you know which channels you are subscribed to. This can be useful if you listen to more than one channel and want to be more dynamic.</p>
-
-<pre>{
-  "event": "channels/subscribed",
-  "payload": {
-    "channels": ["gossip"]
-  }
 }</pre>
 
 <hr />
@@ -107,6 +92,42 @@
 }</pre>
 
 <p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
+
+<hr />
+
+<h4 id="channels-subscribe">
+  <%= link(to: "#channels-subscribe") do %>
+    channels/subscribe
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>Subscribe to a new channel on your currently connected socket.</p>
+
+<pre>{
+  "event": "channels/subscribe",
+  "payload": {
+    "channel": "gossip",
+  }
+}</pre>
+
+<hr />
+
+<h4 id="channels-unsubscribe">
+  <%= link(to: "#channels-unsubscribe") do %>
+    channels/unsubscribe
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>Unsubscribe to a channel you are subscribed to.</p>
+
+<pre>{
+  "event": "channels/unsubscribe",
+  "payload": {
+    "channel": "gossip",
+  }
+}</pre>
 
 <hr />
 

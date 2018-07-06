@@ -65,27 +65,6 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Channel Subscriptions</h3>
-
-          <%= form_tag(subscription_path(@conn, :update, game.id), [as: :game, method: :put]) do %>
-            <input type="hidden" name="game[subscriptions][]" value=""/>
-
-            <div class="form-group">
-              <%= Enum.map(Channels.all(), fn channel -> %>
-                <label>
-                  <input type="checkbox" name="game[subscriptions][]" value="<%= channel.id %>" <%= channel_checked?(game, channel) %>/>
-                  <%= channel.name %>
-                </label>
-              <% end) %>
-            </div>
-
-            <%= submit("Save Subscriptions", class: "btn btn-secondary") %>
-          <% end %>
-        </div>
-      </div>
-
       <hr />
     <% end) %>
   </div>

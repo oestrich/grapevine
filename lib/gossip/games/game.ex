@@ -6,7 +6,6 @@ defmodule Gossip.Games.Game do
   use Gossip.Schema
 
   alias Gossip.Accounts.User
-  alias Gossip.Channels.SubscribedChannel
 
   schema "games" do
     field(:name, :string)
@@ -18,9 +17,6 @@ defmodule Gossip.Games.Game do
     field(:client_secret, Ecto.UUID)
 
     belongs_to(:user, User)
-
-    has_many(:subscribed_channels, SubscribedChannel)
-    has_many(:channels, through: [:subscribed_channels, :channel])
 
     timestamps()
   end

@@ -128,14 +128,10 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
-        {:ok, preload(game)}
+        {:ok, game}
 
       {:error, _} ->
         {:error, :invalid}
     end
-  end
-
-  defp preload(game) do
-    Repo.preload(game, [:subscribed_channels, :channels])
   end
 end
