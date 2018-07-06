@@ -59,6 +59,9 @@
                 None
               <% end %>
             </dl>
+
+            <dd>Display in Connected Games?</dd>
+            <dl><code><%= game.display %></code></dl>
           </dd>
 
           <p><%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, game.id), method: :post, class: "btn btn-warning", data: [confirm: "Are you sure?"]) %></p>
