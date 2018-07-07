@@ -7,6 +7,7 @@ defmodule Web.SocketHandler do
 
   alias Web.Socket.Implementation
   alias Web.Socket.State
+  alias Metrics.Server, as: Metrics
 
   require Logger
 
@@ -20,6 +21,7 @@ defmodule Web.SocketHandler do
     :timer.send_interval(@heartbeat_interval, :heartbeat)
 
     Logger.info("Socket starting")
+    Metrics.socket_online()
 
     {:ok, req, %State{status: "inactive"}}
   end
