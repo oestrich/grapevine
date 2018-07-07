@@ -37,6 +37,7 @@
 <ol>
   <li>Gossip <em>will</em> go down sometime while you are connected. Most likely for a new deploy. Make sure your game does not crash because of this.</li>
   <li>Similarly, you should reconnect back to Gossip when it comes back online.</li>
+  <li>You must support unicode at the server level. Several connected games allow unicode input so you may receive it at any time.</li>
 </ol>
 
 <h3 id="events">Events</h3>
