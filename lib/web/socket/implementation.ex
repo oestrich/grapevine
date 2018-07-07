@@ -10,12 +10,18 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
+  alias Metrics.ChannelsInstrumenter
+  alias Metrics.SocketInstrumenter
 
   @valid_supports ["channels"]
 
   def heartbeat(state) do
+    SocketInstrumenter.heartbeat()
+
     case state do
       %{heartbeat_count: count} when count >= 3 ->
+        SocketInstrumenter.heartbeat_disconnect()
+
         {:disconnect, state}
 
       _ ->
@@ -25,20 +31,30 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state = %{status: "inactive"}, %{"event" => "authenticate", "payload" => payload}) do
+    SocketInstrumenter.connect()
+
     with {:ok, game} <- validate_socket(payload),
          {:ok, supports} <- validate_supports(payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
+        SocketInstrumenter.connect_failure()
+
         {:disconnect, %{event: "authenticate", status: "failure", error: "invalid credentials"}, state}
 
       {:error, :missing_supports} ->
+        SocketInstrumenter.connect_failure()
+
         {:disconnect, %{event: "authenticate", status: "failure", error: "missing supports"}, state}
 
       {:error, :must_support_channels} ->
+        SocketInstrumenter.connect_failure()
+
         {:disconnect, %{event: "authenticate", status: "failure", error: "must support channels"}, state}
 
       {:error, :unknown_supports} ->
+        SocketInstrumenter.connect_failure()
+
         {:disconnect, %{event: "authenticate", status: "failure", error: "includes unknown supports"}, state}
     end
   end
@@ -48,6 +64,7 @@ defmodule Web.Socket.Implementation do
       channel = Channels.ensure_channel(channel)
       state = Map.put(state, :channels, [channel | state.channels])
 
+      ChannelsInstrumenter.subscribe()
       Web.Endpoint.subscribe("channels:#{channel}")
 
       {:ok, maybe_respond(event), state}
@@ -62,6 +79,7 @@ defmodule Web.Socket.Implementation do
       channels = List.delete(state.channels, channel)
       state = Map.put(state, :channels, channels)
 
+      ChannelsInstrumenter.unsubscribe()
       Web.Endpoint.unsubscribe("channels:#{channel}")
 
       {:ok, maybe_respond(event), state}
@@ -80,6 +98,7 @@ defmodule Web.Socket.Implementation do
         |> Map.put("game_id", state.game.client_id)
         |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
 
+      ChannelsInstrumenter.messages_new()
       Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
 
       {:ok, maybe_respond(event), state}
@@ -94,6 +113,8 @@ defmodule Web.Socket.Implementation do
       "HEARTBEAT: #{inspect(event["payload"])}"
     end)
 
+    SocketInstrumenter.heartbeat()
+
     payload = Map.get(event, "payload", %{})
     Presence.update_game(state.game, Map.get(payload, "players", []))
     state = Map.put(state, :heartbeat_count, 0)
@@ -102,6 +123,7 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state, _frame) do
+    SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
   end
 
@@ -163,6 +185,7 @@ defmodule Web.Socket.Implementation do
 
     listen_to_channels(channels)
 
+    SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name}")
     Presence.update_game(state.game, players)
 
@@ -173,6 +196,7 @@ defmodule Web.Socket.Implementation do
     channels
     |> Enum.map(&Channels.ensure_channel/1)
     |> Enum.each(fn channel ->
+      ChannelsInstrumenter.subscribe()
       Web.Endpoint.subscribe("channels:#{channel}")
     end)
   end

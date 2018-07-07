@@ -12,7 +12,10 @@ defmodule Gossip.Application do
       supervisor(Gossip.Repo, []),
       supervisor(Web.Endpoint, []),
       {Gossip.Presence, []},
+      {Metrics.Server, []},
     ]
+
+    Metrics.Setup.setup()
 
     opts = [strategy: :one_for_one, name: Gossip.Supervisor]
     Supervisor.start_link(children, opts)

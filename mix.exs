@@ -45,6 +45,8 @@ defmodule Gossip.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:phoenix_pubsub, "~> 1.0"},
       {:postgrex, ">= 0.0.0"},
+      {:prometheus_ex, "~> 3.0"},
+      {:prometheus_plugs, "~> 1.1.1"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"},
     ]
