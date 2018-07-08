@@ -72,9 +72,14 @@
 
     <footer>
       <div class="container">
-        <p class="text-muted">
-          <%= link("Gossip Project", to: "https://github.com/oestrich/gossip", target: "_blank") %>
-        </p>
+        <div class="row">
+          <div class="col-md-3">
+            <p class="text-muted"><%= link("Gossip Project", to: "https://github.com/oestrich/gossip", target: "_blank") %></p>
+          </div>
+          <div class="col-md-3 offset-md-6">
+            <p class="text-right"><%= link("Become a Patron!", to: "https://www.patreon.com/midmud", target: "_blank") %></p>
+          </div>
+        </div>
       </div>
     </footer>
 
