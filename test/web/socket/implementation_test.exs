@@ -89,6 +89,24 @@ defmodule Web.Socket.ImplementationTest do
       assert response.status == "failure"
       assert state.status == "inactive"
     end
+
+    test "subscribing to an invalid channel name", %{state: state, game: game} do
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
+          "supports" => ["channels"],
+          "channels" => ["this is bad"],
+        },
+      }
+
+      {:ok, response, _state} = Implementation.receive(state, frame)
+
+      assert response.status == "success"
+
+      assert_receive {:broadcast, %{error: ~s(Could not subscribe to 'this is bad')}}
+    end
   end
 
   describe "post a new message" do
@@ -166,6 +184,20 @@ defmodule Web.Socket.ImplementationTest do
 
       assert {:ok, :skip, state} = Implementation.receive(state, frame)
       assert state.channels == ["general", "gossip"]
+    end
+
+    test "subscribe to a new channel - failure", %{state: state} do
+      frame = %{
+        "event" => "channels/subscribe",
+        "payload" => %{
+          "channel" => "bad channel",
+        },
+      }
+
+      assert {:ok, response, state} = Implementation.receive(state, frame)
+
+      assert state.channels == ["gossip"]
+      assert response.error == "Could not subscribe to 'bad channel'"
     end
 
     test "unsubscribe to a channel", %{state: state} do

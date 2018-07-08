@@ -17,6 +17,8 @@ defmodule Gossip.Channels.Channel do
     struct
     |> cast(params, [:name, :description])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zA-Z]+$/)
+    |> validate_length(:name, max: 15)
     |> unique_constraint(:name)
   end
 end

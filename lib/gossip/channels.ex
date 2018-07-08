@@ -23,15 +23,20 @@ defmodule Gossip.Channels do
   @doc """
   Ensure a channel exists
   """
-  @spec ensure_channel(name()) :: name()
+  @spec ensure_channel(name()) :: {:ok, name()} | {:error, name()}
   def ensure_channel(name) do
     case Repo.get_by(Channel, name: name) do
       nil ->
-        create(%{name: name})
-        name
+        case create(%{name: name}) do
+          {:ok, channel} ->
+            {:ok, channel.name}
 
-      _channel ->
-        name
+          {:error, _} ->
+            {:error, name}
+        end
+
+      channel ->
+        {:ok, channel.name}
     end
   end
 

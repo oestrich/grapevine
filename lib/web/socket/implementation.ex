@@ -60,8 +60,8 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "channels/subscribe", "payload" => payload}) do
-    with {:ok, channel} <- Map.fetch(payload, "channel") do
-      channel = Channels.ensure_channel(channel)
+    with {:ok, channel} <- Map.fetch(payload, "channel"),
+         {:ok, channel} <- Channels.ensure_channel(channel) do
       state = Map.put(state, :channels, [channel | state.channels])
 
       ChannelsInstrumenter.subscribe()
@@ -69,6 +69,15 @@ defmodule Web.Socket.Implementation do
 
       {:ok, maybe_respond(event), state}
     else
+      {:error, name} ->
+        message = %{
+          event: "channels/subscribe",
+          status: "failure",
+          error: ~s(Could not subscribe to '#{name}'),
+        }
+
+        {:ok, maybe_ref(message, event), state}
+
       _ ->
         {:ok, maybe_respond(event), state}
     end
@@ -186,7 +195,7 @@ defmodule Web.Socket.Implementation do
     listen_to_channels(channels)
 
     SocketInstrumenter.connect_success()
-    Logger.info("Authenticated #{game.name}")
+    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)}")
     Presence.update_game(state.game, players)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
@@ -195,10 +204,24 @@ defmodule Web.Socket.Implementation do
   defp listen_to_channels(channels) do
     channels
     |> Enum.map(&Channels.ensure_channel/1)
-    |> Enum.each(fn channel ->
-      ChannelsInstrumenter.subscribe()
-      Web.Endpoint.subscribe("channels:#{channel}")
-    end)
+    |> Enum.each(&subscribe_channel/1)
+  end
+
+  defp subscribe_channel({:error, name}) do
+    Logger.info("Trying to subscribe to a bad channel")
+
+    event = %{
+      event: "channels/subscribe",
+      status: "failure",
+      error: ~s(Could not subscribe to '#{name}'),
+    }
+
+    send(self(), {:broadcast, event})
+  end
+
+  defp subscribe_channel({:ok, channel}) do
+    ChannelsInstrumenter.subscribe()
+    Web.Endpoint.subscribe("channels:#{channel}")
   end
 
   defp check_channel_subscribed_to(state, channel) do
@@ -208,6 +231,16 @@ defmodule Web.Socket.Implementation do
 
       false ->
         {:error, :not_subscribed}
+    end
+  end
+
+  defp maybe_ref(message, event) do
+    case Map.has_key?(event, "ref") do
+      true ->
+        Map.put(message, :ref, event["ref"])
+
+      false ->
+        message
     end
   end
 

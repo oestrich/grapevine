@@ -78,6 +78,8 @@
   "status": "success"
 }</pre>
 
+<p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</>
+
 <hr />
 
 <h4 id="heartbeat">
@@ -128,6 +130,15 @@
 <pre>{
   "event": "channels/subscribe",
   "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b"
+}</pre>
+
+<p>You may receive a response to this as a failure, channel names are validated. Channel names must be &lt;=15 characters and letters only.</p>
+
+<pre>{
+  "event": "channels/subscribe",
+  "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b",
+  "status": "failure",
+  "error": "Could not subscribe to 'bad channel name'",
 }</pre>
 
 <hr />
