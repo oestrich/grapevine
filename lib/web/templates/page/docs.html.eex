@@ -22,6 +22,15 @@
 
 <p>You will only recieve messages for channels you are subscribed to.</p>
 
+<h3 id="server-support">Server Support</h3>
+
+<p>The following servers/frameworks have built-in support or a library to import for Gossip support:</p>
+
+<ul>
+  <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
+  <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
+</ul>
+
 <h3 id="connecting">Connecting</h3>
 
 <p>Once you have your Client ID and Client Secret, you can start connecting to the Gossip network. Point your websocket client at:</p>
