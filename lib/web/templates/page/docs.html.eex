@@ -8,9 +8,21 @@
   <p>Before continuing, you should <%= link("create an account", to: registration_path(@conn, :new)) %> or <%= link("sign in", to: session_path(@conn, :new)) %>.</p>
 <% end %>
 
-<h3 id="config">Game Configuration</h3>
+<h3 id="config">
+  <%= link(to: "#config") do %>
+    Game Configuration
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>Once you have an account, visit your <%= link("configuration page", to: user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+
+<h3 id="channels">
+  <%= link(to: "#channels") do %>
+    Channels
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>You also subscribe to the channels you want your game to pay attention to. Right now Gossip has the following channels:<p>
 
@@ -20,9 +32,18 @@
   <% end) %>
 </ul>
 
+<p>In addition to those listed above, you can subscribe to any valid channel name. This will make dynamically create channels as you subscribe to them. They will exist for anyone to connect to, but not show on the website until the admins approve them.</p>
+
+<p>A valid channel name must be &lt;=15 characters and letters only.</p>
+
 <p>You will only recieve messages for channels you are subscribed to.</p>
 
-<h3 id="server-support">Server Support</h3>
+<h3 id="server-support">
+  <%= link(to: "#server-support") do %>
+    Server Support
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>The following servers/frameworks have built-in support or a library to import for Gossip support:</p>
 
@@ -31,7 +52,12 @@
   <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
 </ul>
 
-<h3 id="connecting">Connecting</h3>
+<h3 id="connecting">
+  <%= link(to: "#connecting") do %>
+    Connecting
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>Once you have your Client ID and Client Secret, you can start connecting to the Gossip network. Point your websocket client at:</p>
 
@@ -39,7 +65,12 @@
 
 <p>Once you are connected, you must send an <code>authenticate</code> message to authenticate your connection.</p>
 
-<h3 id="citizen">Expectations of a Connecting Game</h3>
+<h3 id="citizen">
+  <%= link(to: "#citizen") do %>
+    Expectations of a Connecting Game
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>If you are connecting to the Gossip network, please know that you connect under the following assumptions:</p>
 
@@ -50,7 +81,12 @@
   <li>You must support unicode at the server level. Several connected games allow unicode input so you may receive it at any time.</li>
 </ol>
 
-<h3 id="events">Events</h3>
+<h3 id="events">
+  <%= link(to: "#events") do %>
+    Events
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
 
 <p>Below is a list of events you can send or may receive from the socket.</p>
 

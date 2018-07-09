@@ -2,19 +2,23 @@ main {
   padding-top: 3em;
 }
 
+h3 a,
 h4 a {
   color: black;
   text-decoration: underline;
 }
 
+h3 a i,
 h4 a i {
   display: none !important;
 }
 
+h3 a:hover,
 h4 a:hover {
   color: black;
 }
 
+h3:hover a i,
 h4:hover a i {
   display: inline !important;
 }
