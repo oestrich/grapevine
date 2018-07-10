@@ -20,7 +20,7 @@ mix deps.get
 mix compile
 cd assets && npm install && node node_modules/brunch/bin/brunch build && cd ..
 mix ecto.reset
-mix run --no-halt
+mix phx.server
 ```
 
 This will start a web server on port 4000. You can now load [http://localhost:4000/](http://localhost:4000/) to view the application.
