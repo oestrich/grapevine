@@ -11,3 +11,6 @@
     </p>
   </div>
 </div>
+
+<div id="guildWebRing" style="width: 250px; height: 100px; margin: auto;"></div>
+<script src="https://cdn.swiftausterity.com/mcgWebRing.js"></script>

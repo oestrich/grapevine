@@ -72,8 +72,6 @@
       </div>
     </main>
 
-    <div id="guildWebRing" style="width: 250px; height: 100px; margin: auto;"></div>
-
     <footer>
       <div class="container">
         <%= link("GitHub", to: "https://github.com/oestrich/gossip", target: "_blank") %>
@@ -82,7 +80,6 @@
       </div>
     </footer>
 
-    <script src="https://cdn.swiftausterity.com/mcgWebRing.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
