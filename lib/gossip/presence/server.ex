@@ -5,8 +5,8 @@ defmodule Gossip.Presence.Server do
 
   import Gossip.Presence, only: [ets_key: 0]
 
-  def update_game(state, game, players) do
-    :ets.insert(ets_key(), {game.id, players, Timex.now()})
+  def update_game(state, game, supports, players) do
+    :ets.insert(ets_key(), {game.id, supports, players, Timex.now()})
     {:ok, state}
   end
 end

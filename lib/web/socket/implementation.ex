@@ -13,7 +13,7 @@ defmodule Web.Socket.Implementation do
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
 
-  @valid_supports ["channels"]
+  @valid_supports ["channels", "players"]
 
   def heartbeat(state) do
     SocketInstrumenter.heartbeat()
@@ -125,7 +125,7 @@ defmodule Web.Socket.Implementation do
     SocketInstrumenter.heartbeat()
 
     payload = Map.get(event, "payload", %{})
-    Presence.update_game(state.game, Map.get(payload, "players", []))
+    Presence.update_game(state.game, state.supports, Map.get(payload, "players", []))
     state = Map.put(state, :heartbeat_count, 0)
 
     {:ok, state}
@@ -134,6 +134,10 @@ defmodule Web.Socket.Implementation do
   def receive(state, _frame) do
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
+  end
+
+  def valid_support?(support) do
+    Enum.member?(@valid_supports, support)
   end
 
   defp validate_socket(payload) do
@@ -172,7 +176,7 @@ defmodule Web.Socket.Implementation do
   end
 
   defp check_unknown_supports(supports) do
-    case Enum.all?(supports, &Enum.member?(@valid_supports, &1)) do
+    case Enum.all?(supports, &valid_support?/1) do
       true ->
         {:ok, supports}
 
@@ -196,7 +200,7 @@ defmodule Web.Socket.Implementation do
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)}")
-    Presence.update_game(state.game, players)
+    Presence.update_game(state.game, state.supports, players)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
   end

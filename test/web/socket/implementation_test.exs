@@ -242,6 +242,16 @@ defmodule Web.Socket.ImplementationTest do
     end
   end
 
+  describe "available supports" do
+    test "channels is valid" do
+      assert Implementation.valid_support?("channels")
+    end
+
+    test "players is valid" do
+      assert Implementation.valid_support?("players")
+    end
+  end
+
   def basic_setup(_) do
     user = create_user()
     game = create_game(user)

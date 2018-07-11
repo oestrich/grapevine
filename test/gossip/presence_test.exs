@@ -7,17 +7,18 @@ defmodule Gossip.PresenceTest do
     setup do
       user = create_user()
       game = create_game(user, %{name: "MUD Game"})
+      supports = ["channels"]
       players = ["player"]
 
       Presence.reset()
 
-      %{game: game, players: players}
+      %{game: game, supports: supports, players: players}
     end
 
-    test "on update the game is shown as online", %{game: game, players: players} do
-      :ok = Presence.update_game(game, players)
+    test "on update the game is shown as online", %{game: game, supports: supports, players: players} do
+      :ok = Presence.update_game(game, supports, players)
 
-      assert [{_game, ^players, _timestamp}] = Presence.online_games()
+      assert [{_game, ^supports, ^players, _timestamp}] = Presence.online_games()
     end
   end
 end
