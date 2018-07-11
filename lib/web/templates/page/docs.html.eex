@@ -49,6 +49,7 @@
 
 <ul>
   <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
+  <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
   <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
 </ul>
 
