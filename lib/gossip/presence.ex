@@ -25,6 +25,11 @@ defmodule Gossip.Presence do
     GenServer.call(__MODULE__, {:update, game, supports, players})
   end
 
+  @spec update_game(Socket.state()) :: :ok
+  def update_game(state) do
+    GenServer.call(__MODULE__, {:update, state.game, state.supports, state.players})
+  end
+
   # for tests
   @doc false
   def reset() do

@@ -12,6 +12,7 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Presence
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
+  alias Web.Socket.Players
 
   @valid_supports ["channels", "players"]
 
@@ -125,10 +126,52 @@ defmodule Web.Socket.Implementation do
     SocketInstrumenter.heartbeat()
 
     payload = Map.get(event, "payload", %{})
-    Presence.update_game(state.game, state.supports, Map.get(payload, "players", []))
-    state = Map.put(state, :heartbeat_count, 0)
+    players = Map.get(payload, "players", [])
+
+    state =
+      state
+      |> Map.put(:heartbeat_count, 0)
+      |> Map.put(:players, players)
+
+    Presence.update_game(state)
 
     {:ok, state}
+  end
+
+  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-in"}) do
+    case Players.player_sign_in(state, event) do
+      {:ok, state} ->
+        {:ok, maybe_respond(event), state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "players"))
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
+  end
+
+  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-out"}) do
+    case Players.player_sign_out(state, event) do
+      {:ok, state} ->
+        {:ok, maybe_respond(event), state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "players"))
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
   end
 
   def receive(state, _frame) do
@@ -195,12 +238,14 @@ defmodule Web.Socket.Implementation do
       |> Map.put(:game, game)
       |> Map.put(:supports, supports)
       |> Map.put(:channels, channels)
+      |> Map.put(:players, players)
 
     listen_to_channels(channels)
+    Players.maybe_listen_to_players_channel(state)
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)}")
-    Presence.update_game(state.game, state.supports, players)
+    Presence.update_game(state)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
   end
@@ -256,5 +301,13 @@ defmodule Web.Socket.Implementation do
       false ->
         :skip
     end
+  end
+
+  defp fail_response(:skip, _), do: :skip
+
+  defp fail_response(response, reason) do
+    response
+    |> Map.put("status", "failure")
+    |> Map.put("error", reason)
   end
 end

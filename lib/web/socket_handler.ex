@@ -49,7 +49,7 @@ defmodule Web.SocketHandler do
   end
 
   # Ignore broadcasts from the same client id
-  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "messages/broadcast"}, req, state) do
+  def websocket_info(message = %Phoenix.Socket.Broadcast{}, req, state) do
     client_id = state.game.client_id
 
     case Map.get(message.payload, "game_id") do
@@ -65,15 +65,6 @@ defmodule Web.SocketHandler do
 
         {:reply, {:text, Poison.encode!(message)}, req, state}
     end
-  end
-
-  def websocket_info(message = %Phoenix.Socket.Broadcast{}, req, state) do
-    message = %{
-      event: message.event,
-      payload: message.payload,
-    }
-
-    {:reply, {:text, Poison.encode!(message)}, req, state}
   end
 
   def websocket_info(:heartbeat, req, state) do
