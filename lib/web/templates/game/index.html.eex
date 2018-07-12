@@ -5,7 +5,7 @@
 <% end %>
 
 <div class="card-columns">
-  <%= Enum.map(@games, fn {game, players, _timestamp} -> %>
+  <%= Enum.map(@games, fn {game, _supports, players, _timestamp} -> %>
     <div class="card">
       <div class="card-body">
         <h4 class="card-title"><%= game.name %></h4>
