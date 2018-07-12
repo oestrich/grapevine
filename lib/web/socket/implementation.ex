@@ -244,7 +244,7 @@ defmodule Web.Socket.Implementation do
     Players.maybe_listen_to_players_channel(state)
 
     SocketInstrumenter.connect_success()
-    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)}")
+    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
     Presence.update_game(state)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
