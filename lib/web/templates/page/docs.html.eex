@@ -84,7 +84,7 @@
 
 <h3 id="events">
   <%= link(to: "#events") do %>
-    Events
+    Core Events (<code>channels</code>)
     <i class="fas fa-link"></i>
   <% end %>
 </h3>
@@ -167,7 +167,7 @@
   "event": "channels/subscribe",
   "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b",
   "payload": {
-    "channel": "gossip",
+    "channel": "gossip"
   }
 }</pre>
 
@@ -202,7 +202,7 @@
   "event": "channels/unsubscribe",
   "ref": "e4d07334-4a4b-44ba-94dc-2b937160a466",
   "payload": {
-    "channel": "gossip",
+    "channel": "gossip"
   }
 }</pre>
 
@@ -264,6 +264,95 @@
   "event": "messages/new",
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
 }</pre>
+
+<h3 id="events">
+  <%= link(to: "#events") do %>
+    Player Events (<code>players</code>)
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
+
+<p>These events are related to the <code>players</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
+
+<hr />
+
+<h4 id="players-sign-in">
+  <%= link(to: "#players-sign-in") do %>
+    players/sign-in
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>When a player signs into your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
+
+<p>You will not get a broadcast message back for messages you send.</p>
+
+<pre>{
+  "event": "players/sign-in",
+  "ref": "0e11c053-65b3-477c-aae9-5cd8cf21dc8f",
+  "payload": {
+    "name": "Player"
+  }
+}</pre>
+
+<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+
+<pre>{
+  "event": "players/sign-in",
+  "ref": "0e11c053-65b3-477c-aae9-5cd8cf21dc8f"
+}</pre>
+
+<p>While connected with the <code>players</code> flag, you may receive an update from another game. You may wish to broadcast to your local players that someone has come onlien in the network.</p>
+
+<pre>{
+  "event": "players/sign-in",
+  "payload": {
+    "game": "ExVenture",
+    "name": "Player"
+  }
+}</pre>
+
+<p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
+
+<hr />
+
+<h4 id="players-sign-out">
+  <%= link(to: "#players-sign-out") do %>
+    players/sign-out
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>When a player signs out of your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
+
+<p>You will not get a broadcast message back for messages you send.</p>
+
+<pre>{
+  "event": "players/sign-out",
+  "ref": "da4c5503-dd15-490a-9d0d-85e2c50b72de",
+  "payload": {
+    "name": "Player"
+  }
+}</pre>
+
+<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+
+<pre>{
+  "event": "players/sign-out",
+  "ref": "da4c5503-dd15-490a-9d0d-85e2c50b72de"
+}</pre>
+
+<p>While connected with the <code>players</code> flag, you may receive an update from another game. You may wish to broadcast to your local players that someone has gone offline in the network.</p>
+
+<pre>{
+  "event": "players/sign-out",
+  "payload": {
+    "game": "ExVenture",
+    "name": "Player"
+  }
+}</pre>
+
+<p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
 
 <h3 id="socket-errors">Socket Error Code</h3>
 

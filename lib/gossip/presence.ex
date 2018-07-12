@@ -10,6 +10,7 @@ defmodule Gossip.Presence do
 
   @ets_key :gossip_presence
 
+  @type supports :: [String.t()]
   @type players :: [String.t()]
 
   def start_link(_) do
@@ -19,9 +20,14 @@ defmodule Gossip.Presence do
   @doc """
   Update a game and their players presence
   """
-  @spec update_game(Game.t(), players()) :: :ok
-  def update_game(game, players) do
-    GenServer.call(__MODULE__, {:update, game, players})
+  @spec update_game(Game.t(), supports(), players()) :: :ok
+  def update_game(game, supports, players) do
+    GenServer.call(__MODULE__, {:update, game, supports, players})
+  end
+
+  @spec update_game(Socket.state()) :: :ok
+  def update_game(state) do
+    GenServer.call(__MODULE__, {:update, state.game, state.supports, state.players})
   end
 
   # for tests
@@ -45,8 +51,8 @@ defmodule Gossip.Presence do
     {:ok, %{}}
   end
 
-  def handle_call({:update, game, players}, _from, state) do
-    {:ok, state} = Server.update_game(state, game, players)
+  def handle_call({:update, game, supports, players}, _from, state) do
+    {:ok, state} = Server.update_game(state, game, supports, players)
     {:reply, :ok, state}
   end
 

@@ -12,8 +12,9 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Presence
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
+  alias Web.Socket.Players
 
-  @valid_supports ["channels"]
+  @valid_supports ["channels", "players"]
 
   def heartbeat(state) do
     SocketInstrumenter.heartbeat()
@@ -125,15 +126,61 @@ defmodule Web.Socket.Implementation do
     SocketInstrumenter.heartbeat()
 
     payload = Map.get(event, "payload", %{})
-    Presence.update_game(state.game, Map.get(payload, "players", []))
-    state = Map.put(state, :heartbeat_count, 0)
+    players = Map.get(payload, "players", [])
+
+    state =
+      state
+      |> Map.put(:heartbeat_count, 0)
+      |> Map.put(:players, players)
+
+    Presence.update_game(state)
 
     {:ok, state}
+  end
+
+  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-in"}) do
+    case Players.player_sign_in(state, event) do
+      {:ok, state} ->
+        {:ok, maybe_respond(event), state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "players"))
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
+  end
+
+  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-out"}) do
+    case Players.player_sign_out(state, event) do
+      {:ok, state} ->
+        {:ok, maybe_respond(event), state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "players"))
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
   end
 
   def receive(state, _frame) do
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
+  end
+
+  def valid_support?(support) do
+    Enum.member?(@valid_supports, support)
   end
 
   defp validate_socket(payload) do
@@ -172,7 +219,7 @@ defmodule Web.Socket.Implementation do
   end
 
   defp check_unknown_supports(supports) do
-    case Enum.all?(supports, &Enum.member?(@valid_supports, &1)) do
+    case Enum.all?(supports, &valid_support?/1) do
       true ->
         {:ok, supports}
 
@@ -191,12 +238,14 @@ defmodule Web.Socket.Implementation do
       |> Map.put(:game, game)
       |> Map.put(:supports, supports)
       |> Map.put(:channels, channels)
+      |> Map.put(:players, players)
 
     listen_to_channels(channels)
+    Players.maybe_listen_to_players_channel(state)
 
     SocketInstrumenter.connect_success()
-    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)}")
-    Presence.update_game(state.game, players)
+    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
+    Presence.update_game(state)
 
     {:ok, %{event: "authenticate", status: "success"}, state}
   end
@@ -252,5 +301,13 @@ defmodule Web.Socket.Implementation do
       false ->
         :skip
     end
+  end
+
+  defp fail_response(:skip, _), do: :skip
+
+  defp fail_response(response, reason) do
+    response
+    |> Map.put("status", "failure")
+    |> Map.put("error", reason)
   end
 end

@@ -16,6 +16,7 @@ defmodule Web.Socket.ImplementationTest do
           "client_secret" => game.client_secret,
           "supports" => ["channels"],
           "channels" => ["gossip"],
+          "players" => ["player"],
         },
       }
 
@@ -25,6 +26,7 @@ defmodule Web.Socket.ImplementationTest do
 
       assert state.status == "active"
       assert state.game.id == game.id
+      assert state.players == ["player"]
     end
 
     test "invalid credentials", %{state: state, game: game} do
@@ -239,6 +241,94 @@ defmodule Web.Socket.ImplementationTest do
       {:ok, state} = Implementation.receive(state, frame)
 
       assert state.heartbeat_count == 0
+      assert state.players == ["player"]
+    end
+  end
+
+  describe "player status" do
+    setup [:basic_setup]
+
+    test "new sign in", %{state: state} do
+      state = %{state | supports: ["channels", "players"]}
+      Web.Endpoint.subscribe("players:status")
+
+      frame = %{
+        "event" => "players/sign-in",
+        "payload" => %{
+          "name" => "Player",
+        },
+      }
+
+      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert state.players == ["Player"]
+      assert_receive %{event: "players/sign-in"}, 50
+    end
+
+    test "new sign in - must send a player name", %{state: state} do
+      state = %{state | supports: ["channels", "players"]}
+      Web.Endpoint.subscribe("players:status")
+
+      frame = %{
+        "event" => "players/sign-in",
+        "payload" => %{},
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      refute_receive %{event: "players/sign-in"}, 50
+    end
+
+    test "sign out", %{state: state} do
+      state = %{state | supports: ["channels", "players"], players: ["Player"]}
+
+      Web.Endpoint.subscribe("players:status")
+
+      frame = %{
+        "event" => "players/sign-out",
+        "payload" => %{
+          "name" => "Player",
+        },
+      }
+
+      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert state.players == []
+      assert_receive %{event: "players/sign-out"}, 50
+    end
+
+    test "does not support the players feature - no ref", %{state: state} do
+      frame = %{
+        "event" => "players/sign-out",
+        "payload" => %{
+          "name" => "Player",
+        },
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+    end
+
+    test "does not support the players feature - ref", %{state: state} do
+      frame = %{
+        "event" => "players/sign-out",
+        "ref" => "ref",
+        "payload" => %{
+          "name" => "Player",
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+  end
+
+  describe "available supports" do
+    test "channels is valid" do
+      assert Implementation.valid_support?("channels")
+    end
+
+    test "players is valid" do
+      assert Implementation.valid_support?("players")
     end
   end
 
@@ -248,6 +338,8 @@ defmodule Web.Socket.ImplementationTest do
 
     state = %Web.Socket.State{
       status: "active",
+      supports: ["channels"],
+      players: [],
       game: game,
     }
 
