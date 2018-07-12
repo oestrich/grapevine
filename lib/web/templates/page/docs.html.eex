@@ -122,6 +122,7 @@
 <pre>{
   "event": "authenticate",
   "status": "success"
+  "unicode": "✔️"
 }</pre>
 
 <p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</>

@@ -247,7 +247,13 @@ defmodule Web.Socket.Implementation do
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
     Presence.update_game(state)
 
-    {:ok, %{event: "authenticate", status: "success"}, state}
+    response = %{
+      event: "authenticate",
+      status: "success",
+      unicode: "✔️"
+    }
+
+    {:ok, response, state}
   end
 
   defp listen_to_channels(channels) do
