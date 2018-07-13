@@ -44,6 +44,10 @@ defmodule Web.SocketHandler do
     end
   end
 
+  def websocket_handle({:ping, message}, req, state) do
+    {:reply, {:pong, message}, req, state}
+  end
+
   def websocket_info({:broadcast, event}, req, state) do
     {:reply, {:text, Poison.encode!(event)}, req, state}
   end
