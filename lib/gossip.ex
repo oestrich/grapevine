@@ -6,4 +6,11 @@ defmodule Gossip do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
+
+  @doc """
+  Get the loaded version of Gossip, to send when connecting.
+  """
+  def version() do
+    elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :gossip)), 2)
+  end
 end

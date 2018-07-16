@@ -89,7 +89,9 @@
   <% end %>
 </h3>
 
-<p>Below is a list of events you can send or may receive from the socket.</p>
+<p><b>Since 1.0.0</b></p>
+
+<p>These are the core features of connecting to Gossip. These include authenticating, a heartbeat, basic public channels.</p>
 
 <h4 id="authenticate">
   <%= link(to: "#authenticate") do %>
@@ -122,7 +124,10 @@
 <pre>{
   "event": "authenticate",
   "status": "success"
-  "unicode": "✔️"
+  "payload": {
+    "unicode": "✔️",
+    "version": "<%= Gossip.version() %>"
+  }
 }</pre>
 
 <p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</>
@@ -266,6 +271,8 @@
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
 }</pre>
 
+<hr />
+
 <h3 id="events">
   <%= link(to: "#events") do %>
     Player Events (<code>players</code>)
@@ -273,9 +280,9 @@
   <% end %>
 </h3>
 
-<p>These events are related to the <code>players</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
+<p><b>Since 1.0.0</b></p>
 
-<hr />
+<p>These events are related to the <code>players</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
 
 <h4 id="players-sign-in">
   <%= link(to: "#players-sign-in") do %>

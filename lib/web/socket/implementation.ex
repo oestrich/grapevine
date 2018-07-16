@@ -250,7 +250,10 @@ defmodule Web.Socket.Implementation do
     response = %{
       event: "authenticate",
       status: "success",
-      unicode: "✔️"
+      payload: %{
+        unicode: "✔️",
+        version: Gossip.version(),
+      }
     }
 
     {:ok, response, state}
