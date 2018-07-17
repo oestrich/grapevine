@@ -100,6 +100,8 @@
   <% end %>
 </h4>
 
+<p><b>Since 1.0.0</b></p>
+
 <p>This event authorizes the connection and afterwards you will start to receive new broadcasts.</p>
 
 <p><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</p>
@@ -141,6 +143,8 @@
   <% end %>
 </h4>
 
+<p><b>Since 1.0.0</b></p>
+
 <p>Once you are authenticated, the server will start sending heartbeat events.</p>
 
 <pre>{
@@ -166,6 +170,8 @@
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
+
+<p><b>Since 1.0.0</b></p>
 
 <p>Subscribe to a new channel on your currently connected socket.</p>
 
@@ -202,6 +208,8 @@
   <% end %>
 </h4>
 
+<p><b>Since 1.0.0</b></p>
+
 <p>Unsubscribe to a channel you are subscribed to.</p>
 
 <pre>{
@@ -228,6 +236,8 @@
   <% end %>
 </h4>
 
+<p><b>Since 1.0.0</b></p>
+
 <p>When a channel you are subscribed to receives a new message you will get a broadcast.</p>
 
 <pre>{
@@ -249,6 +259,8 @@
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
+
+<p><b>Since 1.0.0</b></p>
 
 <p>To send a new message, use this event. <code>channel</code> must be a channel you are subscribed to. All of the fields in the <code>payload</code> are required.</p>
 
@@ -291,6 +303,8 @@
   <% end %>
 </h4>
 
+<p><b>Since 1.0.0</b></p>
+
 <p>When a player signs into your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
 
 <p>You will not get a broadcast message back for messages you send.</p>
@@ -330,6 +344,8 @@
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
+
+<p><b>Since 1.0.0</b></p>
 
 <p>When a player signs out of your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
 
