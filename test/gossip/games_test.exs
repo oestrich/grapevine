@@ -41,7 +41,12 @@ defmodule Gossip.GamesTest do
     end
 
     test "saves the version if available", %{game: game} do
-      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"version" => "1.0.0"})
+      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"version" => "1.1.0"})
+      assert game.version == "1.1.0"
+    end
+
+    test "defaults version if unavailable", %{game: game} do
+      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret)
       assert game.version == "1.0.0"
     end
   end

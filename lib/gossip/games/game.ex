@@ -11,7 +11,7 @@ defmodule Gossip.Games.Game do
     field(:name, :string)
     field(:short_name, :string)
     field(:user_agent, :string)
-    field(:version, :string)
+    field(:version, :string, default: "1.0.0")
     field(:homepage_url, :string)
     field(:display, :boolean, default: true)
 
