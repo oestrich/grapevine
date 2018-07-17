@@ -11,6 +11,7 @@ defmodule Gossip.Games.Game do
     field(:name, :string)
     field(:short_name, :string)
     field(:user_agent, :string)
+    field(:version, :string)
     field(:homepage_url, :string)
     field(:display, :boolean, default: true)
 
@@ -42,7 +43,7 @@ defmodule Gossip.Games.Game do
     |> put_change(:client_secret, UUID.uuid4())
   end
 
-  def user_agent_changeset(struct, params) do
-    cast(struct, params, [:user_agent])
+  def metadata_changeset(struct, params) do
+    cast(struct, params, [:user_agent, :version])
   end
 end

@@ -110,6 +110,8 @@
 
 <p><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</p>
 
+<p><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Gossip updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</p>
+
 <pre>{
   "event": "authenticate",
   "payload": {
@@ -117,6 +119,7 @@
     "client_secret": "client secret",
     "supports": ["channels"],
     "channels": ["gossip"],
+    "version": "1.0.0",
     "user_agent": "ExVenture 0.23.0"
   }
 }</pre>
@@ -132,7 +135,9 @@
   }
 }</pre>
 
-<p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</>
+<p>The version number returned is the current version of Gossip.</p>
+
+<p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</p>
 
 <hr />
 

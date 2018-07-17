@@ -96,7 +96,7 @@ defmodule Gossip.Games do
          {:ok, client_secret} <- Ecto.UUID.cast(client_secret),
          {:ok, game} <- get_game(client_id),
          {:ok, game} <- validate_secret(game, client_secret) do
-      record_user_agent(game, user_agent_params)
+      record_metadata(game, user_agent_params)
     else
       _ ->
         {:error, :invalid}
@@ -123,8 +123,8 @@ defmodule Gossip.Games do
     end
   end
 
-  defp record_user_agent(game, user_agent_params) do
-    changeset = game |> Game.user_agent_changeset(user_agent_params)
+  defp record_metadata(game, user_agent_params) do
+    changeset = game |> Game.metadata_changeset(user_agent_params)
 
     case changeset |> Repo.update() do
       {:ok, game} ->

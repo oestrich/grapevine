@@ -39,6 +39,11 @@ defmodule Gossip.GamesTest do
       assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"user_agent" => "ExVenture 0.23.0"})
       assert game.user_agent == "ExVenture 0.23.0"
     end
+
+    test "saves the version if available", %{game: game} do
+      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"version" => "1.0.0"})
+      assert game.version == "1.0.0"
+    end
   end
 
   describe "regenerate client id and secret" do
