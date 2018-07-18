@@ -234,9 +234,9 @@
 
 <hr />
 
-<h4 id="messages-broadcast">
-  <%= link(to: "#messages-broadcast") do %>
-    messages/broadcast
+<h4 id="channels-broadcast">
+  <%= link(to: "#channels-broadcast") do %>
+    channels/broadcast
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -246,7 +246,7 @@
 <p>When a channel you are subscribed to receives a new message you will get a broadcast.</p>
 
 <pre>{
-  "event": "messages/broadcast",
+  "event": "channels/broadcast",
   "ref": "89036074-446f-41ab-b87a-44ef1f962f2e",
   "payload": {
     "channel": "gossip",
@@ -258,9 +258,9 @@
 
 <hr />
 
-<h4 id="messages-new">
-  <%= link(to: "#messages-new") do %>
-    messages/new
+<h4 id="channels-send">
+  <%= link(to: "#channels-send") do %>
+    channels/send
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
@@ -274,7 +274,7 @@
 <p>You will not get a broadcast message back for messages you send.</p>
 
 <pre>{
-  "event": "messages/new",
+  "event": "channels/send",
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
   "payload": {
     "channel": "gossip",
@@ -286,7 +286,7 @@
 <p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
-  "event": "messages/new",
+  "event": "channels/send",
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
 }</pre>
 

@@ -26,7 +26,7 @@ defmodule Metrics.ChannelsInstrumenter do
   @doc """
   A new message was sent on a channel
   """
-  def messages_new() do
+  def send() do
     Counter.inc(name: :gossip_channel_message_count)
   end
 

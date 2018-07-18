@@ -14,7 +14,7 @@ export default class ChatSocket {
     this.channel = this.socket.channel(`channels:${this.channelName}`, {});
     this.channel.join().receive("ok", resp => { this.append("Connected") });
 
-    this.channel.on("messages/broadcast", data => {
+    this.channel.on("channels/broadcast", data => {
       let message = `<span class="blue">${data.name}@${data.game}</span> says, <span class="green">"${data.message}"</span>`;
       this.append(message);
     });

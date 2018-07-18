@@ -129,7 +129,7 @@ defmodule Web.Socket.ImplementationTest do
       Web.Endpoint.subscribe("channels:gossip")
 
       frame = %{
-        "event" => "messages/new",
+        "event" => "channels/send",
         "payload" => %{
           "channel" => "gossip",
           "name" => "Player",
@@ -147,7 +147,7 @@ defmodule Web.Socket.ImplementationTest do
       Web.Endpoint.subscribe("channels:gossip")
 
       frame = %{
-        "event" => "messages/new",
+        "event" => "channels/send",
         "payload" => %{
           "channel" => "gossip",
           "name" => "Player",
@@ -164,7 +164,7 @@ defmodule Web.Socket.ImplementationTest do
       Web.Endpoint.subscribe("channels:gossip")
 
       frame = %{
-        "event" => "messages/new",
+        "event" => "channels/send",
         "payload" => %{
           "channel" => "general",
           "name" => "Player",
