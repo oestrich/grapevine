@@ -143,6 +143,23 @@ defmodule Web.Socket.ImplementationTest do
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
     end
 
+    test "strips out mxp data", %{state: state} do
+      Web.Endpoint.subscribe("channels:gossip")
+
+      frame = %{
+        "event" => "messages/new",
+        "payload" => %{
+          "channel" => "gossip",
+          "name" => "Player",
+          "message" => "<b>Hello!</b>",
+        },
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      assert_receive %{payload: %{"channel" => "gossip", "message" => "Hello!"}}
+    end
+
     test "does not broadcast the message if you are not subscribed", %{state: state, game: game} do
       Web.Endpoint.subscribe("channels:gossip")
 
