@@ -100,7 +100,7 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  def receive(state = %{status: "active"}, event = %{"event" => "messages/new", "payload" => payload}) do
+  def receive(state = %{status: "active"}, event = %{"event" => "channels/send", "payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- check_channel_subscribed_to(state, channel) do
       payload =
@@ -117,8 +117,8 @@ defmodule Web.Socket.Implementation do
         |> Map.put("name", name)
         |> Map.put("message", message)
 
-      ChannelsInstrumenter.messages_new()
-      Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)
+      ChannelsInstrumenter.send()
+      Web.Endpoint.broadcast("channels:#{channel}", "channels/broadcast", payload)
 
       {:ok, maybe_respond(event), state}
     else
