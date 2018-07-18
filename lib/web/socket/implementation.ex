@@ -10,6 +10,7 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
+  alias Gossip.Text
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
   alias Web.Socket.Players
@@ -107,6 +108,9 @@ defmodule Web.Socket.Implementation do
         |> Map.put("game", state.game.short_name)
         |> Map.put("game_id", state.game.client_id)
         |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
+
+      message = Text.clean(Map.get(payload, "message", ""))
+      payload = Map.put(payload, "message", message)
 
       ChannelsInstrumenter.messages_new()
       Web.Endpoint.broadcast("channels:#{channel}", "messages/broadcast", payload)

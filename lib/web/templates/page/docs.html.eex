@@ -269,6 +269,8 @@
 
 <p>To send a new message, use this event. <code>channel</code> must be a channel you are subscribed to. All of the fields in the <code>payload</code> are required.</p>
 
+<p>The <code>message</code> in the payload will have MXP tags stripped before broadcasting. Do not send MXP data.</p>
+
 <p>You will not get a broadcast message back for messages you send.</p>
 
 <pre>{
