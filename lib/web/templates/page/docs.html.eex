@@ -298,8 +298,8 @@
 
 <hr />
 
-<h3 id="events">
-  <%= link(to: "#events") do %>
+<h3 id="players">
+  <%= link(to: "#players") do %>
     Player Events (<code>players</code>)
     <i class="fas fa-link"></i>
   <% end %>
