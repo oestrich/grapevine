@@ -82,6 +82,12 @@
   <li>You must support unicode at the server level. Several connected games allow unicode input so you may receive it at any time.</li>
 </ol>
 
+<p>It is suggested to follow these:</p>
+
+<ol>
+  <li>Formatting for player names should be in the format of <code>Player@GameName</code>.</li>
+</ol>
+
 <h3 id="events">
   <%= link(to: "#events") do %>
     Core Events (<code>channels</code>)
