@@ -48,5 +48,6 @@ release :gossip do
 
   set commands: [
     "migrate": "rel/commands/migrate.sh",
+    "restarting": "rel/commands/restarting.sh",
   ]
 end

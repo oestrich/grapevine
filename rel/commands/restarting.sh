@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/gossip command Elixir.Gossip restart $0
+bin/gossip eval "'Elixir.Gossip':restart(15)"
