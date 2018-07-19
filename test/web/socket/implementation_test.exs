@@ -352,24 +352,24 @@ defmodule Web.Socket.ImplementationTest do
       assert {:ok, :skip, _state} = Implementation.receive(state, frame)
 
       game_name = game.short_name
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EV"}}}, 50
+      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
     end
 
-    test "request game status updates for a single game", %{state: state, game: game} do
+    test "request game status updates for a single game", %{state: state} do
       frame = %{
         "event" => "players/status",
         "ref" => UUID.uuid4(),
         "payload" => %{
-          "game" => "EV",
+          "game" => "EVTwo",
         }
       }
 
       assert {:ok, :skip, _state} = Implementation.receive(state, frame)
 
-      game_name = game.short_name
-      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EV"}}}, 50
+      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
     end
   end
 
@@ -400,11 +400,13 @@ defmodule Web.Socket.ImplementationTest do
   def status_updates(%{state: state, user: user, game: game1}) do
     state = %{state | supports: ["channels", "players"]}
 
-    game2 = create_game(user, %{name: "ExVenture", short_name: "EV"})
+    game2 = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+    game3 = create_game(user, %{name: "ExVenture 2", short_name: "EVTwo"})
 
     Presence.reset()
     Presence.update_game(game1, [], ["Player1"])
     Presence.update_game(game2, [], ["Player2"])
+    Presence.update_game(game3, [], ["Player3"])
 
     %{state: state}
   end

@@ -97,7 +97,9 @@ defmodule Web.Socket.Players do
   def request_status(state, %{"ref" => ref}) when ref != nil do
     case supports_players?(state) do
       true ->
-        Enum.each(Presence.online_games, &broadcast_state(&1, ref))
+        Presence.online_games()
+        |> Enum.reject(&(elem(&1, 0).id == state.game.id))
+        |> Enum.each(&broadcast_state(&1, ref))
 
         {:ok, state}
 
