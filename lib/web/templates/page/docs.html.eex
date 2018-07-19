@@ -17,8 +17,8 @@
 
 <p>Once you have an account, visit your <%= link("configuration page", to: user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
 
-<h3 id="channels">
-  <%= link(to: "#channels") do %>
+<h3 id="channels-basic">
+  <%= link(to: "#channels-basic") do %>
     Channels
     <i class="fas fa-link"></i>
   <% end %>
@@ -88,23 +88,13 @@
   <li>Formatting for player names should be in the format of <code>Player@GameName</code>.</li>
 </ol>
 
-<h3 id="events">
-  <%= link(to: "#events") do %>
-    Core Events (<code>channels</code>)
-    <i class="fas fa-link"></i>
-  <% end %>
-</h3>
+<%= DocView.flag_header("channels", "Core Events") %>
 
 <p><b>Since 1.0.0</b></p>
 
 <p>These are the core features of connecting to Gossip. These include authenticating, a heartbeat, basic public channels.</p>
 
-<h4 id="authenticate">
-  <%= link(to: "#authenticate") do %>
-    authenticate
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("authenticate") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -147,12 +137,7 @@
 
 <hr />
 
-<h4 id="heartbeat">
-  <%= link(to: "#heartbeat") do %>
-    heartbeat
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("heartbeat") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -175,12 +160,7 @@
 
 <hr />
 
-<h4 id="restart">
-  <%= link(to: "#restart") do %>
-    restart
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("restart") %>
 
 <p>When Gossip knows a restart is imminent, you will receive this event. This event will be sent when mostly before a server restart due to a deploy.</p>
 
@@ -198,12 +178,7 @@
 
 <hr />
 
-<h4 id="channels-subscribe">
-  <%= link(to: "#channels-subscribe") do %>
-    channels/subscribe
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("channels/subscribe") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -235,12 +210,7 @@
 
 <hr />
 
-<h4 id="channels-unsubscribe">
-  <%= link(to: "#channels-unsubscribe") do %>
-    channels/unsubscribe
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("channels/unsubscribe") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -263,12 +233,7 @@
 
 <hr />
 
-<h4 id="channels-broadcast">
-  <%= link(to: "#channels-broadcast") do %>
-    channels/broadcast
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("channels/broadcast") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -287,12 +252,7 @@
 
 <hr />
 
-<h4 id="channels-send">
-  <%= link(to: "#channels-send") do %>
-    channels/send
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("channels/send") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -321,23 +281,13 @@
 
 <hr />
 
-<h3 id="players">
-  <%= link(to: "#players") do %>
-    Player Events (<code>players</code>)
-    <i class="fas fa-link"></i>
-  <% end %>
-</h3>
+<%= DocView.flag_header("players", "Player Events") %>
 
 <p><b>Since 1.0.0</b></p>
 
 <p>These events are related to the <code>players</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
 
-<h4 id="players-sign-in">
-  <%= link(to: "#players-sign-in") do %>
-    players/sign-in
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("players/sign-in") %>
 
 <p><b>Since 1.0.0</b></p>
 
@@ -374,12 +324,7 @@
 
 <hr />
 
-<h4 id="players-sign-out">
-  <%= link(to: "#players-sign-out") do %>
-    players/sign-out
-    <i class="fas fa-link"></i>
-  <% end %>
-</h4>
+<%= DocView.event_header("players/sign-out") %>
 
 <p><b>Since 1.0.0</b></p>
 
