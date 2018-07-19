@@ -175,6 +175,29 @@
 
 <hr />
 
+<h4 id="restart">
+  <%= link(to: "#restart") do %>
+    restart
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>When Gossip knows a restart is imminent, you will receive this event. This event will be sent when mostly before a server restart due to a deploy.</p>
+
+<p>After receiving this event, your connection to Gossip may drop at any moment.</p>
+
+<pre>{
+  "event": "restart",
+  "ref": "f15ed228-ad43-4af4-9466-7d353fc9bf11",
+  "payload": {
+    "downtime": 15
+  }
+}</pre>
+
+<p><code>downtime</code> is a suggested amount of seconds you should wait before restarting. It is a hint from the server for how long it thinks Gossip will be down.</p>
+
+<hr />
+
 <h4 id="channels-subscribe">
   <%= link(to: "#channels-subscribe") do %>
     channels/subscribe

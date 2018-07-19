@@ -23,6 +23,9 @@ defmodule Web.SocketHandler do
     Logger.info("Socket starting")
     Metrics.socket_online()
 
+    # General purpose channels
+    Web.Endpoint.subscribe("restart")
+
     {:ok, req, %State{status: "inactive"}}
   end
 
@@ -53,6 +56,18 @@ defmodule Web.SocketHandler do
   end
 
   # Ignore broadcasts from the same client id
+  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "restart"}, req, state) do
+    message = %{
+      event: "restart",
+      ref: UUID.uuid4(),
+      payload: %{
+        downtime: message.payload["downtime"] + Enum.random(-5..5)
+      }
+    }
+
+    {:reply, {:text, Poison.encode!(message)}, req, state}
+  end
+
   def websocket_info(message = %Phoenix.Socket.Broadcast{}, req, state) do
     client_id = state.game.client_id
 

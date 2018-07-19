@@ -13,4 +13,11 @@ defmodule Gossip do
   def version() do
     elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :gossip)), 2)
   end
+
+  @doc """
+  Push a restart event to sockets
+  """
+  def restart(downtime) do
+    Web.Endpoint.broadcast("restart", "restart", %{"downtime" => downtime})
+  end
 end
