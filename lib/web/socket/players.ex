@@ -116,12 +116,13 @@ defmodule Web.Socket.Players do
 
   defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
 
-  defp broadcast_state({game, _support, players, _timestamp}, ref) do
+  defp broadcast_state({game, supports, players, _timestamp}, ref) do
     event = %{
       "event" => "players/status",
       "ref" => ref,
       "payload" => %{
         "game" => game.short_name,
+        "supports" => supports,
         "players" => players
       }
     }
