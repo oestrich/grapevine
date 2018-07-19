@@ -14,8 +14,9 @@ defmodule Web.Socket.Implementation do
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
   alias Web.Socket.Players
+  alias Web.Socket.Tells
 
-  @valid_supports ["channels", "players"]
+  @valid_supports ["channels", "players", "tells"]
 
   def heartbeat(state) do
     SocketInstrumenter.heartbeat()
@@ -201,6 +202,24 @@ defmodule Web.Socket.Implementation do
     end
   end
 
+  def receive(state = %{status: "active"}, event = %{"event" => "tells/send"}) do
+    case Tells.send(state, event) do
+      {:ok, state} ->
+        {:ok, :skip, state}
+
+      {:error, response} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(response)
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
+  end
+
   def receive(state, _frame) do
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
@@ -269,6 +288,7 @@ defmodule Web.Socket.Implementation do
 
     listen_to_channels(channels)
     Players.maybe_listen_to_players_channel(state)
+    Tells.maybe_subscribe(state)
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")

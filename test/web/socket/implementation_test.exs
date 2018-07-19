@@ -373,6 +373,151 @@ defmodule Web.Socket.ImplementationTest do
     end
   end
 
+  describe "tells" do
+    setup [:basic_setup]
+
+    test "send a new tell", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "EVOne",
+          "player" => "Player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
+    test "validation problem with the tell", %{state: state} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+
+    test "receiving game is offline", %{state: state} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "ExVenture",
+          "player" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "game offline"
+    end
+
+    test "receiving player is offline", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "EVOne",
+          "player" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "player offline"
+    end
+
+    test "receiving game does not support tells", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, [], ["Player1"])
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "EVOne",
+          "player" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "not supported"
+    end
+
+    test "does not support the tells feature - no ref", %{state: state} do
+      frame = %{
+        "event" => "tells/send",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "ExVenture",
+          "player" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+    end
+
+    test "does not support the tells feature - ref", %{state: state} do
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "ExVenture",
+          "player" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+  end
+
   describe "available supports" do
     test "channels is valid" do
       assert Implementation.valid_support?("channels")
@@ -381,11 +526,17 @@ defmodule Web.Socket.ImplementationTest do
     test "players is valid" do
       assert Implementation.valid_support?("players")
     end
+
+    test "tells is valid" do
+      assert Implementation.valid_support?("tells")
+    end
   end
 
   def basic_setup(_) do
     user = create_user()
     game = create_game(user)
+
+    Presence.reset()
 
     state = %Web.Socket.State{
       status: "active",
@@ -403,7 +554,6 @@ defmodule Web.Socket.ImplementationTest do
     game2 = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
     game3 = create_game(user, %{name: "ExVenture 2", short_name: "EVTwo"})
 
-    Presence.reset()
     Presence.update_game(game1, [], ["Player1"])
     Presence.update_game(game2, [], ["Player2"])
     Presence.update_game(game3, [], ["Player3"])
