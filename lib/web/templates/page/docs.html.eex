@@ -1,5 +1,37 @@
 <div class="row">
-  <div class="col-md-8 offset-md-2">
+  <div class="col-md-4">
+    <h5>Table of Contents</h5>
+
+    <ul>
+      <li><%= link("Game Configuration", to: "#config") %></li>
+      <li><%= link("Channels", to: "#channels-basic") %></li>
+      <li><%= link("Server Support", to: "#server-support") %></li>
+      <li><%= link("Connecting", to: "#connecting") %></li>
+      <li><%= link("Expectations of a Connecting Game", to: "#citizen") %></li>
+      <li>
+        <%= link("Core Events", to: "#channels") %>
+        <ul>
+          <li><%= link("authenticate", to: "#authenticate") %></li>
+          <li><%= link("heartbeat", to: "#heartbeat") %></li>
+          <li><%= link("restart", to: "#restart") %></li>
+          <li><%= link("channels/subscribe", to: "#channels-subscribe") %></li>
+          <li><%= link("channels/unsubscribe", to: "#channels-unsubscribe") %></li>
+          <li><%= link("channels/broadcast", to: "#channels-broadcast") %></li>
+          <li><%= link("channels/send", to: "#channels-send") %></li>
+        </ul>
+      </li>
+      <li>
+        <%= link("Players Events", to: "#players") %>
+        <ul>
+          <li><%= link("players/sign-in", to: "#players-sign-in") %></li>
+          <li><%= link("players/sign-out", to: "#players-sign-out") %></li>
+          <li><%= link("players/status", to: "#players-status") %></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="col-md-8">
 <h2>Docs</h2>
 
 <p>Thanks for checking out Gossip.</p>
