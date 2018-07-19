@@ -76,4 +76,56 @@ defmodule Web.Socket.Players do
   end
 
   def player_sign_out(_state, _event), do: :error
+
+  @doc """
+  Request player status, of connected games
+  """
+  def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
+    case supports_players?(state) do
+      true ->
+        Presence.online_games()
+        |> Enum.find(&find_game(&1, game_name))
+        |> maybe_broadcast_state(ref)
+
+        {:ok, state}
+
+      false ->
+        {:error, :missing_support}
+    end
+  end
+
+  def request_status(state, %{"ref" => ref}) when ref != nil do
+    case supports_players?(state) do
+      true ->
+        Enum.each(Presence.online_games, &broadcast_state(&1, ref))
+
+        {:ok, state}
+
+      false ->
+        {:error, :missing_support}
+    end
+  end
+
+  def request_status(_state, _), do: :error
+
+  defp find_game({game, _support, _players, _timestamp}, name) do
+    game.short_name == name
+  end
+
+  defp maybe_broadcast_state(nil, _ref), do: :ok
+
+  defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
+
+  defp broadcast_state({game, _support, players, _timestamp}, ref) do
+    event = %{
+      "event" => "players/status",
+      "ref" => ref,
+      "payload" => %{
+        "game" => game.short_name,
+        "players" => players
+      }
+    }
+
+    send(self(), {:broadcast, event})
+  end
 end

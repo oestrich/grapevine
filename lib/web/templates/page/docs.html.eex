@@ -359,6 +359,46 @@
 
 <p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
 
+<hr />
+
+<%= DocView.event_header("players/status") %>
+
+<p>To check the status of other games on the network, send a <code>players/status</code> event.</p>
+
+<pre>{
+  "events": "players/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4"
+}</pre>
+
+<p><code>ref</code> is required.</p>
+
+<p>In response you will receive a message per connected game.</p>
+
+<pre>{
+  "events": "players/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "payload": {
+     "game": "ExVenture",
+     "players: ["admin"]
+  }
+}</pre>
+
+<h5>Single Game Update</h5>
+
+<p>You can request an update to a single game by adding its name in the payload.</p>
+
+<pre>{
+  "events": "players/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "payload": {
+    "game": "ExVenture"
+  }
+}</pre>
+
+<p><code>ref</code> is required.</p>
+
+<p>You will only receive an update for that game. It will look the same as above.</p>
+
 <h3 id="socket-errors">Socket Error Code</h3>
 
 <dl>

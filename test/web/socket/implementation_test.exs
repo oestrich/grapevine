@@ -1,6 +1,7 @@
 defmodule Web.Socket.ImplementationTest do
   use Gossip.DataCase
 
+  alias Gossip.Presence
   alias Web.Socket.Implementation
 
   describe "authenticating" do
@@ -339,6 +340,39 @@ defmodule Web.Socket.ImplementationTest do
     end
   end
 
+  describe "player status udpates" do
+    setup [:basic_setup, :status_updates]
+
+    test "fetch all updates", %{state: state, game: game} do
+      frame = %{
+        "event" => "players/status",
+        "ref" => UUID.uuid4()
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      game_name = game.short_name
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EV"}}}, 50
+    end
+
+    test "request game status updates for a single game", %{state: state, game: game} do
+      frame = %{
+        "event" => "players/status",
+        "ref" => UUID.uuid4(),
+        "payload" => %{
+          "game" => "EV",
+        }
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      game_name = game.short_name
+      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
+      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EV"}}}, 50
+    end
+  end
+
   describe "available supports" do
     test "channels is valid" do
       assert Implementation.valid_support?("channels")
@@ -360,6 +394,18 @@ defmodule Web.Socket.ImplementationTest do
       game: game,
     }
 
-    %{state: state, game: game}
+    %{state: state, user: user, game: game}
+  end
+
+  def status_updates(%{state: state, user: user, game: game1}) do
+    state = %{state | supports: ["channels", "players"]}
+
+    game2 = create_game(user, %{name: "ExVenture", short_name: "EV"})
+
+    Presence.reset()
+    Presence.update_game(game1, [], ["Player1"])
+    Presence.update_game(game2, [], ["Player2"])
+
+    %{state: state}
   end
 end

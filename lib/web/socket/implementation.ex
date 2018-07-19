@@ -183,6 +183,24 @@ defmodule Web.Socket.Implementation do
     end
   end
 
+  def receive(state = %{status: "active"}, event = %{"event" => "players/status"}) do
+    case Players.request_status(state, event) do
+      {:ok, state} ->
+        {:ok, :skip, state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "players"))
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
+  end
+
   def receive(state, _frame) do
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
