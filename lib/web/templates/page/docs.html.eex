@@ -363,6 +363,8 @@
 
 <%= DocView.event_header("players/status") %>
 
+<p><b>Since 1.1.0</b></p>
+
 <p>To check the status of other games on the network, send a <code>players/status</code> event.</p>
 
 <pre>{
