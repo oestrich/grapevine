@@ -22,10 +22,10 @@ defmodule Web.Socket.Tells do
   Send a tell to another game
   """
   def send(state, event) do
-    with {:ok, :supports} <- check_supports(state),
+    with :ok <- check_supports(state),
          {:ok, payload} <- check_payload(event),
          {:ok, game, supports, players} <- check_game_online(payload),
-         {:ok, :game, :supports} <- check_remote_game_supports(supports),
+         :ok <- check_remote_game_supports(supports),
          :ok <- check_player_online(players, payload) do
       event = %{
         "game" => state.game.short_name,
@@ -38,31 +38,16 @@ defmodule Web.Socket.Tells do
       Web.Endpoint.broadcast("tells:#{game.short_name}", "tells/receive", event)
 
       {:ok, state}
-    else
-      {:error, :missing_support} ->
-        {:error, ~s(missing support for "tells")}
-
-      {:error, :invalid_payload} ->
-        {:error, ~s(invalid payload)}
-
-      {:error, :game, :offline} ->
-        {:error, ~s(game offline)}
-
-      {:error, :game, :missing_support} ->
-        {:error, ~s(not supported)}
-
-      {:error, :player, :offline} ->
-        {:error, ~s(player offline)}
     end
   end
 
   defp check_supports(state) do
     case supports_tells?(state) do
       true ->
-        {:ok, :supports}
+        :ok
 
       false ->
-        {:error, :missing_support}
+        {:error, ~s(missing support for "tells")}
     end
   end
 
@@ -74,7 +59,7 @@ defmodule Web.Socket.Tells do
         {:ok, payload}
 
       false ->
-        {:error, :invalid_payload}
+        {:error, ~s(invalid payload)}
     end
   end
 
@@ -88,17 +73,17 @@ defmodule Web.Socket.Tells do
         {:ok, game, supports, players}
 
       nil ->
-        {:error, :game, :offline}
+        {:error, ~s(game offline)}
     end
   end
 
   defp check_remote_game_supports(supports) do
     case supports_tells?(%{supports: supports}) do
       true ->
-        {:ok, :game, :supports}
+        :ok
 
       false ->
-        {:error, :game, :missing_support}
+        {:error, ~s(not supported)}
     end
   end
 
@@ -108,7 +93,7 @@ defmodule Web.Socket.Tells do
         :ok
 
       false ->
-        {:error, :player, :offline}
+        {:error, ~s(player offline)}
     end
   end
 
