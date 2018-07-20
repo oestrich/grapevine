@@ -88,7 +88,9 @@ defmodule Web.Socket.Tells do
   end
 
   defp check_player_online(players, payload) do
-    case payload["to_name"] in players do
+    players = Enum.map(players, &String.downcase/1)
+
+    case String.downcase(payload["to_name"]) in players do
       true ->
         :ok
 

@@ -422,6 +422,29 @@ defmodule Web.Socket.ImplementationTest do
       assert_receive %{event: "tells/receive"}, 50
     end
 
+    test "handles player name not capitalized", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
     test "validation problem with the tell", %{state: state} do
       state = %{state | supports: ["channels", "tells"]}
 
