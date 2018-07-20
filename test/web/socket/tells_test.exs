@@ -8,9 +8,9 @@ defmodule Web.Socket.TellsTest do
   describe "validate a send payload" do
     test "all valid" do
       payload = %{
-        "from" => "Player",
-        "game" => "ExVenture",
-        "player" => "eric",
+        "from_name" => "Player",
+        "to_game" => "ExVenture",
+        "to_name" => "eric",
         "sent_at" => "2018-07-17T13:12:28Z",
         "message" => "hi"
       }
@@ -20,7 +20,7 @@ defmodule Web.Socket.TellsTest do
 
     test "missing fields" do
       payload = %{
-        "from" => "Player",
+        "from_name" => "Player",
         "sent_at" => "2018-07-17T13:12:28Z",
         "message" => "hi"
       }
@@ -30,9 +30,9 @@ defmodule Web.Socket.TellsTest do
 
     test "all strings" do
       payload = %{
-        "from" => 1,
-        "game" => nil,
-        "player" => "eric",
+        "from_name" => 1,
+        "to_game" => nil,
+        "to_name" => "eric",
         "sent_at" => "2018-07-17T13:12:28Z",
         "message" => "hi"
       }
@@ -42,9 +42,9 @@ defmodule Web.Socket.TellsTest do
 
     test "sent_at is formatted properly" do
       payload = %{
-        "from" => "Player",
-        "game" => "ExVenture",
-        "player" => "eric",
+        "from_name" => "Player",
+        "to_game" => "ExVenture",
+        "to_name" => "eric",
         "sent_at" => "2018-07-17T13:12:28-0400",
         "message" => "hi"
       }

@@ -456,9 +456,9 @@
   "event": "tells/send",
   "ref": "5c528fc3-cb9e-4867-98ea-6e235594241e",
   "payload": {
-    "from": "Player",
-    "game": "ExVenture",
-    "player": "eric",
+    "from_name": "Player",
+    "to_game": "ExVenture",
+    "to_name": "eric",
     "sent_at": "2018-07-17T13:12:28Z",
     "message": "hi"
   }
@@ -466,11 +466,11 @@
 
 <p><code>ref</code> is required.</p>
 
-<p><code>from</code> is required. This is the name of the player sending the tell.</p>
+<p><code>from_name</code> is required. This is the name of the player sending the tell.</p>
 
-<p><code>game</code> is required. This is the name of the game that will process the tell.</p>
+<p><code>to_game</code> is required. This is the name of the game that will process the tell. The server will match this case insensitive against connected games.</p>
 
-<p><code>player</code> is required. This is the name of the receiving player.</p>
+<p><code>to_name</code> is required. This is the name of the receiving player.</p>
 
 <p><code>sent_at</code> is required. This is an ISO8601 formatted timestamp of when the message was sent. It <b>must</b> be in UTC, use the <code>Z</code> format for UTC.</p>
 
@@ -513,19 +513,19 @@
   "event": "tells/receive",
   "ref": "d4a08749-acbe-45ab-bc0f-51609fd6b95b",
   "payload": {
-    "game": "AMud",
-    "from": "Player",
-    "player": "eric",
+    "from_game": "AMud",
+    "from_name": "Player",
+    "to_name": "eric",
     "sent_at": "2018-07-17T13:12:28Z",
     "message": "hi"
   }
 }</pre>
 
-<p><code>from</code> is the name of the player sending the tell.</p>
+<p><code>from_name</code> is the name of the player sending the tell.</p>
 
-<p><code>game</code> is the name of the game sending the tell.</p>
+<p><code>from_game</code> is the name of the game sending the tell.</p>
 
-<p><code>player</code> is the name of the receiving player.</p>
+<p><code>to_name</code> is the name of the receiving player.</p>
 
 <p><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</p>
 

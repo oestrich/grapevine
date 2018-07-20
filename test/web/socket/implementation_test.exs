@@ -387,9 +387,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "EVOne",
-          "player" => "Player1",
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "Player1",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -410,9 +410,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "evone",
-          "player" => "Player1",
+          "from_name" => "Player",
+          "to_game" => "evone",
+          "to_name" => "Player1",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -429,7 +429,7 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
+          "from_name" => "Player",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -447,9 +447,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "ExVenture",
-          "player" => "eric",
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -470,9 +470,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "EVOne",
-          "player" => "eric",
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -493,9 +493,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "EVOne",
-          "player" => "eric",
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -510,9 +510,9 @@ defmodule Web.Socket.ImplementationTest do
       frame = %{
         "event" => "tells/send",
         "payload" => %{
-          "from" => "Player",
-          "game" => "ExVenture",
-          "player" => "eric",
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
@@ -526,9 +526,9 @@ defmodule Web.Socket.ImplementationTest do
         "event" => "tells/send",
         "ref" => "ref",
         "payload" => %{
-          "from" => "Player",
-          "game" => "ExVenture",
-          "player" => "eric",
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
         },
