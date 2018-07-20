@@ -21,11 +21,18 @@
         </ul>
       </li>
       <li>
-        <%= link("Players Events", to: "#players") %>
+        <%= link("Player Events", to: "#players") %>
         <ul>
           <li><%= link("players/sign-in", to: "#players-sign-in") %></li>
           <li><%= link("players/sign-out", to: "#players-sign-out") %></li>
           <li><%= link("players/status", to: "#players-status") %></li>
+        </ul>
+      </li>
+      <li>
+        <%= link("Tell Events", to: "#tells") %>
+        <ul>
+          <li><%= link("tells/send", to: "#tells-send") %></li>
+          <li><%= link("tells/receive", to: "#tells-receive") %></li>
         </ul>
       </li>
     </ul>
@@ -432,6 +439,97 @@
 <p><code>ref</code> is required.</p>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
+
+<hr />
+
+<%= DocView.flag_header("tells", "Tell Events") %>
+
+<p><b>Since 2.0.0</b></p>
+
+<p>These events are related to the <code>tells</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
+
+<%= DocView.event_header("tells/send") %>
+
+<p><b>Since 2.0.0</b></p>
+
+<pre>{
+  "event": "tells/send",
+  "ref": "5c528fc3-cb9e-4867-98ea-6e235594241e",
+  "payload": {
+    "from_name": "Player",
+    "to_game": "ExVenture",
+    "to_name": "eric",
+    "sent_at": "2018-07-17T13:12:28Z",
+    "message": "hi"
+  }
+}</pre>
+
+<p><code>ref</code> is required.</p>
+
+<p><code>from_name</code> is required. This is the name of the player sending the tell.</p>
+
+<p><code>to_game</code> is required. This is the name of the game that will process the tell. The server will match this case insensitive against connected games.</p>
+
+<p><code>to_name</code> is required. This is the name of the receiving player.</p>
+
+<p><code>sent_at</code> is required. This is an ISO8601 formatted timestamp of when the message was sent. It <b>must</b> be in UTC, use the <code>Z</code> format for UTC.</p>
+
+<p><code>message</code> is required. This is the body of the tell.</p>
+
+<p>If the game and player are online, you will receive a response back.</p>
+
+<pre>{
+  "event": "tells/send",
+  "ref": "5c528fc3-cb9e-4867-98ea-6e235594241e",
+  "status": "success"
+}</pre>
+
+<p>If the tell did not succeed in sending, you will receive an error response.</p>
+
+<pre>{
+  "event": "tells/send",
+  "ref": "5c528fc3-cb9e-4867-98ea-6e235594241e",
+  "status": "failure",
+  "error": "game offline"
+}</pre>
+
+<p>Possible failure responses are:
+
+<ul>
+  <li><code>game offline</code></li>
+  <li><code>player offline</code></li>
+  <li><code>not supported</code>, the connected game does not support tells</li>
+</ul>
+
+<hr />
+
+<%= DocView.event_header("tells/receive") %>
+
+<p><b>Since 2.0.0</b></p>
+
+<p>When another game sends a tell to your game, you will receive this event.</p>
+
+<pre>{
+  "event": "tells/receive",
+  "ref": "d4a08749-acbe-45ab-bc0f-51609fd6b95b",
+  "payload": {
+    "from_game": "AMud",
+    "from_name": "Player",
+    "to_name": "eric",
+    "sent_at": "2018-07-17T13:12:28Z",
+    "message": "hi"
+  }
+}</pre>
+
+<p><code>from_name</code> is the name of the player sending the tell.</p>
+
+<p><code>from_game</code> is the name of the game sending the tell.</p>
+
+<p><code>to_name</code> is the name of the receiving player.</p>
+
+<p><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</p>
+
+<p><code>message</code> is the body of the tell.</p>
 
 <h3 id="socket-errors">Socket Error Code</h3>
 

@@ -98,7 +98,7 @@ defmodule Web.Socket.Players do
     case supports_players?(state) do
       true ->
         Presence.online_games()
-        |> Enum.reject(&(elem(&1, 0).id == state.game.id))
+        |> Enum.reject(&(&1.game.id == state.game.id))
         |> Enum.each(&broadcast_state(&1, ref))
 
         {:ok, state}
@@ -110,22 +110,22 @@ defmodule Web.Socket.Players do
 
   def request_status(_state, _), do: :error
 
-  defp find_game({game, _support, _players, _timestamp}, name) do
-    game.short_name == name
+  defp find_game(state, name) do
+    state.game.short_name == name
   end
 
   defp maybe_broadcast_state(nil, _ref), do: :ok
 
   defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
 
-  defp broadcast_state({game, supports, players, _timestamp}, ref) do
+  defp broadcast_state(state, ref) do
     event = %{
       "event" => "players/status",
       "ref" => ref,
       "payload" => %{
-        "game" => game.short_name,
-        "supports" => supports,
-        "players" => players
+        "game" => state.game.short_name,
+        "supports" => state.supports,
+        "players" => state.players
       }
     }
 
