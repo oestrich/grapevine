@@ -66,7 +66,7 @@ defmodule Web.Socket.Tells do
   defp check_game_online(payload) do
     game =
       Presence.online_games()
-      |> Enum.find(&(elem(&1, 0).short_name == payload["game"]))
+      |> Enum.find(&(String.downcase(elem(&1, 0).short_name) == String.downcase(payload["game"])))
 
     case game do
       {game, supports, players, _timestamp} ->

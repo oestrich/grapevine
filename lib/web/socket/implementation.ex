@@ -205,7 +205,12 @@ defmodule Web.Socket.Implementation do
   def receive(state = %{status: "active"}, event = %{"event" => "tells/send"}) do
     case Tells.send(state, event) do
       {:ok, state} ->
-        {:ok, :skip, state}
+        response =
+          event
+          |> maybe_respond()
+          |> succeed_response()
+
+        {:ok, response, state}
 
       {:error, response} ->
         response =
@@ -357,6 +362,12 @@ defmodule Web.Socket.Implementation do
       false ->
         :skip
     end
+  end
+
+  defp succeed_response(:skip), do: :skip
+
+  defp succeed_response(response) do
+    Map.put(response, "status", "success")
   end
 
   defp fail_response(:skip, _), do: :skip

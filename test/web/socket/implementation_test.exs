@@ -395,7 +395,30 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
+    test "handles short names not capitalized", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from" => "Player",
+          "game" => "evone",
+          "player" => "Player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
       assert_receive %{event: "tells/receive"}, 50
     end
 
