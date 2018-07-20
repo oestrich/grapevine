@@ -118,7 +118,7 @@
   <li>Gossip <em>will</em> go down sometime while you are connected. Most likely for a new deploy. Make sure your game does not crash because of this.</li>
   <li>While Gossip is down, your app should transition channels to local only.</li>
   <li>Similarly, you should reconnect back to Gossip when it comes back online.</li>
-  <li>You must support unicode at the server level. Several connected games allow unicode input so you may receive it at any time.</li>
+  <li>You must support UTF-8 at the server level. Several connected games allow UTF-8 input so you may receive it at any time.</li>
 </ol>
 
 <p>It is suggested to follow these:</p>
