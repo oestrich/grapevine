@@ -22,8 +22,8 @@ defmodule Gossip.Presence.Client do
 
   defp fetch_game_from_ets(game_id) do
     case :ets.lookup(ets_key(), game_id) do
-      [{^game_id, supports, players, timestamp}] ->
-        {game_id, supports, players, timestamp}
+      [{^game_id, state}] ->
+        {game_id, state}
 
       _ ->
         nil
@@ -32,14 +32,18 @@ defmodule Gossip.Presence.Client do
 
   defp filter_online(nil), do: false
 
-  defp filter_online({_game_id, _supports, _players, timestamp}) do
+  defp filter_online({_game_id, state}) do
     oldest_online = Timex.now() |> Timex.shift(seconds: -1 * @timeout_seconds)
-    Timex.after?(timestamp, oldest_online)
+    Timex.after?(state.timestamp, oldest_online)
   end
 
-  defp fetch_game_from_db({game_id, supports, players, timestamp}) do
-    with {:ok, game} <- Games.get(game_id) do
-      {game, supports, players, timestamp}
+  defp fetch_game_from_db({game_id, state}) do
+    case Games.get(game_id) do
+      {:ok, game} ->
+        Map.put(state, :game, game)
+
+      {:error, :not_found} ->
+        nil
     end
   end
 

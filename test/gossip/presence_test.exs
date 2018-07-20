@@ -18,7 +18,7 @@ defmodule Gossip.PresenceTest do
     test "on update the game is shown as online", %{game: game, supports: supports, players: players} do
       :ok = Presence.update_game(game, supports, players)
 
-      assert [{_game, ^supports, ^players, _timestamp}] = Presence.online_games()
+      assert [%{supports: ^supports, players: ^players}] = Presence.online_games()
     end
   end
 end

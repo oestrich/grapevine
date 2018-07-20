@@ -24,7 +24,7 @@ defmodule Web.Socket.Tells do
   def send(state, event) do
     with :ok <- check_supports(state),
          {:ok, payload} <- check_payload(event),
-         {:ok, game, supports, players} <- check_game_online(payload),
+         {:ok, %{game: game, supports: supports, players: players}} <- check_game_online(payload),
          :ok <- check_remote_game_supports(supports),
          :ok <- check_player_online(players, payload) do
       event = %{
@@ -66,14 +66,14 @@ defmodule Web.Socket.Tells do
   defp check_game_online(payload) do
     game =
       Presence.online_games()
-      |> Enum.find(&(String.downcase(elem(&1, 0).short_name) == String.downcase(payload["to_game"])))
+      |> Enum.find(&(String.downcase(&1.game.short_name) == String.downcase(payload["to_game"])))
 
     case game do
-      {game, supports, players, _timestamp} ->
-        {:ok, game, supports, players}
-
       nil ->
         {:error, ~s(game offline)}
+
+      state ->
+        {:ok, state}
     end
   end
 

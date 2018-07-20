@@ -7,7 +7,7 @@ defmodule Web.GameController do
   plug Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate]
 
   def index(conn, _params) do
-    games = Enum.filter(Presence.online_games(), &(elem(&1, 0).display))
+    games = Enum.filter(Presence.online_games(), &(&1.game.display))
 
     conn
     |> assign(:games, games)
