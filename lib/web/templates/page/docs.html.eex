@@ -448,6 +448,8 @@
 
 <p>These events are related to the <code>tells</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
 
+<p>It is suggested to also support the <code>players</code> flag, as you can keep your players' status more up to date on Gossip. Players must be online on Gossip to receive tells.</p>
+
 <%= DocView.event_header("tells/send") %>
 
 <p><b>Since 2.0.0</b></p>
