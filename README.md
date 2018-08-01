@@ -6,14 +6,22 @@ Gossip is a MUD chat network.
 - [Docs](https://gossip.haus/docs)
 - [Patreon](https://www.patreon.com/midmud)
 
-## Requirements
+## WebSocket Protocol
+
+View the websocket details on [Gossip][websocket-docs].
+
+## Server
+
+### Requirements
+
+This is only required to run Gossip itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
 
 - PostgreSQL 10
 - Elixir 1.6.6
 - Erlang 21.0.2.
 - node.js 8.6
 
-## Setup
+### Setup
 
 ```bash
 mix deps.get
@@ -25,7 +33,7 @@ mix phx.server
 
 This will start a web server on port 4000. You can now load [http://localhost:4000/](http://localhost:4000/) to view the application.
 
-## Running Tests
+### Running Tests
 
 ```bash
 MIX_ENV=test mix ecto.create
@@ -33,6 +41,4 @@ MIX_ENV=test mix ecto.migrate
 mix test
 ```
 
-## WebSocket Protocol
-
-View the websocket details on [Gossip](https://gossip.haus/docs).
+[websocket-docs]: https://gossip.haus/docs
