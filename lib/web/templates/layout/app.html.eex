@@ -74,9 +74,9 @@
 
     <footer>
       <div class="container">
-        <%= link("GitHub", to: "https://github.com/oestrich/gossip", target: "_blank") %>
-        |
-        <%= link("Become a Patron!", to: "https://www.patreon.com/midmud", target: "_blank") %>
+        <%= link(to: "https://www.patreon.com/midmud", target: "_blank", class: "mb-4 float-right") do %>
+          <%= img_tag("/images/patron.png") %>
+        <% end %>
       </div>
     </footer>
 
