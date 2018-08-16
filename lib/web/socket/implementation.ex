@@ -41,21 +41,25 @@ defmodule Web.Socket.Implementation do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
+        Logger.debug("Disconnecting - invalid authenticate")
         SocketInstrumenter.connect_failure()
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "invalid credentials"}, state}
 
       {:error, :missing_supports} ->
+        Logger.debug("Disconnecting - missing supports")
         SocketInstrumenter.connect_failure()
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "missing supports"}, state}
 
       {:error, :must_support_channels} ->
+        Logger.debug("Disconnecting - must support channels")
         SocketInstrumenter.connect_failure()
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "must support channels"}, state}
 
       {:error, :unknown_supports} ->
+        Logger.debug("Disconnecting - unknown set of supports")
         SocketInstrumenter.connect_failure()
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "includes unknown supports"}, state}

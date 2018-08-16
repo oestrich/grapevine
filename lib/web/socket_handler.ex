@@ -30,6 +30,8 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_handle({:text, message}, req, state) do
+    Logger.debug(message, type: :socket)
+
     with {:ok, message} <- Poison.decode(message),
          {:ok, response, state} <- Implementation.receive(state, message) do
       respond(state, req, response)
