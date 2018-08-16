@@ -11,7 +11,7 @@ defmodule Gossip do
   Get the loaded version of Gossip, to send when connecting.
   """
   def version() do
-    elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :gossip)), 2)
+    to_string(elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :gossip)), 2))
   end
 
   @doc """
