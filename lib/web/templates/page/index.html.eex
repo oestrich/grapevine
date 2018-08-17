@@ -1,14 +1,29 @@
 <div class="jumbotron">
   <div class="container">
-    <h1 class="display-3">Gossip</h1>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h1 class="display-3">Gossip</h1>
 
-    <p>Welcome to Gossip, the MUD chat network.</p>
+        <p>Welcome to Gossip, the MUD chat network.</p>
 
-    <p>
-      <%= link(to: page_path(@conn, :docs), class: "btn btn-primary btn-lg") do %>
-      Learn more &raquo;
-      <% end %>
-    </p>
+        <p>
+        <%= link(to: page_path(@conn, :docs), class: "btn btn-primary btn-lg") do %>
+          Learn more &raquo;
+        <% end %>
+        </p>
+      </div>
+
+      <div class="col-md-6">
+        <%= if @game do %>
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Highlighted Game</h6>
+              <%= @game.name %> - <%= link("Play Now", to: @game.homepage_url, target: "_blank") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 
