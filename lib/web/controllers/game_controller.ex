@@ -11,7 +11,7 @@ defmodule Web.GameController do
 
     conn
     |> assign(:games, games)
-    |> render("index.html")
+    |> render(:index)
   end
 
   def edit(conn, %{"id" => id}) do
