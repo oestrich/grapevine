@@ -28,6 +28,8 @@ defmodule Web.Router do
 
     resources("/games/mine", UserGameController, only: [:index, :create])
 
+    get("/media", PageController, :media)
+
     resources("/register", RegistrationController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)

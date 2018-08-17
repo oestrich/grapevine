@@ -15,4 +15,8 @@ defmodule Web.PageController do
   def docs(conn, _params) do
     render(conn, "docs.html")
   end
+
+  def media(conn, _params) do
+    render(conn, "media.html")
+  end
 end
