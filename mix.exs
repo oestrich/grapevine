@@ -35,11 +35,11 @@ defmodule Gossip.Mixfile do
     [
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
-      {:cowboy, "~> 1.0"},
+      {:cowboy, "~> 2.0"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:distillery, "~> 1.4", runtime: false},
       {:gettext, "~> 0.11"},
-      {:phoenix, "~> 1.3.3"},
+      {:phoenix, git: "https://github.com/phoenixframework/phoenix.git", override: true},
       {:phoenix_ecto, "~> 3.2"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_pubsub, "~> 1.0"},
