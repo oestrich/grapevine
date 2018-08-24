@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/gossip command Elixir.Gossip.ReleaseTasks migrate
+bin/gossip eval 'Gossip.ReleaseTasks.migrate()'

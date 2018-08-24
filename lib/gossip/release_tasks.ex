@@ -17,20 +17,6 @@ defmodule Gossip.ReleaseTasks do
     Gossip.Repo
   ]
 
-  defp startup() do
-    IO.puts("Loading gossip...")
-    # Load the code for gossip, but don't start it
-    :ok = Application.load(:gossip)
-
-    IO.puts("Starting dependencies..")
-    # Start apps necessary for executing migrations
-    Enum.each(@start_apps, &Application.ensure_all_started/1)
-
-    # Start the Repo(s) for gossip
-    IO.puts("Starting repos..")
-    Enum.each(@repos, & &1.start_link(pool_size: 1))
-  end
-
   def migrate() do
     startup()
 
@@ -40,6 +26,21 @@ defmodule Gossip.ReleaseTasks do
     # Signal shutdown
     IO.puts("Success!")
     :init.stop()
+  end
+
+  defp startup() do
+    IO.puts("Loading gossip...")
+
+    # Load the code for gossip, but don't start it
+    Application.load(:gossip)
+
+    IO.puts("Starting dependencies..")
+    # Start apps necessary for executing migrations
+    Enum.each(@start_apps, &Application.ensure_all_started/1)
+
+    # Start the Repo(s) for gossip
+    IO.puts("Starting repos..")
+    Enum.each(@repos, & &1.start_link(pool_size: 1))
   end
 
   def priv_dir(app), do: "#{:code.priv_dir(app)}"
