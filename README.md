@@ -31,7 +31,7 @@ mix ecto.reset
 mix phx.server
 ```
 
-This will start a web server on port 4000. You can now load [http://localhost:4000/](http://localhost:4000/) to view the application.
+This will start a web server on port 4001. You can now load [http://localhost:4001/](http://localhost:4001/) to view the application.
 
 ### Running Tests
 
@@ -39,6 +39,15 @@ This will start a web server on port 4000. You can now load [http://localhost:40
 MIX_ENV=test mix ecto.create
 MIX_ENV=test mix ecto.migrate
 mix test
+```
+
+### Docker
+
+```bash
+docker-compose build gossip
+docker-compose up -d postgres
+docker-compose run --rm gossip migrate
+docker-compose up gossip
 ```
 
 [websocket-docs]: https://gossip.haus/docs
