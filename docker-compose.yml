@@ -1,0 +1,23 @@
+# https://docs.docker.com/compose/compose-file/
+version: '3.6'
+services:
+  gossip:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - 4001:4001
+
+  postgres:
+    image: postgres:10.4-alpine
+    environment:
+      POSTGRES_DB: gossip
+      POSTGRES_PASSWORD: gossip
+      POSTGRES_USER: gossip
+    ports:
+      - 15433:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data: {}
