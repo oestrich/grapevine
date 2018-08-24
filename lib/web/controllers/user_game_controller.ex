@@ -20,10 +20,11 @@ defmodule Web.UserGameController do
         |> put_flash(:info, "Game created!")
         |> redirect(to: user_game_path(conn, :index))
 
-      {:error, _} ->
+      {:error, changeset} ->
         conn
         |> put_flash(:error, "There was an issue creating the game.")
-        |> redirect(to: user_game_path(conn, :index))
+        |> assign(:changeset, changeset)
+        |> render("index.html")
     end
   end
 end
