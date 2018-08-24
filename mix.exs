@@ -5,7 +5,7 @@ defmodule Gossip.Mixfile do
     [
       app: :gossip,
       version: "2.0.0",
-      elixir: "~> 1.4",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -44,7 +44,7 @@ defmodule Gossip.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_pubsub, "~> 1.0"},
       {:postgrex, ">= 0.0.0"},
-      {:prometheus_ex, "~> 3.0"},
+      {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
       {:prometheus_plugs, "~> 1.1.1"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"},
@@ -62,7 +62,7 @@ defmodule Gossip.Mixfile do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

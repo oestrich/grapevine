@@ -17,8 +17,8 @@ View the websocket details on [Gossip][websocket-docs].
 This is only required to run Gossip itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
 
 - PostgreSQL 10
-- Elixir 1.6.6
-- Erlang 21.0.2.
+- Elixir 1.7.2
+- Erlang 21.0.5
 - node.js 8.6
 
 ### Setup
