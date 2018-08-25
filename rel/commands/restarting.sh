@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/gossip eval "Gossip.restart()"
+bin/gossip rpc "Gossip.restart()"
