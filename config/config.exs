@@ -18,8 +18,7 @@ config :gossip, Web.Endpoint,
   http: [dispatch: [
     {:_, [
       {"/socket", Web.SocketHandler, []},
-      {"/chat/websocket", Phoenix.Endpoint.CowboyWebSocket, {Phoenix.Transports.WebSocket, {Web.Endpoint, Web.UserSocket, :websocket}}},
-      {:_, Plug.Adapters.Cowboy.Handler, {Web.Endpoint, []}}
+      {:_, Phoenix.Endpoint.Cowboy2Handler, {Web.Endpoint, []}}
     ]}]],
   pubsub: [name: Gossip.PubSub,
            adapter: Phoenix.PubSub.PG2]

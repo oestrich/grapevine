@@ -3,7 +3,7 @@ defmodule Web.SocketHandler do
   Cowboy WebSocket handler
   """
 
-  @behaviour :cowboy_websocket_handler
+  @behaviour :cowboy_websocket
 
   alias Web.Socket.Implementation
   alias Web.Socket.State
@@ -13,11 +13,11 @@ defmodule Web.SocketHandler do
 
   @heartbeat_interval 15_000
 
-  def init(_, _req, _opts) do
-    {:upgrade, :protocol, :cowboy_websocket}
+  def init(req, opts) do
+    {:cowboy_websocket, req, opts}
   end
 
-  def websocket_init(_type, req, _opts) do
+  def websocket_init(_state) do
     :timer.send_interval(@heartbeat_interval, :heartbeat)
 
     Logger.info("Socket starting")
@@ -26,39 +26,39 @@ defmodule Web.SocketHandler do
     # General purpose channels
     Web.Endpoint.subscribe("restart")
 
-    {:ok, req, %State{status: "inactive"}}
+    {:ok, %State{status: "inactive"}}
   end
 
-  def websocket_handle({:text, message}, req, state) do
+  def websocket_handle({:text, message}, state) do
     Logger.debug(message, type: :socket)
 
     with {:ok, message} <- Poison.decode(message),
          {:ok, response, state} <- Implementation.receive(state, message) do
-      respond(state, req, response)
+      respond(state, response)
     else
       {:ok, state} ->
-        {:ok, req, state}
+        {:ok, state}
 
       {:disconnect, response, state} ->
         send(self(), {:disconnect})
 
-        {:reply, {:text, Poison.encode!(response)}, req, state}
+        {:reply, {:text, Poison.encode!(response)}, state}
 
       _ ->
-        {:reply, {:text, Poison.encode!(%{status: "unknown"})}, req, state}
+        {:reply, {:text, Poison.encode!(%{status: "unknown"})}, state}
     end
   end
 
-  def websocket_handle({:ping, message}, req, state) do
-    {:reply, {:pong, message}, req, state}
+  def websocket_handle({:ping, message}, state) do
+    {:reply, {:pong, message}, state}
   end
 
-  def websocket_info({:broadcast, event}, req, state) do
-    {:reply, {:text, Poison.encode!(event)}, req, state}
+  def websocket_info({:broadcast, event}, state) do
+    {:reply, {:text, Poison.encode!(event)}, state}
   end
 
   # Ignore broadcasts from the same client id
-  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "restart"}, req, state) do
+  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "restart"}, state) do
     message = %{
       event: "restart",
       ref: UUID.uuid4(),
@@ -67,15 +67,15 @@ defmodule Web.SocketHandler do
       }
     }
 
-    {:reply, {:text, Poison.encode!(message)}, req, state}
+    {:reply, {:text, Poison.encode!(message)}, state}
   end
 
-  def websocket_info(message = %Phoenix.Socket.Broadcast{}, req, state) do
+  def websocket_info(message = %Phoenix.Socket.Broadcast{}, state) do
     client_id = state.game.client_id
 
     case Map.get(message.payload, "game_id") do
       ^client_id ->
-        {:ok, req, state}
+        {:ok, state}
 
       _ ->
         message = %{
@@ -84,38 +84,38 @@ defmodule Web.SocketHandler do
           payload: Map.delete(message.payload, "game_id"),
         }
 
-        {:reply, {:text, Poison.encode!(message)}, req, state}
+        {:reply, {:text, Poison.encode!(message)}, state}
     end
   end
 
-  def websocket_info(:heartbeat, req, state) do
+  def websocket_info(:heartbeat, state) do
     case Implementation.heartbeat(state) do
       {:ok, response, state} ->
-        {:reply, {:text, Poison.encode!(response)}, req, state}
+        {:reply, {:text, Poison.encode!(response)}, state}
 
       {:disconnect, state} ->
         Logger.warn("Disconnecting the socket")
-        {:reply, {:close, 4001, "goodbye"}, req, state}
+        {:reply, {:close, 4001, "goodbye"}, state}
     end
   end
 
-  def websocket_info({:disconnect}, req, state) do
-    {:reply, {:close, 4000, "goodbye"}, req, state}
+  def websocket_info({:disconnect}, state) do
+    {:reply, {:close, 4000, "goodbye"}, state}
   end
 
-  def websocket_info(_message, req, state) do
-    {:reply, {:text, "error"}, req, state}
+  def websocket_info(_message, state) do
+    {:reply, {:text, "error"}, state}
   end
 
   def websocket_terminate(_reason, _req, _state) do
     :ok
   end
 
-  defp respond(state, req, :skip) do
-    {:ok, req, state}
+  defp respond(state, :skip) do
+    {:ok, state}
   end
 
-  defp respond(state, req, response) do
-    {:reply, {:text, Poison.encode!(response)}, req, state}
+  defp respond(state, response) do
+    {:reply, {:text, Poison.encode!(response)}, state}
   end
 end

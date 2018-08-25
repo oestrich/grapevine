@@ -3,8 +3,6 @@ defmodule Web.UserSocket do
 
   channel "channels:*", Web.ChatChannel
 
-  transport :websocket, Phoenix.Transports.WebSocket
-
   def connect(_params, socket) do
     {:ok, socket}
   end

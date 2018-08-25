@@ -1,7 +1,7 @@
 defmodule Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :gossip
 
-  socket("/chat", Web.UserSocket)
+  socket("/chat", Web.UserSocket, websocket: true)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -46,11 +46,6 @@ defmodule Web.Endpoint do
   configuration should be loaded from the system environment.
   """
   def init(_key, config) do
-    if config[:load_from_system_env] do
-      port = System.get_env("PORT") || raise "expected the PORT environment variable to be set"
-      {:ok, Keyword.put(config, :http, [:inet6, port: port])}
-    else
-      {:ok, config}
-    end
+    {:ok, config}
   end
 end
