@@ -229,7 +229,8 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  def receive(state, _frame) do
+  def receive(state, frame) do
+    Logger.warn("Getting an unknown frame - #{inspect(state)} - #{inspect(frame)}")
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
   end
