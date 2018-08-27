@@ -24,7 +24,7 @@
       </div>
 
       <div class="actions">
-        <%= submit "Register Your Game", class: "btn btn-primary btn-block btn-flat" %>
+        <%= submit "Register", class: "btn btn-primary btn-block btn-flat" %>
       </div>
     <% end %>
   </div>
