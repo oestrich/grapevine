@@ -90,6 +90,9 @@ defmodule Web.SocketHandler do
 
   def websocket_info(:heartbeat, state) do
     case Implementation.heartbeat(state) do
+      {:ok, state} ->
+        {:ok, state}
+
       {:ok, response, state} ->
         {:reply, {:text, Poison.encode!(response)}, state}
 

@@ -18,6 +18,21 @@ defmodule Web.Socket.Implementation do
 
   @valid_supports ["channels", "players", "tells"]
 
+  def heartbeat(state = %{status: "inactive"}) do
+    state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
+
+    Logger.debug("Inactive heartbeat", type: :heartbeat)
+
+    case state.heartbeat_count > 3 do
+      true ->
+        SocketInstrumenter.heartbeat_disconnect()
+        {:disconnect, state}
+
+      false ->
+        {:ok, state}
+    end
+  end
+
   def heartbeat(state) do
     SocketInstrumenter.heartbeat()
 
