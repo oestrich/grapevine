@@ -1,0 +1,134 @@
+asyncapi: '1.0.0'
+info:
+  title: Gossip API
+  version: '2.0.0'
+  description: The MUD Chat Network
+  license:
+    name: MIT
+    url: 'https://github.com/oestrich/gossip/blob/master/LICENSE'
+servers:
+  - url: wss://gossip.haus/socket
+    scheme: wss
+    description: Web Socket
+components:
+  messages:
+    authenticateRequest:
+      summary: "Authenticate to the service after connecting"
+      description: |
+        You must send this to authenticate your socket and continue.
+
+        Generates an authenticate response.
+      payload:
+        type: object
+        properties:
+          event:
+            type: string
+          payload:
+            type: object
+            properties:
+              client_id:
+                type: string
+              client_secret:
+                type: string
+              supports:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - "channels"
+                    - "players"
+                    - "tells"
+              channels:
+                type: array
+                items:
+                  type: string
+              version:
+                type: string
+              user_agent:
+                type: string
+          example:
+            event: "authenticate"
+            payload:
+              client_id: "client id"
+              client_secret: "client secret"
+              supports:
+                - "channels"
+              channels:
+                - "gossip"
+              version: "1.0.0"
+              user_agent: "ExVenture 0.25.0"
+
+    authenticateResponse:
+      summary: "Response from an `authenticate` event"
+      payload:
+        type: object
+        properties:
+          event:
+            type: string
+          status:
+            type: string
+            enum:
+              - success
+              - failure
+          payload:
+            type: object
+            properties:
+              unicode:
+                type: string
+                description: |
+                  Sends back a unicode check mark to verify your client supports unicode
+              version:
+                description: "Server version of Gossip"
+                type: string
+        example:
+          event: "authenticate"
+          status: "success"
+          payload:
+            unicode: "✔️"
+            version: "2.0.0"
+
+    heartbeatReceive:
+      summary: "A heartbeat to keep the connection alive"
+      description: |
+        A heartbeat to keep the connection alive
+
+        Also syncs the current player list
+      payload:
+        type: object
+        properties:
+          event:
+            type: "string"
+        example:
+          event: "heartbeat"
+
+    heartbeatResponse:
+      summary: "A heartbeat to keep the connection alive"
+      description: |
+        Response to the server sent heartbeat event
+
+        Also syncs the current player list
+      payload:
+        type: object
+        properties:
+          event:
+            type: "string"
+          payload:
+            type: object
+            properties:
+              players:
+                type: array
+                items:
+                  type: string
+        example:
+          event: "heartbeat"
+          payload:
+            players:
+              - "Player1"
+              - "Player2"
+
+events:
+  receive:
+    - $ref: "#/components/messages/authenticateResponse"
+    - $ref: "#/components/messages/heartbeatReceive"
+  send:
+    - $ref: "#/components/messages/authenticateRequest"
