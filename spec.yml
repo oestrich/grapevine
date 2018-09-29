@@ -87,6 +87,180 @@ components:
             unicode: "✔️"
             version: "2.0.0"
 
+    channelsBroadcast:
+      summary: "Receive a new broadcast on a channel you are subscribed to"
+      payload:
+        type: object
+        required:
+          - event
+          - payload
+        properties:
+          event:
+            type: string
+          payload:
+            type: object
+            properties:
+              channel:
+                type: string
+              message:
+                type: string
+              game:
+                type: string
+              name:
+                type: string
+        example:
+          event: "chanels/broadcast"
+          payload:
+            channel: "gossip"
+            message: "Hello everyone!"
+            game: "ExVenture"
+            name: "Player"
+
+    channelsSend:
+      summary: "Send a new message on a channel"
+      description: |
+        Send a new message on a channel
+
+        If a reference is included, you will receive a channelsSendResponse back
+      payload:
+        type: object
+        required:
+          - event
+          - payload
+        properties:
+          event:
+            type: string
+          ref:
+            type: string
+            format: uuid
+          payload:
+            type: object
+            required:
+              - channel
+              - message
+              - name
+            properties:
+              channel:
+                type: string
+              message:
+                type: string
+              name:
+                type: string
+        example:
+          event: "channels/send"
+          ref: "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b"
+          payload:
+            channel: "gossip"
+            message: "Hello there!"
+            name: "Player"
+
+    channelsSendResponse:
+      summary: Response back from a "channels/send" if a reference was included
+      payload:
+        type: object
+        required:
+          - event
+          - ref
+        properties:
+          event:
+            type: string
+          ref:
+            type: string
+            format: uuid
+        example:
+          event: "channels/send"
+          ref: "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b"
+
+    channelsSubscribe:
+      summary: "Subscribe to a new channel"
+      description: |
+        Subscribe to a new channel.
+
+        If a reference is included, you will receive a channelsSubscribeResponse back
+      payload:
+        type: object
+        required:
+          - event
+          - payload
+        properties:
+          event:
+            type: string
+          ref:
+            type: string
+            format: uuid
+          payload:
+            type: object
+            properties:
+              channel:
+                type: string
+        example:
+          event: "channels/subscribe"
+          ref: "a6f8006d-ddac-465e-a3df-fb440e83189b"
+          payload:
+            channel: "gossip"
+
+      channelsSubscribeResponse:
+        summary: "Response from a 'channels/subscribe' event"
+        payload:
+          type: object
+          required:
+            - event
+            - ref
+          properties:
+            event:
+              type: string
+            ref:
+              type: string
+              format: uuid
+          example:
+            event: "channels/subscribe"
+            ref: "a6f8006d-ddac-465e-a3df-fb440e83189b"
+
+    channelsUnsubscribe:
+      summary: "Unsubscribe to a channel"
+      description: |
+        Unsubscribe to a channel.
+
+        If a reference is included, you will receive a channelsUnsubscribeResponse back
+      payload:
+        type: object
+        required:
+          - event
+          - payload
+        properties:
+          event:
+            type: string
+          ref:
+            type: string
+            format: uuid
+          payload:
+            type: object
+            properties:
+              channel:
+                type: string
+        example:
+          event: "channels/unsubscribe"
+          ref: "a6f8006d-ddac-465e-a3df-fb440e83189b"
+          payload:
+            channel: "gossip"
+
+      channelsUnsubscribeResponse:
+        summary: "Response from a 'channels/unsubscribe' event"
+        payload:
+          type: object
+          required:
+            - event
+            - ref
+          properties:
+            event:
+              type: string
+            ref:
+              type: string
+              format: uuid
+          example:
+            event: "channels/unsubscribe"
+            ref: "a6f8006d-ddac-465e-a3df-fb440e83189b"
+
     heartbeatReceive:
       summary: "A heartbeat to keep the connection alive"
       description: |
@@ -126,9 +300,37 @@ components:
               - "Player1"
               - "Player2"
 
+    restart:
+      summary: "A message saying the service is restarting shortly"
+      payload:
+        type: object
+        properties:
+          event:
+            type: string
+          ref:
+            type: string
+            format: uuid
+          payload:
+            downtime:
+              type: integer
+        example:
+          event: restart
+          ref: f15ed228-ad43-4af4-9466-7d353fc9bf11
+          payload:
+            downtime: 15
+
 events:
   receive:
     - $ref: "#/components/messages/authenticateResponse"
+    - $ref: "#/components/messages/channelsBroadcast"
+    - $ref: "#/components/messages/channelsSendResponse"
+    - $ref: "#/components/messages/channelsSubscribeResponse"
+    - $ref: "#/components/messages/channelsUnsubscribeResponse"
     - $ref: "#/components/messages/heartbeatReceive"
+    - $ref: "#/components/messages/restart"
   send:
     - $ref: "#/components/messages/authenticateRequest"
+    - $ref: "#/components/messages/channelsSend"
+    - $ref: "#/components/messages/channelsSubscribe"
+    - $ref: "#/components/messages/channelsUnsubscribe"
+    - $ref: "#/components/messages/heartbeatResponse"
