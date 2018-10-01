@@ -20,14 +20,22 @@ components:
         Generates an authenticate response.
       payload:
         type: object
+        required:
+          - event
+          - payload
         properties:
           event:
             type: string
           payload:
             type: object
+            required:
+              - client_id
+              - client_secret
+              - supports
             properties:
               client_id:
                 type: string
+                descrip
               client_secret:
                 type: string
               supports:
