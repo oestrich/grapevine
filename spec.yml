@@ -1,4 +1,4 @@
-asyncapi: '1.0.0'
+asyncapi: '1.2.0'
 info:
   title: Gossip API
   version: '2.0.0'
@@ -54,17 +54,17 @@ components:
                 type: string
               user_agent:
                 type: string
-          example:
-            event: "authenticate"
-            payload:
-              client_id: "client id"
-              client_secret: "client secret"
-              supports:
-                - "channels"
-              channels:
-                - "gossip"
-              version: "1.0.0"
-              user_agent: "ExVenture 0.25.0"
+        example:
+          event: "authenticate"
+          payload:
+            client_id: "client id"
+            client_secret: "client secret"
+            supports:
+              - "channels"
+            channels:
+              - "gossip"
+            version: "1.0.0"
+            user_agent: "ExVenture 0.25.0"
 
     authenticateResponse:
       summary: "Response from an `authenticate` event"
