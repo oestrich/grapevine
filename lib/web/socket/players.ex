@@ -45,19 +45,29 @@ defmodule Web.Socket.Players do
   def player_sign_in(_state, _event), do: :error
 
   defp sign_player_in(state, name) do
-    payload = %{
-      "game" => state.game.short_name,
-      "game_id" => state.game.client_id,
-      "name" => name
-    }
-
-    Web.Endpoint.broadcast("players:status", "players/sign-in", payload)
+    maybe_broadcast_signin(state, name)
 
     players = Enum.uniq([name | state.players])
     state = %{state | players: players}
     Presence.update_game(state)
 
     {:ok, state}
+  end
+
+  defp maybe_broadcast_signin(state, name) do
+    payload = %{
+      "game" => state.game.short_name,
+      "game_id" => state.game.client_id,
+      "name" => name
+    }
+
+    case state.game.display do
+      true ->
+        Web.Endpoint.broadcast("players:status", "players/sign-in", payload)
+
+      false ->
+        :ok
+    end
   end
 
   @doc """
@@ -82,19 +92,29 @@ defmodule Web.Socket.Players do
   def player_sign_out(_state, _event), do: :error
 
   defp sign_player_out(state, name) do
-    payload = %{
-      "game" => state.game.short_name,
-      "game_id" => state.game.client_id,
-      "name" => name
-    }
-
-    Web.Endpoint.broadcast("players:status", "players/sign-out", payload)
+    maybe_broadcast_signout(state, name)
 
     players = List.delete(state.players, name)
     state = %{state | players: players}
     Presence.update_game(state)
 
     {:ok, state}
+  end
+
+  defp maybe_broadcast_signout(state, name) do
+    payload = %{
+      "game" => state.game.short_name,
+      "game_id" => state.game.client_id,
+      "name" => name
+    }
+
+    case state.game.display do
+      true ->
+        Web.Endpoint.broadcast("players:status", "players/sign-out", payload)
+
+      false ->
+        :ok
+    end
   end
 
   @doc """
