@@ -1,5 +1,7 @@
 # Gossip
 
+![Gossip](https://gossip.haus/images/gossip.png)
+
 Gossip is a MUD chat network.
 
 - [MUD Coders Slack](https://slack.mudcoders.com/)
