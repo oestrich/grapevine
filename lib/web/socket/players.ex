@@ -101,54 +101,55 @@ defmodule Web.Socket.Players do
   Request player status, of connected games
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
-  case supports_players?(state) do
-    true ->
-      Presence.online_games()
-      |> Enum.find(&find_game(&1, game_name))
-      |> maybe_broadcast_state(ref)
+    case supports_players?(state) do
+      true ->
+        Presence.online_games()
+        |> Enum.find(&find_game(&1, game_name))
+        |> maybe_broadcast_state(ref)
 
-      {:ok, state}
+        {:ok, state}
 
-    false ->
-      {:error, :missing_support}
+      false ->
+        {:error, :missing_support}
+    end
   end
-end
 
-def request_status(state, %{"ref" => ref}) when ref != nil do
-  case supports_players?(state) do
-    true ->
-      Presence.online_games()
-      |> Enum.reject(&(&1.game.id == state.game.id))
-      |> Enum.each(&broadcast_state(&1, ref))
+  def request_status(state, %{"ref" => ref}) when ref != nil do
+    case supports_players?(state) do
+      true ->
+        Presence.online_games()
+        |> Enum.reject(&(&1.game.id == state.game.id))
+        |> Enum.filter(&(&1.game.display))
+        |> Enum.each(&broadcast_state(&1, ref))
 
-      {:ok, state}
+        {:ok, state}
 
-    false ->
-      {:error, :missing_support}
+      false ->
+        {:error, :missing_support}
+    end
   end
-end
 
-def request_status(_state, _), do: :error
+  def request_status(_state, _), do: :error
 
-defp find_game(state, name) do
-  state.game.short_name == name
-end
+  defp find_game(state, name) do
+    state.game.short_name == name
+  end
 
-defp maybe_broadcast_state(nil, _ref), do: :ok
+  defp maybe_broadcast_state(nil, _ref), do: :ok
 
-defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
+  defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
 
-defp broadcast_state(state, ref) do
-  event = %{
-    "event" => "players/status",
-    "ref" => ref,
-    "payload" => %{
-      "game" => state.game.short_name,
-      "supports" => state.supports,
-      "players" => state.players
+  defp broadcast_state(state, ref) do
+    event = %{
+      "event" => "players/status",
+      "ref" => ref,
+      "payload" => %{
+        "game" => state.game.short_name,
+        "supports" => state.supports,
+        "players" => state.players
+      }
     }
-  }
 
-  send(self(), {:broadcast, event})
-end
+    send(self(), {:broadcast, event})
+  end
 end

@@ -388,6 +388,7 @@ defmodule Web.Socket.ImplementationTest do
       refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
       assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
       assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
+      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVThree"}}}, 50
     end
 
     test "request game status updates for a single game", %{state: state} do
@@ -632,10 +633,12 @@ defmodule Web.Socket.ImplementationTest do
 
     game2 = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
     game3 = create_game(user, %{name: "ExVenture 2", short_name: "EVTwo"})
+    game4 = create_game(user, %{name: "ExVenture 3", short_name: "EVThree", display: false})
 
     Presence.update_game(game1, [], ["Player1"])
     Presence.update_game(game2, [], ["Player2"])
     Presence.update_game(game3, [], ["Player3"])
+    Presence.update_game(game4, [], ["Player4"])
 
     %{state: state}
   end
