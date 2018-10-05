@@ -90,7 +90,7 @@
   <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
   <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
   <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
-  <li><%= link("Javascript", to: "https://www.npmjs.com/package/gossiphaus") %></li>
+  <li><%= link("Javascript", to: "https://github.com/dinchak/node-gossiphaus") %></li>
 </ul>
 
 <h3 id="connecting">
