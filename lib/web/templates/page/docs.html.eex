@@ -8,6 +8,7 @@
       <li><%= link("Server Support", to: "#server-support") %></li>
       <li><%= link("Connecting", to: "#connecting") %></li>
       <li><%= link("Expectations of a Connecting Game", to: "#citizen") %></li>
+      <li><%= link("Common Vocabulary", to: "#common-vocabulary") %></li>
       <li><%= link("Socket Error Codes", to: "#socket-errors") %></li>
       <li>
         <%= link("Core Events", to: "#channels") %>
@@ -129,6 +130,20 @@
   <li>Formatting for player names should be in the format of <code>Player@GameName</code>.</li>
 </ol>
 
+<h3 id="common-vocabulary">
+  <%= link(to: "#common-vocabulary") do %>
+    Common Vocabulary
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
+
+<ul>
+  <li><code>ref</code> is a unique reference that identifies an event in a request and response. This should be a UUID.</li>
+  <li><code>channel</code> is the name of a channel on Gossip.</li>
+  <li><code>game</code> is the short name of a connected game.</li>
+  <li><code>channel</code> is the name of a lilayer in a connected game.</li>
+</ul>
+
 <h3 id="socket-errors">
   <%= link(to: "#socket-errors") do %>
     Socket Error Codes
@@ -144,6 +159,7 @@
   <dd>Heartbeat failure</dd>
 </dl>
 
+<hr />
 <%= DocView.flag_header("channels", "Core Events") %>
 
 <p><b>Since 1.0.0</b></p>
@@ -155,14 +171,6 @@
 <p><b>Since 1.0.0</b></p>
 
 <p>This event authorizes the connection and afterwards you will start to receive new broadcasts.</p>
-
-<p><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</p>
-
-<p><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</p>
-
-<p><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</p>
-
-<p><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Gossip updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</p>
 
 <pre>{
   "event": "authenticate",
@@ -176,6 +184,13 @@
   }
 }</pre>
 
+<ul>
+  <li><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</li>
+  <li><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</li>
+  <li><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</li>
+  <li><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Gossip updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</li>
+</ul>
+
 <p>You will receive a response from this with a sucess or failure message.</p>
 
 <pre>{
@@ -187,9 +202,10 @@
   }
 }</pre>
 
-<p><code>unicode</code> is present to ensure you properly parse unicode characters.</p>
-
-<p><code>version</code> is the current version of Gossip.</p>
+<ul>
+  <li><code>unicode</code> is present to ensure you properly parse unicode characters.</li>
+  <li><code>version</code> is the current version of Gossip.</li>
+</ul>
 
 <p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</p>
 
@@ -214,7 +230,9 @@
   }
 }</pre>
 
-<p><code>players</code> is optional but suggested. You should include your full player list to keep Gossip in sync with you. Gossip must know your players are online to forward remote tells.</p>
+<ul>
+  <li><code>players</code> is optional but suggested. You should include your full player list to keep Gossip in sync with you. Gossip must know your players are online to forward remote tells.</li>
+</ul>
 
 <p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
 
@@ -234,7 +252,9 @@
   }
 }</pre>
 
-<p><code>downtime</code> is a suggested amount of seconds you should wait before restarting. It is a hint from the server for how long it thinks Gossip will be down.</p>
+<ul>
+  <li><code>downtime</code> is a suggested amount of seconds you should wait before restarting. It is a hint from the server for how long it thinks Gossip will be down.</li>
+</ul>
 
 <hr />
 
@@ -252,9 +272,10 @@
   }
 }</pre>
 
-<p><code>ref</code> is optional.</p>
-
-<p><code>channel</code> is required.</p>
+<ul>
+  <li><code>ref</code> is optional.</li>
+  <li><code>channel</code> is required.</li>
+</ul>
 
 <p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
@@ -288,9 +309,10 @@
   }
 }</pre>
 
-<p><code>ref</code> is optional.</p>
-
-<p><code>channel</code> is required.</p>
+<ul>
+  <li><code>ref</code> is optional.</li>
+  <li><code>channel</code> is required.</li>
+</ul>
 
 <p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
@@ -318,13 +340,11 @@
   }
 }</pre>
 
-<p><code>channel</code> is the channel the message was sent to.</p>
+<ul>
+  <li><code>message</code> is the message itself.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for other payload data.</li>
+</ul>
 
-<p><code>message</code> is the message itself.</p>
-
-<p><code>game</code> is the short name of the game that the message was sent from.</p>
-
-<p><code>name</code> is the name of the player sending the message.</p>
 
 <hr />
 
@@ -348,13 +368,13 @@
   }
 }</pre>
 
-<p><code>ref</code> is optional.</p>
-
-<p><code>channel</code> is required. <code>channel</code> must be a channel you are subscribed to.</p>
-
-<p><code>name</code> is required.</p>
-
-<p><code>message</code> is required.</p>
+<ul>
+  <li><code>ref</code> is olitional.</li>
+  <li><code>channel</code> is required. <code>channel</code> must be a channel you are subscribed to.</li>
+  <li><code>name</code> is required.</li>
+  <li><code>message</code> is required.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
 
 <p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
@@ -387,9 +407,11 @@
   }
 }</pre>
 
-<p><code>ref</code> is optional.</p>
-
-<p><code>name</code> is required.</p>
+<ul>
+  <li><code>ref</code> is optional.</li>
+  <li><code>name</code> is required.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
 
 <p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
@@ -408,9 +430,7 @@
   }
 }</pre>
 
-<p><code>game</code> is the short name of the game that signed into.</p>
-
-<p><code>name</code> is the name of the player that signed in.</p>
+<p>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for information on payload data.</p>
 
 <p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
 
@@ -432,9 +452,11 @@
   }
 }</pre>
 
-<p><code>ref</code> is optional.</p>
-
-<p><code>name</code> is required.</p>
+<ul>
+  <li><code>ref</code> is optional.</li>
+  <li><code>name</code> is required.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
 
 <p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
@@ -452,6 +474,8 @@
     "name": "Player"
   }
 }</pre>
+
+<p>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for information on payload data.</p>
 
 <p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
 
@@ -481,9 +505,10 @@
   }
 }</pre>
 
-<p><code>game</code> is the short name of the game.</p>
-
-<p><code>players</code> is the list of players that are currently online.</p>
+<ul>
+  <li><code>players</code> is the list of players that are currently online.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
 
 <h5>Single Game Update</h5>
 
@@ -497,9 +522,11 @@
   }
 }</pre>
 
-<p><code>ref</code> is required.</p>
-
-<p><code>name</code> is required.</p>
+<ul>
+  <li><code>ref</code> is required.</li>
+  <li><code>name</code> is required.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
 
@@ -529,17 +556,14 @@
   }
 }</pre>
 
-<p><code>ref</code> is required.</p>
-
-<p><code>from_name</code> is required. This is the name of the player sending the tell.</p>
-
-<p><code>to_game</code> is required. This is the name of the game that will process the tell. The server will match this case insensitive against connected games.</p>
-
-<p><code>to_name</code> is required. This is the name of the receiving player.</p>
-
-<p><code>sent_at</code> is required. This is an ISO8601 formatted timestamp of when the message was sent. It <b>must</b> be in UTC, use the <code>Z</code> format for UTC.</p>
-
-<p><code>message</code> is required. This is the body of the tell.</p>
+<ul>
+  <li><code>ref</code> is required.</li>
+  <li><code>from_name</code> is required. This is the name of the player sending the tell.</li>
+  <li><code>to_game</code> is required. This is the name of the game that will process the tell. The server will match this case insensitive against connected games.</li>
+  <li><code>to_name</code> is required. This is the name of the receiving player.</li>
+  <li><code>sent_at</code> is required. This is an ISO8601 formatted timestamp of when the message was sent. It <b>must</b> be in UTC, use the <code>Z</code> format for UTC.</li>
+  <li><code>message</code> is required. This is the body of the tell.</li>
+</ul>
 
 <p>If the game and player are online, you will receive a response back.</p>
 
@@ -586,14 +610,12 @@
   }
 }</pre>
 
-<p><code>from_name</code> is the name of the player sending the tell.</p>
-
-<p><code>from_game</code> is the name of the game sending the tell.</p>
-
-<p><code>to_name</code> is the name of the receiving player.</p>
-
-<p><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</p>
-
-<p><code>message</code> is the body of the tell.</p>
+<ul>
+  <li><code>from_name</code> is the name of the player sending the tell.</li>
+  <li><code>from_game</code> is the name of the game sending the tell.</li>
+  <li><code>to_name</code> is the name of the receiving player.</li>
+  <li><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</li>
+  <li><code>message</code> is the body of the tell.</li>
+</ul>
   </div>
 </div>
