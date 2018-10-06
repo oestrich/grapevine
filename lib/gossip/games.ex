@@ -4,11 +4,13 @@ defmodule Gossip.Games do
   """
 
   alias Gossip.Games.Game
+  alias Gossip.Games.UserAgent
   alias Gossip.Repo
 
   @type id :: integer()
   @type game_params :: map()
   @type token :: String.t()
+  @type user_agent :: String.t()
 
   @doc """
   Start a new game
@@ -72,6 +74,40 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Register a connecting games user agent
+  """
+  @spec register_user_agent(user_agent()) :: {:ok, UserAgent.t()}
+  def register_user_agent(version) do
+    case get_user_agent(version) do
+      {:ok, user_agent} ->
+        {:ok, user_agent}
+
+      {:error, :not_found} ->
+        create_user_agent(version)
+    end
+  end
+
+  defp create_user_agent(version) do
+    %UserAgent{}
+    |> UserAgent.changeset(%{version: version})
+    |> Repo.insert()
+  end
+
+  @doc """
+  Get a user agent by its version string
+  """
+  @spec get_user_agent(user_agent()) :: {:ok, UserAgent.t()} | {:error, :not_found}
+  def get_user_agent(version) do
+    case Repo.get_by(UserAgent, version: version) do
+      nil ->
+        {:error, :not_found}
+
+      user_agent ->
+        {:ok, user_agent}
+    end
+  end
+
+  @doc """
   Update a game
   """
   @spec regenerate_client_tokens(User.t(), id()) :: {:ok, Game.t()}
@@ -128,10 +164,21 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
+        maybe_register_user_agent(game)
         {:ok, game}
 
       {:error, _} ->
         {:error, :invalid}
+    end
+  end
+
+  defp maybe_register_user_agent(game) do
+    case game.user_agent do
+      nil ->
+        :ok
+
+      user_agent ->
+        register_user_agent(user_agent)
     end
   end
 end
