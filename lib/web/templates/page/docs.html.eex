@@ -8,6 +8,7 @@
       <li><%= link("Server Support", to: "#server-support") %></li>
       <li><%= link("Connecting", to: "#connecting") %></li>
       <li><%= link("Expectations of a Connecting Game", to: "#citizen") %></li>
+      <li><%= link("Socket Error Codes", to: "#socket-errors") %></li>
       <li>
         <%= link("Core Events", to: "#channels") %>
         <ul>
@@ -128,6 +129,21 @@
   <li>Formatting for player names should be in the format of <code>Player@GameName</code>.</li>
 </ol>
 
+<h3 id="socket-errors">
+  <%= link(to: "#socket-errors") do %>
+    Socket Error Codes
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
+
+<dl>
+  <dt>4000</dt>
+  <dd>Authentication failed</dd>
+
+  <dt>4001</dt>
+  <dd>Heartbeat failure</dd>
+</dl>
+
 <%= DocView.flag_header("channels", "Core Events") %>
 
 <p><b>Since 1.0.0</b></p>
@@ -187,7 +203,7 @@
   "event": "heartbeat",
 }</pre>
 
-<p>When you receive a heartbeat, you must respond to it with a heartbeat of your own. This should include a list of your players that are online.</p>
+<p>When you receive a heartbeat, you <b>must</b> respond to it with a heartbeat of your own.</p>
 
 <pre>{
   "event": "heartbeat",
@@ -196,13 +212,15 @@
   }
 }</pre>
 
+<p><code>players</code> is optional but suggested. You should include your full player list to keep Gossip in sync with you. Gossip must know your players are online to forward remote tells.</p>
+
 <p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
 
 <hr />
 
 <%= DocView.event_header("restart") %>
 
-<p>When Gossip knows a restart is imminent, you will receive this event. This event will be sent when mostly before a server restart due to a deploy.</p>
+<p>When Gossip knows a restart is imminent, you will receive this event. This event will be sent before a server restart due to a deploy.</p>
 
 <p>After receiving this event, your connection to Gossip may drop at any moment.</p>
 
@@ -232,7 +250,11 @@
   }
 }</pre>
 
-<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+<p><code>ref</code> is optional.</p>
+
+<p><code>channel</code> is required.</p>
+
+<p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
   "event": "channels/subscribe",
@@ -264,7 +286,11 @@
   }
 }</pre>
 
-<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+<p><code>ref</code> is optional.</p>
+
+<p><code>channel</code> is required.</p>
+
+<p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
   "event": "channels/unsubscribe",
@@ -296,11 +322,11 @@
 
 <p><b>Since 1.0.0</b></p>
 
-<p>To send a new message, use this event. <code>channel</code> must be a channel you are subscribed to. All of the fields in the <code>payload</code> are required.</p>
+<p>To send a new message, use this event.</p>
 
 <p>The <code>message</code> in the payload will have MXP tags stripped before broadcasting. Do not send MXP data.</p>
 
-<p>You will not get a broadcast message back for messages you send.</p>
+<p>You will not get a <code>channels/broadcast</code> event for messages you send.</p>
 
 <pre>{
   "event": "channels/send",
@@ -312,7 +338,15 @@
   }
 }</pre>
 
-<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+<p><code>ref</code> is optional.</p>
+
+<p><code>channel</code> is required. <code>channel</code> must be a channel you are subscribed to.</p>
+
+<p><code>name</code> is required.</p>
+
+<p><code>message</code> is required.</p>
+
+<p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
   "event": "channels/send",
@@ -333,7 +367,7 @@
 
 <p>When a player signs into your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
 
-<p>You will not get a broadcast message back for messages you send.</p>
+<p>You will not receive a <code>players/sign-in</code> event back for messages you send.</p>
 
 <pre>{
   "event": "players/sign-in",
@@ -343,7 +377,11 @@
   }
 }</pre>
 
-<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+<p><code>ref</code> is optional.</p>
+
+<p><code>name</code> is required.</p>
+
+<p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
   "event": "players/sign-in",
@@ -370,7 +408,7 @@
 
 <p>When a player signs out of your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
 
-<p>You will not get a broadcast message back for messages you send.</p>
+<p>You will not receive a <code>players/sign-out</code> event back for messages you send.</p>
 
 <pre>{
   "event": "players/sign-out",
@@ -380,7 +418,11 @@
   }
 }</pre>
 
-<p>On success, if a <code>ref</code> is included then you will get a response back confirming your message.</p>
+<p><code>ref</code> is optional.</p>
+
+<p><code>name</code> is required.</p>
+
+<p>If a <code>ref</code> is included then you will get a response back confirming your message.</p>
 
 <pre>{
   "event": "players/sign-out",
@@ -438,6 +480,8 @@
 }</pre>
 
 <p><code>ref</code> is required.</p>
+
+<p><code>name</code> is required.</p>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
 
@@ -533,15 +577,5 @@
 <p><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</p>
 
 <p><code>message</code> is the body of the tell.</p>
-
-<h3 id="socket-errors">Socket Error Code</h3>
-
-<dl>
-  <dt>4000</dt>
-  <dd>Authentication failed</dd>
-
-  <dt>4001</dt>
-  <dd>Heartbeat failure</dd>
-</dl>
   </div>
 </div>
