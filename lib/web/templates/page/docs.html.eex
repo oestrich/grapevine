@@ -187,7 +187,9 @@
   }
 }</pre>
 
-<p>The version number returned is the current version of Gossip.</p>
+<p><code>unicode</code> is present to ensure you properly parse unicode characters.</p>
+
+<p><code>version</code> is the current version of Gossip.</p>
 
 <p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</p>
 
@@ -316,6 +318,14 @@
   }
 }</pre>
 
+<p><code>channel</code> is the channel the message was sent to.</p>
+
+<p><code>message</code> is the message itself.</p>
+
+<p><code>game</code> is the short name of the game that the message was sent from.</p>
+
+<p><code>name</code> is the name of the player sending the message.</p>
+
 <hr />
 
 <%= DocView.event_header("channels/send") %>
@@ -398,6 +408,10 @@
   }
 }</pre>
 
+<p><code>game</code> is the short name of the game that signed into.</p>
+
+<p><code>name</code> is the name of the player that signed in.</p>
+
 <p><b>Note:</b> you must still respond to heartbeats with your full list. Each beat fully replaces the list ensuring it keeps in sync. This is for between the beats and notifying connected games.</p>
 
 <hr />
@@ -466,6 +480,10 @@
      "players: ["admin"]
   }
 }</pre>
+
+<p><code>game</code> is the short name of the game.</p>
+
+<p><code>players</code> is the list of players that are currently online.</p>
 
 <h5>Single Game Update</h5>
 
