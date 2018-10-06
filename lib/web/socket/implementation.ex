@@ -333,6 +333,8 @@ defmodule Web.Socket.Implementation do
       }
     }
 
+    send(self(), :heartbeat)
+
     {:ok, response, state}
   end
 
