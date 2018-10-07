@@ -11,6 +11,9 @@ defmodule Gossip.Applications.Application do
     field(:client_id, Ecto.UUID)
     field(:client_secret, Ecto.UUID)
 
+    # Fields to imitate a game
+    field(:display, :boolean, virtual: true, default: false)
+
     timestamps()
   end
 

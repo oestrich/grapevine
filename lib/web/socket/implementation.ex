@@ -7,6 +7,7 @@ defmodule Web.Socket.Implementation do
 
   require Logger
 
+  alias Gossip.Applications
   alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
@@ -260,7 +261,16 @@ defmodule Web.Socket.Implementation do
   end
 
   defp validate_socket(payload) do
-    Games.validate_socket(Map.get(payload, "client_id"), Map.get(payload, "client_secret"), payload)
+    client_id = Map.get(payload, "client_id")
+    client_secret = Map.get(payload, "client_secret")
+
+    case Games.validate_socket(client_id, client_secret, payload) do
+      {:ok, game} ->
+        {:ok, game}
+
+      {:error, :invalid} ->
+        Applications.validate_socket(client_id, client_secret)
+    end
   end
 
   defp validate_supports(payload) do

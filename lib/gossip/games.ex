@@ -12,6 +12,7 @@ defmodule Gossip.Games do
   @type token :: String.t()
   @type user_agent :: String.t()
   @type game_name :: String.t()
+  @type uuid :: String.t()
 
   @doc """
   Start a new game
@@ -127,7 +128,7 @@ defmodule Gossip.Games do
   @doc """
   Validate a socket
   """
-  @spec validate_socket(String.t(), String.t()) :: {:ok, Game.t()} | {:error, :invalid}
+  @spec validate_socket(uuid(), uuid()) :: {:ok, Game.t()} | {:error, :invalid}
   def validate_socket(client_id, client_secret, user_agent_params \\ %{}) do
     with {:ok, client_id} <- Ecto.UUID.cast(client_id),
          {:ok, client_secret} <- Ecto.UUID.cast(client_secret),

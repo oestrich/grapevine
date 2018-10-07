@@ -110,6 +110,44 @@ defmodule Web.Socket.ImplementationTest do
 
       assert_receive {:broadcast, %{error: ~s(Could not subscribe to 'this is bad')}}
     end
+
+    test "validating as an application", %{state: state} do
+      application = create_application()
+
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => application.client_id,
+          "client_secret" => application.client_secret,
+          "supports" => ["channels"],
+        },
+      }
+
+      {:ok, response, state} = Implementation.receive(state, frame)
+
+      assert response.status == "success"
+
+      assert state.status == "active"
+      assert state.game.id == application.id
+    end
+
+    test "invalid application credentials", %{state: state} do
+      application = create_application()
+
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => application.client_id,
+          "client_secret" => "bad secret",
+          "supports" => ["channels"],
+        },
+      }
+
+      {:disconnect, response, state} = Implementation.receive(state, frame)
+
+      assert response.status == "failure"
+      assert state.status == "inactive"
+    end
   end
 
   describe "post a new message" do

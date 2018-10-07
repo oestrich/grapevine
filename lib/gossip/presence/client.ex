@@ -3,6 +3,7 @@ defmodule Gossip.Presence.Client do
   Implementation of the Presence client
   """
 
+  alias Gossip.Applications
   alias Gossip.Games
 
   import Gossip.Presence, only: [ets_key: 0]
@@ -14,16 +15,16 @@ defmodule Gossip.Presence.Client do
   """
   def online_games() do
     keys()
-    |> Enum.map(&fetch_game_from_ets/1)
+    |> Enum.map(&fetch_from_ets/1)
     |> Enum.filter(&filter_online/1)
-    |> Enum.map(&fetch_game_from_db/1)
+    |> Enum.map(&fetch_from_db/1)
     |> Enum.reject(&is_nil/1)
   end
 
-  defp fetch_game_from_ets(game_id) do
-    case :ets.lookup(ets_key(), game_id) do
-      [{^game_id, state}] ->
-        {game_id, state}
+  defp fetch_from_ets(id) do
+    case :ets.lookup(ets_key(), id) do
+      [{^id, state}] ->
+        {id, state}
 
       _ ->
         nil
@@ -37,10 +38,20 @@ defmodule Gossip.Presence.Client do
     Timex.after?(state.timestamp, oldest_online)
   end
 
-  defp fetch_game_from_db({game_id, state}) do
+  defp fetch_from_db({"game:" <> game_id, state}) do
     case Games.get(game_id) do
       {:ok, game} ->
         Map.put(state, :game, game)
+
+      {:error, :not_found} ->
+        nil
+    end
+  end
+
+  defp fetch_from_db({"application:" <> application_id, state}) do
+    case Applications.get(application_id) do
+      {:ok, application} ->
+        Map.put(state, :game, application)
 
       {:error, :not_found} ->
         nil

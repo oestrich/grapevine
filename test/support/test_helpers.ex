@@ -1,5 +1,6 @@
 defmodule Gossip.TestHelpers do
   alias Gossip.Accounts
+  alias Gossip.Applications
   alias Gossip.Channels
   alias Gossip.Games
 
@@ -35,5 +36,16 @@ defmodule Gossip.TestHelpers do
     {:ok, game} = Games.register(user, attributes)
 
     game
+  end
+
+  def create_application(attributes \\ %{}) do
+    attributes = Map.merge(%{
+      name: "Grapevine",
+      short_name: "Grapevine",
+    }, attributes)
+
+    {:ok, application} = Applications.create_application(attributes)
+
+    application
   end
 end

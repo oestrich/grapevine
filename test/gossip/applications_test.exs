@@ -16,4 +16,22 @@ defmodule Gossip.ApplicationsTest do
       assert application.client_id
     end
   end
+
+  describe "validating the socket" do
+    setup do
+      %{application: create_application()}
+    end
+
+    test "when valid", %{application: application} do
+      assert {:ok, _application} = Applications.validate_socket(application.client_id, application.client_secret)
+    end
+
+    test "when bad secret", %{application: application} do
+      assert {:error, :invalid} = Applications.validate_socket(application.client_id, "bad")
+    end
+
+    test "when bad id", %{application: application} do
+      assert {:error, :invalid} = Applications.validate_socket("bad", application.client_id)
+    end
+  end
 end
