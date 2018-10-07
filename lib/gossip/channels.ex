@@ -59,4 +59,21 @@ defmodule Gossip.Channels do
         {:ok, channel}
     end
   end
+
+  @doc """
+  Load the list of blocked channel names
+
+  File is in `priv/channels/block-list.txt`
+
+  This file is a newline separated list of downcased names
+  """
+  @spec name_blocklist() :: [name()]
+  def name_blocklist() do
+    blocklist = Path.join(:code.priv_dir(:gossip), "channels/block-list.txt")
+    {:ok, blocklist} = File.read(blocklist)
+
+    blocklist
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
+  end
 end
