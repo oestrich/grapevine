@@ -44,7 +44,7 @@ defmodule Gossip.TestHelpers do
       short_name: "Grapevine",
     }, attributes)
 
-    {:ok, application} = Applications.create_application(attributes)
+    {:ok, application} = Applications.create(attributes)
 
     application
   end

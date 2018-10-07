@@ -25,8 +25,8 @@ defmodule Gossip.Applications do
 
   @doc """
   """
-  @spec create_application(attributes()) :: {:ok, Application.t()}
-  def create_application(attributes) do
+  @spec create(attributes()) :: {:ok, Application.t()}
+  def create(attributes) do
     %Application{}
     |> Application.changeset(attributes)
     |> Repo.insert()

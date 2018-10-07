@@ -5,7 +5,7 @@ defmodule Gossip.ApplicationsTest do
 
   describe "generating a system level application" do
     test "successfully" do
-      {:ok, application} = Applications.create_application(%{
+      {:ok, application} = Applications.create(%{
         name: "Grapevine",
         short_name: "Grapevine",
       })
