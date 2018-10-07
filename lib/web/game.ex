@@ -10,6 +10,7 @@ defmodule Web.Game do
   def highlighted_game(games) do
     games
     |> Enum.map(& &1.game)
+    |> Enum.filter(&(&1.display))
     |> Enum.filter(&(&1.homepage_url != nil))
     |> Enum.shuffle()
     |> List.first()
