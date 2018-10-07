@@ -9,6 +9,11 @@ defmodule Gossip.Channels.ChannelTest do
       assert changeset.errors[:name]
     end
 
+    test "blocks certain names" do
+      changeset = %Channel{} |> Channel.changeset(%{name: "all"})
+      assert changeset.errors[:name]
+    end
+
     test "shorter names" do
       changeset = %Channel{} |> Channel.changeset(%{name: "thisisalongerchannel"})
       assert changeset.errors[:name]
