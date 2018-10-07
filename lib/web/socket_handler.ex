@@ -70,6 +70,13 @@ defmodule Web.SocketHandler do
     {:reply, {:text, Poison.encode!(message)}, state}
   end
 
+  def websocket_info(message = %Phoenix.Socket.Broadcast{topic: "system:backbone"}, state) do
+    case Implementation.backbone_event(state, message) do
+      {:ok, state} ->
+        {:ok, state}
+    end
+  end
+
   def websocket_info(message = %Phoenix.Socket.Broadcast{}, state) do
     client_id = state.game.client_id
 

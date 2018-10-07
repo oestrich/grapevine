@@ -14,10 +14,15 @@ defmodule Web.Socket.Implementation do
   alias Gossip.Text
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
+  alias Web.Socket.Backbone
   alias Web.Socket.Players
   alias Web.Socket.Tells
 
   @valid_supports ["channels", "players", "tells"]
+
+  def backbone_event(state, message) do
+    Backbone.event(state, message)
+  end
 
   def heartbeat(state = %{status: "inactive"}) do
     state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
@@ -329,6 +334,7 @@ defmodule Web.Socket.Implementation do
     listen_to_channels(channels)
     Players.maybe_listen_to_players_channel(state)
     Tells.maybe_subscribe(state)
+    Backbone.maybe_finalize_authenticate(state)
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
