@@ -6,6 +6,7 @@ defmodule Gossip.Games.Game do
   use Gossip.Schema
 
   alias Gossip.Accounts.User
+  alias Gossip.Games
 
   schema "games" do
     field(:name, :string)
@@ -27,6 +28,8 @@ defmodule Gossip.Games.Game do
     struct
     |> cast(params, [:name, :short_name, :homepage_url, :display])
     |> validate_required([:name, :short_name, :display, :user_id])
+    |> check_name_against_block_list(:name)
+    |> check_name_against_block_list(:short_name)
     |> validate_length(:short_name, less_than_or_equal_to: 15)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/\w+\./)
@@ -45,5 +48,21 @@ defmodule Gossip.Games.Game do
 
   def metadata_changeset(struct, params) do
     cast(struct, params, [:user_agent, :version])
+  end
+
+  defp check_name_against_block_list(changeset, field) do
+    case get_change(changeset, field) do
+      nil ->
+        changeset
+
+      value ->
+        case Enum.member?(Games.name_blocklist(), String.downcase(value)) do
+          true ->
+            add_error(changeset, field, "is blocked")
+
+          false ->
+            changeset
+        end
+    end
   end
 end

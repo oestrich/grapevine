@@ -11,6 +11,7 @@ defmodule Gossip.Games do
   @type game_params :: map()
   @type token :: String.t()
   @type user_agent :: String.t()
+  @type game_name :: String.t()
 
   @doc """
   Start a new game
@@ -180,5 +181,22 @@ defmodule Gossip.Games do
       user_agent ->
         register_user_agent(user_agent)
     end
+  end
+
+  @doc """
+  Load the list of blocked game names
+
+  File is in `priv/games/block-list.txt`
+
+  This file is a newline separated list of downcased names
+  """
+  @spec name_blocklist() :: [game_name()]
+  def name_blocklist() do
+    blocklist = Path.join(:code.priv_dir(:gossip), "games/block-list.txt")
+    {:ok, blocklist} = File.read(blocklist)
+
+    blocklist
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
   end
 end
