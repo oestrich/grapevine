@@ -3,13 +3,15 @@ defmodule Gossip.Repo.Migrations.CreateNetworkApplications do
 
   def change do
     create table(:applications) do
-      add(:short_name, :string)
-      add(:client_id, :uuid)
-      add(:client_secret, :uuid)
+      add(:name, :string, null: false)
+      add(:short_name, :string, null: false)
+      add(:client_id, :uuid, null: false)
+      add(:client_secret, :uuid, null: false)
 
       timestamps()
     end
 
+    create index(:applications, ["lower(name)"], unique: true, name: :applications_lower_name_index)
     create index(:applications, ["lower(short_name)"], unique: true, name: :applications_lower_short_name_index)
     create index(:applications, :client_id, unique: true)
   end

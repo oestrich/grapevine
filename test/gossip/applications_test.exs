@@ -5,8 +5,12 @@ defmodule Gossip.ApplicationsTest do
 
   describe "generating a system level application" do
     test "successfully" do
-      {:ok, application} = Applications.create_application(%{short_name: "Grapevine"})
+      {:ok, application} = Applications.create_application(%{
+        name: "Grapevine",
+        short_name: "Grapevine",
+      })
 
+      assert application.name == "Grapevine"
       assert application.short_name == "Grapevine"
       assert application.client_id
       assert application.client_id
