@@ -4,7 +4,7 @@ defmodule Gossip.Mixfile do
   def project do
     [
       app: :gossip,
-      version: "2.0.0",
+      version: "2.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
