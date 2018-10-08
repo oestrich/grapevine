@@ -8,6 +8,7 @@ defmodule Web.Socket.Implementation do
   require Logger
 
   alias Gossip.Applications
+  alias Gossip.Applications.Application
   alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
@@ -376,6 +377,8 @@ defmodule Web.Socket.Implementation do
     ChannelsInstrumenter.subscribe()
     Web.Endpoint.subscribe("channels:#{channel}")
   end
+
+  defp check_channel_subscribed_to(%{game: %Application{}}, channel), do: {:ok, channel}
 
   defp check_channel_subscribed_to(state, channel) do
     case channel in state.channels do
