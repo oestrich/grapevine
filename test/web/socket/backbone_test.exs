@@ -21,4 +21,29 @@ defmodule Web.Socket.BackboneTest do
       assert_receive %{event: "channels/broadcast", payload: %{message: "hi"}}
     end
   end
+
+  describe "syncing channels" do
+    test "sends channel notices over the backbone" do
+      Web.Endpoint.subscribe("system:backbone")
+
+      create_channel(%{name: "gossip"})
+
+      Backbone.sync_channels()
+
+      assert_receive %{event: "sync/channels"}
+    end
+
+    test "batches into groups of 10" do
+      Web.Endpoint.subscribe("system:backbone")
+
+      Enum.each(1..12, fn i ->
+        create_channel(%{name: "gossip#{[?a + i]}"})
+      end)
+
+      Backbone.sync_channels()
+
+      assert_receive %{event: "sync/channels"}
+      assert_receive %{event: "sync/channels"}
+    end
+  end
 end

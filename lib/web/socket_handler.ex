@@ -74,6 +74,9 @@ defmodule Web.SocketHandler do
     case Implementation.backbone_event(state, message) do
       {:ok, state} ->
         {:ok, state}
+
+      {:ok, response, state} ->
+        {:reply, {:text, Poison.encode!(response)}, state}
     end
   end
 
