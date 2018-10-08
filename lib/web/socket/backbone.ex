@@ -4,6 +4,9 @@ defmodule Web.Socket.Backbone do
 
   Backbone events:
   - "channels/new", payload is the new channel
+
+  Sync events:
+  - "sync/channels", Sync a list of channels
   """
 
   alias Gossip.Applications.Application
@@ -29,7 +32,19 @@ defmodule Web.Socket.Backbone do
   def process_event(state, message = %{event: "channels/new"}) do
     Web.Endpoint.subscribe("channels:#{message.payload.name}")
 
+    broadcast_channels([message.payload])
+
     {:ok, state}
+  end
+
+  def process_event(state, message = %{event: "sync/" <> _}) do
+    response = %{
+      event: message.event,
+      ref: UUID.uuid4(),
+      payload: message.payload,
+    }
+
+    {:ok, response, state}
   end
 
   def process_event(state, _message), do: {:ok, state}
@@ -44,6 +59,7 @@ defmodule Web.Socket.Backbone do
     with {:ok, :application} <- check_for_application(state) do
       subscribe_to_backbone()
       subscribe_to_all()
+      sync_channels()
     end
   end
 
@@ -65,6 +81,27 @@ defmodule Web.Socket.Backbone do
     channels = Channels.all(include_hidden: true)
     Enum.each(channels, fn channel ->
       Web.Endpoint.subscribe("channels:#{channel.name}")
+    end)
+  end
+
+  @doc """
+  Send batches of `sync/channels` events to newly connected sockets
+  """
+  def sync_channels() do
+    channels = Channels.all(include_hidden: true)
+
+    channels
+    |> Enum.chunk_every(10)
+    |> Enum.each(&broadcast_channels/1)
+  end
+
+  defp broadcast_channels(channels) do
+    Web.Endpoint.broadcast("system:backbone", "sync/channels", %{channels: format_channels(channels)})
+  end
+
+  defp format_channels(channels) do
+    Enum.map(channels, fn channel ->
+      Map.take(channel, [:id, :name, :description, :hidden])
     end)
   end
 end
