@@ -3,6 +3,7 @@ defmodule Web.GameView do
 
   alias Gossip.Games
   alias Web.ConnectionView
+  alias Web.ReactView
 
   def render("index.json", %{games: games}) do
     %{

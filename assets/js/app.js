@@ -1,22 +1,35 @@
-// Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
-
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
 import "phoenix_html"
-
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
 
 import ChatSocket from "./socket";
 window.ChatSocket = ChatSocket;
+
+import React from "react";
+import ReactDOM from "react-dom";
+
+import Connection from "./connection";
+
+window.Components = {
+  Connection,
+}
+
+/**
+ * ReactPhoenix
+ *
+ * Copied from https://github.com/geolessel/react-phoenix/blob/master/src/react_phoenix.js
+ */
+class ReactPhoenix {
+  static init() {
+    const elements = document.querySelectorAll('[data-react-class]')
+    Array.prototype.forEach.call(elements, e => {
+      const targetId = document.getElementById(e.dataset.reactTargetId)
+      const targetDiv = targetId ? targetId : e
+      const reactProps = e.dataset.reactProps ? e.dataset.reactProps : "{}"
+      const reactElement = React.createElement(eval(e.dataset.reactClass), JSON.parse(reactProps))
+      ReactDOM.render(reactElement, targetDiv)
+    })
+  }
+}
+
+document.addEventListener("DOMContentLoaded", e => {
+  ReactPhoenix.init();
+})

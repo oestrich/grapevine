@@ -17,7 +17,7 @@ defmodule Web.ConnectionController do
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Coult not create the connection!")
-        |> redirect(to: user_game_path(conn, :index))
+        |> redirect(to: game_path(conn, :show, game_id))
     end
   end
 
