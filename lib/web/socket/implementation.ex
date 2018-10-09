@@ -16,10 +16,11 @@ defmodule Web.Socket.Implementation do
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
   alias Web.Socket.Backbone
+  alias Web.Socket.Games, as: SocketGames
   alias Web.Socket.Players
   alias Web.Socket.Tells
 
-  @valid_supports ["channels", "players", "tells"]
+  @valid_supports ["channels", "players", "tells", "games"]
 
   def backbone_event(state, message) do
     Backbone.event(state, message)
@@ -243,6 +244,24 @@ defmodule Web.Socket.Implementation do
           event
           |> maybe_respond()
           |> fail_response(response)
+
+        {:ok, response, state}
+
+      :error ->
+        {:ok, maybe_respond(event), state}
+    end
+  end
+
+  def receive(state = %{status: "active"}, event = %{"event" => "games/status"}) do
+    case SocketGames.request_status(state, event) do
+      {:ok, state} ->
+        {:ok, :skip, state}
+
+      {:error, :missing_support} ->
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(missing support for "games"))
 
         {:ok, response, state}
 

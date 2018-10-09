@@ -13,8 +13,10 @@ defmodule Gossip.Games.Game do
     field(:short_name, :string)
     field(:user_agent, :string)
     field(:version, :string, default: "1.0.0")
-    field(:homepage_url, :string)
     field(:display, :boolean, default: true)
+
+    field(:description, :string)
+    field(:homepage_url, :string)
 
     field(:client_id, Ecto.UUID)
     field(:client_secret, Ecto.UUID)
@@ -26,7 +28,7 @@ defmodule Gossip.Games.Game do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name, :short_name, :homepage_url, :display])
+    |> cast(params, [:name, :short_name, :homepage_url, :description, :display])
     |> validate_required([:name, :short_name, :display, :user_id])
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)

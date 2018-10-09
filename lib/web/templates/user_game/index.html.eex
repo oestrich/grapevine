@@ -48,6 +48,15 @@
               <% end %>
             </dl>
 
+            <dd>Description</dd>
+            <dl>
+              <%= if game.description do %>
+                <%= game.description %>
+              <% else %>
+                None
+              <% end %>
+            </dl>
+
             <dd>Client ID</dd>
             <dl><code><%= game.client_id %></code></dl>
 

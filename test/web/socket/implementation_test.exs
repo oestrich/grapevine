@@ -671,6 +671,56 @@ defmodule Web.Socket.ImplementationTest do
     end
   end
 
+  describe "games" do
+    setup [:basic_setup, :status_updates]
+
+    test "fetch all updates", %{state: state, game: game} do
+      state = %{state | supports: ["channels", "games"]}
+
+      frame = %{
+        "event" => "games/status",
+        "ref" => UUID.uuid4()
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      game_name = game.short_name
+      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: ^game_name}}}, 50
+      assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVOne"}}}, 50
+      assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVTwo"}}}, 50
+      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVThree"}}}, 50
+    end
+
+    test "does not support the games feature - ref", %{state: state} do
+      frame = %{
+        "event" => "games/status",
+        "ref" => "ref"
+      }
+
+      assert {:ok, response, _state} = Implementation.receive(state, frame)
+
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+
+    test "request game status updates for a single game", %{state: state} do
+      state = %{state | supports: ["channels", "games"]}
+
+      frame = %{
+        "event" => "games/status",
+        "ref" => UUID.uuid4(),
+        "payload" => %{
+          "game" => "EVTwo",
+        }
+      }
+
+      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+
+      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVOne"}}}, 50
+      assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVTwo"}}}, 50
+    end
+  end
+
   describe "available supports" do
     test "channels is valid" do
       assert Implementation.valid_support?("channels")
@@ -682,6 +732,10 @@ defmodule Web.Socket.ImplementationTest do
 
     test "tells is valid" do
       assert Implementation.valid_support?("tells")
+    end
+
+    test "games is valid" do
+      assert Implementation.valid_support?("games")
     end
   end
 

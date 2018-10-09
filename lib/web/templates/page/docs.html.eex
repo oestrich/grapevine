@@ -660,12 +660,11 @@
     "user_agent": "ExVenture 0.26.0",
     "user_agent_repo_url": "https://...",
     "connections": [
-      {"type": "telnet", "host": "example.com", "port": "4000"},
+      {"type": "telnet", "host": "example.com", "port": 4000},
       {"type": "web", "url": "https://example.com/play"}
     ],
     "supports": ["channels", "players", "tells", "games"],
-    "players_online_count": 3,
-    "uptime_seconds": 123
+    "players_online_count": 3
   }
 }</pre>
 
@@ -678,7 +677,6 @@
   <li><code>connections</code> is an array of connection objects. See below for more about <%= link("connections", to: "#game-connections") %>. May not be present</li>
   <li><code>supports</code> if the game is currently connected, this is an array of what the socket supports. May not be present.</li>
   <li><code>players_online_count</code> if the game is currently connected, the number of players that are online. May not be present.</li>
-  <li><code>uptime_seconds</code> if the game is currently connected, the number of seconds the socket has been online. May not be present.</li>
   <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
 </ul>
 

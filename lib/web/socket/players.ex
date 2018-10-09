@@ -165,7 +165,6 @@ defmodule Web.Socket.Players do
       "ref" => ref,
       "payload" => %{
         "game" => state.game.short_name,
-        "supports" => state.supports,
         "players" => state.players
       }
     }
