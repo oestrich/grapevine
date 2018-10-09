@@ -13,4 +13,17 @@ defmodule Web.ConnectionView do
         Map.take(connection, [:type, :host, :port])
     end
   end
+
+  def connection_info(connection) do
+    case connection.type do
+      "web" ->
+        connection.url
+
+      "telnet" ->
+        "#{connection.host}:#{connection.port}"
+
+      "secure telnet" ->
+        "#{connection.host}:#{connection.port}"
+    end
+  end
 end

@@ -1,0 +1,139 @@
+<div class="row mt-3">
+  <div class="col-md-6">
+    <h3 class="game-title">
+      <%= @game.name %> Settings
+      <%= link("Edit", to: game_path(@conn, :edit, @game.id), class: "btn btn-default") %>
+    </h3>
+
+    <dl>
+      <dd>Short Name</dd>
+      <dl><%= @game.short_name %></dl>
+
+      <dd>Homepage URL</dd>
+      <dl>
+        <%= if @game.homepage_url do %>
+          <code><%= link(@game.homepage_url, to: @game.homepage_url) %></code>
+        <% else %>
+          None
+        <% end %>
+      </dl>
+
+      <dd>Description</dd>
+      <dl>
+        <%= if @game.description do %>
+          <%= @game.description %>
+        <% else %>
+          None
+        <% end %>
+      </dl>
+
+      <dd>Client ID</dd>
+      <dl><code><%= @game.client_id %></code></dl>
+
+      <dd>Client Secret</dd>
+      <dl><code><%= @game.client_secret %></code></dl>
+
+      <dd>User Agent</dd>
+      <dl>
+        <%= if @game.user_agent do %>
+          <code><%= @game.user_agent %></code>
+        <% else %>
+          None
+        <% end %>
+      </dl>
+
+      <dd>Display in Connected Games?</dd>
+      <dl><code><%= @game.display %></code></dl>
+
+      <p><%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-warning", data: [confirm: "Are you sure?"]) %></p>
+  </div>
+
+  <div class="col-md-6">
+    <h3>Connections</h3>
+    <%= if Enum.empty?(@game.connections) do %>
+      <b>None</b>
+    <% end %>
+
+    <div class="row">
+      <%= Enum.map(@game.connections, fn connection -> %>
+        <%= render(ConnectionView, "show.html", connection: connection, conn: @conn) %>
+      <% end) %>
+    </div>
+
+    <%= link("Add Web", to: "#add-web", class: "btn btn-secondary add-web") %>
+    <%= link("Add Telnet", to: "#add-telnet", class: "btn btn-secondary add-telnet") %>
+    <%= link("Add Secure Telnet", to: "#add-secure-telnet", class: "btn btn-secondary add-secure-telnet") %>
+
+    <%= form_for(@conn, game_connection_path(@conn, :create, @game.id), [as: :connection, method: "POST", id: "add-web", class: "hidden"], fn f ->%>
+      <%= hidden_input(f, :type, value: "web") %>
+
+      <div class="form-group">
+        <label>
+          URL
+          <%= text_input(f, :url, class: "form-control") %>
+        </label>
+      </div>
+
+      <%= submit("Save", class: "btn btn-primary") %>
+    <% end) %>
+
+    <%= form_for(@conn, game_connection_path(@conn, :create, @game.id), [as: :connection, method: "POST", id: "add-telnet", class: "hidden"], fn f ->%>
+      <%= hidden_input(f, :type, value: "telnet") %>
+
+      <div class="form-group">
+        <label>
+          Host
+          <%= text_input(f, :host, class: "form-control") %>
+        </label>
+
+        <label>
+          Port
+          <%= number_input(f, :port, class: "form-control") %>
+        </label>
+      </div>
+
+      <%= submit("Save", class: "btn btn-primary") %>
+    <% end) %>
+
+    <%= form_for(@conn, game_connection_path(@conn, :create, @game.id), [as: :connection, method: "POST", id: "add-secure-telnet", class: "hidden"], fn f ->%>
+      <%= hidden_input(f, :type, value: "secure telnet") %>
+
+      <div class="form-group">
+        <label>
+          Host
+          <%= text_input(f, :host, class: "form-control") %>
+        </label>
+
+        <label>
+          Port
+          <%= number_input(f, :port, class: "form-control") %>
+        </label>
+      </div>
+
+      <%= submit("Save", class: "btn btn-primary") %>
+    <% end) %>
+  </div>
+</div>
+
+<script type="application/javascript">
+var showHref = function(e) {
+  e.preventDefault();
+  var id = e.target.hash;
+  document.querySelector(id).classList.remove("hidden");
+};
+
+var addWebButtons = document.querySelectorAll(".add-web");
+for (var i = 0; i < addWebButtons.length; i++) {
+  addWebButtons[i].addEventListener("click", showHref);
+}
+
+var addTelnetButtons = document.querySelectorAll(".add-telnet");
+for (var i = 0; i < addTelnetButtons.length; i++) {
+  addTelnetButtons[i].addEventListener("click", showHref);
+}
+
+var addSecureTelnetButtons = document.querySelectorAll(".add-secure-telnet");
+for (var i = 0; i < addSecureTelnetButtons.length; i++) {
+  addSecureTelnetButtons[i].addEventListener("click", showHref);
+}
+</script>

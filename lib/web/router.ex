@@ -25,13 +25,13 @@ defmodule Web.Router do
 
     get("/docs", PageController, :docs)
 
-    resources("/games", GameController, only: [:index, :edit, :update]) do
+    resources("/games/mine", UserGameController, only: [:index, :create])
+
+    resources("/games", GameController, only: [:index, :show, :edit, :update]) do
       resources("/connections", ConnectionController, only: [:create])
     end
 
     post("/games/:id/regenerate", GameController, :regenerate)
-
-    resources("/games/mine", UserGameController, only: [:index, :create])
 
     get("/media", PageController, :media)
 

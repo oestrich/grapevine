@@ -1,12 +1,9 @@
-<%= case @connection.type do %>
-  <% "web" -> %>
-    <b>Web:</b> <%= @connection.url %>
-
-  <% "telnet" -> %>
-    <b>Telnet:</b> <%= @connection.host %>:<%= @connection.port %>
-
-  <% "secure telnet" -> %>
-    <b>TLS:</b> <%= @connection.host %>:<%= @connection.port %>
-<% end %>
-
-<%= link("Delete", to: connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-danger") %>
+<div class="col-md-12 mb-3">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><%= String.capitalize(@connection.type) %></h5>
+      <p class="card-text"><%= connection_info(@connection) %></p>
+      <%= link("Delete", to: connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-danger") %>
+    </div>
+  </div>
+</div>

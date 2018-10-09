@@ -14,6 +14,22 @@ defmodule Web.GameController do
     |> render(:index)
   end
 
+  def show(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    case Games.get(user, id) do
+      {:ok, game} ->
+        conn
+        |> assign(:game, game)
+        |> render("show.html")
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Could not find that game.")
+        |> redirect(to: page_path(conn, :index))
+    end
+  end
+
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
@@ -35,10 +51,10 @@ defmodule Web.GameController do
     %{current_user: user} = conn.assigns
 
     with {:ok, game} <- Games.get(user, id),
-         {:ok, _game} <- Games.update(game, params) do
+         {:ok, game} <- Games.update(game, params) do
       conn
       |> put_flash(:info, "Game updated!")
-      |> redirect(to: user_game_path(conn, :index))
+      |> redirect(to: game_path(conn, :show, game.id))
     end
   end
 
@@ -46,10 +62,10 @@ defmodule Web.GameController do
     %{current_user: user} = conn.assigns
 
     case Games.regenerate_client_tokens(user, id) do
-      {:ok, _game} ->
+      {:ok, game} ->
         conn
         |> put_flash(:info, "Game updated!")
-        |> redirect(to: user_game_path(conn, :index))
+        |> redirect(to: game_path(conn, :show, game.id))
 
       {:error, _} ->
         conn
