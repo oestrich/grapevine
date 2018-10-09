@@ -669,7 +669,7 @@
 }</pre>
 
 <ul>
-  <li><code>display</code> is a less restrictive name for the game.</li>
+  <li><code>display_name</code> is a less restrictive name for the game.</li>
   <li><code>description</code> is text about the game.</li>
   <li><code>homepage_url</code> is the home page for the game.</li>
   <li><code>user_agent</code> is the reported user agent of the connectin game. May not be present.</li>
