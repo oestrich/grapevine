@@ -3,9 +3,13 @@ defmodule Gossip.Games do
   Context for games
   """
 
+  alias Gossip.Accounts.User
+  alias Gossip.Games.Connection
   alias Gossip.Games.Game
   alias Gossip.Games.UserAgent
   alias Gossip.Repo
+
+  import Ecto.Query
 
   @type id :: integer()
   @type game_params :: map()
@@ -38,6 +42,17 @@ defmodule Gossip.Games do
       game ->
         {:ok, game}
     end
+  end
+
+  @doc """
+  Get games for a user
+  """
+  @spec for_user(User.t()) :: [Game.t()]
+  def for_user(user) do
+    Game
+    |> where([g], g.user_id == ^user.id)
+    |> preload([:connections])
+    |> Repo.all()
   end
 
   @doc """
@@ -182,6 +197,55 @@ defmodule Gossip.Games do
       user_agent ->
         register_user_agent(user_agent)
     end
+  end
+
+  @doc """
+  Check if a user can manage a connection
+  """
+  @spec user_owns_connection?(User.t(), Connection.t()) :: boolean()
+  def user_owns_connection?(user, connection) do
+    connection = Repo.preload(connection, :game)
+    connection.game.user_id == user.id
+  end
+
+  @doc """
+  Get a connection by an id
+  """
+  @spec get_connection(id()) :: {:ok, Connection.t()} | {:error, :not_found}
+  def get_connection(id) do
+    case Repo.get_by(Connection, id: id) do
+      nil ->
+        {:error, :not_found}
+
+      connection ->
+        {:ok, connection}
+    end
+  end
+
+  @doc """
+  Create a new game connection
+  """
+  def create_connection(game, params) do
+    game
+    |> Ecto.build_assoc(:connections)
+    |> Connection.changeset(params)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Update a game connection
+  """
+  def update_connection(connection, params) do
+    connection
+    |> Connection.update_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
+  Delete a game connection
+  """
+  def delete_connection(connection) do
+    Repo.delete(connection)
   end
 
   @doc """

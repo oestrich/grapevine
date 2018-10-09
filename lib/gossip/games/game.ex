@@ -7,6 +7,7 @@ defmodule Gossip.Games.Game do
 
   alias Gossip.Accounts.User
   alias Gossip.Games
+  alias Gossip.Games.Connection
 
   schema "games" do
     field(:name, :string)
@@ -22,6 +23,8 @@ defmodule Gossip.Games.Game do
     field(:client_secret, Ecto.UUID)
 
     belongs_to(:user, User)
+
+    has_many(:connections, Connection)
 
     timestamps()
   end
