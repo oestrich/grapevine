@@ -28,14 +28,20 @@ defmodule Gossip.TestHelpers do
   end
 
   def create_game(user, attributes \\ %{}) do
-    attributes = Map.merge(%{
+    {:ok, game} = Games.register(user, game_attributes(attributes))
+
+    game
+  end
+
+  def game_struct(attributes \\ %{}) do
+    struct(Games.Game, game_attributes(attributes))
+  end
+
+  def game_attributes(attributes) do
+    Map.merge(%{
       name: "A MUD",
       short_name: "AM",
     }, attributes)
-
-    {:ok, game} = Games.register(user, attributes)
-
-    game
   end
 
   def create_application(attributes \\ %{}) do

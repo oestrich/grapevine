@@ -84,4 +84,98 @@ defmodule Gossip.GamesTest do
       assert first_user_agent.id == second_user_agent.id
     end
   end
+
+  describe "checking a connection matches a user" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "is owned", %{user: user, game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      assert Games.user_owns_connection?(user, connection)
+    end
+
+    test "is not owned", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      user = create_user(%{email: "other@example.com"})
+      refute Games.user_owns_connection?(user, connection)
+    end
+  end
+
+  describe "create a new connection" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "web", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      assert connection.game_id == game.id
+      assert connection.type == "web"
+      assert connection.url == "http://example.com/play"
+    end
+
+    test "telnet", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+
+      assert connection.game_id == game.id
+      assert connection.type == "telnet"
+      assert connection.host == "example.com"
+      assert connection.port == 4000
+    end
+
+    test "secure telnet", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+
+      assert connection.game_id == game.id
+      assert connection.type == "secure telnet"
+      assert connection.host == "example.com"
+      assert connection.port == 4000
+    end
+  end
+
+  describe "update a connection" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "web", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} = Games.update_connection(connection, %{url: "http://example.com/"})
+
+      assert connection.url == "http://example.com/"
+    end
+
+    test "telnet", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
+
+      assert connection.host == "game.example.com"
+    end
+
+    test "secure telnet", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
+
+      assert connection.host == "game.example.com"
+    end
+  end
+
+  describe "delete a connection" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "deletes it", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      {:ok, _connection} = Games.delete_connection(connection)
+    end
+  end
 end

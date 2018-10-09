@@ -21,9 +21,14 @@ defmodule Web.Router do
 
     resources("/chat", ChatController, only: [:index, :show])
 
+    resources("/connections", ConnectionController, only: [:delete])
+
     get("/docs", PageController, :docs)
 
-    resources("/games", GameController, only: [:index, :edit, :update])
+    resources("/games", GameController, only: [:index, :edit, :update]) do
+      resources("/connections", ConnectionController, only: [:create])
+    end
+
     post("/games/:id/regenerate", GameController, :regenerate)
 
     resources("/games/mine", UserGameController, only: [:index, :create])

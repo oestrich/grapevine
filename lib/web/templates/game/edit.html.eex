@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-4 offset-md-4">
+  <div class="col-md-6 offset-md-3">
     <h3>Create a new Game</h3>
 
     <%= form_for(@changeset, game_path(@conn, :update, @game.id), fn f -> %>
@@ -18,6 +18,11 @@
         <%= label(f, :homepage_url, "Homepage URL") %>
         <%= text_input(f, :homepage_url, class: "form-control") %>
         <span class="help-block">Link to the game's homepage.</span>
+      </div>
+
+      <div class="form-group">
+        <%= label(f, :description) %>
+        <%= textarea(f, :description, class: "form-control", rows: 5) %>
       </div>
 
       <div class="form-group form-check">

@@ -1,0 +1,12 @@
+<%= case @connection.type do %>
+  <% "web" -> %>
+    <b>Web:</b> <%= @connection.url %>
+
+  <% "telnet" -> %>
+    <b>Telnet:</b> <%= @connection.host %>:<%= @connection.port %>
+
+  <% "secure telnet" -> %>
+    <b>TLS:</b> <%= @connection.host %>:<%= @connection.port %>
+<% end %>
+
+<%= link("Delete", to: connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-danger") %>

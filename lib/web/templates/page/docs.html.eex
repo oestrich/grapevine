@@ -37,6 +37,12 @@
           <li><%= link("tells/receive", to: "#tells-receive") %></li>
         </ul>
       </li>
+      <li>
+        <%= link("Game Events", to: "#games") %>
+        <ul>
+          <li><%= link("games/status", to: "#games-status") %></li>
+        </ul>
+      </li>
     </ul>
   </div>
 
@@ -485,7 +491,7 @@
 
 <p><b>Since 1.1.0</b></p>
 
-<p>To check the status of other games on the network, send a <code>players/status</code> event.</p>
+<p>To check the status of other players on the network, send a <code>players/status</code> event.</p>
 
 <pre>{
   "event": "players/status",
@@ -617,5 +623,135 @@
   <li><code>sent_at</code> is an ISO8601 formatted timestamp of when the message was sent. It is in UTC.</li>
   <li><code>message</code> is the body of the tell.</li>
 </ul>
+
+<hr />
+
+<%= DocView.flag_header("games", "Game Events") %>
+
+<p><b>Since 2.1.0</b></p>
+
+<p>These events are related to the <code>games</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
+
+<hr />
+
+<%= DocView.event_header("games/status") %>
+
+<p><b>Since 2.1.0</b></p>
+
+<p>To check the status of other games on the network, send a <code>games/status</code> event.</p>
+
+<pre>{
+  "event": "games/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4"
+}</pre>
+
+<p><code>ref</code> is required.</p>
+
+<p>In response you will receive a message per connected game.</p>
+
+<pre>{
+  "event": "games/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "payload": {
+    "game": "ExVenture",
+    "display_name": "An ExVenture game",
+    "description": "...",
+    "homepage_url": "https://...",
+    "user_agent": "ExVenture 0.26.0",
+    "user_agent_repo_url": "https://...",
+    "connections": [
+      {"type": "telnet", "host": "example.com", "port": 4000},
+      {"type": "web", "url": "https://example.com/play"}
+    ],
+    "supports": ["channels", "players", "tells", "games"],
+    "players_online_count": 3
+  }
+}</pre>
+
+<ul>
+  <li><code>display</code> is a less restrictive name for the game.</li>
+  <li><code>description</code> is text about the game.</li>
+  <li><code>homepage_url</code> is the home page for the game.</li>
+  <li><code>user_agent</code> is the reported user agent of the connectin game. May not be present.</li>
+  <li><code>user_agent_repo_url</code> is a source code repository for the user agent. May not be present.</li>
+  <li><code>connections</code> is an array of connection objects. See below for more about <%= link("connections", to: "#game-connections") %>. May not be present</li>
+  <li><code>supports</code> if the game is currently connected, this is an array of what the socket supports. May not be present.</li>
+  <li><code>players_online_count</code> if the game is currently connected, the number of players that are online. May not be present.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
+
+<h5 id="game-connections">Connection Object</h5>
+
+<p>A connection object contains ways of connecting to play the game.</p>
+
+<p>Current connection types are: <code>web</code>, <code>telnet</code>, and <code>secure telnet</code>.</p>
+
+<h6>web</h6>
+
+This is a web based game.
+
+<pre>{
+  "type": "web",
+  "url": "https://example.com/play"
+}</pre>
+
+<ul>
+  <li><code>type</code> is set to "web"</li>
+  <li><code>url</code> is a web page to start playing the game.</li>
+</ul>
+
+<h6>telnet</h6>
+
+This is a standard telnet connection.
+
+<pre>{
+  "type": "telnet",
+  "host": "example.com"
+  "port": 4000
+}</pre>
+
+<ul>
+  <li><code>type</code> is set to "telnet"</li>
+  <li><code>host</code> is the host name to connect to.</li>
+  <li><code>port</code> is the port to connect to.</li>
+</ul>
+
+<h6>secure telnet</h6>
+
+This is a TLS secured telnet connection.
+
+<pre>{
+  "type": "secure telnet",
+  "host": "example.com"
+  "port": 4000
+}</pre>
+
+<ul>
+  <li><code>type</code> is set to "telnet"</li>
+  <li><code>host</code> is the host name to connect to.</li>
+  <li><code>port</code> is the port to connect to.</li>
+</ul>
+
+<h5>Query for a Single Game</h5>
+
+<p>You can request an update to a single game by adding its name in the payload.</p>
+
+<p>You can also query for games not connected via this event.</p>
+
+<pre>{
+  "event": "games/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "payload": {
+    "game": "ExVenture"
+  }
+}</pre>
+
+<ul>
+  <li><code>ref</code> is required.</li>
+  <li><code>name</code> is required.</li>
+  <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
+</ul>
+
+<p>You will only receive an update for that game. It will look the same as above.</p>
   </div>
 </div>
