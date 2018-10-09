@@ -40,7 +40,7 @@ defmodule Gossip.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, game}
+        {:ok, Repo.preload(game, [:connections])}
     end
   end
 

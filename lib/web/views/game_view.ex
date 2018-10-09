@@ -2,6 +2,7 @@ defmodule Web.GameView do
   use Web, :view
 
   alias Gossip.Games
+  alias Web.ConnectionView
 
   def render("index.json", %{games: games}) do
     %{
@@ -24,6 +25,23 @@ defmodule Web.GameView do
     |> maybe_add(:homepage_url, game.homepage_url)
     |> maybe_add(:user_agent, game.user_agent)
     |> maybe_add(:user_agent_url, user_agent_repo_url(game.user_agent))
+    |> maybe_add_connections(game)
+  end
+
+  defp maybe_add_connections(json, game) do
+    case game.connections do
+      [] ->
+        json
+
+      connections ->
+        connections =
+          connections
+          |> Enum.map(fn connection ->
+            ConnectionView.render("show.json", %{connection: connection})
+          end)
+
+        Map.put(json, :connections, connections)
+    end
   end
 
   defp user_agent_repo_url(nil), do: nil

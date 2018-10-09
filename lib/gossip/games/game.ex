@@ -35,6 +35,7 @@ defmodule Gossip.Games.Game do
     |> validate_required([:name, :short_name, :display, :user_id])
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)
+    |> maybe_strip_carriage_returns_from_description()
     |> validate_length(:short_name, less_than_or_equal_to: 15)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/\w+\./)
@@ -53,6 +54,16 @@ defmodule Gossip.Games.Game do
 
   def metadata_changeset(struct, params) do
     cast(struct, params, [:user_agent, :version])
+  end
+
+  defp maybe_strip_carriage_returns_from_description(changeset) do
+    case get_change(changeset, :description) do
+      nil ->
+        changeset
+
+      description ->
+        put_change(changeset, :description, String.replace(description, "\r", ""))
+    end
   end
 
   defp check_name_against_block_list(changeset, field) do

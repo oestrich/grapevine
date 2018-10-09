@@ -44,12 +44,12 @@ defmodule Gossip.Games.Connection do
       "telnet" ->
         changeset
         |> validate_required([:host, :port])
-        |> validate_inclusion(:port, 0..65535)
+        |> validate_inclusion(:port, 0..65_535)
 
       "secure telnet" ->
         changeset
         |> validate_required([:host, :port])
-        |> validate_inclusion(:port, 0..65535)
+        |> validate_inclusion(:port, 0..65_535)
     end
   end
 end

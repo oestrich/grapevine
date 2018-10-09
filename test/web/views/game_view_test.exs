@@ -5,7 +5,10 @@ defmodule Web.GameViewTest do
 
   describe "games/status json" do
     setup do
-      %{game: game_struct(%{})}
+      game = game_struct(%{})
+      game = %{game | connections: []}
+
+      %{game: game}
     end
 
     test "includes names", %{game: game} do
@@ -44,6 +47,16 @@ defmodule Web.GameViewTest do
       game = %{game | description: "A game about..."}
       json = GameView.render("status.json", %{game: game})
       assert json.description == game.description
+    end
+
+    test "includes connections if available", %{game: game} do
+      game = %{game | connections: []}
+      json = GameView.render("status.json", %{game: game})
+      refute Map.has_key?(json, :connections)
+
+      game = %{game | connections: [%{type: "web", url: "https://example.com/play"}]}
+      json = GameView.render("status.json", %{game: game})
+      assert length(json.connections) == 1
     end
   end
 end
