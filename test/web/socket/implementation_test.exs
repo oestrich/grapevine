@@ -28,6 +28,8 @@ defmodule Web.Socket.ImplementationTest do
       assert state.status == "active"
       assert state.game.id == game.id
       assert state.players == ["player"]
+    after
+      Presence.reset()
     end
 
     test "invalid credentials", %{state: state, game: game} do
@@ -109,6 +111,8 @@ defmodule Web.Socket.ImplementationTest do
       assert response.status == "success"
 
       assert_receive {:broadcast, %{error: ~s(Could not subscribe to 'this is bad')}}
+    after
+      Presence.reset()
     end
 
     test "validating as an application", %{state: state} do
@@ -129,6 +133,8 @@ defmodule Web.Socket.ImplementationTest do
 
       assert state.status == "active"
       assert state.game.id == application.id
+    after
+      Presence.reset()
     end
 
     test "invalid application credentials", %{state: state} do

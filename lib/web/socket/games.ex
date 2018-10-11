@@ -12,6 +12,19 @@ defmodule Web.Socket.Games do
   def supports_games?(state), do: "games" in state.supports
 
   @doc """
+  Maybe subcsribe to the games status channel, only if the socket supports it
+  """
+  def maybe_listen_to_games_channel(state) do
+    case supports_games?(state) do
+      true ->
+        Web.Endpoint.subscribe("games:status")
+
+      false ->
+        :ok
+    end
+  end
+
+  @doc """
   Request game status, of connected games
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do

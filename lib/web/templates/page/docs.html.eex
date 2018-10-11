@@ -634,6 +634,40 @@
 
 <hr />
 
+<%= DocView.event_header("games/connect") %>
+
+<p><b>Since 2.2.0</b></p>
+
+<p>While connected with the <code>games</code> flag, you may receive a connection notice for another game. You may wish to broadcast to your local players that game has come online from the network.</p>
+
+<pre>{
+  "event": "games/connect",
+  "payload": {
+    "game": "ExVenture",
+  }
+}</pre>
+
+<p>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for information on payload data.</p>
+
+<hr />
+
+<%= DocView.event_header("games/disconnect") %>
+
+<p><b>Since 2.2.0</b></p>
+
+<p>While connected with the <code>games</code> flag, you may receive a disconnection notice for another game. You may wish to broadcast to your local players that game has gone offline from the network.</p>
+
+<pre>{
+  "event": "games/disconnect",
+  "payload": {
+    "game": "ExVenture",
+  }
+}</pre>
+
+<p>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for information on payload data.</p>
+
+<hr />
+
 <%= DocView.event_header("games/status") %>
 
 <p><b>Since 2.1.0</b></p>

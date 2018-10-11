@@ -353,12 +353,13 @@ defmodule Web.Socket.Implementation do
 
     listen_to_channels(channels)
     Players.maybe_listen_to_players_channel(state)
+    SocketGames.maybe_listen_to_games_channel(state)
     Tells.maybe_subscribe(state)
     Backbone.maybe_finalize_authenticate(state)
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
-    Presence.update_game(state)
+    Presence.track(state)
 
     response = %{
       event: "authenticate",

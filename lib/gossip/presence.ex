@@ -30,6 +30,11 @@ defmodule Gossip.Presence do
     GenServer.call(__MODULE__, {:update, state.game, state.supports, state.players})
   end
 
+  @spec track(Socket.state()) :: :ok
+  def track(state) do
+    GenServer.call(__MODULE__, {:track, self(), state.game, state.supports, state.players})
+  end
+
   # for tests
   @doc false
   def reset() do
@@ -47,8 +52,15 @@ defmodule Gossip.Presence do
 
   def init(_) do
     create_table()
+    Process.flag(:trap_exit, true)
+    {:ok, initial_state()}
+  end
 
-    {:ok, %{}}
+  def handle_call({:track, socket, game, supports, players}, _from, state) do
+    Process.link(socket)
+    {:ok, state} = Server.track(state, socket, game)
+    {:ok, state} = Server.update_game(state, game, supports, players)
+    {:reply, :ok, state}
   end
 
   def handle_call({:update, game, supports, players}, _from, state) do
@@ -56,11 +68,18 @@ defmodule Gossip.Presence do
     {:reply, :ok, state}
   end
 
-  def handle_call({:reset}, _from, state) do
+  def handle_call({:reset}, _from, _state) do
     :ets.delete(ets_key())
     create_table()
-    {:reply, :ok, state}
+    {:reply, :ok, initial_state()}
   end
+
+  def handle_info({:EXIT, pid, _reason}, state) do
+    {:ok, state} = Server.remove_socket(state, pid)
+    {:noreply, state}
+  end
+
+  defp initial_state(), do: %{sockets: []}
 
   defp create_table() do
     :ets.new(@ets_key, [:set, :protected, :named_table])
