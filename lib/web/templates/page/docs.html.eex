@@ -40,6 +40,8 @@
       <li>
         <%= link("Game Events", to: "#games") %>
         <ul>
+          <li><%= link("games/connect", to: "#games-connect") %></li>
+          <li><%= link("games/disconnect", to: "#games-disconnect") %></li>
           <li><%= link("games/status", to: "#games-status") %></li>
         </ul>
       </li>
