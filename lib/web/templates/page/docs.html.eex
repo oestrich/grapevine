@@ -652,6 +652,7 @@
 <pre>{
   "event": "games/status",
   "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "status": "success",
   "payload": {
     "game": "ExVenture",
     "display_name": "An ExVenture game",
@@ -751,6 +752,15 @@ This is a TLS secured telnet connection.
   <li><code>name</code> is required.</li>
   <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
 </ul>
+
+<p>When requesting a single game, you might receive an error response. If the game is unknown.</p>
+
+<pre>{
+  "event": "games/status",
+  "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
+  "status": "failure",
+  "error": "unknown game"
+}</pre>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
   </div>

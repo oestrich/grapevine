@@ -19,7 +19,7 @@ defmodule Web.Socket.Games do
       true ->
         Presence.online_games()
         |> Enum.find(&find_game(&1, game_name))
-        |> maybe_broadcast_state(ref)
+        |> maybe_broadcast_game(ref)
 
         {:ok, state}
 
@@ -49,9 +49,18 @@ defmodule Web.Socket.Games do
     state.game.short_name == name
   end
 
-  defp maybe_broadcast_state(nil, _ref), do: :ok
+  defp maybe_broadcast_game(nil, ref) do
+    event = %{
+      "event" => "games/status",
+      "ref" => ref,
+      "status" => "failure",
+      "error" => "unknown game"
+    }
 
-  defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
+    send(self(), {:broadcast, event})
+  end
+
+  defp maybe_broadcast_game(game, ref), do: broadcast_state(game, ref)
 
   defp broadcast_state(presence, ref) do
     game_payload = GameView.render("status.json", %{game: presence.game})
@@ -64,6 +73,7 @@ defmodule Web.Socket.Games do
     event = %{
       "event" => "games/status",
       "ref" => ref,
+      "status" => "success",
       "payload" => payload
     }
 
