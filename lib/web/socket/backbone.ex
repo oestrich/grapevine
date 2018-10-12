@@ -131,7 +131,7 @@ defmodule Web.Socket.Backbone do
 
   defp format_games(games) do
     Enum.map(games, fn game ->
-      GameView.render("status.json", %{game: game})
+      GameView.render("sync.json", %{game: game})
     end)
   end
 end

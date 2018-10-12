@@ -29,6 +29,14 @@ defmodule Web.GameView do
     |> maybe_add_connections(game)
   end
 
+  def render("sync.json", %{game: game}) do
+    json = render("status.json", %{game: game})
+
+    json
+    |> Map.put(:id, game.id)
+    |> Map.put(:display, game.display)
+  end
+
   defp maybe_add_connections(json, game) do
     case game.connections do
       [] ->
