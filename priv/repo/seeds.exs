@@ -4,8 +4,14 @@ alias Gossip.Channels
 alias Gossip.Games
 alias Gossip.Repo
 
-{:ok, _channel} = Channels.create(%{name: "gossip"})
-{:ok, _channel} = Channels.create(%{name: "testing"})
+{:ok, channel} = Channels.create(%{name: "gossip"})
+channel
+|> Ecto.Changeset.change(%{hidden: false})
+|> Repo.update!()
+{:ok, channel} = Channels.create(%{name: "testing"})
+channel
+|> Ecto.Changeset.change(%{hidden: false})
+|> Repo.update!()
 
 # Create a known grapevine login
 {:ok, application} = Applications.create(%{name: "Grapevine", short_name: "Grapevine"})
