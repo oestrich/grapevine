@@ -31,6 +31,16 @@ defmodule Gossip.Games do
   def edit(game), do: game |> Game.changeset(%{})
 
   @doc """
+  Get all games
+  """
+  @spec all() :: [Game.t()]
+  def all() do
+    Game
+    |> preload([:connections])
+    |> Repo.all()
+  end
+
+  @doc """
   Fetch a game
   """
   @spec get(id()) :: Game.t()
@@ -74,10 +84,19 @@ defmodule Gossip.Games do
   """
   @spec register(User.t(), game_params()) :: {:ok, Game.t()}
   def register(user, params) do
-    user
-    |> Ecto.build_assoc(:games)
-    |> Game.changeset(params)
-    |> Repo.insert()
+    changeset =
+      user
+      |> Ecto.build_assoc(:games)
+      |> Game.changeset(params)
+
+    case changeset |> Repo.insert() do
+      {:ok, game} ->
+        Web.Endpoint.broadcast("system:backbone", "games/new", game)
+        {:ok, game}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -85,9 +104,16 @@ defmodule Gossip.Games do
   """
   @spec update(Game.t(), game_params()) :: {:ok, Game.t()}
   def update(game, params) do
-    game
-    |> Game.changeset(params)
-    |> Repo.update()
+    changeset = game |> Game.changeset(params)
+
+    case changeset |> Repo.update() do
+      {:ok, game} ->
+        Web.Endpoint.broadcast("system:backbone", "games/edit", game)
+        {:ok, game}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -226,26 +252,49 @@ defmodule Gossip.Games do
   Create a new game connection
   """
   def create_connection(game, params) do
-    game
-    |> Ecto.build_assoc(:connections)
-    |> Connection.changeset(params)
-    |> Repo.insert()
+    changeset =
+      game
+      |> Ecto.build_assoc(:connections)
+      |> Connection.changeset(params)
+
+    case changeset |> Repo.insert() do
+      {:ok, connection} ->
+        broadcast_game_update(game.id)
+        {:ok, connection}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Update a game connection
   """
   def update_connection(connection, params) do
-    connection
-    |> Connection.update_changeset(params)
-    |> Repo.update()
+    changeset = connection |> Connection.update_changeset(params)
+
+    case changeset |> Repo.update() do
+      {:ok, connection} ->
+        broadcast_game_update(connection.game_id)
+        {:ok, connection}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Delete a game connection
   """
   def delete_connection(connection) do
-    Repo.delete(connection)
+    case Repo.delete(connection) do
+      {:ok, connection} ->
+        broadcast_game_update(connection.game_id)
+        {:ok, connection}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -263,5 +312,14 @@ defmodule Gossip.Games do
     blocklist
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
+  end
+
+  defp broadcast_game_update(game_id) do
+    case get(game_id) do
+      {:ok, game} ->
+        Web.Endpoint.broadcast("system:backbone", "games/edit", game)
+      _ ->
+        :ok
+    end
   end
 end

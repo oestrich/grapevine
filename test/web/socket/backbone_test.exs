@@ -2,6 +2,7 @@ defmodule Web.Socket.BackboneTest do
   use Gossip.DataCase
 
   alias Gossip.Channels.Channel
+  alias Gossip.Games.Game
   alias Web.Socket.Backbone
 
   describe "backbone processing" do
@@ -19,6 +20,32 @@ defmodule Web.Socket.BackboneTest do
       Web.Endpoint.broadcast("channels:newChannel", "channels/broadcast", %{message: "hi"})
 
       assert_receive %{event: "channels/broadcast", payload: %{message: "hi"}}
+    end
+
+    test "broadcasts new games", %{state: state} do
+      Web.Endpoint.subscribe("system:backbone")
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "games/new",
+        payload: %Game{name: "game", connections: []}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive %{event: "sync/games"}
+    end
+
+    test "broadcasts edited games", %{state: state} do
+      Web.Endpoint.subscribe("system:backbone")
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "games/edit",
+        payload: %Game{name: "game", connections: []}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive %{event: "sync/games"}
     end
   end
 
@@ -44,6 +71,36 @@ defmodule Web.Socket.BackboneTest do
 
       assert_receive %{event: "sync/channels"}
       assert_receive %{event: "sync/channels"}
+    end
+  end
+
+  describe "syncing games" do
+    test "sends game notices over the backbone" do
+      Web.Endpoint.subscribe("system:backbone")
+
+      user = create_user()
+      create_game(user)
+
+      Backbone.sync_games()
+
+      assert_receive %{event: "sync/games"}
+    end
+
+    test "batches into groups of 10" do
+      Web.Endpoint.subscribe("system:backbone")
+
+      user = create_user()
+      Enum.each(1..12, fn i ->
+        create_game(user, %{
+          name: "gossip#{[?a + i]}",
+          short_name: "gossip#{[?a + i]}",
+        })
+      end)
+
+      Backbone.sync_games()
+
+      assert_receive %{event: "sync/games"}
+      assert_receive %{event: "sync/games"}
     end
   end
 end

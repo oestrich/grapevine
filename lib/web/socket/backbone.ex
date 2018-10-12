@@ -11,6 +11,8 @@ defmodule Web.Socket.Backbone do
 
   alias Gossip.Applications.Application
   alias Gossip.Channels
+  alias Gossip.Games
+  alias Web.GameView
 
   @doc """
   Process a system backbone message
@@ -31,9 +33,17 @@ defmodule Web.Socket.Backbone do
   """
   def process_event(state, message = %{event: "channels/new"}) do
     Web.Endpoint.subscribe("channels:#{message.payload.name}")
-
     broadcast_channels([message.payload])
+    {:ok, state}
+  end
 
+  def process_event(state, message = %{event: "games/new"}) do
+    broadcast_games([message.payload])
+    {:ok, state}
+  end
+
+  def process_event(state, message = %{event: "games/edit"}) do
+    broadcast_games([message.payload])
     {:ok, state}
   end
 
@@ -60,6 +70,7 @@ defmodule Web.Socket.Backbone do
       subscribe_to_backbone()
       subscribe_to_all()
       sync_channels()
+      sync_games()
     end
   end
 
@@ -95,13 +106,32 @@ defmodule Web.Socket.Backbone do
     |> Enum.each(&broadcast_channels/1)
   end
 
+  @doc """
+  Send batches of `sync/games` events to newly connected sockets
+  """
+  def sync_games() do
+    Games.all()
+    |> Enum.chunk_every(10)
+    |> Enum.each(&broadcast_games/1)
+  end
+
   defp broadcast_channels(channels) do
     Web.Endpoint.broadcast("system:backbone", "sync/channels", %{channels: format_channels(channels)})
+  end
+
+  defp broadcast_games(games) do
+    Web.Endpoint.broadcast("system:backbone", "sync/games", %{games: format_games(games)})
   end
 
   defp format_channels(channels) do
     Enum.map(channels, fn channel ->
       Map.take(channel, [:id, :name, :description, :hidden])
+    end)
+  end
+
+  defp format_games(games) do
+    Enum.map(games, fn game ->
+      GameView.render("status.json", %{game: game})
     end)
   end
 end
