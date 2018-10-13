@@ -149,7 +149,7 @@
   <li><code>ref</code> is a unique reference that identifies an event in a request and response. This should be a UUID.</li>
   <li><code>channel</code> is the name of a channel on Gossip.</li>
   <li><code>game</code> is the short name of a connected game.</li>
-  <li><code>channel</code> is the name of a lilayer in a connected game.</li>
+  <li><code>name</code> is the name of a player in a connected game.</li>
 </ul>
 
 <h3 id="socket-errors">
