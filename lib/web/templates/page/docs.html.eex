@@ -523,7 +523,7 @@
 <p>You can request an update to a single game by adding its name in the payload.</p>
 
 <pre>{
-  "event": "players/status",
+  "event": "games/status",
   "ref": "c8cbaef2-b6e9-4110-b712-a312aee9e7d4",
   "payload": {
     "game": "ExVenture"
