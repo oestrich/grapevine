@@ -35,6 +35,7 @@ defmodule Web.GameView do
     json
     |> Map.put(:id, game.id)
     |> Map.put(:display, game.display)
+    |> Map.put(:allow_character_registration, game.allow_character_registration)
   end
 
   defp maybe_add_connections(json, game) do

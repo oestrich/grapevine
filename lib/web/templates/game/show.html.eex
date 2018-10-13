@@ -45,6 +45,9 @@
       <dd>Display in Connected Games?</dd>
       <dl><code><%= @game.display %></code></dl>
 
+      <dd>Allow Character Registration on Grapevine?</dd>
+      <dl><code><%= @game.allow_character_registration %></code></dl>
+
       <p><%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-warning", data: [confirm: "Are you sure?"]) %></p>
   </div>
 

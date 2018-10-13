@@ -31,6 +31,12 @@
         <% end %>
       </div>
 
+      <div class="form-group form-check">
+        <%= label(f, :allow_character_registration) do %>
+          <%= checkbox(f, :allow_character_registration, class: "form-check-input") %> Allow Character Registrations on Grapevine?
+        <% end %>
+      </div>
+
       <%= submit("Update Game", class: "btn btn-secondary") %>
     <% end) %>
   </div>
