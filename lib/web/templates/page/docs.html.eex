@@ -292,7 +292,7 @@
   "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b"
 }</pre>
 
-<p>You may receive a response to this as a failure, channel names are validated. Channel names must be &lt;=15 characters and letters only.</p>
+<p>You may receive a response to this as a failure, channel names are validated. See <%= link("basic channel info for validation info", to: "#channels-basic") %>.</p>
 
 <pre>{
   "event": "channels/subscribe",
