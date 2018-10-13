@@ -20,7 +20,7 @@ defmodule Gossip.Channels.Channel do
     |> cast(params, [:name, :description])
     |> validate_required([:name])
     |> validate_format(:name, ~r/^[a-zA-Z-_]+$/)
-    |> validate_length(:name, max: 15)
+    |> validate_length(:name, min: 3, max: 15)
     |> check_name_against_block_list()
     |> unique_constraint(:name)
   end

@@ -28,5 +28,10 @@ defmodule Gossip.Channels.ChannelTest do
       changeset = %Channel{} |> Channel.changeset(%{name: "thisisalongerchannel"})
       assert changeset.errors[:name]
     end
+
+    test "not long enough" do
+      changeset = %Channel{} |> Channel.changeset(%{name: "a"})
+      assert changeset.errors[:name]
+    end
   end
 end
