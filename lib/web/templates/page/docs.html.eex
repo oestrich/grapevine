@@ -81,7 +81,7 @@
   <% end) %>
 </ul>
 
-<p>In addition to those listed above, you can subscribe to any valid channel name. This will make dynamically create channels as you subscribe to them. They will exist for anyone to connect to, but not show on the website until the admins approve them.</p>
+<p>In addition to those listed above, you can subscribe to any valid channel name. This will dynamically create channels as you subscribe to them. They will exist for anyone to connect to, but not show on the website until the admins approve them.</p>
 
 <p>A valid channel name must be &lt;=15 characters, letters (<code>a-zA-Z</code>), <code>_</code>, and <code>-</code> only.</p>
 
