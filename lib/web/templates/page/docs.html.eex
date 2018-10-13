@@ -83,7 +83,7 @@
 
 <p>In addition to those listed above, you can subscribe to any valid channel name. This will dynamically create channels as you subscribe to them. They will exist for anyone to connect to, but not show on the website until the admins approve them.</p>
 
-<p>A valid channel name must be &lt;=15 characters, letters (<code>a-zA-Z</code>), <code>_</code>, and <code>-</code> only.</p>
+<p>A valid channel name must be between 3 and 15 characters (inclusive), letters (<code>a-zA-Z</code>), <code>_</code>, and <code>-</code> only.</p>
 
 <p>You will only recieve messages for channels you are subscribed to.</p>
 
@@ -215,7 +215,7 @@
   <li><code>version</code> is the current version of Gossip.</li>
 </ul>
 
-<p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. See more below about valid channel names.</p>
+<p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. <%= link("See more above about valid channel names.", to: "#channels-basic") %></p>
 
 <hr />
 
@@ -292,7 +292,7 @@
   "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b"
 }</pre>
 
-<p>You may receive a response to this as a failure, channel names are validated. See <%= link("basic channel info for validation info", to: "#channels-basic") %>.</p>
+<p>You may receive a response to this as a failure, channel names are validated. <%= link("See more above about valid channel names.", to: "#channels-basic") %></p>
 
 <pre>{
   "event": "channels/subscribe",
