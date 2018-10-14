@@ -22,6 +22,15 @@ application
 })
 |> Repo.update!()
 
+# Create a known raisin login
+{:ok, application} = Applications.create(%{name: "Raisin", short_name: "Raisin"})
+application
+|> Ecto.Changeset.change(%{
+  client_id: "c922b500-bbf8-4944-8c40-3c5559376c96",
+  client_secret: "b178f27b-df94-4324-abf8-d82be5e91419"
+})
+|> Repo.update!()
+
 # Create a know user and game login
 {:ok, user} = Accounts.register(%{
   email: "admin@example.com",
