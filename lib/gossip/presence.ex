@@ -5,6 +5,8 @@ defmodule Gossip.Presence do
 
   use GenServer
 
+  alias Gossip.Applications.Application
+  alias Gossip.Games.Game
   alias Gossip.Presence.Client
   alias Gossip.Presence.Server
 
@@ -32,7 +34,14 @@ defmodule Gossip.Presence do
 
   @spec track(Socket.state()) :: :ok
   def track(state) do
-    GenServer.call(__MODULE__, {:track, self(), state.game, state.supports, state.players})
+    case state.game do
+      %Application{} ->
+        :ok
+
+      %Game{} ->
+        message = {:track, self(), state.game, state.supports, state.players}
+        GenServer.call(__MODULE__, message)
+    end
   end
 
   # for tests
