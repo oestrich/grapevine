@@ -47,16 +47,6 @@ defmodule Web.Socket.Backbone do
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "sync/" <> _}) do
-    response = %{
-      event: message.event,
-      ref: UUID.uuid4(),
-      payload: message.payload,
-    }
-
-    {:ok, response, state}
-  end
-
   def process_event(state, _message), do: {:ok, state}
 
   @doc """
@@ -116,11 +106,21 @@ defmodule Web.Socket.Backbone do
   end
 
   defp broadcast_channels(channels) do
-    Web.Endpoint.broadcast("system:backbone", "sync/channels", %{channels: format_channels(channels)})
+    event = format_event("sync/channels", %{channels: format_channels(channels)})
+    send(self(), {:broadcast, event})
   end
 
   defp broadcast_games(games) do
-    Web.Endpoint.broadcast("system:backbone", "sync/games", %{games: format_games(games)})
+    event = format_event("sync/games", %{games: format_games(games)})
+    send(self(), {:broadcast, event})
+  end
+
+  defp format_event(event, payload) do
+    %{
+      event: event,
+      ref: UUID.uuid4(),
+      payload: payload,
+    }
   end
 
   defp format_channels(channels) do

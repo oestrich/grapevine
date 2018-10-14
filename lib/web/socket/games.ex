@@ -45,8 +45,8 @@ defmodule Web.Socket.Games do
     case supports_games?(state) do
       true ->
         Presence.online_games()
-        |> Enum.reject(&(&1.game.id == state.game.id))
         |> Enum.filter(&(&1.game.display))
+        |> Enum.reject(&(&1.game.id == state.game.id))
         |> Enum.each(&broadcast_state(&1, ref))
 
         {:ok, state}

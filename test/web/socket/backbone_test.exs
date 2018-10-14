@@ -23,7 +23,6 @@ defmodule Web.Socket.BackboneTest do
     end
 
     test "broadcasts new games", %{state: state} do
-      Web.Endpoint.subscribe("system:backbone")
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/new",
@@ -32,11 +31,10 @@ defmodule Web.Socket.BackboneTest do
 
       Backbone.process_event(state, message)
 
-      assert_receive %{event: "sync/games"}
+      assert_receive {:broadcast, %{event: "sync/games"}}
     end
 
     test "broadcasts edited games", %{state: state} do
-      Web.Endpoint.subscribe("system:backbone")
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/edit",
@@ -45,50 +43,42 @@ defmodule Web.Socket.BackboneTest do
 
       Backbone.process_event(state, message)
 
-      assert_receive %{event: "sync/games"}
+      assert_receive {:broadcast, %{event: "sync/games"}}
     end
   end
 
   describe "syncing channels" do
     test "sends channel notices over the backbone" do
-      Web.Endpoint.subscribe("system:backbone")
-
       create_channel(%{name: "gossip"})
 
       Backbone.sync_channels()
 
-      assert_receive %{event: "sync/channels"}
+      assert_receive {:broadcast, %{event: "sync/channels"}}
     end
 
     test "batches into groups of 10" do
-      Web.Endpoint.subscribe("system:backbone")
-
       Enum.each(1..12, fn i ->
         create_channel(%{name: "gossip#{[?a + i]}"})
       end)
 
       Backbone.sync_channels()
 
-      assert_receive %{event: "sync/channels"}
-      assert_receive %{event: "sync/channels"}
+      assert_receive {:broadcast, %{event: "sync/channels"}}
+      assert_receive {:broadcast, %{event: "sync/channels"}}
     end
   end
 
   describe "syncing games" do
     test "sends game notices over the backbone" do
-      Web.Endpoint.subscribe("system:backbone")
-
       user = create_user()
       create_game(user)
 
       Backbone.sync_games()
 
-      assert_receive %{event: "sync/games"}
+      assert_receive {:broadcast, %{event: "sync/games"}}
     end
 
     test "batches into groups of 10" do
-      Web.Endpoint.subscribe("system:backbone")
-
       user = create_user()
       Enum.each(1..12, fn i ->
         create_game(user, %{
@@ -99,8 +89,8 @@ defmodule Web.Socket.BackboneTest do
 
       Backbone.sync_games()
 
-      assert_receive %{event: "sync/games"}
-      assert_receive %{event: "sync/games"}
+      assert_receive {:broadcast, %{event: "sync/games"}}
+      assert_receive {:broadcast, %{event: "sync/games"}}
     end
   end
 end
