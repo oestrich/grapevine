@@ -5,6 +5,7 @@ defmodule Web.Socket.Games do
 
   alias Gossip.Presence
   alias Web.GameView
+  alias Web.Socket.Implementation
 
   @doc """
   Check if the socket supports games
@@ -46,7 +47,7 @@ defmodule Web.Socket.Games do
       true ->
         Presence.online_games()
         |> Enum.filter(&(&1.game.display))
-        |> Enum.reject(&(&1.game.id == state.game.id))
+        |> Implementation.remove_self_from_game_list(state)
         |> Enum.each(&broadcast_state(&1, ref))
 
         {:ok, state}

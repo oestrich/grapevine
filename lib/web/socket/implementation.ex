@@ -285,6 +285,17 @@ defmodule Web.Socket.Implementation do
     Enum.member?(@valid_supports, support)
   end
 
+  @doc """
+  Filter the connected game from the list of games
+
+  Checks the struct for application sockets
+  """
+  def remove_self_from_game_list(games, state) do
+    Enum.reject(games, fn %{game: game} ->
+      game.id == state.game.id && game.__struct__ == state.game.__struct__
+    end)
+  end
+
   defp validate_socket(payload) do
     client_id = Map.get(payload, "client_id")
     client_secret = Map.get(payload, "client_secret")
