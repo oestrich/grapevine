@@ -31,8 +31,7 @@ Although this list cannot be exhaustive, we explicitly honor diversity in age, g
 If you experience or witness unacceptable behavior—or have any other concerns—please report it by contacting eric@midmud.com or @eric on the [MUD Coders Guild](http://mudcoders.com) Slack. All reports will be handled with discretion. In your report please include:
 
 - Your contact information.
-- Usernames of any individuals involved. If there are additional witnesses, please
-include them as well. Your account of what occurred, and if you believe the incident is ongoing. If there is a publicly available record (e.g. a mailing list archive or a public IRC logger), please include a link.
+- Usernames of any individuals involved. If there are additional witnesses, please include them as well. Your account of what occurred, and if you believe the incident is ongoing. If there is a publicly available record (e.g. a mailing list archive or a public IRC logger), please include a link.
 - Any additional information that may be helpful.
 
 We will respect confidentiality requests for the purpose of protecting victims of abuse. Anyone asked to stop unacceptable behavior is expected to comply immediately. If an individual engages in unacceptable behavior, a moderator may take any action they deem appropriate, up to and including a permanent ban from our community without warning.
