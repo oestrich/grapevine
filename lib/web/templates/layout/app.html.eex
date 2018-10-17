@@ -77,6 +77,8 @@
     <footer>
       <div class="container">
         <%= link("Media", to: page_path(@conn, :media)) %>
+        |
+        <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
         <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>
           <%= img_tag("/images/patron.png") %>
         <% end %>

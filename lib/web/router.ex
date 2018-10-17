@@ -21,6 +21,8 @@ defmodule Web.Router do
 
     resources("/chat", ChatController, only: [:index, :show])
 
+    get("/conduct", PageController, :conduct)
+
     resources("/connections", ConnectionController, only: [:delete])
 
     get("/docs", PageController, :docs)

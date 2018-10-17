@@ -38,6 +38,7 @@ defmodule Gossip.Mixfile do
       {:cowboy, "~> 2.0"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:distillery, "~> 2.0", runtime: false},
+      {:earmark, "~> 1.2"},
       {:gettext, "~> 0.11"},
       {:phoenix, git: "https://github.com/phoenixframework/phoenix.git", override: true},
       {:phoenix_ecto, "~> 3.2"},
