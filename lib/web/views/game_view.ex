@@ -30,12 +30,18 @@ defmodule Web.GameView do
   end
 
   def render("sync.json", %{game: game}) do
-    json = render("status.json", %{game: game})
-
-    json
-    |> Map.put(:id, game.id)
-    |> Map.put(:display, game.display)
-    |> Map.put(:allow_character_registration, game.allow_character_registration)
+    %{
+      id: game.id,
+      game: game.short_name,
+      display_name: game.name,
+      display: game.display,
+      description: game.description,
+      homepage_url: game.homepage_url,
+      user_agent: game.user_agent,
+      user_agent_url: user_agent_repo_url(game.user_agent),
+      connections: format_connections(game.connections),
+      allow_character_registration: game.allow_character_registration,
+    }
   end
 
   defp maybe_add_connections(json, game) do
@@ -44,14 +50,15 @@ defmodule Web.GameView do
         json
 
       connections ->
-        connections =
-          connections
-          |> Enum.map(fn connection ->
-            ConnectionView.render("show.json", %{connection: connection})
-          end)
-
-        Map.put(json, :connections, connections)
+        Map.put(json, :connections, format_connections(connections))
     end
+  end
+
+  defp format_connections(connections) do
+    connections
+    |> Enum.map(fn connection ->
+      ConnectionView.render("show.json", %{connection: connection})
+    end)
   end
 
   defp user_agent_repo_url(nil), do: nil

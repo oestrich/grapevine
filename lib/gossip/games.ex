@@ -207,6 +207,7 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
+        Web.Endpoint.broadcast("system:backbone", "games/edit", game)
         maybe_register_user_agent(game)
         {:ok, game}
 
