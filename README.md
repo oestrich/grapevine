@@ -4,6 +4,8 @@
 
 Gossip is a MUD chat network.
 
+- [Grapevine](https://github.com/oestrich/grapevine)
+- [Raisin](https://github.com/oestrich/raisin)
 - [MUD Coders Slack](https://slack.mudcoders.com/)
 - [Docs](https://gossip.haus/docs)
 - [Patreon](https://www.patreon.com/exventure)
