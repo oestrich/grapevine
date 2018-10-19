@@ -189,7 +189,12 @@ defmodule Web.Socket.Implementation do
         {:ok, response, state}
 
       :error ->
-        {:ok, maybe_respond(event), state}
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(an error occurred, try again))
+
+        {:ok, response, state}
     end
   end
 
@@ -207,7 +212,12 @@ defmodule Web.Socket.Implementation do
         {:ok, response, state}
 
       :error ->
-        {:ok, maybe_respond(event), state}
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(an error occurred, try again))
+
+        {:ok, response, state}
     end
   end
 
@@ -225,7 +235,12 @@ defmodule Web.Socket.Implementation do
         {:ok, response, state}
 
       :error ->
-        {:ok, maybe_respond(event), state}
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(an error occurred, try again))
+
+        {:ok, response, state}
     end
   end
 
@@ -248,7 +263,12 @@ defmodule Web.Socket.Implementation do
         {:ok, response, state}
 
       :error ->
-        {:ok, maybe_respond(event), state}
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(an error occurred, try again))
+
+        {:ok, response, state}
     end
   end
 
@@ -266,7 +286,12 @@ defmodule Web.Socket.Implementation do
         {:ok, response, state}
 
       :error ->
-        {:ok, maybe_respond(event), state}
+        response =
+          event
+          |> maybe_respond()
+          |> fail_response(~s(an error occurred, try again))
+
+        {:ok, response, state}
     end
   end
 
