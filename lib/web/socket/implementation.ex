@@ -21,6 +21,7 @@ defmodule Web.Socket.Implementation do
   alias Web.Socket.Tells
 
   @valid_supports ["channels", "players", "tells", "games"]
+  @disable_debug_seconds 300
 
   def backbone_event(state, message) do
     Backbone.event(state, message)
@@ -97,7 +98,7 @@ defmodule Web.Socket.Implementation do
       ChannelsInstrumenter.subscribe()
       Web.Endpoint.subscribe("channels:#{channel}")
 
-      {:ok, maybe_respond(event), state}
+      {:ok, maybe_respond(event, state), state}
     else
       {:error, name} ->
         message = %{
@@ -109,7 +110,7 @@ defmodule Web.Socket.Implementation do
         {:ok, maybe_ref(message, event), state}
 
       _ ->
-        {:ok, maybe_respond(event), state}
+        {:ok, maybe_respond(event, state), state}
     end
   end
 
@@ -121,10 +122,10 @@ defmodule Web.Socket.Implementation do
       ChannelsInstrumenter.unsubscribe()
       Web.Endpoint.unsubscribe("channels:#{channel}")
 
-      {:ok, maybe_respond(event), state}
+      {:ok, maybe_respond(event, state), state}
     else
       _ ->
-        {:ok, maybe_respond(event), state}
+        {:ok, maybe_respond(event, state), state}
     end
   end
 
@@ -148,10 +149,10 @@ defmodule Web.Socket.Implementation do
       ChannelsInstrumenter.send()
       Web.Endpoint.broadcast("channels:#{channel}", "channels/broadcast", payload)
 
-      {:ok, maybe_respond(event), state}
+      {:ok, maybe_respond(event, state), state}
     else
       _ ->
-        {:ok, maybe_respond(event), state}
+        {:ok, maybe_respond(event, state), state}
     end
   end
 
@@ -178,12 +179,12 @@ defmodule Web.Socket.Implementation do
   def receive(state = %{status: "active"}, event = %{"event" => "players/sign-in"}) do
     case Players.player_sign_in(state, event) do
       {:ok, state} ->
-        {:ok, maybe_respond(event), state}
+        {:ok, maybe_respond(event, state), state}
 
       {:error, :missing_support} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(missing support for "players"))
 
         {:ok, response, state}
@@ -191,7 +192,7 @@ defmodule Web.Socket.Implementation do
       :error ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(an error occurred, try again))
 
         {:ok, response, state}
@@ -201,12 +202,12 @@ defmodule Web.Socket.Implementation do
   def receive(state = %{status: "active"}, event = %{"event" => "players/sign-out"}) do
     case Players.player_sign_out(state, event) do
       {:ok, state} ->
-        {:ok, maybe_respond(event), state}
+        {:ok, maybe_respond(event, state), state}
 
       {:error, :missing_support} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(missing support for "players"))
 
         {:ok, response, state}
@@ -214,7 +215,7 @@ defmodule Web.Socket.Implementation do
       :error ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(an error occurred, try again))
 
         {:ok, response, state}
@@ -229,7 +230,7 @@ defmodule Web.Socket.Implementation do
       {:error, :missing_support} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(missing support for "players"))
 
         {:ok, response, state}
@@ -237,7 +238,7 @@ defmodule Web.Socket.Implementation do
       :error ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(an error occurred, try again))
 
         {:ok, response, state}
@@ -249,7 +250,7 @@ defmodule Web.Socket.Implementation do
       {:ok, state} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> succeed_response()
 
         {:ok, response, state}
@@ -257,7 +258,7 @@ defmodule Web.Socket.Implementation do
       {:error, response} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(response)
 
         {:ok, response, state}
@@ -265,7 +266,7 @@ defmodule Web.Socket.Implementation do
       :error ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(an error occurred, try again))
 
         {:ok, response, state}
@@ -280,7 +281,7 @@ defmodule Web.Socket.Implementation do
       {:error, :missing_support} ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(missing support for "games"))
 
         {:ok, response, state}
@@ -288,7 +289,7 @@ defmodule Web.Socket.Implementation do
       :error ->
         response =
           event
-          |> maybe_respond()
+          |> maybe_respond(state)
           |> fail_response(~s(an error occurred, try again))
 
         {:ok, response, state}
@@ -378,6 +379,7 @@ defmodule Web.Socket.Implementation do
   defp finalize_auth(state, game, payload, supports) do
     channels = Map.get(payload, "channels", [])
     players = Map.get(payload, "players", [])
+    debug = Map.get(payload, "debug", false)
 
     state =
       state
@@ -386,12 +388,15 @@ defmodule Web.Socket.Implementation do
       |> Map.put(:supports, supports)
       |> Map.put(:channels, channels)
       |> Map.put(:players, players)
+      |> Map.put(:debug, debug)
 
     listen_to_channels(channels)
     Players.maybe_listen_to_players_channel(state)
     SocketGames.maybe_listen_to_games_channel(state)
     Tells.maybe_subscribe(state)
     Backbone.maybe_finalize_authenticate(state)
+
+    maybe_schedule_disable_debug(state)
 
     SocketInstrumenter.connect_success()
     Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
@@ -409,6 +414,16 @@ defmodule Web.Socket.Implementation do
     send(self(), :heartbeat)
 
     {:ok, response, state}
+  end
+
+  defp maybe_schedule_disable_debug(state) do
+    case state.debug do
+      true ->
+        Process.send_after(self(), {:disable_debug}, :timer.seconds(@disable_debug_seconds))
+
+      false ->
+        :ok
+    end
   end
 
   defp listen_to_channels(channels) do
@@ -456,8 +471,8 @@ defmodule Web.Socket.Implementation do
     end
   end
 
-  defp maybe_respond(event) do
-    case Map.has_key?(event, "ref") do
+  defp maybe_respond(event, state) do
+    case Map.has_key?(event, "ref") || state.debug do
       true ->
         Map.take(event, ["event", "ref"])
 

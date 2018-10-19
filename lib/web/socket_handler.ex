@@ -116,6 +116,10 @@ defmodule Web.SocketHandler do
     {:reply, {:close, 4000, "goodbye"}, state}
   end
 
+  def websocket_info({:disable_debug}, state) do
+    {:ok, %{state | debug: false}}
+  end
+
   def websocket_info(_message, state) do
     {:reply, {:text, "error"}, state}
   end

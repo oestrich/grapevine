@@ -3,10 +3,11 @@ defmodule Web.Socket.ImplementationTest do
 
   alias Gossip.Presence
   alias Web.Socket.Implementation
+  alias Web.Socket.State
 
   describe "authenticating" do
     setup do
-      %{state: %{status: "inactive"}, game: create_game(create_user())}
+      %{state: %State{status: "inactive"}, game: create_game(create_user())}
     end
 
     test "validating authentication", %{state: state, game: game} do
@@ -161,7 +162,7 @@ defmodule Web.Socket.ImplementationTest do
       user = create_user()
       game = create_game(user)
 
-      state = %{
+      state = %State{
         status: "active",
         game: game,
         channels: ["gossip"],
@@ -229,7 +230,7 @@ defmodule Web.Socket.ImplementationTest do
       user = create_user()
       game = create_game(user)
 
-      state = %{
+      state = %State{
         status: "active",
         game: game,
         channels: ["gossip"],
@@ -751,7 +752,7 @@ defmodule Web.Socket.ImplementationTest do
 
     Presence.reset()
 
-    state = %Web.Socket.State{
+    state = %State{
       status: "active",
       supports: ["channels"],
       players: [],
