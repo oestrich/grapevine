@@ -158,6 +158,23 @@ defmodule Web.Socket.Core do
     end
   end
 
+  @doc """
+  Filter the connected game from the list of games
+
+  Checks the struct for application sockets
+  """
+  def remove_self_from_game_list(games, state) do
+    Enum.reject(games, fn %{game: game} ->
+      game.id == state.game.id && game.__struct__ == state.game.__struct__
+    end)
+  end
+
+  @doc """
+  Subscribe to a channel
+
+  Broadcasts back an error if the name was invalid. Use in conjunction with
+  `Channels.ensure_channel/1`
+  """
   def subscribe_channel({:error, name}) do
     Logger.info("Trying to subscribe to a bad channel")
 

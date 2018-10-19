@@ -1,4 +1,4 @@
-defmodule Web.Socket.Implementation do
+defmodule Web.Socket.Router do
   @moduledoc """
   WebSocket Implementation
 
@@ -128,16 +128,5 @@ defmodule Web.Socket.Implementation do
     Logger.warn("Getting an unknown frame - #{inspect(state)} - #{inspect(frame)}")
     SocketInstrumenter.unknown_event()
     {:ok, %{status: "unknown"}, state}
-  end
-
-  @doc """
-  Filter the connected game from the list of games
-
-  Checks the struct for application sockets
-  """
-  def remove_self_from_game_list(games, state) do
-    Enum.reject(games, fn %{game: game} ->
-      game.id == state.game.id && game.__struct__ == state.game.__struct__
-    end)
   end
 end

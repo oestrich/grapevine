@@ -5,7 +5,7 @@ defmodule Web.SocketHandler do
 
   @behaviour :cowboy_websocket
 
-  alias Web.Socket.Implementation
+  alias Web.Socket.Router
   alias Web.Socket.State
   alias Metrics.Server, as: Metrics
 
@@ -33,7 +33,7 @@ defmodule Web.SocketHandler do
     Logger.debug(message, type: :socket)
 
     with {:ok, message} <- Poison.decode(message),
-         {:ok, response, state} <- Implementation.receive(state, message) do
+         {:ok, response, state} <- Router.receive(state, message) do
       respond(state, response)
     else
       {:ok, state} ->
@@ -71,7 +71,7 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info(message = %Phoenix.Socket.Broadcast{topic: "system:backbone"}, state) do
-    case Implementation.backbone_event(state, message) do
+    case Router.backbone_event(state, message) do
       {:ok, state} ->
         {:ok, state}
 
@@ -99,7 +99,7 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info(:heartbeat, state) do
-    case Implementation.heartbeat(state) do
+    case Router.heartbeat(state) do
       {:ok, state} ->
         {:ok, state}
 

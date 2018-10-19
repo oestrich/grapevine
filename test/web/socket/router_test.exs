@@ -1,9 +1,9 @@
-defmodule Web.Socket.ImplementationTest do
+defmodule Web.Socket.RouterTest do
   use Gossip.DataCase
 
   alias Gossip.Presence
   alias Web.Socket.Core
-  alias Web.Socket.Implementation
+  alias Web.Socket.Router
   alias Web.Socket.State
 
   describe "authenticating" do
@@ -23,7 +23,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:ok, response, state} = Implementation.receive(state, frame)
+      {:ok, response, state} = Router.receive(state, frame)
 
       assert response.status == "success"
 
@@ -44,7 +44,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:disconnect, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Router.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"
@@ -59,7 +59,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:disconnect, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Router.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"
@@ -75,7 +75,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:disconnect, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Router.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"
@@ -91,7 +91,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:disconnect, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Router.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"
@@ -108,7 +108,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:ok, response, _state} = Implementation.receive(state, frame)
+      {:ok, response, _state} = Router.receive(state, frame)
 
       assert response.status == "success"
 
@@ -129,7 +129,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:ok, response, state} = Implementation.receive(state, frame)
+      {:ok, response, state} = Router.receive(state, frame)
 
       assert response.status == "success"
 
@@ -151,7 +151,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:disconnect, response, state} = Implementation.receive(state, frame)
+      {:disconnect, response, state} = Router.receive(state, frame)
 
       assert response.status == "failure"
       assert state.status == "inactive"
@@ -184,7 +184,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
       assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
@@ -202,7 +202,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       assert_receive %{payload: %{"channel" => "gossip", "message" => "Hello!"}}
     end
@@ -219,7 +219,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
       refute_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}, 50
@@ -248,7 +248,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.channels == ["general", "gossip"]
     end
 
@@ -261,7 +261,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, state} = Implementation.receive(state, frame)
+      assert {:ok, response, state} = Router.receive(state, frame)
 
       assert state.channels == ["gossip"]
       assert response["error"] == ~s(Could not subscribe to "bad channel")
@@ -275,7 +275,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.channels == []
     end
   end
@@ -284,7 +284,7 @@ defmodule Web.Socket.ImplementationTest do
     setup [:basic_setup]
 
     test "sending heartbeats", %{state: state} do
-      {:ok, response, state} = Implementation.heartbeat(state)
+      {:ok, response, state} = Router.heartbeat(state)
 
       assert response == %{event: "heartbeat"}
       assert state.heartbeat_count == 1
@@ -292,7 +292,7 @@ defmodule Web.Socket.ImplementationTest do
 
     test "sending heartbeats - out of counts", %{state: state} do
       state = %{state | heartbeat_count: 3}
-      assert {:disconnect, _state} = Implementation.heartbeat(state)
+      assert {:disconnect, _state} = Router.heartbeat(state)
     end
 
     test "receive a heartbeat", %{state: state} do
@@ -303,7 +303,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:ok, :skip, state} = Implementation.receive(state, frame)
+      {:ok, :skip, state} = Router.receive(state, frame)
 
       assert state.heartbeat_count == 0
       assert state.players == ["player"]
@@ -324,7 +324,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == ["Player"]
       assert_receive %{event: "players/sign-in"}, 50
     end
@@ -341,7 +341,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == ["Player"]
       refute_receive %{event: "players/sign-in"}, 50
     end
@@ -357,7 +357,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == ["Player"]
       refute_receive %{event: "players/sign-in"}, 50
     end
@@ -371,7 +371,7 @@ defmodule Web.Socket.ImplementationTest do
         "payload" => %{},
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       refute_receive %{event: "players/sign-in"}, 50
     end
@@ -388,7 +388,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == []
       assert_receive %{event: "players/sign-out"}, 50
     end
@@ -406,7 +406,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == []
       refute_receive %{event: "players/sign-out"}, 50
     end
@@ -423,7 +423,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.players == []
       refute_receive %{event: "players/sign-out"}, 50
     end
@@ -436,7 +436,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
     end
 
     test "does not support the players feature - ref", %{state: state} do
@@ -448,7 +448,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
 
       assert response["ref"] == "ref"
       assert response["status"] == "failure"
@@ -464,7 +464,7 @@ defmodule Web.Socket.ImplementationTest do
         "ref" => UUID.uuid4()
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
       refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
@@ -482,7 +482,7 @@ defmodule Web.Socket.ImplementationTest do
         }
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
       assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
@@ -511,7 +511,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
       assert_receive %{event: "tells/receive"}, 50
     end
 
@@ -534,7 +534,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
       assert_receive %{event: "tells/receive"}, 50
     end
 
@@ -557,7 +557,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, %{"ref" => "ref"}, _state} = Implementation.receive(state, frame)
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
       assert_receive %{event: "tells/receive"}, 50
     end
 
@@ -574,7 +574,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
       assert response["ref"] == "ref"
       assert response["status"] == "failure"
     end
@@ -594,7 +594,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
       assert response["ref"] == "ref"
       assert response["error"] == "game offline"
     end
@@ -617,7 +617,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
       assert response["ref"] == "ref"
       assert response["error"] == "player offline"
     end
@@ -640,7 +640,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
       assert response["ref"] == "ref"
       assert response["error"] == "not supported"
     end
@@ -657,7 +657,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
     end
 
     test "does not support the tells feature - ref", %{state: state} do
@@ -673,7 +673,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
 
       assert response["ref"] == "ref"
       assert response["status"] == "failure"
@@ -691,7 +691,7 @@ defmodule Web.Socket.ImplementationTest do
         "ref" => UUID.uuid4()
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
       refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: ^game_name}}}, 50
@@ -706,7 +706,7 @@ defmodule Web.Socket.ImplementationTest do
         "ref" => "ref"
       }
 
-      assert {:ok, response, _state} = Implementation.receive(state, frame)
+      assert {:ok, response, _state} = Router.receive(state, frame)
 
       assert response["ref"] == "ref"
       assert response["status"] == "failure"
@@ -723,7 +723,7 @@ defmodule Web.Socket.ImplementationTest do
         }
       }
 
-      assert {:ok, :skip, _state} = Implementation.receive(state, frame)
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVOne"}}}, 50
       assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVTwo"}}}, 50

@@ -4,7 +4,7 @@ defmodule Web.Socket.Players do
   """
 
   alias Gossip.Presence
-  alias Web.Socket.Implementation
+  alias Web.Socket.Core
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it
@@ -140,7 +140,7 @@ defmodule Web.Socket.Players do
       true ->
         Presence.online_games()
         |> Enum.filter(&(&1.game.display))
-        |> Implementation.remove_self_from_game_list(state)
+        |> Core.remove_self_from_game_list(state)
         |> Enum.each(&broadcast_state(&1, ref))
 
         {:ok, :skip, state}
