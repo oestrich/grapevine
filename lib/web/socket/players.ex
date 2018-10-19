@@ -82,7 +82,7 @@ defmodule Web.Socket.Players do
             sign_player_out(state, name)
 
           false ->
-            {:ok, state}
+            {:ok, :skip, state}
         end
 
       false ->
@@ -99,7 +99,7 @@ defmodule Web.Socket.Players do
     state = %{state | players: players}
     Presence.update_game(state)
 
-    {:ok, state}
+    {:ok, :skip, state}
   end
 
   defp maybe_broadcast_signout(state, name) do
@@ -128,7 +128,7 @@ defmodule Web.Socket.Players do
         |> Enum.find(&find_game(&1, game_name))
         |> maybe_broadcast_state(ref)
 
-        {:ok, state}
+        {:ok, :skip, state}
 
       false ->
         {:error, :missing_support}
@@ -143,7 +143,7 @@ defmodule Web.Socket.Players do
         |> Implementation.remove_self_from_game_list(state)
         |> Enum.each(&broadcast_state(&1, ref))
 
-        {:ok, state}
+        {:ok, :skip, state}
 
       false ->
         {:error, :missing_support}

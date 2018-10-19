@@ -35,7 +35,7 @@ defmodule Web.Socket.Games do
         |> Enum.find(&find_game(&1, game_name))
         |> maybe_broadcast_game(ref)
 
-        {:ok, state}
+        {:ok, :skip, state}
 
       false ->
         {:error, :missing_support}
@@ -50,7 +50,7 @@ defmodule Web.Socket.Games do
         |> Implementation.remove_self_from_game_list(state)
         |> Enum.each(&broadcast_state(&1, ref))
 
-        {:ok, state}
+        {:ok, :skip, state}
 
       false ->
         {:error, :missing_support}
