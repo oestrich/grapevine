@@ -34,6 +34,8 @@ defmodule Web.Socket.Core do
     Authenticate.process(state, payload)
   end
 
+  def authenticate(_state, _), do: :error
+
   @doc """
   Response to the server sending a heartbeat out
 
@@ -82,6 +84,8 @@ defmodule Web.Socket.Core do
     end
   end
 
+  def channel_subscribe(_state, _event), do: :error
+
   @doc """
   Unsubscribe from a channel
 
@@ -101,6 +105,8 @@ defmodule Web.Socket.Core do
         {:ok, state}
     end
   end
+
+  def channel_unsubscribe(_state, _event), do: :error
 
   @doc """
   Send a new message over a channel
@@ -133,6 +139,8 @@ defmodule Web.Socket.Core do
         {:ok, state}
     end
   end
+
+  def channel_send(_state, _event), do: :error
 
   def valid_support?(support) do
     Enum.member?(@valid_supports, support)
