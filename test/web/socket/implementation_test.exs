@@ -2,6 +2,7 @@ defmodule Web.Socket.ImplementationTest do
   use Gossip.DataCase
 
   alias Gossip.Presence
+  alias Web.Socket.Core
   alias Web.Socket.Implementation
   alias Web.Socket.State
 
@@ -254,6 +255,7 @@ defmodule Web.Socket.ImplementationTest do
     test "subscribe to a new channel - failure", %{state: state} do
       frame = %{
         "event" => "channels/subscribe",
+        "ref" => "123",
         "payload" => %{
           "channel" => "bad channel",
         },
@@ -262,7 +264,7 @@ defmodule Web.Socket.ImplementationTest do
       assert {:ok, response, state} = Implementation.receive(state, frame)
 
       assert state.channels == ["gossip"]
-      assert response.error == "Could not subscribe to 'bad channel'"
+      assert response["error"] == ~s(Could not subscribe to "bad channel")
     end
 
     test "unsubscribe to a channel", %{state: state} do
@@ -301,7 +303,7 @@ defmodule Web.Socket.ImplementationTest do
         },
       }
 
-      {:ok, state} = Implementation.receive(state, frame)
+      {:ok, :skip, state} = Implementation.receive(state, frame)
 
       assert state.heartbeat_count == 0
       assert state.players == ["player"]
@@ -730,19 +732,19 @@ defmodule Web.Socket.ImplementationTest do
 
   describe "available supports" do
     test "channels is valid" do
-      assert Implementation.valid_support?("channels")
+      assert Core.valid_support?("channels")
     end
 
     test "players is valid" do
-      assert Implementation.valid_support?("players")
+      assert Core.valid_support?("players")
     end
 
     test "tells is valid" do
-      assert Implementation.valid_support?("tells")
+      assert Core.valid_support?("tells")
     end
 
     test "games is valid" do
-      assert Implementation.valid_support?("games")
+      assert Core.valid_support?("games")
     end
   end
 

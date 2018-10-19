@@ -22,6 +22,9 @@ defmodule Web.Socket.Response do
       {:ok, :skip, state} ->
         {:ok, :skip, state}
 
+      {:ok, response, state} ->
+        {:ok, response, state}
+
       {:ok, state} ->
         response =
           response.event
@@ -53,6 +56,9 @@ defmodule Web.Socket.Response do
           |> fail_response("an error occurred, try again")
 
         {:ok, response, state}
+
+      {:disconnect, response, state} ->
+        {:disconnect, response, state}
     end
   end
 
