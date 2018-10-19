@@ -18,6 +18,7 @@ defmodule Web.Socket.Implementation do
   alias Web.Socket.Backbone
   alias Web.Socket.Games, as: SocketGames
   alias Web.Socket.Players
+  alias Web.Socket.Response
   alias Web.Socket.Tells
 
   @valid_supports ["channels", "players", "tells", "games"]
@@ -177,123 +178,38 @@ defmodule Web.Socket.Implementation do
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "players/sign-in"}) do
-    case Players.player_sign_in(state, event) do
-      {:ok, state} ->
-        {:ok, maybe_respond(event, state), state}
-
-      {:error, :missing_support} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(missing support for "players"))
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(an error occurred, try again))
-
-        {:ok, response, state}
-    end
+    state
+    |> Players.player_sign_in(event)
+    |> Response.wrap(event, "players")
+    |> Response.respond_to(state)
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "players/sign-out"}) do
-    case Players.player_sign_out(state, event) do
-      {:ok, state} ->
-        {:ok, maybe_respond(event, state), state}
-
-      {:error, :missing_support} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(missing support for "players"))
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(an error occurred, try again))
-
-        {:ok, response, state}
-    end
+    state
+    |> Players.player_sign_out(event)
+    |> Response.wrap(event, "players")
+    |> Response.respond_to(state)
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "players/status"}) do
-    case Players.request_status(state, event) do
-      {:ok, state} ->
-        {:ok, :skip, state}
-
-      {:error, :missing_support} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(missing support for "players"))
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(an error occurred, try again))
-
-        {:ok, response, state}
-    end
+    state
+    |> Players.request_status(event)
+    |> Response.wrap(event, "players")
+    |> Response.respond_to(state)
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "tells/send"}) do
-    case Tells.send(state, event) do
-      {:ok, state} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> succeed_response()
-
-        {:ok, response, state}
-
-      {:error, response} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(response)
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(an error occurred, try again))
-
-        {:ok, response, state}
-    end
+    state
+    |> Tells.send(event)
+    |> Response.wrap(event, "tells")
+    |> Response.respond_to(state)
   end
 
   def receive(state = %{status: "active"}, event = %{"event" => "games/status"}) do
-    case SocketGames.request_status(state, event) do
-      {:ok, state} ->
-        {:ok, :skip, state}
-
-      {:error, :missing_support} ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(missing support for "games"))
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          event
-          |> maybe_respond(state)
-          |> fail_response(~s(an error occurred, try again))
-
-        {:ok, response, state}
-    end
+    state
+    |> SocketGames.request_status(event)
+    |> Response.wrap(event, "tells")
+    |> Response.respond_to(state)
   end
 
   def receive(state = %{status: "inactive"}, frame) do
@@ -479,19 +395,5 @@ defmodule Web.Socket.Implementation do
       false ->
         :skip
     end
-  end
-
-  defp succeed_response(:skip), do: :skip
-
-  defp succeed_response(response) do
-    Map.put(response, "status", "success")
-  end
-
-  defp fail_response(:skip, _), do: :skip
-
-  defp fail_response(response, reason) do
-    response
-    |> Map.put("status", "failure")
-    |> Map.put("error", reason)
   end
 end
