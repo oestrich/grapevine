@@ -18,6 +18,9 @@ defmodule Web.Socket.RouterMacro do
     quote do
       alias Web.Socket.Response
 
+      @doc """
+      Receive a new event from the socket
+      """
       unquote(out)
     end
   end

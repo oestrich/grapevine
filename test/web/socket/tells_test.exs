@@ -1,9 +1,203 @@
 defmodule Web.Socket.TellsTest do
-  use ExUnit.Case
+  use Gossip.DataCase
 
+  alias Gossip.Presence
+  alias Web.Socket.Router
+  alias Web.Socket.State
   alias Web.Socket.Tells
 
   doctest Tells
+
+  describe "tells" do
+    setup [:basic_setup]
+
+    test "send a new tell", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "Player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
+    test "handles short names not capitalized", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "evone",
+          "to_name" => "Player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
+    test "handles player name not capitalized", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+      Web.Endpoint.subscribe("tells:#{game.short_name}")
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "player1",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
+      assert_receive %{event: "tells/receive"}, 50
+    end
+
+    test "validation problem with the tell", %{state: state} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+
+    test "receiving game is offline", %{state: state} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "game offline"
+    end
+
+    test "receiving player is offline", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, ["tells"], ["Player1"])
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "player offline"
+    end
+
+    test "receiving game does not support tells", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(game, [], ["Player1"])
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "not supported"
+    end
+
+    test "does not support the tells feature - no ref", %{state: state} do
+      frame = %{
+        "event" => "tells/send",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
+    end
+
+    test "does not support the tells feature - ref", %{state: state} do
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "ExVenture",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+
+      assert response["ref"] == "ref"
+      assert response["status"] == "failure"
+    end
+  end
 
   describe "validate a send payload" do
     test "all valid" do
@@ -51,5 +245,21 @@ defmodule Web.Socket.TellsTest do
 
       refute Tells.valid_payload?(payload)
     end
+  end
+
+  def basic_setup(_) do
+    user = create_user()
+    game = create_game(user)
+
+    Presence.reset()
+
+    state = %State{
+      status: "active",
+      supports: ["channels"],
+      players: [],
+      game: game,
+    }
+
+    %{state: state, user: user, game: game}
   end
 end
