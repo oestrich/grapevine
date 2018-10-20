@@ -1,4 +1,4 @@
-defmodule Web.Socket.Games do
+defmodule Socket.Games do
   @moduledoc """
   Games support flag
   """
@@ -6,7 +6,7 @@ defmodule Web.Socket.Games do
   use Web.Socket.Module
 
   alias Gossip.Presence
-  alias Web.Socket.Core
+  alias Socket.Core
 
   @doc """
   Check if the socket supports games

@@ -1,9 +1,9 @@
-defmodule Web.Socket.BackboneTest do
+defmodule Socket.BackboneTest do
   use Gossip.DataCase
 
   alias Gossip.Channels.Channel
   alias Gossip.Games.Game
-  alias Web.Socket.Backbone
+  alias Socket.Backbone
 
   describe "backbone processing" do
     setup do

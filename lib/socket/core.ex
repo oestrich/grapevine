@@ -1,4 +1,4 @@
-defmodule Web.Socket.Core do
+defmodule Socket.Core do
   @moduledoc """
   Core events
 
@@ -15,8 +15,8 @@ defmodule Web.Socket.Core do
   alias Gossip.Text
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
-  alias Web.Socket.Backbone
-  alias Web.Socket.Core.Authenticate
+  alias Socket.Backbone
+  alias Socket.Core.Authenticate
 
   @valid_supports ["channels", "players", "tells", "games"]
 
@@ -258,11 +258,11 @@ defmodule Web.Socket.Core do
     alias Gossip.Games
     alias Gossip.Presence
     alias Metrics.SocketInstrumenter
-    alias Web.Socket.Backbone
-    alias Web.Socket.Core
-    alias Web.Socket.Games, as: SocketGames
-    alias Web.Socket.Players
-    alias Web.Socket.Tells
+    alias Socket.Backbone
+    alias Socket.Core
+    alias Socket.Games, as: SocketGames
+    alias Socket.Players
+    alias Socket.Tells
 
     @disable_debug_seconds 300
 

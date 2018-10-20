@@ -1,4 +1,4 @@
-defmodule Web.Socket.Tells do
+defmodule Socket.Tells do
   @moduledoc """
   Implementation for the `tells` flag
   """

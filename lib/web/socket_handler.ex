@@ -5,10 +5,10 @@ defmodule Web.SocketHandler do
 
   @behaviour :cowboy_websocket
 
-  alias Web.Socket.Core.Heartbeat
+  alias Metrics.Server, as: Metrics
+  alias Socket.Core.Heartbeat
   alias Web.Socket.Router
   alias Web.Socket.State
-  alias Metrics.Server, as: Metrics
 
   require Logger
 

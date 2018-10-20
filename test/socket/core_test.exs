@@ -1,9 +1,9 @@
-defmodule Web.Socket.CoreTest do
+defmodule Socket.CoreTest do
   use Gossip.DataCase
 
   alias Gossip.Presence
-  alias Web.Socket.Core
-  alias Web.Socket.Core.Heartbeat
+  alias Socket.Core
+  alias Socket.Core.Heartbeat
   alias Web.Socket.Router
   alias Web.Socket.State
 

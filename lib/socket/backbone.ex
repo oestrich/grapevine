@@ -1,4 +1,4 @@
-defmodule Web.Socket.Backbone do
+defmodule Socket.Backbone do
   @moduledoc """
   Backbone processing for application sockets
 

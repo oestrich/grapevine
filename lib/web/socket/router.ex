@@ -8,8 +8,8 @@ defmodule Web.Socket.Router do
   require Logger
 
   alias Metrics.SocketInstrumenter
-  alias Web.Socket.Backbone
-  alias Web.Socket.Core
+  alias Socket.Backbone
+  alias Socket.Core
 
   import Web.Socket.RouterMacro
 
@@ -17,7 +17,7 @@ defmodule Web.Socket.Router do
     Backbone.handle_event(state, message)
   end
 
-  receives(Web.Socket) do
+  receives(Socket) do
     module(Core, "channels") do
       event("heartbeat", :heartbeat)
 

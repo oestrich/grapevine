@@ -1,4 +1,4 @@
-defmodule Web.Socket.Players do
+defmodule Socket.Players do
   @moduledoc """
   Player status subscription feature module
   """
@@ -6,7 +6,7 @@ defmodule Web.Socket.Players do
   use Web.Socket.Module
 
   alias Gossip.Presence
-  alias Web.Socket.Core
+  alias Socket.Core
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it
