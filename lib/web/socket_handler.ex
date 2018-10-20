@@ -5,6 +5,7 @@ defmodule Web.SocketHandler do
 
   @behaviour :cowboy_websocket
 
+  alias Web.Socket.Core.Heartbeat
   alias Web.Socket.Router
   alias Web.Socket.State
   alias Metrics.Server, as: Metrics
@@ -99,7 +100,7 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info(:heartbeat, state) do
-    case Router.heartbeat(state) do
+    case Heartbeat.handle(state) do
       {:ok, state} ->
         {:ok, state}
 
