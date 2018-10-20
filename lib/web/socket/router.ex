@@ -12,7 +12,7 @@ defmodule Web.Socket.Router do
   alias Web.Socket.Core
 
   def backbone_event(state, message) do
-    Backbone.event(state, message)
+    Backbone.handle_event(state, message)
   end
 
   def heartbeat(state = %{status: "inactive"}) do

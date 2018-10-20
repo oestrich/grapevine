@@ -9,6 +9,8 @@ defmodule Web.Socket.Backbone do
   - "sync/channels", Sync a list of channels
   """
 
+  use Web.Socket.Module
+
   alias Gossip.Applications.Application
   alias Gossip.Channels
   alias Gossip.Games
@@ -19,7 +21,7 @@ defmodule Web.Socket.Backbone do
 
   Gates the state for a connected application before processing
   """
-  def event(state, message) do
+  def handle_event(state, message) do
     with {:ok, :application} <- check_for_application(state) do
       process_event(state, message)
     else
@@ -96,6 +98,13 @@ defmodule Web.Socket.Backbone do
     |> Enum.each(&broadcast_channels/1)
   end
 
+  defp broadcast_channels(channels) do
+    token()
+    |> assign(:channels, channels)
+    |> event("sync/channels")
+    |> relay()
+  end
+
   @doc """
   Send batches of `sync/games` events to newly connected sockets
   """
@@ -105,33 +114,42 @@ defmodule Web.Socket.Backbone do
     |> Enum.each(&broadcast_games/1)
   end
 
-  defp broadcast_channels(channels) do
-    event = format_event("sync/channels", %{channels: format_channels(channels)})
-    send(self(), {:broadcast, event})
-  end
-
   defp broadcast_games(games) do
-    event = format_event("sync/games", %{games: format_games(games)})
-    send(self(), {:broadcast, event})
+    token()
+    |> assign(:games, games)
+    |> event("sync/games")
+    |> relay()
   end
 
-  defp format_event(event, payload) do
-    %{
-      event: event,
-      ref: UUID.uuid4(),
-      payload: payload,
-    }
-  end
+  defmodule View do
+    @moduledoc """
+    "View" module for backbone events
+    """
 
-  defp format_channels(channels) do
-    Enum.map(channels, fn channel ->
-      Map.take(channel, [:id, :name, :description, :hidden])
-    end)
-  end
+    def event("sync/channels", %{channels: channels}) do
+      payload =
+        Enum.map(channels, fn channel ->
+          Map.take(channel, [:id, :name, :description, :hidden])
+        end)
 
-  defp format_games(games) do
-    Enum.map(games, fn game ->
-      GameView.render("sync.json", %{game: game})
-    end)
+      %{
+        event: "sync/channels",
+        ref: UUID.uuid4(),
+        payload: %{channels: payload},
+      }
+    end
+
+    def event("sync/games", %{games: games}) do
+      payload =
+        Enum.map(games, fn game ->
+          GameView.render("sync.json", %{game: game})
+        end)
+
+      %{
+        event: "sync/games",
+        ref: UUID.uuid4(),
+        payload: %{games: payload},
+      }
+    end
   end
 end

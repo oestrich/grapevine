@@ -201,7 +201,7 @@ defmodule Web.Socket.Core do
       %{
         "channel" => channel,
         "game" => game.short_name,
-        "game_id" => game.id,
+        "game_id" => game.client_id,
         "name" => name,
         "message" => message,
       }
