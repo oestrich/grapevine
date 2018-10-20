@@ -99,7 +99,7 @@ defmodule Web.Socket.Players do
     state = %{state | players: players}
     Presence.update_game(state)
 
-    {:ok, :skip, state}
+    {:ok, state}
   end
 
   defp maybe_broadcast_signout(state, name) do
