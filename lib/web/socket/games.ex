@@ -3,8 +3,9 @@ defmodule Web.Socket.Games do
   Games support flag
   """
 
+  use Web.Socket.Module
+
   alias Gossip.Presence
-  alias Web.GameView
   alias Web.Socket.Core
 
   @doc """
@@ -27,6 +28,8 @@ defmodule Web.Socket.Games do
 
   @doc """
   Request game status, of connected games
+
+  Can request a single game
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
     Presence.online_games()
@@ -40,7 +43,7 @@ defmodule Web.Socket.Games do
     Presence.online_games()
     |> Enum.filter(&(&1.game.display))
     |> Core.remove_self_from_game_list(state)
-    |> Enum.each(&broadcast_state(&1, ref))
+    |> Enum.each(&relay_state(&1, ref))
 
     {:ok, :skip, state}
   end
@@ -52,33 +55,54 @@ defmodule Web.Socket.Games do
   end
 
   defp maybe_broadcast_game(nil, ref) do
-    event = %{
-      "event" => "games/status",
-      "ref" => ref,
-      "status" => "failure",
-      "error" => "unknown game"
-    }
-
-    send(self(), {:broadcast, event})
+    token()
+    |> assign(:ref, ref)
+    |> event("unknown")
+    |> relay()
   end
 
-  defp maybe_broadcast_game(game, ref), do: broadcast_state(game, ref)
+  defp maybe_broadcast_game(game, ref), do: relay_state(game, ref)
 
-  defp broadcast_state(presence, ref) do
-    game_payload = GameView.render("status.json", %{game: presence.game})
+  defp relay_state(presence, ref) do
+    token()
+    |> assign(:ref, ref)
+    |> assign(:presence, presence)
+    |> event("game")
+    |> relay()
+  end
 
-    payload = Map.merge(game_payload, %{
-      supports: presence.supports,
-      player_online_count: length(presence.players),
-    })
+  defmodule View do
+    @moduledoc """
+    "View" module for games
 
-    event = %{
-      "event" => "games/status",
-      "ref" => ref,
-      "status" => "success",
-      "payload" => payload
-    }
+    Helps contain what each event looks look as a response
+    """
 
-    send(self(), {:broadcast, event})
+    alias Web.GameView
+
+    def event("unknown", %{ref: ref}) do
+      %{
+        "event" => "games/status",
+        "ref" => ref,
+        "status" => "failure",
+        "error" => "unknown game"
+      }
+    end
+
+    def event("game", %{ref: ref, presence: presence}) do
+      game_payload = GameView.render("status.json", %{game: presence.game})
+
+      payload = Map.merge(game_payload, %{
+        supports: presence.supports,
+        player_online_count: length(presence.players),
+      })
+
+      %{
+        "event" => "games/status",
+        "ref" => ref,
+        "status" => "success",
+        "payload" => payload
+      }
+    end
   end
 end

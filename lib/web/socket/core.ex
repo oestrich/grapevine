@@ -5,21 +5,18 @@ defmodule Web.Socket.Core do
   Authenticate, heartbeat, etc
   """
 
+  use Web.Socket.Module
+
   require Logger
 
-  alias Gossip.Applications
   alias Gossip.Applications.Application
   alias Gossip.Channels
-  alias Gossip.Games
   alias Gossip.Presence
   alias Gossip.Text
   alias Metrics.ChannelsInstrumenter
   alias Metrics.SocketInstrumenter
   alias Web.Socket.Backbone
   alias Web.Socket.Core.Authenticate
-  alias Web.Socket.Games, as: SocketGames
-  alias Web.Socket.Players
-  alias Web.Socket.Tells
 
   @valid_supports ["channels", "players", "tells", "games"]
 
@@ -114,24 +111,20 @@ defmodule Web.Socket.Core do
   Event: "channels/send"
   """
   def channel_send(state, %{"payload" => payload}) do
+    ChannelsInstrumenter.send()
+
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- check_channel_subscribed_to(state, channel) do
-      payload =
-        payload
-        |> Map.put("game", state.game.short_name)
-        |> Map.put("game_id", state.game.client_id)
-        |> Map.take(["id", "channel", "game", "game_id", "name", "message"])
-
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
 
-      payload =
-        payload
-        |> Map.put("name", name)
-        |> Map.put("message", message)
-
-      ChannelsInstrumenter.send()
-      Web.Endpoint.broadcast("channels:#{channel}", "channels/broadcast", payload)
+      token()
+      |> assign(:channel, channel)
+      |> assign(:game, state.game)
+      |> assign(:name, name)
+      |> assign(:message, message)
+      |> payload("send")
+      |> broadcast("channels:#{channel}", "channels/broadcast")
 
       {:ok, state}
     else
@@ -178,18 +171,41 @@ defmodule Web.Socket.Core do
   def subscribe_channel({:error, name}) do
     Logger.info("Trying to subscribe to a bad channel")
 
-    event = %{
-      event: "channels/subscribe",
-      status: "failure",
-      error: ~s(Could not subscribe to '#{name}'),
-    }
-
-    send(self(), {:broadcast, event})
+    token()
+    |> assign(:name, name)
+    |> event("channel-failure")
+    |> relay()
   end
 
   def subscribe_channel({:ok, channel}) do
     ChannelsInstrumenter.subscribe()
     Web.Endpoint.subscribe("channels:#{channel}")
+  end
+
+  defmodule View do
+    @moduledoc """
+    "View" module for channels
+
+    Helps contain what each event looks look as a response
+    """
+
+    def event("channel-failure", %{name: name}) do
+      %{
+        event: "channels/subscribe",
+        status: "failure",
+        error: ~s(Could not subscribe to '#{name}'),
+      }
+    end
+
+    def payload("send", %{channel: channel, game: game, name: name, message: message}) do
+      %{
+        "channel" => channel,
+        "game" => game.short_name,
+        "game_id" => game.id,
+        "name" => name,
+        "message" => message,
+      }
+    end
   end
 
   defmodule Authenticate do
