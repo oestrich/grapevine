@@ -45,7 +45,7 @@ defmodule Web.SocketHandler do
         {:reply, {:text, Poison.encode!(response)}, state}
 
       _ ->
-        {:reply, {:text, Poison.encode!(%{status: "unknown"})}, state}
+        {:reply, {:text, Poison.encode!(%{status: "failure", error: "unknown"})}, state}
     end
   end
 

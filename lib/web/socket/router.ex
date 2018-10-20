@@ -10,10 +10,6 @@ defmodule Web.Socket.Router do
   alias Metrics.SocketInstrumenter
   alias Web.Socket.Backbone
   alias Web.Socket.Core
-  alias Web.Socket.Games, as: SocketGames
-  alias Web.Socket.Players
-  alias Web.Socket.Response
-  alias Web.Socket.Tells
 
   def backbone_event(state, message) do
     Backbone.event(state, message)
@@ -49,73 +45,36 @@ defmodule Web.Socket.Router do
     end
   end
 
+  import Web.Socket.RouterMacro
+
+  receives(Web.Socket) do
+    module(Core, "channels") do
+      event("heartbeat", :heartbeat)
+
+      event("channels/subscribe", :channel_subscribe)
+      event("channels/unsubscribe", :channel_unsubscribe)
+      event("channels/send", :channel_send)
+    end
+
+    module(Players, "players") do
+      event("players/sign-in", :player_sign_in)
+      event("players/sign-out", :player_sign_out)
+      event("players/status", :request_status)
+    end
+
+    module(Tells, "tells") do
+      event("tells/send", :send)
+    end
+
+    module(Games, "games") do
+      event("games/status", :request_status)
+    end
+  end
+
   def receive(state = %{status: "inactive"}, event = %{"event" => "authenticate"}) do
     state
     |> Core.authenticate(event)
     |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "channels/subscribe"}) do
-    state
-    |> Core.channel_subscribe(event)
-    |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "channels/unsubscribe"}) do
-    state
-    |> Core.channel_unsubscribe(event)
-    |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "channels/send"}) do
-    state
-    |> Core.channel_send(event)
-    |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "heartbeat"}) do
-    state
-    |> Core.heartbeat(event)
-    |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-in"}) do
-    state
-    |> Players.player_sign_in(event)
-    |> Response.wrap(event, "players")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "players/sign-out"}) do
-    state
-    |> Players.player_sign_out(event)
-    |> Response.wrap(event, "players")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "players/status"}) do
-    state
-    |> Players.request_status(event)
-    |> Response.wrap(event, "players")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "tells/send"}) do
-    state
-    |> Tells.send(event)
-    |> Response.wrap(event, "tells")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "games/status"}) do
-    state
-    |> SocketGames.request_status(event)
-    |> Response.wrap(event, "tells")
     |> Response.respond_to(state)
   end
 
@@ -127,6 +86,6 @@ defmodule Web.Socket.Router do
   def receive(state, frame) do
     Logger.warn("Getting an unknown frame - #{inspect(state)} - #{inspect(frame)}")
     SocketInstrumenter.unknown_event()
-    {:ok, %{status: "unknown"}, state}
+    {:ok, %{status: "failure", error: "unknown"}, state}
   end
 end
