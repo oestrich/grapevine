@@ -22,8 +22,7 @@ defmodule Web.Socket.Tells do
   Send a tell to another game
   """
   def send(state, event) do
-    with :ok <- check_supports(state),
-         {:ok, payload} <- check_payload(event),
+    with {:ok, payload} <- check_payload(event),
          {:ok, %{game: game, supports: supports, players: players}} <- check_game_online(payload),
          :ok <- check_remote_game_supports(supports),
          :ok <- check_player_online(players, payload) do
@@ -38,16 +37,6 @@ defmodule Web.Socket.Tells do
       Web.Endpoint.broadcast("tells:#{game.short_name}", "tells/receive", event)
 
       {:ok, state}
-    end
-  end
-
-  defp check_supports(state) do
-    case supports_tells?(state) do
-      true ->
-        :ok
-
-      false ->
-        {:error, ~s(missing support for "tells")}
     end
   end
 

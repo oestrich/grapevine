@@ -28,18 +28,12 @@ defmodule Web.Socket.Players do
   Receive a new player sign in, broadcast it
   """
   def player_sign_in(state, %{"payload" => %{"name" => name}}) do
-    case supports_players?(state) do
+    case name in state.players do
       true ->
-        case name in state.players do
-          true ->
-            {:ok, state}
-
-          false ->
-            sign_player_in(state, name)
-        end
+        {:ok, state}
 
       false ->
-        {:error, :missing_support}
+        sign_player_in(state, name)
     end
   end
 
@@ -75,18 +69,12 @@ defmodule Web.Socket.Players do
   Receive a new player sign out, broadcast it
   """
   def player_sign_out(state, %{"payload" => %{"name" => name}}) do
-    case supports_players?(state) do
+    case name in state.players do
       true ->
-        case name in state.players do
-          true ->
-            sign_player_out(state, name)
-
-          false ->
-            {:ok, :skip, state}
-        end
+        sign_player_out(state, name)
 
       false ->
-        {:error, :missing_support}
+        {:ok, :skip, state}
     end
   end
 
@@ -122,32 +110,20 @@ defmodule Web.Socket.Players do
   Request player status, of connected games
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
-    case supports_players?(state) do
-      true ->
-        Presence.online_games()
-        |> Enum.find(&find_game(&1, game_name))
-        |> maybe_broadcast_state(ref)
+    Presence.online_games()
+    |> Enum.find(&find_game(&1, game_name))
+    |> maybe_broadcast_state(ref)
 
-        {:ok, :skip, state}
-
-      false ->
-        {:error, :missing_support}
-    end
+    {:ok, :skip, state}
   end
 
   def request_status(state, %{"ref" => ref}) when ref != nil do
-    case supports_players?(state) do
-      true ->
-        Presence.online_games()
-        |> Enum.filter(&(&1.game.display))
-        |> Core.remove_self_from_game_list(state)
-        |> Enum.each(&broadcast_state(&1, ref))
+    Presence.online_games()
+    |> Enum.filter(&(&1.game.display))
+    |> Core.remove_self_from_game_list(state)
+    |> Enum.each(&broadcast_state(&1, ref))
 
-        {:ok, :skip, state}
-
-      false ->
-        {:error, :missing_support}
-    end
+    {:ok, :skip, state}
   end
 
   def request_status(_state, _), do: :error

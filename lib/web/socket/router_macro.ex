@@ -16,6 +16,7 @@ defmodule Web.Socket.RouterMacro do
     out = parse_modules(module, opts[:do])
 
     quote do
+      alias Web.Socket.Request
       alias Web.Socket.Response
 
       @doc """
@@ -56,10 +57,17 @@ defmodule Web.Socket.RouterMacro do
   def parse_event(module, flag, {:event, _, [event, fun]}) do
     quote do
       def receive(state = %{status: "active"}, event = %{"event" => unquote(event)}) do
-        state
-        |> unquote(module).unquote(fun)(event)
-        |> Response.wrap(event, unquote(flag))
-        |> Response.respond_to(state)
+        with {:ok, :support_present} <- Request.check_support_flag(state, unquote(flag)) do
+          state
+          |> unquote(module).unquote(fun)(event)
+          |> Response.wrap(event, unquote(flag))
+          |> Response.respond_to(state)
+        else
+          {:error, :support_missing} ->
+            {:error, :support_missing}
+            |> Response.wrap(event, unquote(flag))
+            |> Response.respond_to(state)
+        end
       end
     end
   end

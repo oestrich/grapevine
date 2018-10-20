@@ -29,32 +29,20 @@ defmodule Web.Socket.Games do
   Request game status, of connected games
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
-    case supports_games?(state) do
-      true ->
-        Presence.online_games()
-        |> Enum.find(&find_game(&1, game_name))
-        |> maybe_broadcast_game(ref)
+    Presence.online_games()
+    |> Enum.find(&find_game(&1, game_name))
+    |> maybe_broadcast_game(ref)
 
-        {:ok, :skip, state}
-
-      false ->
-        {:error, :missing_support}
-    end
+    {:ok, :skip, state}
   end
 
   def request_status(state, %{"ref" => ref}) when ref != nil do
-    case supports_games?(state) do
-      true ->
-        Presence.online_games()
-        |> Enum.filter(&(&1.game.display))
-        |> Core.remove_self_from_game_list(state)
-        |> Enum.each(&broadcast_state(&1, ref))
+    Presence.online_games()
+    |> Enum.filter(&(&1.game.display))
+    |> Core.remove_self_from_game_list(state)
+    |> Enum.each(&broadcast_state(&1, ref))
 
-        {:ok, :skip, state}
-
-      false ->
-        {:error, :missing_support}
-    end
+    {:ok, :skip, state}
   end
 
   def request_status(_state, _), do: :error

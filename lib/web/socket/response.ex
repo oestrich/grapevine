@@ -33,7 +33,7 @@ defmodule Web.Socket.Response do
 
         {:ok, response, state}
 
-      {:error, :missing_support} ->
+      {:error, :support_missing} ->
         response =
           response.event
           |> maybe_respond(state)

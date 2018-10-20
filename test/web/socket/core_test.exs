@@ -195,6 +195,7 @@ defmodule Web.Socket.CoreTest do
 
       state = %State{
         status: "active",
+        supports: ["channels"],
         game: game,
         channels: ["gossip"],
       }
@@ -263,6 +264,7 @@ defmodule Web.Socket.CoreTest do
 
       state = %State{
         status: "active",
+        supports: ["channels"],
         game: game,
         channels: ["gossip"],
       }
