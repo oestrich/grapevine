@@ -25,7 +25,7 @@ defmodule Web.SocketHandler do
     Metrics.socket_online()
 
     # General purpose channels
-    Web.Endpoint.subscribe("restart")
+    Web.Endpoint.subscribe("system")
 
     {:ok, %State{status: "inactive"}}
   end

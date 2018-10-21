@@ -18,6 +18,6 @@ defmodule Gossip do
   Push a restart event to sockets
   """
   def restart(downtime \\ 15) do
-    Web.Endpoint.broadcast("restart", "restart", %{"downtime" => downtime})
+    Web.Endpoint.broadcast("system", "restart", %{"downtime" => downtime})
   end
 end
