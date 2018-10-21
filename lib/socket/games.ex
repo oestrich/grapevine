@@ -35,7 +35,7 @@ defmodule Socket.Games do
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
     Presence.online_games()
     |> Enum.find(&find_game(&1, game_name))
-    |> maybe_broadcast_game(ref)
+    |> maybe_relay_game(ref)
 
     {:ok, :skip, state}
   end
@@ -55,14 +55,14 @@ defmodule Socket.Games do
     state.game.short_name == name
   end
 
-  defp maybe_broadcast_game(nil, ref) do
+  defp maybe_relay_game(nil, ref) do
     token()
     |> assign(:ref, ref)
     |> event("unknown")
     |> relay()
   end
 
-  defp maybe_broadcast_game(game, ref), do: relay_state(game, ref)
+  defp maybe_relay_game(game, ref), do: relay_state(game, ref)
 
   defp relay_state(presence, ref) do
     token()

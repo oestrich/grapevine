@@ -130,7 +130,12 @@ defmodule Socket.Players do
     state.game.short_name == name
   end
 
-  defp maybe_relay_state(nil, _ref), do: :ok
+  defp maybe_relay_state(nil, ref) do
+    token()
+    |> assign(:ref, ref)
+    |> event("unknown")
+    |> relay()
+  end
 
   defp maybe_relay_state(game, ref), do: relay_state(game, ref)
 
@@ -174,6 +179,15 @@ defmodule Socket.Players do
           "game" => game.short_name,
           "players" => players
         }
+      }
+    end
+
+    def event("unknown", %{ref: ref}) do
+      %{
+        "event" => "players/status",
+        "ref" => ref,
+        "status" => "failure",
+        "error" => "unknown game"
       }
     end
   end
