@@ -1,10 +1,12 @@
-defmodule Web.Socket.Players do
+defmodule Socket.Players do
   @moduledoc """
   Player status subscription feature module
   """
 
+  use Web.Socket.Module
+
   alias Gossip.Presence
-  alias Web.Socket.Core
+  alias Socket.Core
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it
@@ -50,15 +52,13 @@ defmodule Web.Socket.Players do
   end
 
   defp maybe_broadcast_signin(state, name) do
-    payload = %{
-      "game" => state.game.short_name,
-      "game_id" => state.game.client_id,
-      "name" => name
-    }
-
     case state.game.display do
       true ->
-        Web.Endpoint.broadcast("players:status", "players/sign-in", payload)
+        token()
+        |> assign(:game, state.game)
+        |> assign(:name, name)
+        |> payload("sign-in")
+        |> broadcast("players:status", "players/sign-in")
 
       false ->
         :ok
@@ -91,15 +91,13 @@ defmodule Web.Socket.Players do
   end
 
   defp maybe_broadcast_signout(state, name) do
-    payload = %{
-      "game" => state.game.short_name,
-      "game_id" => state.game.client_id,
-      "name" => name
-    }
-
     case state.game.display do
       true ->
-        Web.Endpoint.broadcast("players:status", "players/sign-out", payload)
+        token()
+        |> assign(:game, state.game)
+        |> assign(:name, name)
+        |> payload("sign-out")
+        |> broadcast("players:status", "players/sign-out")
 
       false ->
         :ok
@@ -112,7 +110,7 @@ defmodule Web.Socket.Players do
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
     Presence.online_games()
     |> Enum.find(&find_game(&1, game_name))
-    |> maybe_broadcast_state(ref)
+    |> maybe_relay_state(ref)
 
     {:ok, :skip, state}
   end
@@ -121,7 +119,7 @@ defmodule Web.Socket.Players do
     Presence.online_games()
     |> Enum.filter(&(&1.game.display))
     |> Core.remove_self_from_game_list(state)
-    |> Enum.each(&broadcast_state(&1, ref))
+    |> Enum.each(&relay_state(&1, ref))
 
     {:ok, :skip, state}
   end
@@ -132,20 +130,51 @@ defmodule Web.Socket.Players do
     state.game.short_name == name
   end
 
-  defp maybe_broadcast_state(nil, _ref), do: :ok
+  defp maybe_relay_state(nil, _ref), do: :ok
 
-  defp maybe_broadcast_state(game, ref), do: broadcast_state(game, ref)
+  defp maybe_relay_state(game, ref), do: relay_state(game, ref)
 
-  defp broadcast_state(state, ref) do
-    event = %{
-      "event" => "players/status",
-      "ref" => ref,
-      "payload" => %{
-        "game" => state.game.short_name,
-        "players" => state.players
+  defp relay_state(state, ref) do
+    token()
+    |> assign(:ref, ref)
+    |> assign(:game, state.game)
+    |> assign(:players, state.players)
+    |> event("status")
+    |> relay()
+  end
+
+  defmodule View do
+    @moduledoc """
+    "View" module for players
+
+    Helps contain what each event looks look as a response
+    """
+
+    def payload("sign-in", %{game: game, name: name}) do
+      %{
+        "game" => game.short_name,
+        "game_id" => game.client_id,
+        "name" => name
       }
-    }
+    end
 
-    send(self(), {:broadcast, event})
+    def payload("sign-out", %{game: game, name: name}) do
+      %{
+        "game" => game.short_name,
+        "game_id" => game.client_id,
+        "name" => name
+      }
+    end
+
+    def event("status", %{ref: ref, game: game, players: players}) do
+      %{
+        "event" => "players/status",
+        "ref" => ref,
+        "payload" => %{
+          "game" => game.short_name,
+          "players" => players
+        }
+      }
+    end
   end
 end

@@ -1,10 +1,10 @@
-defmodule Web.Socket.TellsTest do
+defmodule Socket.TellsTest do
   use Gossip.DataCase
 
   alias Gossip.Presence
   alias Web.Socket.Router
   alias Web.Socket.State
-  alias Web.Socket.Tells
+  alias Socket.Tells
 
   doctest Tells
 

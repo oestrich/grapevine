@@ -1,7 +1,9 @@
-defmodule Web.Socket.Tells do
+defmodule Socket.Tells do
   @moduledoc """
   Implementation for the `tells` flag
   """
+
+  use Web.Socket.Module
 
   alias Gossip.Presence
 
@@ -26,15 +28,11 @@ defmodule Web.Socket.Tells do
          {:ok, %{game: game, supports: supports, players: players}} <- check_game_online(payload),
          :ok <- check_remote_game_supports(supports),
          :ok <- check_player_online(players, payload) do
-      event = %{
-        "from_game" => state.game.short_name,
-        "from_name" => payload["from_name"],
-        "to_name" => payload["to_name"],
-        "sent_at" => payload["sent_at"],
-        "message" => payload["message"]
-      }
-
-      Web.Endpoint.broadcast("tells:#{game.short_name}", "tells/receive", event)
+      token()
+      |> assign(:game, state.game)
+      |> assign(:payload, payload)
+      |> payload("send")
+      |> broadcast("tells:#{game.short_name}", "tells/receive")
 
       {:ok, state}
     end
@@ -116,6 +114,24 @@ defmodule Web.Socket.Tells do
 
       _ ->
         false
+    end
+  end
+
+  defmodule View do
+    @moduledoc """
+    "View" module for tells
+
+    Helps contain what each event looks look as a response
+    """
+
+    def payload("send", %{game: game, payload: payload}) do
+      %{
+        "from_game" => game.short_name,
+        "from_name" => payload["from_name"],
+        "to_name" => payload["to_name"],
+        "sent_at" => payload["sent_at"],
+        "message" => payload["message"]
+      }
     end
   end
 end

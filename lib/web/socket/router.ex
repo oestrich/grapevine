@@ -8,46 +8,16 @@ defmodule Web.Socket.Router do
   require Logger
 
   alias Metrics.SocketInstrumenter
-  alias Web.Socket.Backbone
-  alias Web.Socket.Core
-
-  def backbone_event(state, message) do
-    Backbone.event(state, message)
-  end
-
-  def heartbeat(state = %{status: "inactive"}) do
-    state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
-
-    Logger.debug("Inactive heartbeat", type: :heartbeat)
-
-    case state.heartbeat_count > 3 do
-      true ->
-        SocketInstrumenter.heartbeat_disconnect()
-        {:disconnect, state}
-
-      false ->
-        {:ok, state}
-    end
-  end
-
-  def heartbeat(state) do
-    SocketInstrumenter.heartbeat()
-
-    case state do
-      %{heartbeat_count: count} when count >= 3 ->
-        SocketInstrumenter.heartbeat_disconnect()
-
-        {:disconnect, state}
-
-      _ ->
-        state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
-        {:ok, %{event: "heartbeat"}, state}
-    end
-  end
+  alias Socket.Backbone
+  alias Socket.Core
 
   import Web.Socket.RouterMacro
 
-  receives(Web.Socket) do
+  def backbone_event(state, message) do
+    Backbone.handle_event(state, message)
+  end
+
+  receives(Socket) do
     module(Core, "channels") do
       event("heartbeat", :heartbeat)
 

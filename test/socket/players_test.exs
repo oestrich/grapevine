@@ -1,4 +1,4 @@
-defmodule Web.Socket.PlayersTest do
+defmodule Socket.PlayersTest do
   use Gossip.DataCase
 
   alias Gossip.Presence

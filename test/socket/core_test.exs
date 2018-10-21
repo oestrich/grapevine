@@ -1,8 +1,9 @@
-defmodule Web.Socket.CoreTest do
+defmodule Socket.CoreTest do
   use Gossip.DataCase
 
   alias Gossip.Presence
-  alias Web.Socket.Core
+  alias Socket.Core
+  alias Socket.Core.Heartbeat
   alias Web.Socket.Router
   alias Web.Socket.State
 
@@ -162,7 +163,7 @@ defmodule Web.Socket.CoreTest do
     setup [:basic_setup]
 
     test "sending heartbeats", %{state: state} do
-      {:ok, response, state} = Router.heartbeat(state)
+      {:ok, response, state} = Heartbeat.handle(state)
 
       assert response == %{event: "heartbeat"}
       assert state.heartbeat_count == 1
@@ -170,7 +171,7 @@ defmodule Web.Socket.CoreTest do
 
     test "sending heartbeats - out of counts", %{state: state} do
       state = %{state | heartbeat_count: 3}
-      assert {:disconnect, _state} = Router.heartbeat(state)
+      assert {:disconnect, _state} = Heartbeat.handle(state)
     end
 
     test "receive a heartbeat", %{state: state} do
