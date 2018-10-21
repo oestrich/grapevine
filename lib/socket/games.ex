@@ -5,6 +5,7 @@ defmodule Socket.Games do
 
   use Web.Socket.Module
 
+  alias Gossip.Games
   alias Gossip.Presence
   alias Socket.Core
 
@@ -71,6 +72,34 @@ defmodule Socket.Games do
     |> relay()
   end
 
+  @doc """
+  Broadcast a game connecting for the first time to Gossip
+
+  See `Gossip.Presence.Notices` as well
+  """
+  def broadcast_connect_event(game_id) do
+    with {:ok, game} <- Games.get(game_id) do
+      token()
+      |> assign(:game, game)
+      |> payload("games/connect")
+      |> broadcast("games:status", "games/connect")
+    end
+  end
+
+  @doc """
+  Broadcast a game disconnecting completely from Gossip
+
+  See `Gossip.Presence.Notices` as well
+  """
+  def broadcast_disconnect_event(game_id) do
+    with {:ok, game} <- Games.get(game_id) do
+      token()
+      |> assign(:game, game)
+      |> payload("games/disconnect")
+      |> broadcast("games:status", "games/disconnect")
+    end
+  end
+
   defmodule View do
     @moduledoc """
     "View" module for games
@@ -103,6 +132,17 @@ defmodule Socket.Games do
         "status" => "success",
         "payload" => payload
       }
+    end
+
+    def payload("games/connect", %{game: game}) do
+      %{
+        "game" => game.short_name,
+        "game_id" => game.client_id
+      }
+    end
+
+    def payload("games/disconnect", %{game: game}) do
+      %{"game" => game.short_name}
     end
   end
 end

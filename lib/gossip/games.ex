@@ -316,9 +316,9 @@ defmodule Gossip.Games do
   end
 
   defp broadcast_game_update(game_id) do
-    case get(game_id) do
-      {:ok, game} ->
-        Web.Endpoint.broadcast("system:backbone", "games/edit", game)
+    with {:ok, game} <- get(game_id) do
+      Web.Endpoint.broadcast("system:backbone", "games/edit", game)
+    else
       _ ->
         :ok
     end

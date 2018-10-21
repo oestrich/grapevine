@@ -3,7 +3,7 @@ defmodule Gossip.Presence.Notices do
   Send a notice if a game comes online or goes offline
   """
 
-  alias Gossip.Games
+  alias Socket.Games
 
   @doc """
   Maybe send a notice to games that care that another game went online
@@ -13,7 +13,7 @@ defmodule Gossip.Presence.Notices do
   def maybe_broadcast_connect_event(state, socket) do
     with {:ok, game_id} <- get_game_id(state, socket),
          {:ok, :only} <- check_only_socket(state, socket, game_id) do
-      broadcast_connect_event(game_id)
+      Games.broadcast_connect_event(game_id)
     end
   end
 
@@ -25,7 +25,7 @@ defmodule Gossip.Presence.Notices do
   def maybe_broadcast_disconnect_event(state, socket) do
     with {:ok, game_id} <- get_game_id(state, socket),
          {:ok, :only} <- check_only_socket(state, socket, game_id) do
-      broadcast_disconnect_event(game_id)
+      Games.broadcast_disconnect_event(game_id)
     end
   end
 
@@ -53,23 +53,6 @@ defmodule Gossip.Presence.Notices do
 
       false ->
         {:error, :still_online}
-    end
-  end
-
-  defp broadcast_connect_event(game_id) do
-    with {:ok, game} <- Games.get(game_id) do
-      payload = %{
-        "game" => game.short_name,
-        "game_id" => game.client_id
-      }
-      Web.Endpoint.broadcast("games:status", "games/connect", payload)
-    end
-  end
-
-  defp broadcast_disconnect_event(game_id) do
-    with {:ok, game} <- Games.get(game_id) do
-      payload = %{"game" => game.short_name}
-      Web.Endpoint.broadcast("games:status", "games/disconnect", payload)
     end
   end
 end
