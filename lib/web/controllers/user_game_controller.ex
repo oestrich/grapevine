@@ -27,6 +27,7 @@ defmodule Web.UserGameController do
         conn
         |> put_flash(:error, "There was an issue creating the game.")
         |> assign(:changeset, changeset)
+        |> assign(:games, Games.for_user(user))
         |> render("index.html")
     end
   end
