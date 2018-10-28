@@ -1,4 +1,6 @@
-defmodule Gossip.SentryEventFilter do
+defmodule Gossip.SentryFilter do
+  @moduledoc false
+
   @behaviour Sentry.EventFilter
 
   def exclude_exception?(%Phoenix.Router.NoRouteError{}, :plug), do: true
