@@ -1,5 +1,7 @@
 defmodule Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :gossip
+  use Plug.ErrorHandler
+  use Sentry.Plug
 
   socket("/chat", Web.UserSocket, websocket: true)
 
