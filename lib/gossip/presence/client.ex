@@ -11,6 +11,11 @@ defmodule Gossip.Presence.Client do
   @timeout_seconds 60
 
   @doc """
+  Number of seconds that a game can be offline before the game is considered offline
+  """
+  def timeout_seconds(), do: @timeout_seconds
+
+  @doc """
   Get a list of games that are connected and online
   """
   def online_games() do

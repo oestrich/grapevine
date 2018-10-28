@@ -3,6 +3,7 @@ defmodule Gossip.Presence.Notices do
   Send a notice if a game comes online or goes offline
   """
 
+  alias Gossip.Presence
   alias Gossip.Presence.Client
   alias Socket.Games
 
@@ -17,19 +18,34 @@ defmodule Gossip.Presence.Notices do
     with {:ok, type, game_id} <- get_game_id(state, socket),
          {:ok, :only} <- check_only_socket(state, socket, type, game_id),
          {:ok, :offline} <- check_game_offline(type, game_id) do
-      Games.broadcast_connect_event(game_id)
+      Games.broadcast_connect_event(type, game_id)
     end
   end
 
   @doc """
   Maybe send a notice to games that care that another game went offline
 
+  Sends a delayed message to the presence server to check back later and
+  determines if the game is still indeed offline after the `Presence` server
+  thinks the game is offline.
+
   Does not send a notice if there are multiple sockets connected for a game
   """
-  def maybe_broadcast_disconnect_event(state, socket) do
+  def maybe_start_broadcast_disconnect_event(state, socket) do
     with {:ok, type, game_id} <- get_game_id(state, socket),
          {:ok, :only} <- check_only_socket(state, socket, type, game_id) do
-      Games.broadcast_disconnect_event(game_id)
+      Presence.delay_disconnect(type, game_id)
+    end
+  end
+
+  @doc """
+  Maybe send a notice to games that care that another game went offline
+
+  Sends a notice only if the game is still offline.
+  """
+  def maybe_broadcast_disconnect_event(type, game_id) do
+    with {:ok, :offline} <- check_game_offline(type, game_id) do
+      Games.broadcast_disconnect_event(type, game_id)
     end
   end
 

@@ -20,7 +20,7 @@ defmodule Gossip.Presence.Server do
   defp type(%Application{}), do: :game
 
   def remove_socket(state, socket) do
-    Notices.maybe_broadcast_disconnect_event(state, socket)
+    Notices.maybe_start_broadcast_disconnect_event(state, socket)
 
     sockets =
       state.sockets

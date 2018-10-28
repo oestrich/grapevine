@@ -8,6 +8,7 @@ defmodule Gossip.Presence do
   alias Gossip.Applications.Application
   alias Gossip.Games.Game
   alias Gossip.Presence.Client
+  alias Gossip.Presence.Notices
   alias Gossip.Presence.Server
 
   @ets_key :gossip_presence
@@ -42,6 +43,11 @@ defmodule Gossip.Presence do
         message = {:track, self(), state.game, state.supports, state.players}
         GenServer.call(__MODULE__, message)
     end
+  end
+
+  @doc false
+  def delay_disconnect(type, game_id) do
+    Process.send_after(__MODULE__, {:disconnected, type, game_id}, :timer.seconds(Client.timeout_seconds()))
   end
 
   # for tests
@@ -81,6 +87,11 @@ defmodule Gossip.Presence do
     :ets.delete(ets_key())
     create_table()
     {:reply, :ok, initial_state()}
+  end
+
+  def handle_info({:disconnected, type, game_id}, state) do
+    Notices.maybe_broadcast_disconnect_event(type, game_id)
+    {:noreply, state}
   end
 
   def handle_info({:EXIT, pid, _reason}, state) do
