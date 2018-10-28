@@ -25,6 +25,8 @@ config :gossip, Web.Endpoint,
 
 config :gossip, :socket, tls: false
 
+config :gossip, :errors, report: false
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

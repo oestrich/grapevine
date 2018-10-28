@@ -3,6 +3,8 @@ defmodule Gossip.Application do
 
   use Application
 
+  @report_errors Application.get_env(:gossip, :errors)[:report]
+
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
@@ -16,6 +18,10 @@ defmodule Gossip.Application do
     ]
 
     Metrics.Setup.setup()
+
+    if @report_errors do
+      :ok = :error_logger.add_report_handler(Sentry.Logger)
+    end
 
     opts = [strategy: :one_for_one, name: Gossip.Supervisor]
     Supervisor.start_link(children, opts)

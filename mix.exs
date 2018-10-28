@@ -49,6 +49,7 @@ defmodule Gossip.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
       {:prometheus_plugs, "~> 1.1.1"},
+      {:sentry, "~> 6.4"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"},
     ]
