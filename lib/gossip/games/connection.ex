@@ -10,6 +10,7 @@ defmodule Gossip.Games.Connection do
   @types ["web", "telnet", "secure telnet"]
 
   schema "connections" do
+    field(:key, Ecto.UUID, read_after_writes: true)
     field(:type, :string)
     field(:url, :string)
     field(:host, :string)

@@ -2,6 +2,11 @@ defmodule Web.ConnectionView do
   use Web, :view
 
   def render("show.json", %{connection: connection}) do
+    json = render("connection.json", %{connection: connection})
+    Map.put(json, :id, connection.key)
+  end
+
+  def render("connection.json", %{connection: connection}) do
     case connection.type do
       "web" ->
         Map.take(connection, [:type, :url])

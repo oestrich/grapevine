@@ -54,7 +54,7 @@ defmodule Web.GameViewTest do
       json = GameView.render("status.json", %{game: game})
       refute Map.has_key?(json, :connections)
 
-      game = %{game | connections: [%{type: "web", url: "https://example.com/play"}]}
+      game = %{game | connections: [%{key: "key", type: "web", url: "https://example.com/play"}]}
       json = GameView.render("status.json", %{game: game})
       assert length(json.connections) == 1
     end
