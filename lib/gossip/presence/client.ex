@@ -21,7 +21,10 @@ defmodule Gossip.Presence.Client do
     |> Enum.reject(&is_nil/1)
   end
 
-  defp fetch_from_ets(id) do
+  @doc """
+  Fetch a game by id from ETS
+  """
+  def fetch_from_ets(id) do
     case :ets.lookup(ets_key(), id) do
       [{^id, state}] ->
         {id, state}
@@ -31,11 +34,18 @@ defmodule Gossip.Presence.Client do
     end
   end
 
+  @doc """
+  Determine if a game is online based on state from ETS
+  """
+  def game_online?(state) do
+    oldest_online = Timex.now() |> Timex.shift(seconds: -1 * @timeout_seconds)
+    Timex.after?(state.timestamp, oldest_online)
+  end
+
   defp filter_online(nil), do: false
 
   defp filter_online({_game_id, state}) do
-    oldest_online = Timex.now() |> Timex.shift(seconds: -1 * @timeout_seconds)
-    Timex.after?(state.timestamp, oldest_online)
+    game_online?(state)
   end
 
   defp fetch_from_db({"game:" <> game_id, state}) do
@@ -58,14 +68,14 @@ defmodule Gossip.Presence.Client do
     end
   end
 
-  defp keys() do
+  def keys() do
     key = :ets.first(ets_key())
     keys(key, [key])
   end
 
-  defp keys(:"$end_of_table", [:"$end_of_table" | accumulator]), do: accumulator
+  def keys(:"$end_of_table", [:"$end_of_table" | accumulator]), do: accumulator
 
-  defp keys(current_key, accumulator) do
+  def keys(current_key, accumulator) do
     next_key = :ets.next(ets_key(), current_key)
     keys(next_key, [next_key | accumulator])
   end

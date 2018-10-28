@@ -10,17 +10,21 @@ defmodule Gossip.Presence.Server do
   alias Gossip.Presence.Notices
 
   def track(state, socket, game) do
-    state = Map.put(state, :sockets, [{game.id, socket} | state.sockets])
+    state = Map.put(state, :sockets, [{type(game), game.id, socket} | state.sockets])
     Notices.maybe_broadcast_connect_event(state, socket)
     {:ok, state}
   end
+
+  defp type(%Game{}), do: :game
+
+  defp type(%Application{}), do: :game
 
   def remove_socket(state, socket) do
     Notices.maybe_broadcast_disconnect_event(state, socket)
 
     sockets =
       state.sockets
-      |> Enum.reject(fn {_game_id, pid} ->
+      |> Enum.reject(fn {_type, _game_id, pid} ->
         pid == socket
       end)
 
