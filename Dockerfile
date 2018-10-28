@@ -28,11 +28,12 @@ COPY --from=builder /app/deps/phoenix_html /deps/phoenix_html
 RUN npm install
 
 COPY assets /app
-RUN node node_modules/brunch/bin/brunch build --production
+RUN node node_modules/brunch/bin/brunch build
 
 FROM builder as releaser
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
+ENV COOKIE="zR2/sR0Ohy5xeVMjMHsCt5Jl76lTpeI0LU57zu8XrnfLLzHZFuIsWxQYiMLBpToU"
 RUN mix phx.digest
 RUN cp config/prod.docker.exs config/prod.exs && \
     mix release --env=prod --no-tar
@@ -45,8 +46,6 @@ COPY --from=releaser /app/_build/prod/rel/gossip /app/
 ENV MIX_ENV=prod
 
 EXPOSE 4001
-
-VOLUME /var/log/gossip/
 
 ENTRYPOINT ["bin/gossip"]
 CMD ["foreground"]
