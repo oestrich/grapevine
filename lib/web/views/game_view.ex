@@ -41,6 +41,8 @@ defmodule Web.GameView do
       user_agent_url: user_agent_repo_url(game.user_agent),
       connections: format_connections(game.connections),
       allow_character_registration: game.allow_character_registration,
+      client_id: game.client_id,
+      client_secret: game.client_secret,
     }
   end
 

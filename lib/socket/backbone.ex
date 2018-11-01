@@ -4,9 +4,12 @@ defmodule Socket.Backbone do
 
   Backbone events:
   - "channels/new", payload is the new channel
+  - "games/new", payload is the new game
+  - "games/edit", payload is the updated game
 
   Sync events:
   - "sync/channels", Sync a list of channels
+  - "sync/games", Sync a list of games
   """
 
   use Web.Socket.Module
