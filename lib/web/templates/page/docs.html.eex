@@ -101,6 +101,7 @@
   <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
   <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
   <li><%= link("Javascript", to: "https://github.com/dinchak/node-gossiphaus") %></li>
+  <li><%= link("Crystal", to: "https://github.com/proxima/gossip-crystal") %></li>
 </ul>
 
 <h3 id="connecting">
