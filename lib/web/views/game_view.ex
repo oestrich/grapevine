@@ -4,6 +4,7 @@ defmodule Web.GameView do
   alias Gossip.Games
   alias Web.ConnectionView
   alias Web.ReactView
+  alias Web.RedirectURIView
 
   def render("index.json", %{games: games}) do
     %{
@@ -40,6 +41,7 @@ defmodule Web.GameView do
       user_agent: game.user_agent,
       user_agent_url: user_agent_repo_url(game.user_agent),
       connections: format_connections(game.connections),
+      redirect_uris: format_redirect_uris(game.redirect_uris),
       allow_character_registration: game.allow_character_registration,
       client_id: game.client_id,
       client_secret: game.client_secret,
@@ -61,6 +63,10 @@ defmodule Web.GameView do
     |> Enum.map(fn connection ->
       ConnectionView.render("show.json", %{connection: connection})
     end)
+  end
+
+  defp format_redirect_uris(redirect_uris) do
+    Enum.map(redirect_uris, &(&1.uri))
   end
 
   defp user_agent_repo_url(nil), do: nil

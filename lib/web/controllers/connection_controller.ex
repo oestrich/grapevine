@@ -28,12 +28,12 @@ defmodule Web.ConnectionController do
          true <- Games.user_owns_connection?(user, connection),
          {:ok, connection} <- Games.delete_connection(connection) do
       conn
-      |> put_flash(:info, "Created the connection!")
+      |> put_flash(:info, "Deleted the connection!")
       |> redirect(to: game_path(conn, :show, connection.game_id))
     else
       _ ->
         conn
-        |> put_flash(:error, "Coult not delete the connection!")
+        |> put_flash(:error, "Could not delete the connection!")
         |> redirect(to: user_game_path(conn, :index))
     end
   end

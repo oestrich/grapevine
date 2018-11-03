@@ -6,6 +6,7 @@ defmodule Gossip.Games do
   alias Gossip.Accounts.User
   alias Gossip.Games.Connection
   alias Gossip.Games.Game
+  alias Gossip.Games.RedirectURI
   alias Gossip.Games.UserAgent
   alias Gossip.Repo
 
@@ -36,7 +37,7 @@ defmodule Gossip.Games do
   @spec all() :: [Game.t()]
   def all() do
     Game
-    |> preload([:connections])
+    |> preload([:connections, :redirect_uris])
     |> Repo.all()
   end
 
@@ -50,7 +51,7 @@ defmodule Gossip.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections])}
+        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
     end
   end
 
@@ -61,7 +62,6 @@ defmodule Gossip.Games do
   def for_user(user) do
     Game
     |> where([g], g.user_id == ^user.id)
-    |> preload([:connections])
     |> Repo.all()
   end
 
@@ -75,7 +75,7 @@ defmodule Gossip.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections])}
+        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
     end
   end
 
@@ -292,6 +292,62 @@ defmodule Gossip.Games do
       {:ok, connection} ->
         broadcast_game_update(connection.game_id)
         {:ok, connection}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Check if a user can manage a redirect_uri
+  """
+  @spec user_owns_redirect_uri?(User.t(), RedirectURI.t()) :: boolean()
+  def user_owns_redirect_uri?(user, redirect_uri) do
+    redirect_uri = Repo.preload(redirect_uri, :game)
+    redirect_uri.game.user_id == user.id
+  end
+
+  @doc """
+  Get a redirect_uri by an id
+  """
+  @spec get_redirect_uri(id()) :: {:ok, Connection.t()} | {:error, :not_found}
+  def get_redirect_uri(id) do
+    case Repo.get_by(RedirectURI, id: id) do
+      nil ->
+        {:error, :not_found}
+
+      redirect_uri ->
+        {:ok, redirect_uri}
+    end
+  end
+
+  @doc """
+  Create a new redirect uri for a game
+  """
+  def create_redirect_uri(game, uri) do
+    changeset =
+      game
+      |> Ecto.build_assoc(:redirect_uris)
+      |> RedirectURI.changeset(uri)
+
+    case Repo.insert(changeset) do
+      {:ok, redirect_uri} ->
+        broadcast_game_update(game.id)
+        {:ok, redirect_uri}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Delete a redirect uri from a game
+  """
+  def delete_redirect_uri(redirect_uri) do
+    case Repo.delete(redirect_uri) do
+      {:ok, redirect_uri} ->
+        broadcast_game_update(redirect_uri.game_id)
+        {:ok, redirect_uri}
 
       {:error, changeset} ->
         {:error, changeset}

@@ -31,11 +31,15 @@ defmodule Web.Router do
 
     resources("/games", GameController, only: [:index, :show, :edit, :update]) do
       resources("/connections", ConnectionController, only: [:create])
+
+      resources("/redirect-uris", RedirectURIController, only: [:create])
     end
 
     post("/games/:id/regenerate", GameController, :regenerate)
 
     get("/media", PageController, :media)
+
+    resources("/redirect-uris", RedirectURIController, only: [:delete])
 
     resources("/register", RegistrationController, only: [:new, :create])
 

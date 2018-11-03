@@ -7,9 +7,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import Connection from "./connection";
+import RedirectURI from "./redirect-uri";
 
 window.Components = {
   Connection,
+  RedirectURI,
 }
 
 /**

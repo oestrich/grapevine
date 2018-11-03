@@ -1,0 +1,8 @@
+<div class="col-md-12 mb-3">
+  <div class="card">
+    <div class="card-body">
+      <p class="card-text"><code><%= @redirect_uri.uri %></code></p>
+      <%= link("Delete", to: redirect_uri_path(@conn, :delete, @redirect_uri.id), method: "delete", class: "btn btn-sm btn-danger") %>
+    </div>
+  </div>
+</div>

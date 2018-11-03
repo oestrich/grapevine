@@ -178,4 +178,51 @@ defmodule Gossip.GamesTest do
       {:ok, _connection} = Games.delete_connection(connection)
     end
   end
+
+  describe "checking a redirect_uri matches a user" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "is owned", %{user: user, game: game} do
+      {:ok, redirect_uri} = Games.create_redirect_uri(game, "https://example.com/callback")
+
+      assert Games.user_owns_redirect_uri?(user, redirect_uri)
+    end
+
+    test "is not owned", %{game: game} do
+      {:ok, redirect_uri} = Games.create_redirect_uri(game, "https://example.com/callback")
+
+      user = create_user(%{email: "other@example.com"})
+      refute Games.user_owns_redirect_uri?(user, redirect_uri)
+    end
+  end
+
+  describe "create a redirect uri" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "successfully", %{game: game} do
+      {:ok, redirect_uri} = Games.create_redirect_uri(game, "https://example.com/callback")
+      assert redirect_uri.uri
+    end
+  end
+
+  describe "delete a redirect uri" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "successfully", %{game: game} do
+      {:ok, redirect_uri} = Games.create_redirect_uri(game, "https://example.com/callback")
+
+      {:ok, redirect_uri} = Games.delete_redirect_uri(redirect_uri)
+
+      refute Gossip.Repo.get(Games.RedirectURI, redirect_uri.id)
+    end
+  end
 end

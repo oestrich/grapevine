@@ -26,7 +26,7 @@ defmodule Socket.BackboneTest do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/new",
-        payload: %Game{name: "game", connections: []}
+        payload: %Game{name: "game", connections: [], redirect_uris: []}
       }
 
       Backbone.process_event(state, message)
@@ -38,7 +38,7 @@ defmodule Socket.BackboneTest do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/edit",
-        payload: %Game{name: "game", connections: []}
+        payload: %Game{name: "game", connections: [], redirect_uris: []}
       }
 
       Backbone.process_event(state, message)
