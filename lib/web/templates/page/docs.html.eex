@@ -45,6 +45,16 @@
           <li><%= link("games/status", to: "#games-status") %></li>
         </ul>
       </li>
+      <li>
+        <%= link("Grapevine Login", to: "#grapevine-login") %>
+        <ul>
+          <li><%= link("Redirect URIs", to: "#redirect-uris") %></li>
+          <li><%= link("Scopes", to: "#grapevine-scopes") %></li>
+          <li><%= link("Authorization", to: "#authorization") %></li>
+          <li><%= link("Token Generation", to: "#token-generation") %></li>
+          <li><%= link("Fetching User Information", to: "#fetching-user-information") %></li>
+        </ul>
+      </li>
     </ul>
   </div>
 
@@ -800,5 +810,110 @@ This is a TLS secured telnet connection.
 }</pre>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
+
+<h3 id="grapevine-login">
+  <%= link(to: "#grapevine-login") do %>
+    Grapevine Login
+    <i class="fas fa-link"></i>
+  <% end %>
+</h3>
+
+<p><%= link("Grapevine", to: "https://grapevine.haus/") %> is the player half of Gossip. You can integrate a common login through Grapevine by using OAuth 2.0.</p>
+
+<p>For more information on the OAuth 2.0 flow, please check out the spec at <%= link("OAuth.net", to: "https://oauth.net/2/") %>.</p>
+
+<p>Grapevine only supports the <%= link("Authorization Code Grant", to: "https://tools.ietf.org/html/rfc6749#section-4.1") %> type.</p>
+
+<h4 id="redirect-uris">
+  <%= link(to: "#redirect-uris") do %>
+    Redirect URIs
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: user_game_path(@conn, :index)) %> page.
+
+<p>The <code>redirect_uri</code> <b>must</b> be a secure <code>https</code> URI or a <code>localhost</code> URI for development purposes.</p>
+
+<h4 id="grapevine-scopes">
+  <%= link(to: "#grapevine-scopes") do %>
+    Scopes
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>When authorizing against Grapevine, you must provide a set of scopes you wish to request from the user. Listed below are the available scopes.</p>
+
+<ul>
+  <li><code>profile</code> gets basic profile information about the user, such as a <code>UID</code> and <code>username</code></li>
+  <li><code>email</code> can be added with <code>profile</code> to get the user's email address included in the user information response</li>
+</ul>
+
+<h4 id="authorization">
+  <%= link(to: "#authorization") do %>
+    Authorization
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p><b>Authorize Route:</b> <code>https://grapevine.haus/oauth/authorize</code></p>
+
+<p>When authorizing you <i>must</i> provide your <code>client_id</code>, any <code>scope</code> you want, a <code>state</code> to keep track of the request, your <code>redirect_uri</code>, and the <code>response_type</code> <b>must</b> be <code>code</code></p>
+
+<p>A sample request is listed below.</p>
+
+<pre>https://grapevine.haus/oauth/authorize?client_id=YOUR-CLIENT-ID
+&scope=profile
+&state=STATE
+&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fgrapevine%2Fcallback
+&response_type=code</pre>
+
+<h4 id="token-generation">
+  <%= link(to: "#token-generation") do %>
+    Token Generation
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p><b>Token Route:</b> <code>https://grapevine.haus/oauth/token</code></p>
+
+<p>To generate an access token from the authorization code from above, POST to the <code>/oauth/token</code> endpoint.</p>
+
+<p>Access tokens expire after <b>1 hour</b>.</p>
+
+<p>A sample request is listed below.</p>
+
+<pre>POST https://grapevine.haus/oauth/token?client_id=YOUR-CLIENT-ID
+&code=CODE
+&grant_type=authorization_code
+&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fgrapevine%2Fcallback</pre>
+
+<h4 id="fetching-user-information">
+  <%= link(to: "#fetching-user-information") do %>
+    Fetching User Information
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p><b>User Information Route:</b> <code>https://grapevine.haus/users/me</code></p>
+
+<p>Once you have an access token for a user, you can fetch information about the user by doing a request to <code>/users/me</code></p>
+
+<p>The access token should be provided in the <code>Authorization</code> header as a <code>Bearer</code> token.</p>
+
+<p>A sample request is below.</p>
+
+<pre>GET https://grapevine.haus/users/me
+Authorization: Bearer my-token
+Accept: application/json
+
+200 OK
+{
+  "uid": "their UID",
+  "username": "their username",
+  "email": "their email"
+}
+</pre>
+
   </div>
 </div>
