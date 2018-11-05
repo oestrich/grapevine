@@ -122,7 +122,7 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info(_message, state) do
-    {:reply, {:text, "error"}, state}
+    {:ok, state}
   end
 
   def websocket_terminate(_reason, _req, _state) do
