@@ -42,8 +42,7 @@ release :gossip do
   set version: current_version(:gossip)
   set applications: [
     :parse_trans,
-    :runtime_tools,
-    :unsafe
+    :runtime_tools
   ]
 
   set commands: [

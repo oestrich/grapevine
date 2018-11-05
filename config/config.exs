@@ -34,7 +34,9 @@ config :logger, :console,
 
 config :distillery, no_warn_missing: [:elixir_make]
 
-config :sentry, filter: Gossip.SentryFilter
+config :sentry,
+  filter: Gossip.SentryFilter,
+  json_library: Jason
 
 config :phoenix, :json_library, Jason
 

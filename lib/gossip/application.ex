@@ -20,7 +20,7 @@ defmodule Gossip.Application do
     Metrics.Setup.setup()
 
     if @report_errors do
-      :ok = :error_logger.add_report_handler(Sentry.Logger)
+      {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     end
 
     opts = [strategy: :one_for_one, name: Gossip.Supervisor]

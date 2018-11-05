@@ -6,6 +6,7 @@ defmodule Gossip.ReleaseTasks do
     :crypto,
     :ssl,
     :postgrex,
+    :telemetry,
     :ecto
   ]
 
@@ -40,7 +41,7 @@ defmodule Gossip.ReleaseTasks do
 
     # Start the Repo(s) for gossip
     IO.puts("Starting repos..")
-    Enum.each(@repos, & &1.start_link(pool_size: 1))
+    Enum.each(@repos, & &1.start_link(pool_size: 2))
   end
 
   def priv_dir(app), do: "#{:code.priv_dir(app)}"
