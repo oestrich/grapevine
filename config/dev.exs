@@ -50,7 +50,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :gossip, Gossip.Repo,
-  adapter: Ecto.Adapters.Postgres,
   database: "gossip_dev",
   hostname: "localhost",
   pool_size: 10
