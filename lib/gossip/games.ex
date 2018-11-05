@@ -91,7 +91,7 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.insert() do
       {:ok, game} ->
-        Web.Endpoint.broadcast("system:backbone", "games/new", game)
+        broadcast_game_create(game.id)
         {:ok, game}
 
       {:error, changeset} ->
@@ -160,9 +160,16 @@ defmodule Gossip.Games do
         {:error, :not_found}
 
       game ->
-        game
-        |> Game.regenerate_changeset()
-        |> Repo.update()
+        changeset = game |> Game.regenerate_changeset()
+
+        case Repo.update(changeset) do
+          {:ok, game} ->
+            broadcast_game_update(game.id)
+            {:ok, game}
+
+          {:error, changeset} ->
+            {:error, changeset}
+        end
     end
   end
 
@@ -369,6 +376,15 @@ defmodule Gossip.Games do
     blocklist
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
+  end
+
+  defp broadcast_game_create(game_id) do
+    with {:ok, game} <- get(game_id) do
+      Web.Endpoint.broadcast("system:backbone", "games/new", game)
+    else
+      _ ->
+        :ok
+    end
   end
 
   defp broadcast_game_update(game_id) do
