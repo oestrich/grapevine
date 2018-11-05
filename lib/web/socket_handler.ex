@@ -33,7 +33,7 @@ defmodule Web.SocketHandler do
   def websocket_handle({:text, message}, state) do
     Logger.debug(message, type: :socket)
 
-    with {:ok, message} <- Poison.decode(message),
+    with {:ok, message} <- Jason.decode(message),
          {:ok, response, state} <- Router.receive(state, message) do
       respond(state, response)
     else
@@ -43,10 +43,10 @@ defmodule Web.SocketHandler do
       {:disconnect, response, state} ->
         send(self(), {:disconnect})
 
-        {:reply, {:text, Poison.encode!(response)}, state}
+        {:reply, {:text, Jason.encode!(response)}, state}
 
       _ ->
-        {:reply, {:text, Poison.encode!(%{status: "failure", error: "unknown"})}, state}
+        {:reply, {:text, Jason.encode!(%{status: "failure", error: "unknown"})}, state}
     end
   end
 
@@ -55,7 +55,7 @@ defmodule Web.SocketHandler do
   end
 
   def websocket_info({:broadcast, event}, state) do
-    {:reply, {:text, Poison.encode!(event)}, state}
+    {:reply, {:text, Jason.encode!(event)}, state}
   end
 
   # Ignore broadcasts from the same client id
@@ -68,7 +68,7 @@ defmodule Web.SocketHandler do
       }
     }
 
-    {:reply, {:text, Poison.encode!(message)}, state}
+    {:reply, {:text, Jason.encode!(message)}, state}
   end
 
   def websocket_info(message = %Phoenix.Socket.Broadcast{topic: "system:backbone"}, state) do
@@ -77,7 +77,7 @@ defmodule Web.SocketHandler do
         {:ok, state}
 
       {:ok, response, state} ->
-        {:reply, {:text, Poison.encode!(response)}, state}
+        {:reply, {:text, Jason.encode!(response)}, state}
     end
   end
 
@@ -95,7 +95,7 @@ defmodule Web.SocketHandler do
           payload: Map.delete(message.payload, "game_id"),
         }
 
-        {:reply, {:text, Poison.encode!(message)}, state}
+        {:reply, {:text, Jason.encode!(message)}, state}
     end
   end
 
@@ -105,7 +105,7 @@ defmodule Web.SocketHandler do
         {:ok, state}
 
       {:ok, response, state} ->
-        {:reply, {:text, Poison.encode!(response)}, state}
+        {:reply, {:text, Jason.encode!(response)}, state}
 
       {:disconnect, state} ->
         Logger.warn("Disconnecting the socket")
@@ -134,6 +134,6 @@ defmodule Web.SocketHandler do
   end
 
   defp respond(state, response) do
-    {:reply, {:text, Poison.encode!(response)}, state}
+    {:reply, {:text, Jason.encode!(response)}, state}
   end
 end

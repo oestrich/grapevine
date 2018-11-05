@@ -49,7 +49,6 @@ defmodule Gossip.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_pubsub, "~> 1.0"},
       {:plug_cowboy, "~> 2.0", override: true},
-      {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
       {:prometheus_plugs, "~> 1.1.1"},
