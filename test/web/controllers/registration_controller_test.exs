@@ -9,9 +9,9 @@ defmodule Web.RegistrationControllerTest do
         password_confirmation: "password",
       }
 
-      conn = post(conn, registration_path(conn, :create), user: params)
+      conn = post(conn, Routes.registration_path(conn, :create), user: params)
 
-      assert redirected_to(conn) == user_game_path(conn, :index)
+      assert redirected_to(conn) == Routes.user_game_path(conn, :index)
     end
 
     test "failure", %{conn: conn} do
@@ -19,7 +19,7 @@ defmodule Web.RegistrationControllerTest do
         email: "admin@example.com",
       }
 
-      conn = post(conn, registration_path(conn, :create), user: params)
+      conn = post(conn, Routes.registration_path(conn, :create), user: params)
 
       assert html_response(conn, 422)
     end
