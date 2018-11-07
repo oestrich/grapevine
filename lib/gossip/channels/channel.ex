@@ -3,9 +3,13 @@ defmodule Gossip.Channels.Channel do
   Channel schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   alias Gossip.Channels
+
+  @type t :: %__MODULE__{}
 
   schema "channels" do
     field(:name, :string)

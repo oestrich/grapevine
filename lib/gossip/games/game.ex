@@ -3,7 +3,11 @@ defmodule Gossip.Games.Game do
   Game Schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
+
+  @type t :: %__MODULE__{}
 
   alias Gossip.Accounts.User
   alias Gossip.Games
@@ -42,8 +46,8 @@ defmodule Gossip.Games.Game do
     |> validate_length(:short_name, less_than_or_equal_to: 15)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/\w+\./)
-    |> ensure(:client_id, UUID.uuid4())
-    |> ensure(:client_secret, UUID.uuid4())
+    |> Gossip.Schema.ensure(:client_id, UUID.uuid4())
+    |> Gossip.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :games_lower_name_index)
     |> unique_constraint(:short_name, name: :games_lower_short_name_index)
   end

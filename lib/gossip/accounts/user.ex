@@ -3,9 +3,13 @@ defmodule Gossip.Accounts.User do
   User schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   alias Gossip.Games.Game
+
+  @type t :: %__MODULE__{}
 
   schema "users" do
     field(:email, :string)
@@ -25,7 +29,7 @@ defmodule Gossip.Accounts.User do
     |> cast(params, [:email, :password, :password_confirmation])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
-    |> ensure(:token, UUID.uuid4())
+    |> Gossip.Schema.ensure(:token, UUID.uuid4())
     |> hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)

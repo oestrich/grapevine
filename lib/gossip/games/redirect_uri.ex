@@ -3,9 +3,13 @@ defmodule Gossip.Games.RedirectURI do
   Redirect URI Schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   alias Gossip.Games.Game
+
+  @type t :: %__MODULE__{}
 
   schema "redirect_uris" do
     field(:uri, :string)

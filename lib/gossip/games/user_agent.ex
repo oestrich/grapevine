@@ -3,7 +3,11 @@ defmodule Gossip.Games.UserAgent do
   Game Schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
+
+  @type t :: %__MODULE__{}
 
   schema "user_agents" do
     field(:version, :string)

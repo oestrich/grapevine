@@ -3,9 +3,13 @@ defmodule Gossip.Games.Connection do
   Connection Schema
   """
 
-  use Gossip.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   alias Gossip.Games.Game
+
+  @type t :: %__MODULE__{}
 
   @types ["web", "telnet", "secure telnet"]
 
