@@ -1,6 +1,8 @@
 defmodule Web.PageView do
   use Web, :view
 
+  import Web.SocketHelper
+
   alias Gossip.Channels
   alias Web.DocView
 

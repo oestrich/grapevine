@@ -40,7 +40,6 @@ defmodule Web do
       import Web.Router.Helpers
       import Web.ErrorHelpers
       import Web.Gettext
-      import Web.SocketHelper
 
       alias Web.Router.Helpers, as: Routes
     end
