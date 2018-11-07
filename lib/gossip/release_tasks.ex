@@ -6,8 +6,8 @@ defmodule Gossip.ReleaseTasks do
     :crypto,
     :ssl,
     :postgrex,
-    :telemetry,
-    :ecto
+    :ecto,
+    :ecto_sql,
   ]
 
   @apps [
