@@ -15,6 +15,7 @@ defmodule Gossip.Application do
       supervisor(Web.Endpoint, []),
       {Gossip.Presence, []},
       {Metrics.Server, []},
+      {Telemetry.Poller, telemetry_opts()},
     ]
 
     Metrics.Setup.setup()
@@ -30,5 +31,14 @@ defmodule Gossip.Application do
   def config_change(changed, _new, removed) do
     Web.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp telemetry_opts() do
+    [
+      measurements: [
+        {Metrics.GameInstrumenter, :dispatch_game_count, []},
+      ],
+      period: 10_000
+    ]
   end
 end

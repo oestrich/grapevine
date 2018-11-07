@@ -5,8 +5,6 @@ defmodule Metrics.Server do
 
   use GenServer
 
-  alias Gossip.Presence
-  alias Metrics.GameInstrumenter
   alias Metrics.SocketInstrumenter
 
   @update_interval 10_000
@@ -38,10 +36,6 @@ defmodule Metrics.Server do
   end
 
   def handle_info({:update}, state) do
-    Presence.online_games()
-    |> length()
-    |> GameInstrumenter.set_games()
-
     state.sockets
     |> length()
     |> SocketInstrumenter.set_sockets()
