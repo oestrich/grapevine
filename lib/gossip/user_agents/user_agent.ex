@@ -1,4 +1,4 @@
-defmodule Gossip.Games.UserAgent do
+defmodule Gossip.UserAgents.UserAgent do
   @moduledoc """
   Game Schema
   """

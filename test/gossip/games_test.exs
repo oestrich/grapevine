@@ -2,6 +2,7 @@ defmodule Gossip.GamesTest do
   use Gossip.DataCase
 
   alias Gossip.Games
+  alias Gossip.UserAgents
 
   describe "registering a new game" do
     test "successful" do
@@ -42,7 +43,7 @@ defmodule Gossip.GamesTest do
 
     test "registers the user agent locally", %{game: game} do
       assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"user_agent" => "ExVenture 0.23.0"})
-      assert {:ok, _user_agent} = Games.get_user_agent(game.user_agent)
+      assert {:ok, _user_agent} = UserAgents.get_user_agent(game.user_agent)
     end
 
     test "saves the version if available", %{game: game} do
@@ -67,21 +68,6 @@ defmodule Gossip.GamesTest do
 
       assert updated_game.client_id != game.client_id
       assert updated_game.client_secret != game.client_secret
-    end
-  end
-
-  describe "register a user agent" do
-    test "successful" do
-      {:ok, user_agent} = Games.register_user_agent("ExVenture 0.26.0")
-
-      assert user_agent.version == "ExVenture 0.26.0"
-    end
-
-    test "reuses the same agent" do
-      {:ok, first_user_agent} = Games.register_user_agent("ExVenture 0.26.0")
-      {:ok, second_user_agent} = Games.register_user_agent("ExVenture 0.26.0")
-
-      assert first_user_agent.id == second_user_agent.id
     end
   end
 

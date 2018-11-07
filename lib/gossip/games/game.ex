@@ -7,12 +7,12 @@ defmodule Gossip.Games.Game do
 
   import Ecto.Changeset
 
-  @type t :: %__MODULE__{}
-
   alias Gossip.Accounts.User
   alias Gossip.Games
   alias Gossip.Games.Connection
   alias Gossip.Games.RedirectURI
+
+  @type t :: %__MODULE__{}
 
   schema "games" do
     field(:name, :string)

@@ -1,7 +1,7 @@
 defmodule Web.GameView do
   use Web, :view
 
-  alias Gossip.Games
+  alias Gossip.UserAgents
   alias Web.ConnectionView
   alias Web.ReactView
   alias Web.RedirectURIView
@@ -72,7 +72,7 @@ defmodule Web.GameView do
   defp user_agent_repo_url(nil), do: nil
 
   defp user_agent_repo_url(user_agent) do
-    with {:ok, user_agent} <- Games.get_user_agent(user_agent),
+    with {:ok, user_agent} <- UserAgents.get_user_agent(user_agent),
          {:ok, user_agent} <- check_if_repo_url(user_agent) do
       user_agent.repo_url
     else
@@ -98,7 +98,7 @@ defmodule Web.GameView do
   end
 
   defp display_user_agent(user_agent) do
-    with {:ok, user_agent} <- Games.get_user_agent(user_agent),
+    with {:ok, user_agent} <- UserAgents.get_user_agent(user_agent),
          {:ok, user_agent} <- check_if_repo_url(user_agent) do
       link(user_agent.version, to: user_agent.repo_url, target: "_blank")
     else

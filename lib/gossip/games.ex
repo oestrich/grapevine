@@ -7,15 +7,14 @@ defmodule Gossip.Games do
   alias Gossip.Games.Connection
   alias Gossip.Games.Game
   alias Gossip.Games.RedirectURI
-  alias Gossip.Games.UserAgent
   alias Gossip.Repo
+  alias Gossip.UserAgents
 
   import Ecto.Query
 
   @type id :: integer()
   @type game_params :: map()
   @type token :: String.t()
-  @type user_agent :: String.t()
   @type game_name :: String.t()
   @type uuid :: String.t()
 
@@ -117,40 +116,6 @@ defmodule Gossip.Games do
   end
 
   @doc """
-  Register a connecting games user agent
-  """
-  @spec register_user_agent(user_agent()) :: {:ok, UserAgent.t()}
-  def register_user_agent(version) do
-    case get_user_agent(version) do
-      {:ok, user_agent} ->
-        {:ok, user_agent}
-
-      {:error, :not_found} ->
-        create_user_agent(version)
-    end
-  end
-
-  defp create_user_agent(version) do
-    %UserAgent{}
-    |> UserAgent.changeset(%{version: version})
-    |> Repo.insert()
-  end
-
-  @doc """
-  Get a user agent by its version string
-  """
-  @spec get_user_agent(user_agent()) :: {:ok, UserAgent.t()} | {:error, :not_found}
-  def get_user_agent(version) do
-    case Repo.get_by(UserAgent, version: version) do
-      nil ->
-        {:error, :not_found}
-
-      user_agent ->
-        {:ok, user_agent}
-    end
-  end
-
-  @doc """
   Update a game
   """
   @spec regenerate_client_tokens(User.t(), id()) :: {:ok, Game.t()}
@@ -229,7 +194,7 @@ defmodule Gossip.Games do
         :ok
 
       user_agent ->
-        register_user_agent(user_agent)
+        UserAgents.register_user_agent(user_agent)
     end
   end
 
