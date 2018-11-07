@@ -5,12 +5,16 @@ defmodule Metrics.Server do
 
   use GenServer
 
-  alias Metrics.SocketInstrumenter
-
-  @update_interval 10_000
-
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  end
+
+  @doc """
+  Get the count of online sockets
+  """
+  @spec online_sockets() :: integer()
+  def online_sockets() do
+    GenServer.call(__MODULE__, {:sockets, :online})
   end
 
   @doc """
@@ -21,9 +25,12 @@ defmodule Metrics.Server do
   end
 
   def init(_) do
-    :timer.send_interval(@update_interval, {:update})
     Process.flag(:trap_exit, true)
     {:ok, %{sockets: []}}
+  end
+
+  def handle_call({:sockets, :online}, _from, state) do
+    {:reply, length(state.sockets), state}
   end
 
   def handle_cast({:socket, :online, pid}, state) do
@@ -33,13 +40,5 @@ defmodule Metrics.Server do
 
   def handle_info({:EXIT, pid, _reason}, state) do
     {:noreply, Map.put(state, :sockets, List.delete(state.sockets, pid))}
-  end
-
-  def handle_info({:update}, state) do
-    state.sockets
-    |> length()
-    |> SocketInstrumenter.set_sockets()
-
-    {:noreply, state}
   end
 end

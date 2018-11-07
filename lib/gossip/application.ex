@@ -37,6 +37,7 @@ defmodule Gossip.Application do
     [
       measurements: [
         {Metrics.GameInstrumenter, :dispatch_game_count, []},
+        {Metrics.SocketInstrumenter, :dispatch_socket_count, []},
       ],
       period: 10_000
     ]

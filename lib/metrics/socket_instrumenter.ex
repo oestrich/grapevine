@@ -5,6 +5,8 @@ defmodule Metrics.SocketInstrumenter do
 
   use Prometheus.Metric
 
+  alias Metrics.Server
+
   @doc false
   def setup() do
     Gauge.declare(
@@ -41,9 +43,19 @@ defmodule Metrics.SocketInstrumenter do
       name: :gossip_socket_unknown_event_count,
       help: "Total count of unknown events sent to the socket"
     )
+
+    events = [
+      [:gossip, :sockets, :online]
+    ]
+
+    Telemetry.attach_many("grapevine-sockets", events, __MODULE__, :handle_event, nil)
   end
 
-  def set_sockets(count) do
+  def dispatch_socket_count() do
+    Telemetry.execute([:gossip, :sockets, :online], Server.online_sockets(), %{})
+  end
+
+  def handle_event([:gossip, :sockets, :online], count, _metadata, _config) do
     Gauge.set([name: :gossip_socket_count], count)
   end
 
