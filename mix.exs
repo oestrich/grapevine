@@ -45,7 +45,7 @@ defmodule Gossip.Mixfile do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix, "~> 1.4.0-rc.3", override: true},
+      {:phoenix, "~> 1.4", override: true},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_pubsub, "~> 1.0"},
       {:plug_cowboy, "~> 2.0", override: true},

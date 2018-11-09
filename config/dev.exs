@@ -53,3 +53,5 @@ config :gossip, Gossip.Repo,
   database: "gossip_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :phoenix, :plug_init_mode, :runtime
