@@ -9,6 +9,7 @@ Gossip is a MUD chat network.
 - [MUD Coders Slack](https://slack.mudcoders.com/)
 - [Docs](https://gossip.haus/docs)
 - [Patreon](https://www.patreon.com/exventure)
+- [Discord](https://discord.gg/GPEa6dB)
 
 ## WebSocket Protocol
 
