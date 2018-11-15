@@ -24,6 +24,8 @@ defmodule Socket.Tells do
   Send a tell to another game
   """
   def send(state, event) do
+    Telemetry.execute([:gossip, :events, :tells, :send], 1, %{})
+
     with {:ok, payload} <- check_payload(event),
          {:ok, %{game: game, supports: supports, players: players}} <- check_game_online(payload),
          :ok <- check_remote_game_supports(supports),
