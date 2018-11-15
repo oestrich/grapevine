@@ -9,7 +9,6 @@ defmodule Socket.Core.Authenticate do
   alias Gossip.Channels
   alias Gossip.Games
   alias Gossip.Presence
-  alias Metrics.SocketInstrumenter
   alias Socket.Backbone
   alias Socket.Core
   alias Socket.Games, as: SocketGames
@@ -19,33 +18,29 @@ defmodule Socket.Core.Authenticate do
   @disable_debug_seconds 300
 
   def process(state, payload) do
-    SocketInstrumenter.connect()
+    Telemetry.execute([:gossip, :sockets, :connect], 1, %{})
 
     with {:ok, game} <- validate_socket(payload),
          {:ok, supports} <- validate_supports(payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
-        Logger.debug("Disconnecting - invalid authenticate")
-        SocketInstrumenter.connect_failure()
+        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "invalid authenticat event"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "invalid credentials"}, state}
 
       {:error, :missing_supports} ->
-        Logger.debug("Disconnecting - missing supports")
-        SocketInstrumenter.connect_failure()
+        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "missing supports"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "missing supports"}, state}
 
       {:error, :must_support_channels} ->
-        Logger.debug("Disconnecting - must support channels")
-        SocketInstrumenter.connect_failure()
+        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "must support channels"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "must support channels"}, state}
 
       {:error, :unknown_supports} ->
-        Logger.debug("Disconnecting - unknown set of supports")
-        SocketInstrumenter.connect_failure()
+        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "unknown set of supports"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "includes unknown supports"}, state}
     end
@@ -73,8 +68,7 @@ defmodule Socket.Core.Authenticate do
 
     maybe_schedule_disable_debug(state)
 
-    SocketInstrumenter.connect_success()
-    Logger.info("Authenticated #{game.name} - subscribed to #{inspect(channels)} - supports #{inspect(supports)}")
+    Telemetry.execute([:gossip, :sockets, :connect, :success], 1, %{game: game.name, channels: channels, supports: supports})
     Presence.track(state)
 
     response = %{

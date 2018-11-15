@@ -5,16 +5,12 @@ defmodule Socket.Core.Heartbeat do
 
   require Logger
 
-  alias Metrics.SocketInstrumenter
-
   def handle(state = %{status: "inactive"}) do
     state = Map.put(state, :heartbeat_count, state.heartbeat_count + 1)
 
-    Logger.debug("Inactive heartbeat", type: :heartbeat)
-
     case state.heartbeat_count > 3 do
       true ->
-        SocketInstrumenter.heartbeat_disconnect()
+        Telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
         {:disconnect, state}
 
       false ->
@@ -23,11 +19,9 @@ defmodule Socket.Core.Heartbeat do
   end
 
   def handle(state) do
-    SocketInstrumenter.heartbeat()
-
     case state do
       %{heartbeat_count: count} when count >= 3 ->
-        SocketInstrumenter.heartbeat_disconnect()
+        Telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
 
         {:disconnect, state}
 
@@ -37,4 +31,3 @@ defmodule Socket.Core.Heartbeat do
     end
   end
 end
-

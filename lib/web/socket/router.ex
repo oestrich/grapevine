@@ -7,7 +7,6 @@ defmodule Web.Socket.Router do
 
   require Logger
 
-  alias Metrics.SocketInstrumenter
   alias Socket.Backbone
   alias Socket.Core
 
@@ -54,8 +53,7 @@ defmodule Web.Socket.Router do
   end
 
   def receive(state, frame) do
-    Logger.warn("Getting an unknown frame - #{inspect(state)} - #{inspect(frame)}")
-    SocketInstrumenter.unknown_event()
+    Telemetry.execute([:gossip, :sockets, :events, :unknown], 1, %{state: state, frame: frame})
     {:ok, %{status: "failure", error: "unknown"}, state}
   end
 end
