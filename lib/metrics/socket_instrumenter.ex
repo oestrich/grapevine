@@ -53,7 +53,7 @@ defmodule Metrics.SocketInstrumenter do
       [:gossip, :sockets, :events, :unknown],
       [:gossip, :sockets, :heartbeat],
       [:gossip, :sockets, :heartbeat, :disconnect],
-      [:gossip, :sockets, :online],
+      [:gossip, :sockets, :online]
     ]
 
     Telemetry.attach_many("gossip-sockets", events, __MODULE__, :handle_event, nil)
@@ -90,7 +90,12 @@ defmodule Metrics.SocketInstrumenter do
   end
 
   def handle_event([:gossip, :sockets, :connect, :success], _count, metadata, _config) do
-    Logger.info("Authenticated #{metadata.game} - subscribed to #{inspect(metadata.channels)} - supports #{inspect(metadata.supports)}")
+    Logger.info(fn ->
+      channels = inspect(metadata.channels)
+      supports = inspect(metadata.supports)
+
+      "Authenticated #{metadata.game} - subscribed to #{channels} - supports #{supports}"
+    end)
 
     Counter.inc(name: :gossip_socket_connect_success_count)
   end
@@ -103,8 +108,11 @@ defmodule Metrics.SocketInstrumenter do
     Counter.inc(name: :gossip_socket_connect_failure_count)
   end
 
-  def handle_event([:gossip, :sockets, :events, :unknown], _count, %{state: state, frame: frame}, _config) do
-    Logger.warn("Getting an unknown frame - #{inspect(state)} - #{inspect(frame)}")
+  def handle_event([:gossip, :sockets, :events, :unknown], _count, metadata, _config) do
+    Logger.warn(fn ->
+      "Getting an unknown frame - #{inspect(metadata.state)} - #{inspect(metadata.frame)}"
+    end)
+
     Counter.inc(name: :gossip_socket_unknown_event_count)
   end
 end

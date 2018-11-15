@@ -27,7 +27,7 @@ defmodule Metrics.ChannelsInstrumenter do
     events = [
       [:gossip, :channels, :send],
       [:gossip, :channels, :subscribe],
-      [:gossip, :channels, :unsubscribe],
+      [:gossip, :channels, :unsubscribe]
     ]
 
     Telemetry.attach_many("gossip-channels", events, __MODULE__, :handle_event, nil)
