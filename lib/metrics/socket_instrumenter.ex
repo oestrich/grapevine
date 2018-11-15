@@ -5,6 +5,8 @@ defmodule Metrics.SocketInstrumenter do
 
   use Prometheus.Metric
 
+  require Logger
+
   alias Metrics.Server
 
   @doc false
@@ -45,12 +47,23 @@ defmodule Metrics.SocketInstrumenter do
     )
 
     events = [
+      [:gossip, :sockets, :connect],
+      [:gossip, :sockets, :connect, :failure],
+      [:gossip, :sockets, :connect, :success],
+      [:gossip, :sockets, :events, :unknown],
+      [:gossip, :sockets, :heartbeat],
+      [:gossip, :sockets, :heartbeat, :disconnect],
       [:gossip, :sockets, :online]
     ]
 
-    Telemetry.attach_many("grapevine-sockets", events, __MODULE__, :handle_event, nil)
+    Telemetry.attach_many("gossip-sockets", events, __MODULE__, :handle_event, nil)
   end
 
+  @doc """
+  Dispatch a sockets online telemetry execute
+
+  Called from the telemetry-poller
+  """
   def dispatch_socket_count() do
     Telemetry.execute([:gossip, :sockets, :online], Server.online_sockets(), %{})
   end
@@ -59,27 +72,47 @@ defmodule Metrics.SocketInstrumenter do
     Gauge.set([name: :gossip_socket_count], count)
   end
 
-  def heartbeat() do
+  def handle_event([:gossip, :sockets, :heartbeat], _count, %{payload: payload}, _config) do
+    Logger.debug(fn ->
+      "HEARTBEAT: #{inspect(payload)}"
+    end)
+
     Counter.inc(name: :gossip_socket_heartbeat_count)
   end
 
-  def heartbeat_disconnect() do
+  def handle_event([:gossip, :sockets, :heartbeat, :disconnect], _count, _metadata, _config) do
+    Logger.debug("Inactive heartbeat", type: :heartbeat)
     Counter.inc(name: :gossip_socket_heartbeat_disconnect_count)
   end
 
-  def connect() do
+  def handle_event([:gossip, :sockets, :connect], _count, _metadata, _config) do
     Counter.inc(name: :gossip_socket_connect_count)
   end
 
-  def connect_success() do
+  def handle_event([:gossip, :sockets, :connect, :success], _count, metadata, _config) do
+    Logger.info(fn ->
+      channels = inspect(metadata.channels)
+      supports = inspect(metadata.supports)
+
+      "Authenticated #{metadata.game} - subscribed to #{channels} - supports #{supports}"
+    end)
+
     Counter.inc(name: :gossip_socket_connect_success_count)
   end
 
-  def connect_failure() do
+  def handle_event([:gossip, :sockets, :connect, :failure], _count, %{reason: reason}, _config) do
+    Logger.debug(fn ->
+      "Disconnecting a socket - #{reason}"
+    end)
+
     Counter.inc(name: :gossip_socket_connect_failure_count)
   end
 
-  def unknown_event() do
+  def handle_event([:gossip, :sockets, :events, :unknown], _count, metadata, _config) do
+    Logger.warn(fn ->
+      "Getting an unknown frame - #{inspect(metadata.state)} - #{inspect(metadata.frame)}"
+    end)
+
     Counter.inc(name: :gossip_socket_unknown_event_count)
   end
 end

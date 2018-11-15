@@ -5,6 +5,8 @@ defmodule Metrics.ChannelsInstrumenter do
 
   use Prometheus.Metric
 
+  require Logger
+
   @doc false
   def setup() do
     Counter.declare(
@@ -21,26 +23,33 @@ defmodule Metrics.ChannelsInstrumenter do
       name: :gossip_channel_unsubscribe_count,
       help: "Total count of channel unsubscribe events"
     )
+
+    events = [
+      [:gossip, :channels, :send],
+      [:gossip, :channels, :subscribe],
+      [:gossip, :channels, :unsubscribe]
+    ]
+
+    Telemetry.attach_many("gossip-channels", events, __MODULE__, :handle_event, nil)
   end
 
-  @doc """
-  A new message was sent on a channel
-  """
-  def send() do
+  def handle_event([:gossip, :channels, :send], _value, _metadata, _config) do
     Counter.inc(name: :gossip_channel_message_count)
   end
 
-  @doc """
-  A channels/subscribe event
-  """
-  def subscribe() do
+  def handle_event([:gossip, :channels, :subscribe], _value, %{channel: channel_name}, _config) do
+    Logger.debug(fn ->
+      "A socket subscribed to #{channel_name}"
+    end)
+
     Counter.inc(name: :gossip_channel_subscribe_count)
   end
 
-  @doc """
-  A channels/unsubscribe event
-  """
-  def unsubscribe() do
+  def handle_event([:gossip, :channels, :unsubscribe], _value, %{channel: channel_name}, _config) do
+    Logger.debug(fn ->
+      "A socket unsubscribed to #{channel_name}"
+    end)
+
     Counter.inc(name: :gossip_channel_unsubscribe_count)
   end
 end

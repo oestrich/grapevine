@@ -13,8 +13,6 @@ defmodule Socket.Core do
   alias Gossip.Channels
   alias Gossip.Presence
   alias Gossip.Text
-  alias Metrics.ChannelsInstrumenter
-  alias Metrics.SocketInstrumenter
   alias Socket.Core.Authenticate
 
   @valid_supports ["channels", "players", "tells", "games"]
@@ -38,11 +36,7 @@ defmodule Socket.Core do
   Event: "heartbeat"
   """
   def heartbeat(state, event) do
-    Logger.debug(fn ->
-      "HEARTBEAT: #{inspect(event["payload"])}"
-    end)
-
-    SocketInstrumenter.heartbeat()
+    Telemetry.execute([:gossip, :sockets, :heartbeat], 1, %{payload: event["payload"]})
 
     payload = Map.get(event, "payload", %{})
     players = Map.get(payload, "players", [])
@@ -67,7 +61,7 @@ defmodule Socket.Core do
          {:ok, channel} <- Channels.ensure_channel(channel) do
       state = Map.put(state, :channels, [channel | state.channels])
 
-      ChannelsInstrumenter.subscribe()
+      Telemetry.execute([:gossip, :channels, :subscribe], 1, %{channel: channel})
       Web.Endpoint.subscribe("channels:#{channel}")
 
       {:ok, state}
@@ -92,7 +86,7 @@ defmodule Socket.Core do
       channels = List.delete(state.channels, channel)
       state = Map.put(state, :channels, channels)
 
-      ChannelsInstrumenter.unsubscribe()
+      Telemetry.execute([:gossip, :channels, :unsubscribe], 1, %{channel: channel})
       Web.Endpoint.unsubscribe("channels:#{channel}")
 
       {:ok, state}
@@ -110,7 +104,7 @@ defmodule Socket.Core do
   Event: "channels/send"
   """
   def channel_send(state, %{"payload" => payload}) do
-    ChannelsInstrumenter.send()
+    Telemetry.execute([:gossip, :channels, :send], 1, %{})
 
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- check_channel_subscribed_to(state, channel) do
@@ -177,7 +171,7 @@ defmodule Socket.Core do
   end
 
   def subscribe_channel({:ok, channel}) do
-    ChannelsInstrumenter.subscribe()
+    Telemetry.execute([:gossip, :channels, :subscribe], 1, %{channel: channel})
     Web.Endpoint.subscribe("channels:#{channel}")
   end
 
