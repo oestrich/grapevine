@@ -4,7 +4,10 @@ defmodule Metrics.Setup do
   """
 
   def setup() do
-    Metrics.ChannelsInstrumenter.setup()
+    Metrics.Events.ChannelsInstrumenter.setup()
+    Metrics.Events.GamesInstrumenter.setup()
+    Metrics.Events.PlayersInstrumenter.setup()
+    Metrics.Events.TellsInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
     Metrics.SocketInstrumenter.setup()
 
