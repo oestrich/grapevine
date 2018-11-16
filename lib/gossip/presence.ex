@@ -13,6 +13,8 @@ defmodule Gossip.Presence do
 
   @ets_key :gossip_presence
 
+  @record_statistics_tick 15 * 60 * 1000
+
   @type supports :: [String.t()]
   @type players :: [String.t()]
 
@@ -75,6 +77,7 @@ defmodule Gossip.Presence do
     Process.link(socket)
     {:ok, state} = Server.track(state, socket, game)
     {:ok, state} = Server.update_game(state, game, supports, players)
+    schedule_statistics_recording()
     {:reply, :ok, state}
   end
 
@@ -99,9 +102,18 @@ defmodule Gossip.Presence do
     {:noreply, state}
   end
 
+  def handle_call({:record_statistics}, state) do
+    {:ok, state} = Server.record_statistics(state)
+    {:noreply, state}
+  end
+
   defp initial_state(), do: %{sockets: []}
 
   defp create_table() do
     :ets.new(@ets_key, [:set, :protected, :named_table])
+  end
+
+  defp schedule_statistics_recording() do
+    Process.send_after(self(), {:record_statistics}, @record_statistics_tick)
   end
 end

@@ -7,7 +7,9 @@ defmodule Gossip.Presence.Server do
 
   alias Gossip.Applications.Application
   alias Gossip.Games.Game
+  alias Gossip.Presence.Client
   alias Gossip.Presence.Notices
+  alias Gossip.Statistics
 
   def track(state, socket, game) do
     state = Map.put(state, :sockets, [{type(game), game.id, socket} | state.sockets])
@@ -33,6 +35,14 @@ defmodule Gossip.Presence.Server do
 
   def update_game(state, game, supports, players) do
     :ets.insert(ets_key(), {ets_key(game), %{supports: supports, players: players, timestamp: Timex.now()}})
+    {:ok, state}
+  end
+
+  def record_statistics(state) do
+    Enum.each(Client.online_games(), fn presence ->
+      Statistics.record_players(presence.game, Enum.count(presence.players), Timex.now())
+    end)
+
     {:ok, state}
   end
 
