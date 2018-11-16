@@ -55,7 +55,7 @@ defmodule Gossip.Statistics do
 
     case Enum.empty?(values) do
       true ->
-        0
+        nil
 
       false ->
         sum =
