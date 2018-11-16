@@ -3,7 +3,6 @@ defmodule Web.GameController do
 
   alias Gossip.Games
   alias Gossip.Presence
-  alias Gossip.Statistics
 
   plug Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate]
 
@@ -22,7 +21,6 @@ defmodule Web.GameController do
       {:ok, game} ->
         conn
         |> assign(:game, game)
-        |> assign(:player_statistics, Statistics.last_week(game))
         |> render("show.html")
 
       {:error, :not_found} ->

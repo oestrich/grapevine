@@ -8,7 +8,7 @@ defmodule Web.GameStatisticController do
     case Games.get(id) do
       {:ok, game} ->
         conn
-        |> assign(:statistics, Statistics.last_week(game))
+        |> assign(:statistics, Statistics.last_few_days(game))
         |> render("players.json")
 
       {:error, :not_found} ->

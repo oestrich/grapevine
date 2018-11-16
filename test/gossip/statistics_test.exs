@@ -14,7 +14,7 @@ defmodule Gossip.StatisticsTest do
   end
 
   describe "recent stats" do
-    test "fetch the last week of stats" do
+    test "fetch the last few days of stats" do
       game = create_game(create_user())
 
       now = Timex.now()
@@ -23,7 +23,7 @@ defmodule Gossip.StatisticsTest do
         {:ok, _stats} = Statistics.record_players(game, i, now)
       end)
 
-      stats = Statistics.last_week(game)
+      stats = Statistics.last_few_days(game)
 
       stats =
         stats

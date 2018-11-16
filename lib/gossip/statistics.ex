@@ -25,26 +25,22 @@ defmodule Gossip.Statistics do
   end
 
   @doc """
-  Get the last week's worth of statistics
+  Get the last few days's worth of statistics
   """
-  def last_week(game) do
-    last_week =
+  def last_few_days(game) do
+    last_few_days =
       Timex.now()
       |> Timex.shift(days: -2)
-      |> Timex.set(hour: 0, minute: 0, second: 0)
+      |> Timex.set(minute: 0, second: 0)
       |> DateTime.truncate(:second)
 
     stats =
       PlayerStatistic
       |> where([ps], ps.game_id == ^game.id)
-      |> where([ps], ps.recorded_at >= ^last_week)
+      |> where([ps], ps.recorded_at >= ^last_few_days)
       |> Repo.all()
 
-    interval = Timex.Interval.new([
-      from: last_week,
-      until: Timex.now(),
-      step: [hours: 1]
-    ])
+    interval = Timex.Interval.new([from: last_few_days, until: Timex.now(), step: [hours: 1] ])
 
     Enum.map(interval, fn time ->
       {time, find_nearest_stats(stats, time)}
