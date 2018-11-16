@@ -104,6 +104,7 @@ defmodule Gossip.Presence do
 
   def handle_info({:record_statistics}, state) do
     {:ok, state} = Server.record_statistics(state)
+    schedule_statistics_recording()
     {:noreply, state}
   end
 

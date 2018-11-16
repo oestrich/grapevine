@@ -10,6 +10,7 @@ defmodule Metrics.Setup do
     Metrics.Events.TellsInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
     Metrics.SocketInstrumenter.setup()
+    Metrics.StatisticsInstrumenter.setup()
 
     Metrics.PlugExporter.setup()
   end
