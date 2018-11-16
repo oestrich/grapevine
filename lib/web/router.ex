@@ -33,6 +33,8 @@ defmodule Web.Router do
       resources("/connections", ConnectionController, only: [:create])
 
       resources("/redirect-uris", RedirectURIController, only: [:create])
+
+      get("/stats/players", GameStatisticController, :players, as: :statistic)
     end
 
     post("/games/:id/regenerate", GameController, :regenerate)

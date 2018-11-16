@@ -1,4 +1,5 @@
 import "phoenix_html"
+import "./charts"
 
 import ChatSocket from "./socket";
 window.ChatSocket = ChatSocket;

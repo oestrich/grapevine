@@ -27,9 +27,9 @@ defmodule Gossip.StatisticsTest do
 
       stats =
         stats
-        |> Enum.take(-15)
+        |> Enum.take(-4)
         |> Enum.map(&elem(&1, 1))
-        |> Enum.take(14)
+        |> Enum.take(3)
 
       assert Enum.all?(stats, &(&1 > 0))
     end

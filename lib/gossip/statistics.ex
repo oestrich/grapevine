@@ -30,7 +30,7 @@ defmodule Gossip.Statistics do
   def last_week(game) do
     last_week =
       Timex.now()
-      |> Timex.shift(weeks: -1)
+      |> Timex.shift(days: -2)
       |> Timex.set(hour: 0, minute: 0, second: 0)
       |> DateTime.truncate(:second)
 
@@ -43,7 +43,7 @@ defmodule Gossip.Statistics do
     interval = Timex.Interval.new([
       from: last_week,
       until: Timex.now(),
-      step: [minutes: 15]
+      step: [hours: 1]
     ])
 
     Enum.map(interval, fn time ->
@@ -52,17 +52,22 @@ defmodule Gossip.Statistics do
   end
 
   defp find_nearest_stats(stats, time) do
-    value = Enum.find(stats, fn stat ->
-      interval = Timex.Interval.new([from: time, until: [minutes: 15]])
+    values = Enum.filter(stats, fn stat ->
+      interval = Timex.Interval.new([from: time, until: [hours: 1]])
       stat.recorded_at in interval
     end)
 
-    case value do
-      nil ->
+    case Enum.empty?(values) do
+      true ->
         0
 
-      value ->
-        value.player_count
+      false ->
+        sum =
+          values
+          |> Enum.map(&(&1.player_count))
+          |> Enum.sum()
+
+        div(sum, Enum.count(values))
     end
   end
 end

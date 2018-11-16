@@ -83,3 +83,10 @@
     <%= ReactView.react_component("Components.Connection", game_id: @game.id, action: game_connection_path(@conn, :create, @game.id)) %>
   </div>
 </div>
+
+<div class="row mt-3">
+  <div class="col-md-12">
+    <h3>Player Stats</h3>
+    <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.id) %>" style="height: 300px"></div>
+  </div>
+</div>
