@@ -39,7 +39,9 @@ defmodule Gossip.Presence.Server do
   end
 
   def record_statistics(state) do
-    Enum.each(Client.online_games(), fn presence ->
+    Client.online_games()
+    |> Enum.filter(&(&1.type == :game))
+    |> Enum.each(fn presence ->
       Statistics.record_players(presence.game, presence.players, Timex.now())
     end)
 

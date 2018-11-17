@@ -70,6 +70,7 @@ defmodule Gossip.Presence do
   def init(_) do
     create_table()
     Process.flag(:trap_exit, true)
+    schedule_statistics_recording()
     {:ok, initial_state()}
   end
 
@@ -77,7 +78,6 @@ defmodule Gossip.Presence do
     Process.link(socket)
     {:ok, state} = Server.track(state, socket, game)
     {:ok, state} = Server.update_game(state, game, supports, players)
-    schedule_statistics_recording()
     {:reply, :ok, state}
   end
 

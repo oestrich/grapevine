@@ -31,8 +31,8 @@ defmodule Gossip.Presence.Client do
   """
   def fetch_from_ets(id) do
     case :ets.lookup(ets_key(), id) do
-      [{^id, state}] ->
-        {id, state}
+      [{^id, presence}] ->
+        {id, presence}
 
       _ ->
         nil
@@ -40,33 +40,37 @@ defmodule Gossip.Presence.Client do
   end
 
   @doc """
-  Determine if a game is online based on state from ETS
+  Determine if a game is online based on presence from ETS
   """
-  def game_online?(state) do
+  def game_online?(presence) do
     oldest_online = Timex.now() |> Timex.shift(seconds: -1 * @timeout_seconds)
-    Timex.after?(state.timestamp, oldest_online)
+    Timex.after?(presence.timestamp, oldest_online)
   end
 
   defp filter_online(nil), do: false
 
-  defp filter_online({_game_id, state}) do
-    game_online?(state)
+  defp filter_online({_game_id, presence}) do
+    game_online?(presence)
   end
 
-  defp fetch_from_db({"game:" <> game_id, state}) do
+  defp fetch_from_db({"game:" <> game_id, presence}) do
     case Games.get(game_id) do
       {:ok, game} ->
-        Map.put(state, :game, game)
+        presence
+        |> Map.put(:type, :game)
+        |> Map.put(:game, game)
 
       {:error, :not_found} ->
         nil
     end
   end
 
-  defp fetch_from_db({"application:" <> application_id, state}) do
+  defp fetch_from_db({"application:" <> application_id, presence}) do
     case Applications.get(application_id) do
       {:ok, application} ->
-        Map.put(state, :game, application)
+        presence
+        |> Map.put(:type, :application)
+        |> Map.put(:game, application)
 
       {:error, :not_found} ->
         nil
