@@ -55,3 +55,9 @@ config :gossip, Gossip.Repo,
   pool_size: 10
 
 config :phoenix, :plug_init_mode, :runtime
+
+config :gossip, :grapevine, cors_host: "http://localhost:4002"
+
+if File.exists?("config/dev.local.exs") do
+  import_config("dev.local.exs")
+end

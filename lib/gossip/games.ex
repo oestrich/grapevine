@@ -16,6 +16,7 @@ defmodule Gossip.Games do
   @type game_params :: map()
   @type token :: String.t()
   @type game_name :: String.t()
+  @type short_name :: String.t()
   @type uuid :: String.t()
 
   @doc """
@@ -41,6 +42,16 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Get games for a user
+  """
+  @spec for_user(User.t()) :: [Game.t()]
+  def for_user(user) do
+    Game
+    |> where([g], g.user_id == ^user.id)
+    |> Repo.all()
+  end
+
+  @doc """
   Fetch a game
   """
   @spec get(id()) :: Game.t()
@@ -55,21 +66,25 @@ defmodule Gossip.Games do
   end
 
   @doc """
-  Get games for a user
-  """
-  @spec for_user(User.t()) :: [Game.t()]
-  def for_user(user) do
-    Game
-    |> where([g], g.user_id == ^user.id)
-    |> Repo.all()
-  end
-
-  @doc """
   Fetch a game based on the user
   """
   @spec get(User.t(), id()) :: Game.t()
   def get(user, game_id) do
     case Repo.get_by(Game, user_id: user.id, id: game_id) do
+      nil ->
+        {:error, :not_found}
+
+      game ->
+        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
+    end
+  end
+
+  @doc """
+  Fetch a game by the short name
+  """
+  @spec get_by_short(short_name()) :: Game.t()
+  def get_by_short(short_name) do
+    case Repo.get_by(Game, short_name: short_name) do
       nil ->
         {:error, :not_found}
 
