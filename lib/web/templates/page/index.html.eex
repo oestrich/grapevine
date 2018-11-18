@@ -2,9 +2,6 @@
   <div class="col-md-6 p-lg-5 mx-auto my-2">
     <h1 class="display-4 font-weight-normal">Gossip</h1>
     <p class="lead font-weight-normal">Welcome to Gossip, the MUD chat network.</p>
-    <%= if !Map.has_key?(assigns, :current_user) do %>
-      <%= link("Register Your Game Now", to: registration_path(@conn, :new), class: "btn btn-outline-secondary") %>
-    <% end %>
 
     <%= if @game do %>
       <div class="card">
