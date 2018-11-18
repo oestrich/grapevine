@@ -1,31 +1,35 @@
-<div class="jumbotron">
-  <div class="container">
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <h1 class="display-3">Gossip</h1>
+<div class="position-relative overflow-hidden p-3 p-md-3 m-md-3 text-center bg-light">
+  <div class="col-md-6 p-lg-5 mx-auto my-2">
+    <h1 class="display-4 font-weight-normal">Gossip</h1>
+    <p class="lead font-weight-normal">Welcome to Gossip, the MUD chat network.</p>
+    <%= if !Map.has_key?(assigns, :current_user) do %>
+      <%= link("Register Your Game Now", to: registration_path(@conn, :new), class: "btn btn-outline-secondary") %>
+    <% end %>
 
-        <p>Welcome to Gossip, the MUD chat network.</p>
-
-        <p>
-        <%= link(to: page_path(@conn, :docs), class: "btn btn-primary btn-lg") do %>
-          Learn more &raquo;
-        <% end %>
-        </p>
+    <%= if @game do %>
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">Highlighted Game</h6>
+          <%= @game.name %> - <%= link("Play Now", to: @game.homepage_url, target: "_blank") %>
+        </div>
       </div>
-
-      <div class="col-md-6">
-        <%= if @game do %>
-          <div class="card">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">Highlighted Game</h6>
-              <%= @game.name %> - <%= link("Play Now", to: @game.homepage_url, target: "_blank") %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
+    <% end %>
   </div>
 </div>
 
-<div id="guildWebRing" style="width: 250px; height: 100px; margin: auto;"></div>
-<script src="https://cdn.swiftausterity.com/mcgWebRing.js"></script>
+<div class="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+  <div class="bg-dark mr-md-3 pt-1 px-1 pt-md-3 px-md-3 text-center text-white">
+    <div class="my-3 py-1">
+      <h2 class="display-5">Chat</h2>
+      <p class="lead">When you connect your game to Gossip, players can communicate with a wider player base.</p>
+      <%= link("Learn How", to: page_path(@conn, :docs), class: "btn btn-secondary") %>
+    </div>
+  </div>
+  <div class="bg-dark mr-md-3 pt-1 px-1 pt-md-3 px-md-3 text-center text-white">
+    <div class="my-3 py-1">
+      <h2 class="display-5">Grapevine</h2>
+      <p class="lead">When you join Gossip, players can register their characters to their Grapevine Account.</p>
+      <%= link("See Grapevine", to: "https://grapevine.haus/", class: "btn btn-secondary") %>
+    </div>
+  </div>
+</div>
