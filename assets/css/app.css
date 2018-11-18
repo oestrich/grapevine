@@ -139,3 +139,10 @@ pre {
     flex: 1;
   }
 }
+
+/* Charts */
+.chart {
+  background-color: #000000;
+  padding: 20px;
+  height: 300px;
+}
