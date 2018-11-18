@@ -40,7 +40,12 @@ document.querySelectorAll(".chart").forEach(chartElement => {
         legend: { display: false },
         scales: {
           yAxes: [{
-            ticks: { maxTicksLimit: 4, min: 0, fontColor: "#BBB" },
+            ticks: {
+              maxTicksLimit: 4,
+              min: 0,
+              callback: function (value) { if (Number.isInteger(value)) { return value; } },
+              fontColor: "#BBB",
+            },
             scaleLabel: { fontSize: 16, fontColor: "#BBB", display: true, labelString: "Concurrent Players" }
           }],
           xAxes: [{
