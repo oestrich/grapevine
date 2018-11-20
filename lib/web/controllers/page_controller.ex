@@ -8,7 +8,7 @@ defmodule Web.PageController do
     game = Game.highlighted_game(Presence.online_games())
 
     conn
-    |> assign(:game, game)
+    |> assign(:highlighted_game, game)
     |> render("index.html")
   end
 

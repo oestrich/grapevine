@@ -3,11 +3,11 @@
     <h1 class="display-4 font-weight-normal">Gossip</h1>
     <p class="lead font-weight-normal">Welcome to Gossip, the MUD chat network.</p>
 
-    <%= if @game do %>
+    <%= if @highlighted_game do %>
       <div class="card">
         <div class="card-body">
           <h6 class="card-subtitle mb-2 text-muted">Highlighted Game</h6>
-          <%= @game.name %> - <%= link("Play Now", to: @game.homepage_url, target: "_blank") %>
+          <%= @highlighted_game.name %> - <%= link("Play Now", to: @highlighted_game.homepage_url, target: "_blank") %>
         </div>
       </div>
     <% end %>
