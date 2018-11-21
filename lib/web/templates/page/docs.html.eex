@@ -605,7 +605,8 @@
 
 <ul>
   <li><code>game offline</code></li>
-  <li><code>player offline</code></li>
+  <li><code>sending player offline</code></li>
+  <li><code>receiving player offline</code></li>
   <li><code>not supported</code>, the connected game does not support tells</li>
 </ul>
 

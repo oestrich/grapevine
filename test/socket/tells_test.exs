@@ -118,6 +118,30 @@ defmodule Socket.TellsTest do
       assert response["error"] == "game offline"
     end
 
+    test "sending player is offline", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
+      Presence.update_game(state.game, ["tells"], [])
+      Presence.update_game(game, ["tells"], ["eric"])
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        },
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "sending player offline"
+    end
+
     test "receiving player is offline", %{state: state, user: user} do
       state = %{state | supports: ["channels", "tells"]}
 
@@ -138,7 +162,7 @@ defmodule Socket.TellsTest do
 
       assert {:ok, response, _state} = Router.receive(state, frame)
       assert response["ref"] == "ref"
-      assert response["error"] == "player offline"
+      assert response["error"] == "receiving player offline"
     end
 
     test "receiving game does not support tells", %{state: state, user: user} do
@@ -252,6 +276,7 @@ defmodule Socket.TellsTest do
     game = create_game(user)
 
     Presence.reset()
+    Presence.update_game(game, ["tells"], ["Player"])
 
     state = %State{
       status: "active",

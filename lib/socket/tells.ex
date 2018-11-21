@@ -27,14 +27,16 @@ defmodule Socket.Tells do
     Telemetry.execute([:gossip, :events, :tells, :send], 1, %{})
 
     with {:ok, payload} <- check_payload(event),
-         {:ok, %{game: game, supports: supports, players: players}} <- check_game_online(payload),
-         :ok <- check_remote_game_supports(supports),
-         :ok <- check_player_online(players, payload) do
+         {:ok, sending_presence} <- check_game_online(state.game.short_name),
+         {:ok, receiving_presence} <- check_game_online(payload["to_game"]),
+         :ok <- check_remote_game_supports(receiving_presence.supports),
+         :ok <- check_sending_player_online(sending_presence, payload),
+         :ok <- check_receiving_player_online(receiving_presence, payload) do
       token()
       |> assign(:game, state.game)
       |> assign(:payload, payload)
       |> payload("send")
-      |> broadcast("tells:#{game.short_name}", "tells/receive")
+      |> broadcast("tells:#{receiving_presence.game.short_name}", "tells/receive")
 
       {:ok, state}
     end
@@ -52,17 +54,19 @@ defmodule Socket.Tells do
     end
   end
 
-  defp check_game_online(payload) do
-    game =
+  defp check_game_online(game_name) do
+    presence =
       Presence.online_games()
-      |> Enum.find(&(String.downcase(&1.game.short_name) == String.downcase(payload["to_game"])))
+      |> Enum.find(fn presence ->
+        String.downcase(presence.game.short_name) == String.downcase(game_name)
+      end)
 
-    case game do
+    case presence do
       nil ->
         {:error, ~s(game offline)}
 
-      state ->
-        {:ok, state}
+      presence ->
+        {:ok, presence}
     end
   end
 
@@ -76,15 +80,27 @@ defmodule Socket.Tells do
     end
   end
 
-  defp check_player_online(players, payload) do
-    players = Enum.map(players, &String.downcase/1)
+  defp check_sending_player_online(presence, payload) do
+    players = Enum.map(presence.players, &String.downcase/1)
+
+    case String.downcase(payload["from_name"]) in players do
+      true ->
+        :ok
+
+      false ->
+        {:error, "sending player offline"}
+    end
+  end
+
+  defp check_receiving_player_online(presence, payload) do
+    players = Enum.map(presence.players, &String.downcase/1)
 
     case String.downcase(payload["to_name"]) in players do
       true ->
         :ok
 
       false ->
-        {:error, ~s(player offline)}
+        {:error, "receiving player offline"}
     end
   end
 
