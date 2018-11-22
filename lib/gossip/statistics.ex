@@ -63,12 +63,9 @@ defmodule Gossip.Statistics do
         nil
 
       false ->
-        sum =
-          values
-          |> Enum.map(&(&1.player_count))
-          |> Enum.sum()
-
-        div(sum, Enum.count(values))
+        values
+        |> Enum.map(&(&1.player_count))
+        |> Enum.max()
     end
   end
 end
