@@ -12,11 +12,11 @@
         <p class="card-text"><%= user_agent(game) %></p>
         <%= unless Enum.empty?(players) do %>
           <h5>Players (<%= Enum.count(players) %>)</h5>
-          <ul>
+          <div class="players">
             <%= Enum.map(players, fn player -> %>
-              <li><%= player %></li>
+              <span class="player"><%= player %></span>
             <% end) %>
-          </ul>
+          </div>
         <% end %>
         <%= if game.homepage_url do %>
           <%= link("Homepage", to: game.homepage_url, class: "card-link") %>

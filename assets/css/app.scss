@@ -179,3 +179,13 @@ pre {
   padding: 20px;
   height: 300px;
 }
+
+.players {
+  .player {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid $green;
+    border-radius: 4px;
+  }
+}
