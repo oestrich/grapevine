@@ -2,6 +2,7 @@ defmodule Socket.BackboneTest do
   use Gossip.DataCase
 
   alias Gossip.Channels.Channel
+  alias Gossip.Events.Event
   alias Gossip.Games.Game
   alias Socket.Backbone
 
@@ -20,6 +21,42 @@ defmodule Socket.BackboneTest do
       Web.Endpoint.broadcast("channels:newChannel", "channels/broadcast", %{message: "hi"})
 
       assert_receive %{event: "channels/broadcast", payload: %{message: "hi"}}
+    end
+
+    test "broadcasts new events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/new",
+        payload: %Event{title: "A Holiday"}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/events"}}
+    end
+
+    test "broadcasts edited events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/edit",
+        payload: %Event{title: "A Holiday"}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/events"}}
+    end
+
+    test "broadcasts deleted events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/delete",
+        payload: %Event{id: 1, title: "A Holiday"}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/delete"}}
     end
 
     test "broadcasts new games", %{state: state} do

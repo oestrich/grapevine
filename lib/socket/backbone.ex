@@ -42,6 +42,21 @@ defmodule Socket.Backbone do
     {:ok, state}
   end
 
+  def process_event(state, message = %{event: "events/new"}) do
+    broadcast_events([message.payload])
+    {:ok, state}
+  end
+
+  def process_event(state, message = %{event: "events/edit"}) do
+    broadcast_events([message.payload])
+    {:ok, state}
+  end
+
+  def process_event(state, message = %{event: "events/delete"}) do
+    broadcast_event_delete(message.payload)
+    {:ok, state}
+  end
+
   def process_event(state, message = %{event: "games/new"}) do
     broadcast_games([message.payload])
     {:ok, state}
@@ -124,6 +139,21 @@ defmodule Socket.Backbone do
     |> relay()
   end
 
+  defp broadcast_events(events) do
+    token()
+    |> assign(:events, events)
+    |> event("sync/events")
+    |> relay()
+  end
+
+  defp broadcast_event_delete(event) do
+    token()
+    |> assign(:type, "event")
+    |> assign(:id, event.id)
+    |> event("sync/delete")
+    |> relay()
+  end
+
   defmodule View do
     @moduledoc """
     "View" module for backbone events
@@ -139,6 +169,27 @@ defmodule Socket.Backbone do
         event: "sync/channels",
         ref: UUID.uuid4(),
         payload: %{channels: payload},
+      }
+    end
+
+    def event("sync/delete", %{type: type, id: id}) do
+      %{
+        event: "sync/delete",
+        ref: UUID.uuid4(),
+        payload: %{type: type, id: id},
+      }
+    end
+
+    def event("sync/events", %{events: events}) do
+      payload =
+        Enum.map(events, fn event ->
+          Map.take(event, [:id, :title, :description, :start_date, :end_date])
+        end)
+
+      %{
+        event: "sync/events",
+        ref: UUID.uuid4(),
+        payload: %{events: payload},
       }
     end
 
