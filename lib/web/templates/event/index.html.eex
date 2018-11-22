@@ -1,3 +1,12 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Events</li>
+  </ol>
+</nav>
+
 <h3>
   <%= @game.name %> Events
 

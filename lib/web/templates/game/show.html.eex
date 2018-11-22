@@ -1,14 +1,22 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active"><%= @game.name %></li>
+  </ol>
+</nav>
+
+<h3 class="game-title">
+  <%= @game.name %> Settings
+
+  <div class="actions">
+    <%= link("Edit", to: game_path(@conn, :edit, @game.id), class: "btn btn-light") %>
+    <%= link("View Events", to: game_event_path(@conn, :index, @game.id), class: "btn btn-light") %>
+  </div>
+</h3>
+
 <div class="row mt-3">
   <div class="col-md-6">
-    <h3 class="game-title">
-      <%= @game.name %> Settings
-      <%= link("Edit", to: game_path(@conn, :edit, @game.id), class: "btn btn-default") %>
-    </h3>
-
-    <div class="actions">
-      <%= link("View Events", to: game_event_path(@conn, :index, @game.id)) %>
-    </div>
-
     <dl>
       <dd>Short Name</dd>
       <dl><%= @game.short_name %></dl>

@@ -48,9 +48,11 @@ defmodule Web.EventController do
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, event} = Events.get(user, id) do
+    with {:ok, event} = Events.get(user, id),
+         {:ok, game} = Games.get(user, event.game_id) do
       conn
       |> assign(:event, event)
+      |> assign(:game, game)
       |> assign(:changeset, Events.edit(event))
       |> render("edit.html")
     end
@@ -65,9 +67,11 @@ defmodule Web.EventController do
     else
       {:error, changeset} ->
         {:ok, event} = Events.get(user, id)
+        {:ok, game} = Games.get(user, event.game_id)
 
         conn
         |> assign(:event, event)
+        |> assign(:game, game)
         |> assign(:changeset, changeset)
         |> render("edit.html")
     end
