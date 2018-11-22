@@ -27,10 +27,14 @@ defmodule Web.Router do
 
     get("/docs", PageController, :docs)
 
+    resources("/events", EventController, only: [:edit, :update, :delete])
+
     resources("/games/mine", UserGameController, only: [:index, :create])
 
     resources("/games", GameController, only: [:index, :show, :edit, :update]) do
       resources("/connections", ConnectionController, only: [:create])
+
+      resources("/events", EventController, only: [:index, :new, :create])
 
       resources("/redirect-uris", RedirectURIController, only: [:create])
 

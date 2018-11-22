@@ -180,6 +180,7 @@ pre {
   height: 300px;
 }
 
+
 .players {
   .player {
     display: inline-block;
@@ -188,4 +189,13 @@ pre {
     border: 2px solid $green;
     border-radius: 4px;
   }
+}
+
+
+h3 .actions {
+  display: inline-block;
+}
+
+h3 a {
+  text-decoration: none !important;
 }

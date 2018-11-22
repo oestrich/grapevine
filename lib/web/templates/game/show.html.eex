@@ -5,6 +5,10 @@
       <%= link("Edit", to: game_path(@conn, :edit, @game.id), class: "btn btn-default") %>
     </h3>
 
+    <div class="actions">
+      <%= link("View Events", to: game_event_path(@conn, :index, @game.id)) %>
+    </div>
+
     <dl>
       <dd>Short Name</dd>
       <dl><%= @game.short_name %></dl>

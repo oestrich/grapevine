@@ -1,0 +1,30 @@
+<h3>
+  <%= @game.name %> Events
+
+  <div class="actions">
+    <%= link("New Event", to: game_event_path(@conn, :new, @game.id), class: "btn btn-primary") %>
+  </div>
+</h3>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <%= Enum.map(@events, fn event -> %>
+    <tr>
+      <td><%= event.title %></td>
+      <td><%= event.start_date %></td>
+      <td><%= event.end_date %></td>
+      <td>
+        <%= link("Edit", to: event_path(@conn, :edit, event.id), class: "btn btn-light") %>
+        <%= link("Delete", to: event_path(@conn, :delete, event.id), method: :delete, class: "btn btn-danger") %>
+      </td>
+    </tr>
+  <% end) %>
+</table>

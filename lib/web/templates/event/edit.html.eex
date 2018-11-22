@@ -1,0 +1,6 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3>Edit <%= @event.title %></h3>
+    <%= render("_form.html", changeset: @changeset, url: event_path(@conn, :update, @event.id), submit: "Update Event") %>
+  </div>
+</div>

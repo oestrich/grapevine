@@ -8,6 +8,7 @@ defmodule Gossip.Games.Game do
   import Ecto.Changeset
 
   alias Gossip.Accounts.User
+  alias Gossip.Events.Event
   alias Gossip.Games
   alias Gossip.Games.Connection
   alias Gossip.Games.RedirectURI
@@ -31,6 +32,7 @@ defmodule Gossip.Games.Game do
     belongs_to(:user, User)
 
     has_many(:connections, Connection)
+    has_many(:events, Event)
     has_many(:redirect_uris, RedirectURI)
 
     timestamps()
