@@ -56,3 +56,42 @@ docker-compose up gossip
 ```
 
 [websocket-docs]: https://gossip.haus/docs
+
+## Sync Protocol
+
+### `sync/channels`
+
+```json
+{
+  "event": "sync/channels",
+  "payload": {
+    "channels": [
+      { } # full channel
+    ]
+  }
+}
+```
+
+### `sync/games`
+
+```json
+{
+  "event": "sync/games",
+  "payload": {
+    "channels": [
+      { } # full game
+    ]
+  }
+}
+```
+
+### `sync/deletions`
+
+```json
+{
+  "event": "sync/deletions",
+  "payload": [
+    { "type": "game", "id": 1 }
+  ]
+}
+```

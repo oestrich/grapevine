@@ -56,7 +56,7 @@ defmodule Socket.BackboneTest do
 
       Backbone.process_event(state, message)
 
-      assert_receive {:broadcast, %{event: "sync/delete"}}
+      assert_receive {:broadcast, %{event: "sync/deletions"}}
     end
 
     test "broadcasts new games", %{state: state} do

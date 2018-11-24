@@ -150,7 +150,7 @@ defmodule Socket.Backbone do
     token()
     |> assign(:type, "event")
     |> assign(:id, event.id)
-    |> event("sync/delete")
+    |> event("sync/deletions")
     |> relay()
   end
 
@@ -172,11 +172,11 @@ defmodule Socket.Backbone do
       }
     end
 
-    def event("sync/delete", %{type: type, id: id}) do
+    def event("sync/deletions", %{type: type, id: id}) do
       %{
-        event: "sync/delete",
+        event: "sync/deletions",
         ref: UUID.uuid4(),
-        payload: %{type: type, id: id},
+        payload: [%{type: type, id: id}],
       }
     end
 
