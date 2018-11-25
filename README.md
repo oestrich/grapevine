@@ -59,16 +59,50 @@ docker-compose up gossip
 
 ## Sync Protocol
 
+### `sync`
+
+```json
+{
+  "event": "sync",
+  "payload": {
+    "since": "2018-11-24T12:00:00Z"
+  }
+}
+```
+
 ### `sync/channels`
 
 ```json
 {
   "event": "sync/channels",
-  "payload": {
-    "channels": [
-      { } # full channel
-    ]
-  }
+  "payload": [
+    {
+      "action": "create",
+      "payload": { } # full channel
+    },
+    {
+      "action": "update",
+      "payload": { } # full channel
+    },
+    {
+      "action": "delete",
+      "payload": { } # full channel
+    }
+  ]
+}
+```
+
+### `sync/events`
+
+```json
+{
+  "event": "sync/events",
+  "payload": [
+    {
+      "action": "create",
+      "payload": { } # full event
+    }
+  ]
 }
 ```
 
@@ -77,21 +111,15 @@ docker-compose up gossip
 ```json
 {
   "event": "sync/games",
-  "payload": {
-    "channels": [
-      { } # full game
-    ]
-  }
-}
-```
-
-### `sync/deletions`
-
-```json
-{
-  "event": "sync/deletions",
   "payload": [
-    { "type": "game", "id": 1 }
+    {
+      "action": "create",
+      "payload": { } # full game
+    },
+    {
+      "action": "update",
+      "payload": { } # full game
+    }
   ]
 }
 ```

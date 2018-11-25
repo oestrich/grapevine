@@ -16,8 +16,7 @@ defmodule Socket.Backbone do
 
   alias Gossip.Applications.Application
   alias Gossip.Channels
-  alias Gossip.Games
-  alias Web.GameView
+  alias Gossip.Versions
 
   @doc """
   Process a system backbone message
@@ -36,34 +35,34 @@ defmodule Socket.Backbone do
   @doc """
   Process a system backbone message
   """
-  def process_event(state, message = %{event: "channels/new"}) do
-    Web.Endpoint.subscribe("channels:#{message.payload.name}")
-    broadcast_channels([message.payload])
+  def process_event(state, %{event: "channels/new", payload: version}) do
+    Web.Endpoint.subscribe("channels:#{version.payload.name}")
+    broadcast_channels([version])
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "events/new"}) do
-    broadcast_events([message.payload])
+  def process_event(state, %{event: "events/new", payload: version}) do
+    broadcast_events([version])
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "events/edit"}) do
-    broadcast_events([message.payload])
+  def process_event(state, %{event: "events/edit", payload: version}) do
+    broadcast_events([version])
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "events/delete"}) do
-    broadcast_event_delete(message.payload)
+  def process_event(state, %{event: "events/delete", payload: version}) do
+    broadcast_events([version])
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "games/new"}) do
-    broadcast_games([message.payload])
+  def process_event(state, %{event: "games/new", payload: version}) do
+    broadcast_games([version])
     {:ok, state}
   end
 
-  def process_event(state, message = %{event: "games/edit"}) do
-    broadcast_games([message.payload])
+  def process_event(state, %{event: "games/edit", payload: version}) do
+    broadcast_games([version])
     {:ok, state}
   end
 
@@ -79,8 +78,6 @@ defmodule Socket.Backbone do
     with {:ok, :application} <- check_for_application(state) do
       subscribe_to_backbone()
       subscribe_to_all()
-      sync_channels()
-      sync_games()
     end
   end
 
@@ -108,17 +105,16 @@ defmodule Socket.Backbone do
   @doc """
   Send batches of `sync/channels` events to newly connected sockets
   """
-  def sync_channels() do
-    channels = Channels.all(include_hidden: true)
-
-    channels
+  def sync_channels(since \\ nil) do
+    "channels"
+    |> Versions.for(since)
     |> Enum.chunk_every(10)
     |> Enum.each(&broadcast_channels/1)
   end
 
-  defp broadcast_channels(channels) do
+  defp broadcast_channels(versions) do
     token()
-    |> assign(:channels, channels)
+    |> assign(:versions, versions)
     |> event("sync/channels")
     |> relay()
   end
@@ -126,31 +122,24 @@ defmodule Socket.Backbone do
   @doc """
   Send batches of `sync/games` events to newly connected sockets
   """
-  def sync_games() do
-    Games.all()
+  def sync_games(since \\ nil) do
+    "games"
+    |> Versions.for(since)
     |> Enum.chunk_every(10)
     |> Enum.each(&broadcast_games/1)
   end
 
-  defp broadcast_games(games) do
+  defp broadcast_games(versions) do
     token()
-    |> assign(:games, games)
+    |> assign(:versions, versions)
     |> event("sync/games")
     |> relay()
   end
 
-  defp broadcast_events(events) do
+  defp broadcast_events(versions) do
     token()
-    |> assign(:events, events)
+    |> assign(:versions, versions)
     |> event("sync/events")
-    |> relay()
-  end
-
-  defp broadcast_event_delete(event) do
-    token()
-    |> assign(:type, "event")
-    |> assign(:id, event.id)
-    |> event("sync/deletions")
     |> relay()
   end
 
@@ -159,31 +148,23 @@ defmodule Socket.Backbone do
     "View" module for backbone events
     """
 
-    def event("sync/channels", %{channels: channels}) do
+    def event("sync/channels", %{versions: versions}) do
       payload =
-        Enum.map(channels, fn channel ->
-          Map.take(channel, [:id, :name, :description, :hidden])
+        Enum.map(versions, fn version ->
+          Map.take(version, [:action, :payload])
         end)
 
       %{
         event: "sync/channels",
         ref: UUID.uuid4(),
-        payload: %{channels: payload},
+        payload: payload,
       }
     end
 
-    def event("sync/deletions", %{type: type, id: id}) do
-      %{
-        event: "sync/deletions",
-        ref: UUID.uuid4(),
-        payload: [%{type: type, id: id}],
-      }
-    end
-
-    def event("sync/events", %{events: events}) do
+    def event("sync/events", %{versions: versions}) do
       payload =
-        Enum.map(events, fn event ->
-          Map.take(event, [:id, :title, :description, :start_date, :end_date])
+        Enum.map(versions, fn version ->
+          Map.take(version, [:action, :payload])
         end)
 
       %{
@@ -193,16 +174,16 @@ defmodule Socket.Backbone do
       }
     end
 
-    def event("sync/games", %{games: games}) do
+    def event("sync/games", %{versions: versions}) do
       payload =
-        Enum.map(games, fn game ->
-          GameView.render("sync.json", %{game: game})
+        Enum.map(versions, fn version ->
+          Map.take(version, [:action, :payload])
         end)
 
       %{
         event: "sync/games",
         ref: UUID.uuid4(),
-        payload: %{games: payload},
+        payload: payload,
       }
     end
   end

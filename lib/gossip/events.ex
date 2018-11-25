@@ -7,6 +7,7 @@ defmodule Gossip.Events do
 
   alias Gossip.Events.Event
   alias Gossip.Repo
+  alias Gossip.Versions
 
   @doc """
   New changeset for an event
@@ -121,8 +122,9 @@ defmodule Gossip.Events do
   end
 
   defp broadcast_event_create(event_id) do
-    with {:ok, event} <- get(event_id) do
-      Web.Endpoint.broadcast("system:backbone", "events/new", event)
+    with {:ok, event} <- get(event_id),
+         {:ok, version} <- Versions.log("update", event) do
+      Web.Endpoint.broadcast("system:backbone", "events/new", version)
     else
       _ ->
         :ok
@@ -130,8 +132,9 @@ defmodule Gossip.Events do
   end
 
   defp broadcast_event_update(event_id) do
-    with {:ok, event} <- get(event_id) do
-      Web.Endpoint.broadcast("system:backbone", "events/edit", event)
+    with {:ok, event} <- get(event_id),
+         {:ok, version} <- Versions.log("update", event) do
+      Web.Endpoint.broadcast("system:backbone", "events/edit", version)
     else
       _ ->
         :ok
@@ -139,6 +142,11 @@ defmodule Gossip.Events do
   end
 
   defp broadcast_event_delete(event) do
-    Web.Endpoint.broadcast("system:backbone", "events/delete", event)
+    with {:ok, version} <- Versions.log("delete", event) do
+      Web.Endpoint.broadcast("system:backbone", "events/delete", version)
+    else
+      _ ->
+        :ok
+    end
   end
 end

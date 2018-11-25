@@ -9,6 +9,7 @@ defmodule Gossip.Games do
   alias Gossip.Games.RedirectURI
   alias Gossip.Repo
   alias Gossip.UserAgents
+  alias Gossip.Versions
 
   import Ecto.Query
 
@@ -359,8 +360,9 @@ defmodule Gossip.Games do
   end
 
   defp broadcast_game_create(game_id) do
-    with {:ok, game} <- get(game_id) do
-      Web.Endpoint.broadcast("system:backbone", "games/new", game)
+    with {:ok, game} <- get(game_id),
+         {:ok, version} <- Versions.log("create", game) do
+      Web.Endpoint.broadcast("system:backbone", "games/new", version)
     else
       _ ->
         :ok
@@ -368,8 +370,9 @@ defmodule Gossip.Games do
   end
 
   defp broadcast_game_update(game_id) do
-    with {:ok, game} <- get(game_id) do
-      Web.Endpoint.broadcast("system:backbone", "games/edit", game)
+    with {:ok, game} <- get(game_id),
+         {:ok, version} <- Versions.log("update", game) do
+      Web.Endpoint.broadcast("system:backbone", "games/edit", version)
     else
       _ ->
         :ok
