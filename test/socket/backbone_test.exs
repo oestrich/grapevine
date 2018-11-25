@@ -165,4 +165,17 @@ defmodule Socket.BackboneTest do
       refute_receive {:broadcast, %{event: "sync/games"}}
     end
   end
+
+  describe "syncing everything" do
+    test "sends game notices over the backbone" do
+      user = create_user()
+      create_game(user)
+      create_channel(%{name: "gossip"})
+
+      Backbone.sync(%{}, %{"event" => "sync", "payload" => %{}})
+
+      assert_receive {:broadcast, %{event: "sync/games"}}
+      assert_receive {:broadcast, %{event: "sync/channels"}}
+    end
+  end
 end

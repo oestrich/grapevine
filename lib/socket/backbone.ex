@@ -69,6 +69,16 @@ defmodule Socket.Backbone do
   def process_event(state, _message), do: {:ok, state}
 
   @doc """
+  Process a sync frame
+  """
+  def sync(state, %{"event" => "sync", "payload" => payload}) do
+    since = Map.get(payload, "since")
+    sync_channels(since)
+    sync_games(since)
+    {:ok, state}
+  end
+
+  @doc """
   If the connected game is a system application, perform extra finalizations
 
   - Subscribe to all channels
@@ -148,43 +158,29 @@ defmodule Socket.Backbone do
     "View" module for backbone events
     """
 
-    def event("sync/channels", %{versions: versions}) do
+    def event("versions", %{event: event, versions: versions}) do
       payload =
         Enum.map(versions, fn version ->
-          Map.take(version, [:action, :payload])
+          Map.take(version, [:action, :payload, :logged_at])
         end)
 
       %{
-        event: "sync/channels",
+        event: event,
         ref: UUID.uuid4(),
         payload: payload,
       }
+    end
+
+    def event("sync/channels", %{versions: versions}) do
+      event("versions", %{event: "sync/channels", versions: versions})
     end
 
     def event("sync/events", %{versions: versions}) do
-      payload =
-        Enum.map(versions, fn version ->
-          Map.take(version, [:action, :payload])
-        end)
-
-      %{
-        event: "sync/events",
-        ref: UUID.uuid4(),
-        payload: %{events: payload},
-      }
+      event("versions", %{event: "sync/events", versions: versions})
     end
 
     def event("sync/games", %{versions: versions}) do
-      payload =
-        Enum.map(versions, fn version ->
-          Map.take(version, [:action, :payload])
-        end)
-
-      %{
-        event: "sync/games",
-        ref: UUID.uuid4(),
-        payload: payload,
-      }
+      event("versions", %{event: "sync/games", versions: versions})
     end
   end
 end
