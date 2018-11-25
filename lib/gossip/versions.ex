@@ -42,7 +42,7 @@ defmodule Gossip.Versions do
   def for(schema, since) do
     Version
     |> where([v], v.schema == ^schema)
-    |> where([v], v.logged_at >= ^since)
+    |> where([v], v.logged_at > ^since)
     |> order_by([v], asc: v.logged_at)
     |> Repo.all()
   end
