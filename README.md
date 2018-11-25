@@ -78,15 +78,15 @@ docker-compose up gossip
   "payload": [
     {
       "action": "create",
-      "payload": { } # full channel
+      "payload": { }
     },
     {
       "action": "update",
-      "payload": { } # full channel
+      "payload": { }
     },
     {
       "action": "delete",
-      "payload": { } # full channel
+      "payload": { }
     }
   ]
 }
@@ -100,7 +100,7 @@ docker-compose up gossip
   "payload": [
     {
       "action": "create",
-      "payload": { } # full event
+      "payload": { }
     }
   ]
 }
@@ -114,11 +114,11 @@ docker-compose up gossip
   "payload": [
     {
       "action": "create",
-      "payload": { } # full game
+      "payload": { }
     },
     {
       "action": "update",
-      "payload": { } # full game
+      "payload": { }
     }
   ]
 }
