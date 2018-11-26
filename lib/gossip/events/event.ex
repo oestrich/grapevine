@@ -32,7 +32,7 @@ defmodule Gossip.Events.Event do
   defp validate_start_before_end(changeset) do
     with start_date when start_date != nil <- get_field(changeset, :start_date),
          end_date when end_date != nil <- get_field(changeset, :end_date) do
-      case Timex.before?(start_date, end_date) do
+      case Timex.before?(start_date, end_date) || start_date == end_date do
         true ->
           changeset
 

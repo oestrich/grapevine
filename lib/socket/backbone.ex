@@ -75,6 +75,7 @@ defmodule Socket.Backbone do
     since = Map.get(payload, "since")
     sync_channels(since)
     sync_games(since)
+    sync_events(since)
     {:ok, state}
   end
 
@@ -144,6 +145,16 @@ defmodule Socket.Backbone do
     |> assign(:versions, versions)
     |> event("sync/games")
     |> relay()
+  end
+
+  @doc """
+  Send batches of `sync/events` events to newly connected sockets
+  """
+  def sync_events(since \\ nil) do
+    "events"
+    |> Versions.for(since)
+    |> Enum.chunk_every(10)
+    |> Enum.each(&broadcast_events/1)
   end
 
   defp broadcast_events(versions) do

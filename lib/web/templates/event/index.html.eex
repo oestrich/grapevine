@@ -28,7 +28,11 @@
   <%= Enum.map(@events, fn event -> %>
     <tr>
       <td><%= event.title %></td>
-      <td><%= text_to_html(event.description) %></td>
+      <td>
+        <%= if event.description do %>
+          <%= text_to_html(event.description) %>
+        <% end %>
+      </td>
       <td><%= event.start_date %> to <%= event.end_date %></td>
       <td>
         <%= link("Edit", to: event_path(@conn, :edit, event.id), class: "btn btn-light") %>
