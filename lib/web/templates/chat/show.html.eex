@@ -1,3 +1,11 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Chat", to: chat_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active"><%= @channel.name %></li>
+  </ol>
+</nav>
+
 <h2><%= @channel.name %></h2>
 
 <div id="channel-<%= @channel.name %>" data-channel="<%= @channel.name %>" class="terminal channel">

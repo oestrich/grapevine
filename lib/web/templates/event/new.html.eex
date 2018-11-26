@@ -1,0 +1,16 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item"><%= link("Events", to: game_event_path(@conn, :index, @game.id)) %></li>
+    <li class="breadcrumb-item active">New</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3>Create a new Event</h3>
+    <%= render("_form.html", changeset: @changeset, url: game_event_path(@conn, :create, @game.id), submit: "Create Event") %>
+  </div>
+</div>

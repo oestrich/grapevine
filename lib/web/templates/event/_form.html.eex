@@ -1,0 +1,27 @@
+<%= form_for(@changeset, @url, fn f -> %>
+  <div class="form-group">
+    <%= label(f, :title) %>
+    <%= text_input(f, :title, class: "form-control") %>
+    <%= error_tag(f, :title) %>
+  </div>
+
+  <div class="form-group">
+    <%= label(f, :description) %>
+    <%= textarea(f, :description, class: "form-control", rows: 5) %>
+    <%= error_tag(f, :description) %>
+  </div>
+
+  <div class="form-group">
+    <%= label(f, :start_date) %>
+    <%= text_input(f, :start_date, class: "form-control") %>
+    <%= error_tag(f, :start_date) %>
+  </div>
+
+  <div class="form-group">
+    <%= label(f, :end_date) %>
+    <%= text_input(f, :end_date, class: "form-control") %>
+    <%= error_tag(f, :end_date) %>
+  </div>
+
+  <%= submit(@submit, class: "btn btn-secondary") %>
+<% end) %>

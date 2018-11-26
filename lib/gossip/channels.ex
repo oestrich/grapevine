@@ -7,9 +7,11 @@ defmodule Gossip.Channels do
 
   alias Gossip.Channels.Channel
   alias Gossip.Repo
+  alias Gossip.Versions
 
   @type opts :: Keyword.t()
   @type name :: String.t()
+  @type id :: integer()
 
   @doc """
   Create a new channel
@@ -20,7 +22,7 @@ defmodule Gossip.Channels do
 
     case Repo.insert(changeset) do
       {:ok, channel} ->
-        Web.Endpoint.broadcast("system:backbone", "channels/new", channel)
+        broadcast_channel_create(channel.id)
         {:ok, channel}
 
       {:error, changeset} ->
@@ -71,7 +73,18 @@ defmodule Gossip.Channels do
   @doc """
   Get a channel by name
   """
-  @spec get(name()) :: {:ok, Channel.t} | {:error, :not_found}
+  @spec get(name()) :: {:ok, Channel.t()} | {:error, :not_found}
+  @spec get(id()) :: {:ok, Channel.t()} | {:error, :not_found}
+  def get(channel_id) when is_integer(channel_id) do
+    case Repo.get(Channel, channel_id) do
+      nil ->
+        {:error, :not_found}
+
+      channel ->
+        {:ok, channel}
+    end
+  end
+
   def get(channel) do
     case Repo.get_by(Channel, name: channel) do
       nil ->
@@ -97,5 +110,15 @@ defmodule Gossip.Channels do
     blocklist
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
+  end
+
+  defp broadcast_channel_create(channel_id) do
+    with {:ok, channel} <- get(channel_id),
+         {:ok, version} <- Versions.log("create", channel) do
+      Web.Endpoint.broadcast("system:backbone", "channels/new", version)
+    else
+      _ ->
+        :ok
+    end
   end
 end

@@ -1,3 +1,10 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Your Games</li>
+  </ol>
+</nav>
+
 <div class="row">
   <div class="col-md-3">
     <h3>Create a new Game</h3>
@@ -41,8 +48,8 @@
             <td><%= game.name %></td>
             <td><%= game.short_name %></td>
             <td>
-              <%= link("View", to: game_path(@conn, :show, game.id), class: "btn btn-default") %>
-              <%= link("Edit", to: game_path(@conn, :edit, game.id), class: "btn btn-default") %>
+              <%= link("View", to: game_path(@conn, :show, game.id), class: "btn btn-light") %>
+              <%= link("Edit", to: game_path(@conn, :edit, game.id), class: "btn btn-light") %>
             </td>
           </tr>
         <% end) %>

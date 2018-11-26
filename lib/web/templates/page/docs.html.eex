@@ -1,3 +1,10 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Docs</li>
+  </ol>
+</nav>
+
 <div class="row">
   <div class="col-md-4">
     <h5>Table of Contents</h5>

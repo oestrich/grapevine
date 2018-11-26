@@ -47,6 +47,13 @@ defmodule Web.Socket.Router do
     |> Response.respond_to(state)
   end
 
+  def receive(state = %{status: "active"}, event = %{"event" => "sync"}) do
+    state
+    |> Backbone.sync(event)
+    |> Response.wrap(event, "sync")
+    |> Response.respond_to(state)
+  end
+
   def receive(state = %{status: "inactive"}, frame) do
     Logger.warn("Getting an unknown frame unauthenticated - #{inspect(frame)}")
     {:ok, %{status: "failure", error: "unauthenticated"}, state}

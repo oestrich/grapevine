@@ -1,8 +1,9 @@
 defmodule Socket.BackboneTest do
   use Gossip.DataCase
 
-  alias Gossip.Channels.Channel
-  alias Gossip.Games.Game
+  alias Gossip.Games
+  alias Gossip.Versions
+  alias Gossip.Versions.Version
   alias Socket.Backbone
 
   describe "backbone processing" do
@@ -14,7 +15,9 @@ defmodule Socket.BackboneTest do
     end
 
     test "new channel subscribes to that new channel", %{state: state} do
-      message = %Phoenix.Socket.Broadcast{topic: "system:backbone", event: "channels/new", payload: %Channel{name: "newChannel"}}
+      payload = %Version{action: "create", payload: %{name: "newChannel"}}
+
+      message = %Phoenix.Socket.Broadcast{topic: "system:backbone", event: "channels/new", payload: payload}
       Backbone.process_event(state, message)
 
       Web.Endpoint.broadcast("channels:newChannel", "channels/broadcast", %{message: "hi"})
@@ -22,11 +25,47 @@ defmodule Socket.BackboneTest do
       assert_receive %{event: "channels/broadcast", payload: %{message: "hi"}}
     end
 
+    test "broadcasts new events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/new",
+        payload: %Version{action: "create", payload: %{title: "A Holiday"}}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/events"}}
+    end
+
+    test "broadcasts edited events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/edit",
+        payload: %Version{action: "update", payload: %{title: "A Holiday"}}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/events"}}
+    end
+
+    test "broadcasts deleted events", %{state: state} do
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "events/delete",
+        payload: %Version{action: "delete", payload: %{id: 2, title: "A Holiday"}}
+      }
+
+      Backbone.process_event(state, message)
+
+      assert_receive {:broadcast, %{event: "sync/events"}}
+    end
+
     test "broadcasts new games", %{state: state} do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/new",
-        payload: %Game{name: "game", connections: [], redirect_uris: []}
+        payload: %Version{action: "create", payload: %{name: "game", connections: [], redirect_uris: []}}
       }
 
       Backbone.process_event(state, message)
@@ -38,7 +77,7 @@ defmodule Socket.BackboneTest do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/edit",
-        payload: %Game{name: "game", connections: [], redirect_uris: []}
+        payload: %Version{action: "update", payload: %{name: "game", connections: [], redirect_uris: []}}
       }
 
       Backbone.process_event(state, message)
@@ -66,6 +105,21 @@ defmodule Socket.BackboneTest do
       assert_receive {:broadcast, %{event: "sync/channels"}}
       assert_receive {:broadcast, %{event: "sync/channels"}}
     end
+
+    test "limits based on a timestamp if present" do
+      now = Timex.now()
+
+      channel = create_channel(%{name: "gossip"})
+      Enum.each(1..12, fn i ->
+        Versions.log("update", channel, now |> Timex.shift(minutes: -1 * i))
+      end)
+
+      five_minutes_ago = Timex.now() |> Timex.shift(minutes: -5)
+      Backbone.sync_channels(five_minutes_ago)
+
+      assert_receive {:broadcast, %{event: "sync/channels"}}
+      refute_receive {:broadcast, %{event: "sync/channels"}}
+    end
   end
 
   describe "syncing games" do
@@ -91,6 +145,37 @@ defmodule Socket.BackboneTest do
 
       assert_receive {:broadcast, %{event: "sync/games"}}
       assert_receive {:broadcast, %{event: "sync/games"}}
+    end
+
+    test "limits based on a timestamp if present" do
+      now = Timex.now()
+
+      user = create_user()
+      game = create_game(user)
+      {:ok, game} = Games.get(game.id)
+
+      Enum.each(1..12, fn i ->
+        Versions.log("update", game, now |> Timex.shift(minutes: -1 * i))
+      end)
+
+      five_minutes_ago = Timex.now() |> Timex.shift(minutes: -5)
+      Backbone.sync_games(five_minutes_ago)
+
+      assert_receive {:broadcast, %{event: "sync/games"}}
+      refute_receive {:broadcast, %{event: "sync/games"}}
+    end
+  end
+
+  describe "syncing everything" do
+    test "sends game notices over the backbone" do
+      user = create_user()
+      create_game(user)
+      create_channel(%{name: "gossip"})
+
+      Backbone.sync(%{}, %{"event" => "sync", "payload" => %{}})
+
+      assert_receive {:broadcast, %{event: "sync/games"}}
+      assert_receive {:broadcast, %{event: "sync/channels"}}
     end
   end
 end
