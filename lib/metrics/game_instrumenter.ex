@@ -18,7 +18,7 @@ defmodule Metrics.GameInstrumenter do
       [:gossip, :games, :online]
     ]
 
-    Telemetry.attach_many("grapevine-games", events, __MODULE__, :handle_event, nil)
+    Telemetry.attach_many("gossip-games", events, __MODULE__, :handle_event, nil)
   end
 
   def dispatch_game_count() do

@@ -3,11 +3,13 @@ defmodule Metrics.Setup do
   Common area to set up metrics
   """
 
+  @doc false
   def setup() do
     Metrics.Events.ChannelsInstrumenter.setup()
     Metrics.Events.GamesInstrumenter.setup()
     Metrics.Events.PlayersInstrumenter.setup()
     Metrics.Events.TellsInstrumenter.setup()
+    Metrics.GameEventInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
     Metrics.SocketInstrumenter.setup()
     Metrics.StatisticsInstrumenter.setup()
