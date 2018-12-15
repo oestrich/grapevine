@@ -35,13 +35,13 @@ COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
 ENV COOKIE="zR2/sR0Ohy5xeVMjMHsCt5Jl76lTpeI0LU57zu8XrnfLLzHZFuIsWxQYiMLBpToU"
 RUN mix phx.digest
-RUN cp config/prod.docker.exs config/prod.exs && \
-    mix release --env=prod --no-tar
+RUN mix release --env=prod --no-tar
 
 FROM alpine:3.8
 RUN apk add -U bash libssl1.0
 WORKDIR /app
 COPY --from=releaser /app/_build/prod/rel/gossip /app/
+COPY config/prod.docker.exs /etc/gossip.config.exs
 
 ENV MIX_ENV=prod
 

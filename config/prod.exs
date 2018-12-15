@@ -58,9 +58,3 @@ config :phoenix, :serve_endpoints, true
 #
 #     config :gossip, Web.Endpoint, server: true
 #
-
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-if File.exists?("config/prod.secret.exs") do
-  import_config "prod.secret.exs"
-end

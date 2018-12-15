@@ -31,6 +31,10 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :crypto.hash(:sha256, System.get_env("COOKIE")) |> Base.encode16 |> String.to_atom
+
+  set config_providers: [
+    {Mix.Releases.Config.Providers.Elixir, ["/etc/gossip.config.exs"]}
+  ]
 end
 
 # You may define one or more releases in this file.
