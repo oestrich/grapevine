@@ -1,0 +1,20 @@
+[Unit]
+Description=Runner for Grapevine
+After=network.target
+
+[Service]
+Type=forking
+User=deploy
+Group=deploy
+WorkingDirectory=/home/deploy/gossip
+Environment=LANG=en_US.UTF-8
+ExecStart=/home/deploy/gossip/bin/gossip start
+ExecStop=/home/deploy/gossip/bin/gossip stop
+PIDFile=/home/deploy/gossip.pid
+SyslogIdentifier=gossip
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
