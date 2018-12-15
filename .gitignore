@@ -31,3 +31,4 @@ npm-debug.log
 /env.sh
 /scp.sh
 *.sql
+deploy/hosts_*
