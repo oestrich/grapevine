@@ -1,5 +1,4 @@
-$green: #00bb00;
-$dark-green: #00CC00;
+@import "colors";
 
 main {
   padding-top: 1em;
@@ -50,10 +49,6 @@ h4:hover a i {
 
 footer {
   padding-top: 2em;
-}
-
-.game-title a {
-  font-size: 0.9rem;
 }
 
 pre {

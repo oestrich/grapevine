@@ -94,9 +94,9 @@ export default class Connection extends React.Component {
     let type = this.state.type;
 
     return (
-      <div>
-        <a href="#" onClick={this.showForm}>
-          <i className="fa fa-plus"></i> Add Connection
+      <div className="add">
+        <a href="#" className="btn btn-flat" onClick={this.showForm}>
+          <i className="fa fa-plus"></i> Add
         </a>
         <div className={formClass}>
           <div className="card mb-3 mt-3">

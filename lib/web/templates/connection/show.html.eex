@@ -1,9 +1,4 @@
-<div class="col-md-12 mb-3">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title"><%= String.capitalize(@connection.type) %></h5>
-      <p class="card-text"><%= connection_info(@connection) %></p>
-      <%= link("Delete", to: connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-danger") %>
-    </div>
-  </div>
+<div class="connection">
+  <%= String.capitalize(@connection.type) %> - <code><%= connection_info(@connection) %></code>
+  <%= link("Delete", to: connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-flat") %>
 </div>

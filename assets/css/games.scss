@@ -1,0 +1,42 @@
+@import "colors";
+
+.game {
+  background-color: $background-grey;
+  border-radius: .25rem;
+  padding: 16px;
+
+  nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .name {
+      display: inline-block;
+      flex-grow: 2;
+      margin-bottom: 0;
+    }
+
+    .actions {
+      display: inline-block;
+      font-size: 12px;
+    }
+  }
+
+  .add {
+    margin-top: 16px;
+  }
+
+  .short-name {
+    font-size: 16px;
+  }
+
+  .home-page {
+    font-size: 16px;
+  }
+
+  .redirect-uri {
+    width: 100%;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+}
