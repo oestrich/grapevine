@@ -5,30 +5,34 @@
   </ol>
 </nav>
 
-<h2>Connected Games</h2>
+<section>
+  <nav>
+    <h3 class="name">Connected Games</h3>
+  </nav>
 
-<%= if Enum.empty?(@games) do %>
-  <p>No games are online currently</p>
-<% end %>
+  <%= if Enum.empty?(@games) do %>
+    <p>No games are online currently</p>
+  <% end %>
 
-<div class="card-columns">
-  <%= Enum.map(@games, fn %{game: game, players: players} -> %>
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title"><%= game.name %></h4>
-        <p class="card-text"><%= user_agent(game) %></p>
-        <%= unless Enum.empty?(players) do %>
-          <h5>Players (<%= Enum.count(players) %>)</h5>
-          <div class="players">
-            <%= Enum.map(players, fn player -> %>
-              <span class="player"><%= player %></span>
-            <% end) %>
-          </div>
-        <% end %>
-        <%= if game.homepage_url do %>
-          <%= link("Homepage", to: game.homepage_url, class: "card-link") %>
-        <% end %>
+  <div class="card-columns">
+    <%= Enum.map(@games, fn %{game: game, players: players} -> %>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><%= game.name %></h4>
+          <p class="card-text"><%= user_agent(game) %></p>
+          <%= unless Enum.empty?(players) do %>
+            <h5>Players (<%= Enum.count(players) %>)</h5>
+            <div class="players">
+              <%= Enum.map(players, fn player -> %>
+                <span class="player"><%= player %></span>
+              <% end) %>
+            </div>
+          <% end %>
+          <%= if game.homepage_url do %>
+            <%= link("Homepage", to: game.homepage_url, class: "card-link") %>
+          <% end %>
+        </div>
       </div>
-    </div>
-  <% end) %>
-</div>
+    <% end) %>
+  </div>
+</section>
