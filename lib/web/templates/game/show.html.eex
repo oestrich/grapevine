@@ -6,7 +6,7 @@
   </ol>
 </nav>
 
-<div class="game">
+<section class="game">
   <nav class="header">
     <h3 class="name">
       <%= @game.name %>

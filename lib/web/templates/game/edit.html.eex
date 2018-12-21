@@ -9,44 +9,10 @@
 
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <h3>Edit <%= @game.name %></h3>
+    <section>
+      <h3>Edit <%= @game.name %></h3>
 
-    <%= form_for(@changeset, game_path(@conn, :update, @game.id), fn f -> %>
-      <div class="form-group">
-        <%= label(f, :name) %>
-        <%= text_input(f, :name, class: "form-control") %>
-      </div>
-
-      <div class="form-group">
-        <%= label(f, :short_name, "Short Name") %>
-        <%= text_input(f, :short_name, class: "form-control") %>
-        <span class="help-block">This is the name seen in chats and should be alphanumeric.</span>
-      </div>
-
-      <div class="form-group">
-        <%= label(f, :homepage_url, "Homepage URL") %>
-        <%= text_input(f, :homepage_url, class: "form-control") %>
-        <span class="help-block">Link to the game's homepage.</span>
-      </div>
-
-      <div class="form-group">
-        <%= label(f, :description) %>
-        <%= textarea(f, :description, class: "form-control", rows: 5) %>
-      </div>
-
-      <div class="form-group form-check">
-        <%= label(f, :display) do %>
-          <%= checkbox(f, :display, class: "form-check-input") %> Display in Connected Games?
-        <% end %>
-      </div>
-
-      <div class="form-group form-check">
-        <%= label(f, :allow_character_registration) do %>
-          <%= checkbox(f, :allow_character_registration, class: "form-check-input") %> Allow Character Registrations on Grapevine?
-        <% end %>
-      </div>
-
-      <%= submit("Update Game", class: "btn btn-secondary") %>
-    <% end) %>
+      <%= render("_form.html", changeset: @changeset, url: game_path(@conn, :update, @game.id), submit: "Update Game") %>
+    </section>
   </div>
 </div>

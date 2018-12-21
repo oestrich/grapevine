@@ -1,26 +1,7 @@
 @import "colors";
 
 .game {
-  background-color: $background-grey;
   border-radius: .25rem;
-  padding: 16px;
-
-  nav {
-    width: 100%;
-    display: flex;
-    align-items: center;
-
-    .name {
-      display: inline-block;
-      flex-grow: 2;
-      margin-bottom: 0;
-    }
-
-    .actions {
-      display: inline-block;
-      font-size: 12px;
-    }
-  }
 
   .add {
     margin-top: 16px;

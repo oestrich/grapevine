@@ -29,9 +29,9 @@ defmodule Web.Router do
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
-    resources("/games/mine", UserGameController, only: [:index, :create])
+    resources("/games/mine", UserGameController, only: [:index])
 
-    resources("/games", GameController, only: [:index, :show, :edit, :update]) do
+    resources("/games", GameController, only: [:index, :show, :new, :create, :edit, :update]) do
       resources("/connections", ConnectionController, only: [:create])
 
       resources("/events", EventController, only: [:index, :new, :create])

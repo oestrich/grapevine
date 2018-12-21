@@ -23,5 +23,5 @@
     <%= error_tag(f, :end_date) %>
   </div>
 
-  <%= submit(@submit, class: "btn btn-secondary") %>
+  <%= submit(@submit, class: "btn btn-primary") %>
 <% end) %>

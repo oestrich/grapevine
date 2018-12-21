@@ -1,0 +1,24 @@
+@import "colors";
+
+section {
+  background-color: $background-grey;
+  padding: 16px;
+
+  nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .name {
+      display: inline-block;
+      flex-grow: 2;
+      margin-bottom: 0;
+    }
+
+    .actions {
+      display: inline-block;
+      font-size: 12px;
+    }
+  }
+}
