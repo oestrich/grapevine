@@ -47,7 +47,7 @@ defmodule Gossip.Games.Game do
     |> maybe_strip_carriage_returns_from_description()
     |> validate_length(:short_name, less_than_or_equal_to: 15)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
-    |> validate_format(:homepage_url, ~r/^https?:\/\/\w+\./)
+    |> validate_format(:homepage_url, ~r/^https?:\/\/.+\./)
     |> Gossip.Schema.ensure(:client_id, UUID.uuid4())
     |> Gossip.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :games_lower_name_index)
