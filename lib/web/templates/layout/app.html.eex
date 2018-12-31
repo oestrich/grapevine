@@ -9,7 +9,26 @@
 
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
-    <title>Gossip - MUD Chat Network</title>
+    <%= if Map.has_key?(assigns, :open_graph_title) do %>
+      <meta property="og:title" content="<%= @open_graph_title %>" />
+    <% end %>
+
+    <%= if Map.has_key?(assigns, :open_graph_description) do %>
+      <meta property="og:description" content="<%= @open_graph_description %>" />
+    <% end %>
+
+    <%= if Map.has_key?(assigns, :open_graph_url) do %>
+      <meta property="og:url" content="<%= @open_graph_url %>" />
+    <% end %>
+
+    <meta property="og:site_name" content="Gossip" />
+
+    <%= if Map.has_key?(assigns, :title) do %>
+      <title><%= @title %></title>
+    <% else %>
+      <title>Gossip - MUD Chat Network</title>
+    <% end %>
+
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   </head>
