@@ -79,6 +79,8 @@
         <%= link("Media", to: page_path(@conn, :media)) %>
         |
         <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
+        |
+        <%= link("MSSP Check", to: mssp_path(@conn, :index)) %>
         <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>
           <%= img_tag("/images/patron.png") %>
         <% end %>

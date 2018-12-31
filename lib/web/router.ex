@@ -45,6 +45,8 @@ defmodule Web.Router do
 
     get("/media", PageController, :media)
 
+    resources("/mssp", MSSPController, only: [:index])
+
     resources("/redirect-uris", RedirectURIController, only: [:delete])
 
     resources("/register", RegistrationController, only: [:new, :create])
