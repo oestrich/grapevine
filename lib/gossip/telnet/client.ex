@@ -5,8 +5,7 @@ defmodule Gossip.Telnet.Client do
 
   use GenServer
 
-  @iac 255
-  @will 251
+  @do_mssp <<255, 253, 70>>
 
   alias Gossip.Telnet.Client.Options
 
@@ -14,20 +13,20 @@ defmodule Gossip.Telnet.Client do
     GenServer.start_link(__MODULE__, opts)
   end
 
-  defp send_term_type() do
-    IO.inspect "Sending term type"
-    GenServer.cast(self(), {:send_term_type})
-  end
-
   defp record_mssp() do
-    IO.inspect "requesting MSSP"
+    IO.inspect "asking for mssp"
     GenServer.cast(self(), {:record_mssp})
   end
 
   def init(opts) do
     Process.send_after(self(), {:stop}, 15_000)
 
-    {:ok, %{active: false, host: Keyword.get(opts, :host), port: Keyword.get(opts, :port)}, {:continue, :connect}}
+    state = %{
+      host: Keyword.get(opts, :host),
+      port: Keyword.get(opts, :port)
+    }
+
+    {:ok, state, {:continue, :connect}}
   end
 
   def handle_continue(:connect, state) do
@@ -36,13 +35,7 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_cast({:record_mssp}, state) do
-    :gen_tcp.send(state.socket, <<@iac, 253, 70>>)
-    {:noreply, state}
-  end
-
-  def handle_cast({:send_term_type}, state) do
-    :gen_tcp.send(state.socket, <<@iac, @will, 24>>)
-    :gen_tcp.send(state.socket, <<@iac, 250, 24, 0>> <> "Gossip" <> <<@iac, 240>>)
+    :gen_tcp.send(state.socket, @do_mssp)
     {:noreply, state}
   end
 
@@ -52,29 +45,19 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_info({:tcp, _port, data}, state) do
-    IO.inspect Options.parse(data)
+    options = Options.parse(data)
+    IO.inspect options
 
     cond do
-      Options.supports_mssp?(data) ->
+      Options.will_mssp?(options) ->
         record_mssp()
         {:noreply, state}
 
-      Options.mssp_data?(data) ->
-        data
-        |> Options.parse()
-        |> Enum.map(&Options.parse_mssp/1)
-        |> Enum.reject(&is_nil/1)
-        |> Enum.reduce(%{}, fn mssp, map ->
-          Map.merge(map, mssp)
-        end)
-        |> IO.inspect()
+      Options.mssp_data?(options) ->
+        {:mssp, data} = Options.get_mssp_data(options)
+        IO.inspect data
 
         {:stop, :normal, state}
-
-      Options.term_type_request?(data) ->
-        send_term_type()
-
-        {:noreply, state}
 
       true ->
         {:noreply, state}
@@ -86,44 +69,65 @@ defmodule Gossip.Telnet.Client do
     Parse telnet IAC options coming from the game
     """
 
-    @iac 255
+    @se 240
     @sb 250
     @will 251
+    @iac_do 253
+    @iac 255
 
     @mssp 70
+    @mssp_var 1
+    @mssp_val 2
 
-    def supports_mssp?(binary) do
-      binary
-      |> parse()
-      |> Enum.member?([@iac, @will, 70])
+    def will_mssp?(options) do
+      Enum.member?(options, {:will, :mssp})
     end
 
-    def term_type_request?(binary) do
-      binary
-      |> parse()
-      |> Enum.member?([@iac, 253, 24])
-    end
-
-    def mssp_data?(binary) do
-      options = parse(binary)
+    def mssp_data?(options) do
       Enum.any?(options, fn option ->
-        match?([@iac, 250, 70 | _], option)
+        match?({:mssp, _}, option)
       end)
     end
 
+    def get_mssp_data(options) do
+      Enum.find(options, fn option ->
+        match?({:mssp, _}, option)
+      end)
+    end
+
+    @doc """
+    Parse binary data from a MUD into any telnet options found and known
+    """
     def parse(binary) do
       binary
       |> options([], [])
       |> Enum.reverse()
-      |> Enum.filter(&(List.first(&1) == @iac))
+      |> Enum.map(&transform/1)
+      |> Enum.reject(&is_nil/1)
     end
 
+    def transform(option) do
+      case option do
+        [@iac, @will, @mssp] ->
+          {:will, :mssp}
+
+        [@iac, @sb, @mssp | data] ->
+          {:mssp, parse_mssp(data)}
+
+        _ ->
+          nil
+      end
+    end
+
+    @doc """
+    Parse options out of a binary stream
+    """
     def options(<<>>, current, stack) do
       [Enum.reverse(current) | stack]
     end
 
-    def options(<<@iac, 250, data :: binary>>, current, stack) do
-      {sub, data} = parse_sub_negotiation(<<@iac, 250>> <> data)
+    def options(<<@iac, @sb, data :: binary>>, current, stack) do
+      {sub, data} = parse_sub_negotiation(<<@iac, @sb>> <> data)
       options(data, [], [sub, Enum.reverse(current) | stack])
     end
 
@@ -131,8 +135,8 @@ defmodule Gossip.Telnet.Client do
       options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack])
     end
 
-    def options(<<@iac, 253, byte :: size(8), data :: binary>>, current, stack) do
-      options(data, [], [[@iac, 253, byte], Enum.reverse(current) | stack])
+    def options(<<@iac, @iac_do, byte :: size(8), data :: binary>>, current, stack) do
+      options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack])
     end
 
     def options(<<@iac, data :: binary>>, current, stack) do
@@ -143,6 +147,9 @@ defmodule Gossip.Telnet.Client do
       options(data, [byte | current], stack)
     end
 
+    @doc """
+    Parse sub negotiation options out of a stream
+    """
     def parse_sub_negotiation(data) do
       {stack, data} = sub_option(data, [])
       {Enum.reverse(stack), data}
@@ -150,8 +157,8 @@ defmodule Gossip.Telnet.Client do
 
     def sub_option(<<>>, stack), do: {stack, <<>>}
 
-    def sub_option(<<byte :: size(8), @iac, 240, data :: binary>>, stack) do
-      {[240, @iac, byte | stack], data}
+    def sub_option(<<byte :: size(8), @iac, @se, data :: binary>>, stack) do
+      {[byte | stack], data}
     end
 
     def sub_option(<<byte :: size(8), data :: binary>>, stack) do
@@ -161,7 +168,7 @@ defmodule Gossip.Telnet.Client do
     @doc """
     Parse MSSP subnegotiation options
     """
-    def parse_mssp([@iac, @sb, @mssp | data]) do
+    def parse_mssp(data) do
       data
       |> mssp(nil, [])
       |> Enum.reject(&is_nil/1)
@@ -169,8 +176,6 @@ defmodule Gossip.Telnet.Client do
         {to_string(Enum.reverse(map[:name])), to_string(Enum.reverse(map[:value]))}
       end)
     end
-
-    def parse_mssp(_data), do: nil
 
     def mssp([], current, stack) do
       [current | stack]
@@ -180,15 +185,15 @@ defmodule Gossip.Telnet.Client do
       mssp(data, current, stack)
     end
 
-    def mssp([240 | data], current, stack) do
+    def mssp([@se | data], current, stack) do
       mssp(data, current, stack)
     end
 
-    def mssp([1 | data], current, stack) do
+    def mssp([@mssp_var | data], current, stack) do
       mssp(data, %{type: :name, name: [], value: []}, [current | stack])
     end
 
-    def mssp([2 | data], current, stack) do
+    def mssp([@mssp_val | data], current, stack) do
       mssp(data, Map.put(current, :type, :value), stack)
     end
 
