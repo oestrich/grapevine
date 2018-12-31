@@ -9,6 +9,7 @@ defmodule Gossip.Telnet.Client do
 
   @do_mssp <<255, 253, 70>>
 
+  alias Gossip.Telnet
   alias Gossip.Telnet.Client.Options
 
   def start_link(opts) do
@@ -47,6 +48,7 @@ defmodule Gossip.Telnet.Client do
       "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
     end, type: :mssp)
     maybe_forward("mssp/terminated", %{}, state)
+    Telnet.record_no_mssp(state.host, state.port)
     {:stop, :normal, state}
   end
 
@@ -62,6 +64,7 @@ defmodule Gossip.Telnet.Client do
         {:mssp, data} = Options.get_mssp_data(options)
         Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
         maybe_forward("mssp/received", data, state)
+        Telnet.record_mssp_response(state.host, state.port, data)
         {:stop, :normal, state}
 
       true ->
