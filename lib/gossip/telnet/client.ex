@@ -8,6 +8,8 @@ defmodule Gossip.Telnet.Client do
   require Logger
 
   @do_mssp <<255, 253, 70>>
+  @will_term_type <<255, 251, 24>>
+  @term_type <<255, 250, 24, 0>> <> "Gossip" <> <<255, 240>>
 
   alias Gossip.Telnet
   alias Gossip.Telnet.Client.Options
@@ -16,9 +18,14 @@ defmodule Gossip.Telnet.Client do
     GenServer.start_link(__MODULE__, opts)
   end
 
-  defp record_mssp() do
+  defp send_do_mssp() do
     Logger.debug("Asking to send MSSP", type: :mssp)
     GenServer.cast(self(), {:record_mssp})
+  end
+
+  defp send_term_type() do
+    Logger.debug("Responding to term type", type: :mssp)
+    GenServer.cast(self(), {:send_term_type})
   end
 
   def init(opts) do
@@ -44,6 +51,12 @@ defmodule Gossip.Telnet.Client do
     {:noreply, state}
   end
 
+  def handle_cast({:send_term_type}, state) do
+    :gen_tcp.send(state.socket, @will_term_type)
+    :gen_tcp.send(state.socket, @term_type)
+    {:noreply, state}
+  end
+
   def handle_info({:stop}, state) do
     Logger.debug(fn ->
       "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
@@ -59,7 +72,11 @@ defmodule Gossip.Telnet.Client do
 
     cond do
       Options.will_mssp?(options) ->
-        record_mssp()
+        send_do_mssp()
+        {:noreply, %{state | data: <<>>}}
+
+      Options.do_term?(options) ->
+        send_term_type()
         {:noreply, %{state | data: <<>>}}
 
       Options.mssp_data?(options) ->
@@ -96,12 +113,18 @@ defmodule Gossip.Telnet.Client do
     @iac_do 253
     @iac 255
 
+    @term_type 24
+
     @mssp 70
     @mssp_var 1
     @mssp_val 2
 
     def will_mssp?(options) do
       Enum.member?(options, {:will, :mssp})
+    end
+
+    def do_term?(options) do
+      Enum.member?(options, {:do, :term_type})
     end
 
     def mssp_data?(options) do
@@ -129,6 +152,9 @@ defmodule Gossip.Telnet.Client do
 
     def transform(option) do
       case option do
+        [@iac, @iac_do, @term_type] ->
+          {:do, :term_type}
+
         [@iac, @will, @mssp] ->
           {:will, :mssp}
 
