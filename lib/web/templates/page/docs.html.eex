@@ -117,11 +117,12 @@
 <p>The following servers/frameworks have built-in support or a library to import for Gossip support:</p>
 
 <ul>
-  <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
-  <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
-  <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
-  <li><%= link("Javascript", to: "https://github.com/dinchak/node-gossiphaus") %></li>
   <li><%= link("Crystal", to: "https://github.com/proxima/gossip-crystal") %></li>
+  <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
+  <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
+  <li><%= link("Javascript", to: "https://github.com/dinchak/node-gossiphaus") %></li>
+  <li><%= link("Pinwheel", to: "https://github.com/azigler/pinwheel") %></li>
+  <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
 </ul>
 
 <h3 id="connecting">
