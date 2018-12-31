@@ -33,13 +33,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var socket = new MSSPSocket("#mssp-response");
   socket.connect();
 
-  document.getElementById("start-mssp").addEventListener("click", function(event) {
-    console.log("clicked");
+  var host = document.getElementById("mssp_host");
+  var port = document.getElementById("mssp_port");
+  var submit = document.getElementById("start-mssp");
 
-    var host = document.getElementById("mssp_host");
-    var port = document.getElementById("mssp_port");
+  host.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 || event.which == 13) {
+      submit.dispatchEvent(new Event('click'));
+    }
+  });
 
-    socket.checkHost(host.value, port.value);
+  port.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 || event.which == 13) {
+      submit.dispatchEvent(new Event('click'));
+    }
+  });
+
+  submit.addEventListener("click", function(event) {
+    if (host.value != "" && port.value != "") {
+      socket.checkHost(host.value, port.value);
+    }
   });
 });
 </script>
