@@ -5,6 +5,8 @@
 
   <p>If you wish to check what Gossip parses from your game's MSSP data, you can use this checker.</p>
   <p>Gossip follows the guidelines set on the <%= link("TinTin++ MSSP docs page", to: "https://tintin.sourceforge.io/protocols/mssp/", target: "_blank") %>.</p>
+  <p>In order for this check to work, your game <em>must</em> send the <code>IAC WILL MSSP</code> telnet option or respond to <code>mssp-request</code> at the login prompt. Gossip will send the term type <code>Gossip</code> if the game requests it.</p>
+  <p>If your game does not send <code>IAC WILL MSSP</code>, Gossip will send <code>mssp-request\n</code> after 10 seconds. Gossip will wait 20 seconds before giving up.</p>
 
   <div class="row">
     <div class="col-md-6">

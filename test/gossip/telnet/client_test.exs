@@ -46,4 +46,41 @@ defmodule Gossip.Telnet.ClientTest do
       assert values["NAME"] == "ExVenture MUD"
     end
   end
+
+  describe "parsing mssp text data" do
+    test "start and end" do
+      text = """
+      MSSP-REPLY-START
+      NAME\tGame
+      MSSP-REPLY-END
+      """
+
+      values = Client.Options.parse_mssp_text(text)
+
+      assert values["NAME"] == "Game"
+    end
+
+    test "no end" do
+      text = """
+      MSSP-REPLY-START
+      NAME\tGame
+      """
+
+      assert Client.Options.parse_mssp_text(text) == :error
+    end
+
+    test "extra text included" do
+      text = """
+      Welcome to the game
+      MSSP-REPLY-START
+      NAME\tGame
+      MSSP-REPLY-END
+      Left over
+      """
+
+      values = Client.Options.parse_mssp_text(text)
+
+      assert values["NAME"] == "Game"
+    end
+  end
 end

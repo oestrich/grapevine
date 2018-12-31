@@ -20,7 +20,7 @@ defmodule Gossip.Telnet.Client do
 
   defp send_do_mssp() do
     Logger.debug("Asking to send MSSP", type: :mssp)
-    GenServer.cast(self(), {:record_mssp})
+    GenServer.cast(self(), {:send_do_mssp})
   end
 
   defp send_term_type() do
@@ -29,7 +29,8 @@ defmodule Gossip.Telnet.Client do
   end
 
   def init(opts) do
-    Process.send_after(self(), {:stop}, 15_000)
+    Process.send_after(self(), {:text_mssp_request}, 10_000)
+    Process.send_after(self(), {:stop}, 20_000)
 
     state = %{
       host: Keyword.get(opts, :host),
@@ -46,7 +47,7 @@ defmodule Gossip.Telnet.Client do
     {:noreply, Map.put(state, :socket, socket)}
   end
 
-  def handle_cast({:record_mssp}, state) do
+  def handle_cast({:send_do_mssp}, state) do
     :gen_tcp.send(state.socket, @do_mssp)
     {:noreply, state}
   end
@@ -55,6 +56,12 @@ defmodule Gossip.Telnet.Client do
     :gen_tcp.send(state.socket, @will_term_type)
     :gen_tcp.send(state.socket, @term_type)
     {:noreply, state}
+  end
+
+  def handle_info({:text_mssp_request}, state) do
+    Logger.debug("Sending a text version of mssp request", type: :mssp)
+    :gen_tcp.send(state.socket, "mssp-request\n")
+    {:noreply, %{state | data: <<>>}}
   end
 
   def handle_info({:stop}, state) do
@@ -85,6 +92,18 @@ defmodule Gossip.Telnet.Client do
         maybe_forward("mssp/received", data, state)
         Telnet.record_mssp_response(state.host, state.port, data)
         {:stop, :normal, state}
+
+      Options.text_mssp?(state.data) ->
+        case Options.parse_mssp_text(state.data) do
+          :error ->
+            {:noreply, state}
+
+          data ->
+            Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
+            maybe_forward("mssp/received", data, state)
+            Telnet.record_mssp_response(state.host, state.port, data)
+            {:stop, :normal, state}
+        end
 
       true ->
         {:noreply, state}
@@ -131,6 +150,10 @@ defmodule Gossip.Telnet.Client do
       Enum.any?(options, fn option ->
         match?({:mssp, _}, option)
       end)
+    end
+
+    def text_mssp?(string) do
+      string =~ "MSSP-REPLY-START"
     end
 
     def get_mssp_data(options) do
@@ -258,6 +281,48 @@ defmodule Gossip.Telnet.Client do
         _ ->
           mssp(data, current, stack)
       end
+    end
+
+    @doc """
+    Parse text as a response to `mssp-request`
+
+    Should include MSSP-REPLY-START and end with MSSP-REPLY-END
+    """
+    def parse_mssp_text(text) do
+      data =
+        text
+        |> String.replace("\r", "")
+        |> String.split("\n")
+        |> find_mssp_text([])
+
+      case data do
+        :error ->
+          :error
+
+        data ->
+          Enum.into(data, %{}, &parse_mssp_text_line/1)
+      end
+    end
+
+    def find_mssp_text([], _stack) do
+      :error
+    end
+
+    def find_mssp_text(["MSSP-REPLY-START" | data], _stack) do
+      find_mssp_text(data, [])
+    end
+
+    def find_mssp_text(["MSSP-REPLY-END" | _data], stack) do
+      stack
+    end
+
+    def find_mssp_text([line | data], stack) do
+      find_mssp_text(data, [line | stack])
+    end
+
+    def parse_mssp_text_line(line) do
+      [name | values] = String.split(line, "\t")
+      {name, Enum.join(values, "\t")}
     end
   end
 end
