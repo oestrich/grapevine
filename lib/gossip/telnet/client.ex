@@ -27,7 +27,8 @@ defmodule Gossip.Telnet.Client do
     state = %{
       host: Keyword.get(opts, :host),
       port: Keyword.get(opts, :port),
-      channel: Keyword.get(opts, :channel, nil)
+      channel: Keyword.get(opts, :channel, nil),
+      data: <<>>
     }
 
     {:ok, state, {:continue, :connect}}
@@ -53,12 +54,13 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_info({:tcp, _port, data}, state) do
-    options = Options.parse(data)
+    state = %{state | data: state.data <> data}
+    options = Options.parse(state.data)
 
     cond do
       Options.will_mssp?(options) ->
         record_mssp()
-        {:noreply, state}
+        {:noreply, %{state | data: <<>>}}
 
       Options.mssp_data?(options) ->
         {:mssp, data} = Options.get_mssp_data(options)
@@ -90,6 +92,7 @@ defmodule Gossip.Telnet.Client do
     @se 240
     @sb 250
     @will 251
+    @wont 252
     @iac_do 253
     @iac 255
 
@@ -129,7 +132,10 @@ defmodule Gossip.Telnet.Client do
         [@iac, @will, @mssp] ->
           {:will, :mssp}
 
-        [@iac, @sb, @mssp | data] ->
+        [@iac, @wont, @mssp] ->
+          {:wont, :mssp}
+
+        [@iac, @sb, @mssp | data] when data != [] ->
           {:mssp, parse_mssp(data)}
 
         _ ->
