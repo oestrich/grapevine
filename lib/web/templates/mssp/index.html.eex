@@ -1,0 +1,45 @@
+<section>
+  <nav>
+    <h3 class="name">MSSP Check</h3>
+  </nav>
+
+  <p>If you wish to check what Gossip parses from your game's MSSP data, you can use this checker.</p>
+  <p>Gossip follows the guidelines set on the <%= link("TinTin++ MSSP docs page", to: "https://tintin.sourceforge.io/protocols/mssp/", target: "_blank") %>.</p>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= label(:mssp, :host) %>
+        <%= text_input(:mssp, :host, class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <%= label(:mssp, :port) %>
+        <%= number_input(:mssp, :port, class: "form-control") %>
+      </div>
+
+      <button id="start-mssp" class="btn btn-primary">Check!</button>
+    </div>
+
+    <div class="col-md-6">
+      <p>Response:</p>
+      <pre id="mssp-response"></pre>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  var socket = new MSSPSocket("#mssp-response");
+  socket.connect();
+
+  document.getElementById("start-mssp").addEventListener("click", function(event) {
+    console.log("clicked");
+
+    var host = document.getElementById("mssp_host");
+    var port = document.getElementById("mssp_port");
+
+    socket.checkHost(host.value, port.value);
+  });
+});
+</script>

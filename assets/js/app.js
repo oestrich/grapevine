@@ -4,6 +4,9 @@ import "./charts"
 import ChatSocket from "./socket";
 window.ChatSocket = ChatSocket;
 
+import MSSPSocket from "./mssp";
+window.MSSPSocket = MSSPSocket;
+
 import React from "react";
 import ReactDOM from "react-dom";
 

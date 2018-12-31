@@ -25,7 +25,8 @@ defmodule Gossip.Telnet.Client do
 
     state = %{
       host: Keyword.get(opts, :host),
-      port: Keyword.get(opts, :port)
+      port: Keyword.get(opts, :port),
+      channel: Keyword.get(opts, :channel, nil)
     }
 
     {:ok, state, {:continue, :connect}}
@@ -45,7 +46,7 @@ defmodule Gossip.Telnet.Client do
     Logger.debug(fn ->
       "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
     end, type: :mssp)
-
+    maybe_forward("mssp/terminated", %{}, state)
     {:stop, :normal, state}
   end
 
@@ -60,11 +61,21 @@ defmodule Gossip.Telnet.Client do
       Options.mssp_data?(options) ->
         {:mssp, data} = Options.get_mssp_data(options)
         Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
-
+        maybe_forward("mssp/received", data, state)
         {:stop, :normal, state}
 
       true ->
         {:noreply, state}
+    end
+  end
+
+  defp maybe_forward(event, message, state) do
+    case state.channel do
+      nil ->
+        :ok
+
+      channel ->
+        Web.Endpoint.broadcast("mssp:#{channel}", event, message)
     end
   end
 
