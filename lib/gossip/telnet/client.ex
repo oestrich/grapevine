@@ -5,6 +5,8 @@ defmodule Gossip.Telnet.Client do
 
   use GenServer
 
+  require Logger
+
   @do_mssp <<255, 253, 70>>
 
   alias Gossip.Telnet.Client.Options
@@ -14,7 +16,7 @@ defmodule Gossip.Telnet.Client do
   end
 
   defp record_mssp() do
-    IO.inspect "asking for mssp"
+    Logger.debug("Asking to send MSSP", type: :mssp)
     GenServer.cast(self(), {:record_mssp})
   end
 
@@ -40,13 +42,15 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_info({:stop}, state) do
-    IO.inspect "terminating due to no mssp data"
+    Logger.debug(fn ->
+      "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
+    end, type: :mssp)
+
     {:stop, :normal, state}
   end
 
   def handle_info({:tcp, _port, data}, state) do
     options = Options.parse(data)
-    IO.inspect options
 
     cond do
       Options.will_mssp?(options) ->
@@ -55,7 +59,7 @@ defmodule Gossip.Telnet.Client do
 
       Options.mssp_data?(options) ->
         {:mssp, data} = Options.get_mssp_data(options)
-        IO.inspect data
+        Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
 
         {:stop, :normal, state}
 
