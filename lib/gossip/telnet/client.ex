@@ -5,6 +5,9 @@ defmodule Gossip.Telnet.Client do
 
   use GenServer
 
+  @iac 255
+  @will 251
+
   alias Gossip.Telnet.Client.Options
 
   def start_link(opts) do
@@ -12,10 +15,12 @@ defmodule Gossip.Telnet.Client do
   end
 
   defp send_term_type() do
+    IO.inspect "Sending term type"
     GenServer.cast(self(), {:send_term_type})
   end
 
   defp record_mssp() do
+    IO.inspect "requesting MSSP"
     GenServer.cast(self(), {:record_mssp})
   end
 
@@ -31,13 +36,13 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_cast({:record_mssp}, state) do
-    :gen_tcp.send(state.socket, <<255, 253, 70>>)
+    :gen_tcp.send(state.socket, <<@iac, 253, 70>>)
     {:noreply, state}
   end
 
   def handle_cast({:send_term_type}, state) do
-    :gen_tcp.send(state.socket, <<255, 251, 24>>)
-    :gen_tcp.send(state.socket, <<255, 250, 24, 0>> <> "Mudlet" <> <<255, 240>>)
+    :gen_tcp.send(state.socket, <<@iac, @will, 24>>)
+    :gen_tcp.send(state.socket, <<@iac, 250, 24, 0>> <> "Gossip" <> <<@iac, 240>>)
     {:noreply, state}
   end
 
@@ -47,7 +52,6 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_info({:tcp, _port, data}, state) do
-    IO.inspect data
     IO.inspect Options.parse(data)
 
     cond do
@@ -56,17 +60,18 @@ defmodule Gossip.Telnet.Client do
         {:noreply, state}
 
       Options.mssp_data?(data) ->
-        IO.inspect "got mssp data"
-
         data
         |> Options.parse()
         |> Enum.map(&Options.parse_mssp/1)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.reduce(%{}, fn mssp, map ->
+          Map.merge(map, mssp)
+        end)
         |> IO.inspect()
 
         {:stop, :normal, state}
 
       Options.term_type_request?(data) ->
-        IO.inspect "term type requested"
         send_term_type()
 
         {:noreply, state}
@@ -81,22 +86,28 @@ defmodule Gossip.Telnet.Client do
     Parse telnet IAC options coming from the game
     """
 
+    @iac 255
+    @sb 250
+    @will 251
+
+    @mssp 70
+
     def supports_mssp?(binary) do
       binary
       |> parse()
-      |> Enum.member?([255, 251, 70])
+      |> Enum.member?([@iac, @will, 70])
     end
 
     def term_type_request?(binary) do
       binary
       |> parse()
-      |> Enum.member?([255, 253, 24])
+      |> Enum.member?([@iac, 253, 24])
     end
 
     def mssp_data?(binary) do
       options = parse(binary)
       Enum.any?(options, fn option ->
-        match?([255, 250, 70 | _], option)
+        match?([@iac, 250, 70 | _], option)
       end)
     end
 
@@ -104,28 +115,28 @@ defmodule Gossip.Telnet.Client do
       binary
       |> options([], [])
       |> Enum.reverse()
-      |> Enum.filter(&(List.first(&1) == 255))
+      |> Enum.filter(&(List.first(&1) == @iac))
     end
 
     def options(<<>>, current, stack) do
       [Enum.reverse(current) | stack]
     end
 
-    def options(<<255, 250, data :: binary>>, current, stack) do
-      {sub, data} = parse_sub_negotiation(<<255, 250>> <> data)
+    def options(<<@iac, 250, data :: binary>>, current, stack) do
+      {sub, data} = parse_sub_negotiation(<<@iac, 250>> <> data)
       options(data, [], [sub, Enum.reverse(current) | stack])
     end
 
-    def options(<<255, 251, byte :: size(8), data :: binary>>, current, stack) do
-      options(data, [], [[255, 251, byte], Enum.reverse(current) | stack])
+    def options(<<@iac, @will, byte :: size(8), data :: binary>>, current, stack) do
+      options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack])
     end
 
-    def options(<<255, 253, byte :: size(8), data :: binary>>, current, stack) do
-      options(data, [], [[255, 253, byte], Enum.reverse(current) | stack])
+    def options(<<@iac, 253, byte :: size(8), data :: binary>>, current, stack) do
+      options(data, [], [[@iac, 253, byte], Enum.reverse(current) | stack])
     end
 
-    def options(<<255, data :: binary>>, current, stack) do
-      options(data, [255], [Enum.reverse(current) | stack])
+    def options(<<@iac, data :: binary>>, current, stack) do
+      options(data, [@iac], [Enum.reverse(current) | stack])
     end
 
     def options(<<byte :: size(8), data :: binary>>, current, stack) do
@@ -139,8 +150,8 @@ defmodule Gossip.Telnet.Client do
 
     def sub_option(<<>>, stack), do: {stack, <<>>}
 
-    def sub_option(<<byte :: size(8), 255, 240, data :: binary>>, stack) do
-      {[240, 255, byte | stack], data}
+    def sub_option(<<byte :: size(8), @iac, 240, data :: binary>>, stack) do
+      {[240, @iac, byte | stack], data}
     end
 
     def sub_option(<<byte :: size(8), data :: binary>>, stack) do
@@ -150,7 +161,7 @@ defmodule Gossip.Telnet.Client do
     @doc """
     Parse MSSP subnegotiation options
     """
-    def parse_mssp(data) do
+    def parse_mssp([@iac, @sb, @mssp | data]) do
       data
       |> mssp(nil, [])
       |> Enum.reject(&is_nil/1)
@@ -159,11 +170,13 @@ defmodule Gossip.Telnet.Client do
       end)
     end
 
+    def parse_mssp(_data), do: nil
+
     def mssp([], current, stack) do
       [current | stack]
     end
 
-    def mssp([255 | data], current, stack) do
+    def mssp([@iac | data], current, stack) do
       mssp(data, current, stack)
     end
 
