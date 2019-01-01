@@ -129,7 +129,7 @@ defmodule Gossip.Events do
 
   defp broadcast_event_create(event_id) do
     with {:ok, event} <- get(event_id),
-         {:ok, version} <- Versions.log("update", event) do
+         {:ok, version} <- Versions.log("create", event) do
       Web.Endpoint.broadcast("system:backbone", "events/new", version)
     else
       _ ->

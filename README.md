@@ -79,14 +79,6 @@ docker-compose up gossip
     {
       "action": "create",
       "payload": { }
-    },
-    {
-      "action": "update",
-      "payload": { }
-    },
-    {
-      "action": "delete",
-      "payload": { }
     }
   ]
 }
@@ -100,6 +92,14 @@ docker-compose up gossip
   "payload": [
     {
       "action": "create",
+      "payload": { }
+    },
+    {
+      "action": "update",
+      "payload": { }
+    },
+    {
+      "action": "delete",
       "payload": { }
     }
   ]
