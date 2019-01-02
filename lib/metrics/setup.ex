@@ -13,6 +13,7 @@ defmodule Metrics.Setup do
     Metrics.GameInstrumenter.setup()
     Metrics.SocketInstrumenter.setup()
     Metrics.StatisticsInstrumenter.setup()
+    Metrics.TelnetInstrumenter.setup()
 
     Metrics.PlugExporter.setup()
   end

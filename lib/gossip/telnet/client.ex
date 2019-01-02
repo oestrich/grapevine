@@ -19,12 +19,10 @@ defmodule Gossip.Telnet.Client do
   end
 
   defp send_do_mssp() do
-    Logger.debug("Asking to send MSSP", type: :mssp)
     GenServer.cast(self(), {:send_do_mssp})
   end
 
   defp send_term_type() do
-    Logger.debug("Responding to term type", type: :mssp)
     GenServer.cast(self(), {:send_term_type})
   end
 
@@ -39,37 +37,42 @@ defmodule Gossip.Telnet.Client do
       data: <<>>
     }
 
+    :telemetry.execute([:gossip, :telnet, :mssp, :start], 1, state)
+
     {:ok, state, {:continue, :connect}}
   end
 
   def handle_continue(:connect, state) do
     {:ok, socket} = :gen_tcp.connect(String.to_charlist(state.host), state.port, [:binary, {:packet, 0}])
+    :telemetry.execute([:gossip, :telnet, :mssp, :connected], 1, state)
     {:noreply, Map.put(state, :socket, socket)}
   end
 
   def handle_cast({:send_do_mssp}, state) do
     :gen_tcp.send(state.socket, @do_mssp)
+    :telemetry.execute([:gossip, :telnet, :mssp, :option, :sent], 1, state)
     {:noreply, state}
   end
 
   def handle_cast({:send_term_type}, state) do
     :gen_tcp.send(state.socket, @will_term_type)
     :gen_tcp.send(state.socket, @term_type)
+    :telemetry.execute([:gossip, :telnet, :mssp, :term_type, :sent], 1, state)
     {:noreply, state}
   end
 
   def handle_info({:text_mssp_request}, state) do
-    Logger.debug("Sending a text version of mssp request", type: :mssp)
     :gen_tcp.send(state.socket, "mssp-request\n")
+    :telemetry.execute([:gossip, :telnet, :mssp, :text, :sent], 1, state)
+
     {:noreply, %{state | data: <<>>}}
   end
 
   def handle_info({:stop}, state) do
-    Logger.debug(fn ->
-      "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
-    end, type: :mssp)
     maybe_forward("mssp/terminated", %{}, state)
     Telnet.record_no_mssp(state.host, state.port)
+    :telemetry.execute([:gossip, :telnet, :mssp, :failed], 1, state)
+
     {:stop, :normal, state}
   end
 
@@ -88,9 +91,10 @@ defmodule Gossip.Telnet.Client do
 
       Options.mssp_data?(options) ->
         {:mssp, data} = Options.get_mssp_data(options)
-        Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
         maybe_forward("mssp/received", data, state)
         Telnet.record_mssp_response(state.host, state.port, data)
+        :telemetry.execute([:gossip, :telnet, :mssp, :option, :success], 1, state)
+
         {:stop, :normal, state}
 
       Options.text_mssp?(state.data) ->
@@ -99,9 +103,10 @@ defmodule Gossip.Telnet.Client do
             {:noreply, state}
 
           data ->
-            Logger.info("Received MSSP from #{state.host}:#{state.port} - #{inspect(data)}", type: :mssp)
             maybe_forward("mssp/received", data, state)
             Telnet.record_mssp_response(state.host, state.port, data)
+            :telemetry.execute([:gossip, :telnet, :mssp, :text, :success], 1, state)
+
             {:stop, :normal, state}
         end
 
