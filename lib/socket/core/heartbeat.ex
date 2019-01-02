@@ -10,7 +10,7 @@ defmodule Socket.Core.Heartbeat do
 
     case state.heartbeat_count > 3 do
       true ->
-        Telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
+        :telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
         {:disconnect, state}
 
       false ->
@@ -21,7 +21,7 @@ defmodule Socket.Core.Heartbeat do
   def handle(state) do
     case state do
       %{heartbeat_count: count} when count >= 3 ->
-        Telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
+        :telemetry.execute([:gossip, :sockets, :heartbeat, :disconnect], 1, %{})
 
         {:disconnect, state}
 

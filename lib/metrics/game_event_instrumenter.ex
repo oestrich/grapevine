@@ -18,7 +18,7 @@ defmodule Metrics.GameEventInstrumenter do
       [:gossip, :game_events, :delete, :failure],
     ]
 
-    Telemetry.attach_many("gossip-game-events", events, __MODULE__, :handle_event, nil)
+    :telemetry.attach_many("gossip-game-events", events, &handle_event/4, nil)
   end
 
   def handle_event([:gossip, :game_events, :create, status], count, metadata, _config) do

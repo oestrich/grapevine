@@ -12,7 +12,7 @@ defmodule Gossip.Statistics do
   Record a game's player count at a specific time
   """
   def record_players(game, players, time) do
-    Telemetry.execute([:gossip, :statistics, :players, :record], length(players), %{time: time})
+    :telemetry.execute([:gossip, :statistics, :players, :record], length(players), %{time: time})
 
     %PlayerStatistic{}
     |> PlayerStatistic.changeset(game, players, time)

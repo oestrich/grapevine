@@ -18,12 +18,12 @@ defmodule Metrics.GameInstrumenter do
       [:gossip, :games, :online]
     ]
 
-    Telemetry.attach_many("gossip-games", events, __MODULE__, :handle_event, nil)
+    :telemetry.attach_many("gossip-games", events, &handle_event/4, nil)
   end
 
   def dispatch_game_count() do
     count = length(Presence.online_games())
-    Telemetry.execute([:gossip, :games, :online], count, %{})
+    :telemetry.execute([:gossip, :games, :online], count, %{})
   end
 
   def handle_event([:gossip, :games, :online], count, _metadata, _config) do

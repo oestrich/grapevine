@@ -83,12 +83,12 @@ defmodule Gossip.Events do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        Telemetry.execute([:gossip, :game_events, :create, :success], 1, %{game_id: game.id})
+        :telemetry.execute([:gossip, :game_events, :create, :success], 1, %{game_id: game.id})
         broadcast_event_create(event.id)
         {:ok, event}
 
       {:error, changeset} ->
-        Telemetry.execute([:gossip, :game_events, :create, :failure], 1, %{game_id: game.id})
+        :telemetry.execute([:gossip, :game_events, :create, :failure], 1, %{game_id: game.id})
         {:error, changeset}
     end
   end
@@ -101,12 +101,12 @@ defmodule Gossip.Events do
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        Telemetry.execute([:gossip, :game_events, :update, :success], 1, %{game_id: event.game_id})
+        :telemetry.execute([:gossip, :game_events, :update, :success], 1, %{game_id: event.game_id})
         broadcast_event_update(event.id)
         {:ok, event}
 
       {:error, changeset} ->
-        Telemetry.execute([:gossip, :game_events, :update, :failure], 1, %{game_id: event.game_id})
+        :telemetry.execute([:gossip, :game_events, :update, :failure], 1, %{game_id: event.game_id})
         {:error, changeset}
     end
   end
@@ -117,12 +117,12 @@ defmodule Gossip.Events do
   def delete(event) do
     case Repo.delete(event) do
       {:ok, event} ->
-        Telemetry.execute([:gossip, :game_events, :delete, :success], 1, %{game_id: event.game_id})
+        :telemetry.execute([:gossip, :game_events, :delete, :success], 1, %{game_id: event.game_id})
         broadcast_event_delete(event)
         {:ok, event}
 
       {:error, changeset} ->
-        Telemetry.execute([:gossip, :game_events, :delete, :failure], 1, %{game_id: event.game_id})
+        :telemetry.execute([:gossip, :game_events, :delete, :failure], 1, %{game_id: event.game_id})
         {:error, changeset}
     end
   end

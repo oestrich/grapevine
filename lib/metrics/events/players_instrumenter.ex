@@ -26,7 +26,7 @@ defmodule Metrics.Events.PlayersInstrumenter do
       [:gossip, :events, module, event]
     end)
 
-    Telemetry.attach_many("gossip-events-players", events, __MODULE__, :handle_event, nil)
+    :telemetry.attach_many("gossip-events-players", events, &handle_event/4, nil)
   end
 
   def handle_event([:gossip, :events, :players, :sign_in], _value, _metadata, _config) do

@@ -26,7 +26,7 @@ defmodule Metrics.Events.ChannelsInstrumenter do
       [:gossip, :events, module, event]
     end)
 
-    Telemetry.attach_many("gossip-events-channels", events, __MODULE__, :handle_event, nil)
+    :telemetry.attach_many("gossip-events-channels", events, &handle_event/4, nil)
   end
 
   def handle_event([:gossip, :events, :channels, :send], _value, _metadata, _config) do

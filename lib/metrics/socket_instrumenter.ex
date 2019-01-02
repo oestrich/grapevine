@@ -56,7 +56,7 @@ defmodule Metrics.SocketInstrumenter do
       [:gossip, :sockets, :online]
     ]
 
-    Telemetry.attach_many("gossip-sockets", events, __MODULE__, :handle_event, nil)
+    :telemetry.attach_many("gossip-sockets", events, &handle_event/4, nil)
   end
 
   @doc """
@@ -65,7 +65,7 @@ defmodule Metrics.SocketInstrumenter do
   Called from the telemetry-poller
   """
   def dispatch_socket_count() do
-    Telemetry.execute([:gossip, :sockets, :online], Server.online_sockets(), %{})
+    :telemetry.execute([:gossip, :sockets, :online], Server.online_sockets(), %{})
   end
 
   def handle_event([:gossip, :sockets, :online], count, _metadata, _config) do

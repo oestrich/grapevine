@@ -18,29 +18,29 @@ defmodule Socket.Core.Authenticate do
   @disable_debug_seconds 300
 
   def process(state, payload) do
-    Telemetry.execute([:gossip, :sockets, :connect], 1, %{})
+    :telemetry.execute([:gossip, :sockets, :connect], 1, %{})
 
     with {:ok, game} <- validate_socket(payload),
          {:ok, supports} <- validate_supports(payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
-        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "invalid authenticat event"})
+        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "invalid authenticat event"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "invalid credentials"}, state}
 
       {:error, :missing_supports} ->
-        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "missing supports"})
+        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "missing supports"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "missing supports"}, state}
 
       {:error, :must_support_channels} ->
-        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "must support channels"})
+        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "must support channels"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "must support channels"}, state}
 
       {:error, :unknown_supports} ->
-        Telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "unknown set of supports"})
+        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{reason: "unknown set of supports"})
 
         {:disconnect, %{event: "authenticate", status: "failure", error: "includes unknown supports"}, state}
     end
@@ -68,7 +68,7 @@ defmodule Socket.Core.Authenticate do
 
     maybe_schedule_disable_debug(state)
 
-    Telemetry.execute([:gossip, :sockets, :connect, :success], 1, %{game: game.name, channels: channels, supports: supports})
+    :telemetry.execute([:gossip, :sockets, :connect, :success], 1, %{game: game.name, channels: channels, supports: supports})
     Presence.track(state)
 
     response = %{
