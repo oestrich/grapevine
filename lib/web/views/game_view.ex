@@ -31,24 +31,6 @@ defmodule Web.GameView do
     |> maybe_add_connections(game)
   end
 
-  def render("sync.json", %{game: game}) do
-    %{
-      id: game.id,
-      game: game.short_name,
-      display_name: game.name,
-      display: game.display,
-      description: game.description,
-      homepage_url: game.homepage_url,
-      user_agent: game.user_agent,
-      user_agent_url: user_agent_repo_url(game.user_agent),
-      connections: format_connections(game.connections),
-      redirect_uris: format_redirect_uris(game.redirect_uris),
-      allow_character_registration: game.allow_character_registration,
-      client_id: game.client_id,
-      client_secret: game.client_secret,
-    }
-  end
-
   defp maybe_add_connections(json, game) do
     case game.connections do
       [] ->
@@ -64,10 +46,6 @@ defmodule Web.GameView do
     |> Enum.map(fn connection ->
       ConnectionView.render("show.json", %{connection: connection})
     end)
-  end
-
-  defp format_redirect_uris(redirect_uris) do
-    Enum.map(redirect_uris, &(&1.uri))
   end
 
   defp user_agent_repo_url(nil), do: nil

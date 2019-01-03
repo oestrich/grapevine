@@ -74,6 +74,7 @@ defmodule Gossip.Versions do
       allow_character_registration: game.allow_character_registration,
       client_id: game.client_id,
       client_secret: game.client_secret,
+      mssp_last_seen_at: game.mssp_last_seen_at
     }
   end
 

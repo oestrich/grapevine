@@ -233,4 +233,17 @@ defmodule Gossip.GamesTest do
       refute Gossip.Repo.get(Games.RedirectURI, redirect_uri.id)
     end
   end
+
+  describe "touching a game's mssp status" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "successfully", %{game: game} do
+      {:ok, game} = Games.seen_on_mssp(game)
+
+      assert game.mssp_last_seen_at
+    end
+  end
 end

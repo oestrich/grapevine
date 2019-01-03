@@ -216,6 +216,22 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Update the timestamp for a game's last seen status
+  """
+  def seen_on_mssp(game, seen_at \\ Timex.now()) do
+    changeset = Game.seen_on_mssp_changeset(game, seen_at)
+
+    case changeset |> Repo.update() do
+      {:ok, game} ->
+        broadcast_game_update(game.id)
+        {:ok, game}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
   Get all telnet connections
   """
   def telnet_connections() do

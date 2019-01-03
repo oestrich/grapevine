@@ -122,8 +122,10 @@ defmodule Gossip.Telnet.Client do
     end
 
     def record_option(state, data) do
-      players = String.to_integer(data["PLAYERS"])
+      Games.seen_on_mssp(state.game)
       Games.connection_has_mssp(state.connection)
+
+      players = String.to_integer(data["PLAYERS"])
       Statistics.record_mssp_players(state.game, players, Timex.now())
     end
 
