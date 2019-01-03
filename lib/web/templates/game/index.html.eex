@@ -24,7 +24,9 @@
           <%= unless Enum.empty?(channels) do %>
             <div class="channels">
               <%= Enum.map(channels, fn channel -> %>
-                <span class="channel-name" title="Subscribed Channel"><%= channel %></span>
+                <%= if display_channel?(channel) do %>
+                  <span class="channel-name" title="Subscribed Channel"><%= channel %></span>
+                <% end %>
               <% end) %>
             </div>
           <% end %>
