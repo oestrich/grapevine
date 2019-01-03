@@ -9,7 +9,7 @@ defmodule Gossip.Presence.ServerTest do
     test "saves state" do
       game = create_game(create_user())
 
-      Presence.update_game(game, ["channels"], ["Player"])
+      Presence.update_game(presence_state(game, %{supports: ["channels"], players: ["Player"]}))
 
       {:ok, %{}} = Server.record_statistics(%{})
 

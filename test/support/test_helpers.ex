@@ -54,4 +54,13 @@ defmodule Gossip.TestHelpers do
 
     application
   end
+
+  def presence_state(game, state) do
+    Map.merge(%{
+      game: game,
+      supports: [],
+      channels: [],
+      players: []
+    }, state)
+  end
 end

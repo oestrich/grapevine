@@ -78,10 +78,10 @@ defmodule Web.Socket.GamesTest do
     game3 = create_game(user, %{name: "ExVenture 2", short_name: "EVTwo"})
     game4 = create_game(user, %{name: "ExVenture 3", short_name: "EVThree", display: false})
 
-    Presence.update_game(game1, [], ["Player1"])
-    Presence.update_game(game2, [], ["Player2"])
-    Presence.update_game(game3, [], ["Player3"])
-    Presence.update_game(game4, [], ["Player4"])
+    Presence.update_game(presence_state(game1, %{players: ["Player1"]}))
+    Presence.update_game(presence_state(game2, %{players: ["Player2"]}))
+    Presence.update_game(presence_state(game3, %{players: ["Player3"]}))
+    Presence.update_game(presence_state(game4, %{players: ["Player4"]}))
 
     %{state: state}
   end
