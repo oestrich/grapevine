@@ -14,6 +14,7 @@ defmodule Gossip.Application do
       {Gossip.Presence, []},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
+      {Gossip.Telnet.Worker, [name: Gossip.Telnet.Worker]},
     ]
 
     Metrics.Setup.setup()

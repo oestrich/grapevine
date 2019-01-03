@@ -215,6 +215,16 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Get all telnet connections
+  """
+  def telnet_connections() do
+    Connection
+    |> where([c], c.type == "telnet")
+    |> preload([:game])
+    |> Repo.all()
+  end
+
+  @doc """
   Check if a user can manage a connection
   """
   @spec user_owns_connection?(User.t(), Connection.t()) :: boolean()

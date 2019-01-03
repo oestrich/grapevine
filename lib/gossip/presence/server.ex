@@ -42,7 +42,7 @@ defmodule Gossip.Presence.Server do
     Client.online_games()
     |> Enum.filter(&(&1.type == :game))
     |> Enum.each(fn presence ->
-      Statistics.record_players(presence.game, presence.players, Timex.now())
+      Statistics.record_socket_players(presence.game, presence.players, Timex.now())
     end)
 
     {:ok, state}
