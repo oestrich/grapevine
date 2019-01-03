@@ -58,7 +58,8 @@ defmodule Socket.Core do
   """
   def channel_subscribe(state, %{"payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
-         {:ok, channel} <- Channels.ensure_channel(channel) do
+         {:ok, channel} <- Channels.ensure_channel(channel),
+         {:error, :not_subscribed} <- check_channel_subscribed_to(state, channel) do
       state = Map.put(state, :channels, [channel | state.channels])
 
       :telemetry.execute([:gossip, :events, :channels, :subscribe], 1, %{channel: channel})

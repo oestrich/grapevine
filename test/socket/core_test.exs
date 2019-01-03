@@ -285,6 +285,20 @@ defmodule Socket.CoreTest do
       assert state.channels == ["general", "gossip"]
     end
 
+    test "subscribes only once", %{state: state} do
+      frame = %{
+        "event" => "channels/subscribe",
+        "payload" => %{
+          "channel" => "general",
+        }
+      }
+
+      {:ok, :skip, state} = Router.receive(state, frame)
+      {:ok, :skip, state} = Router.receive(state, frame)
+
+      assert state.channels == ["general", "gossip"]
+    end
+
     test "subscribe to a new channel - failure", %{state: state} do
       frame = %{
         "event" => "channels/subscribe",
