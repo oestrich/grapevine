@@ -9,13 +9,24 @@ defmodule Gossip.Statistics do
   alias Gossip.Statistics.PlayerStatistic
 
   @doc """
-  Record a game's player count at a specific time
+  Record a game's player count at a specific time on the socket
   """
-  def record_players(game, players, time) do
+  def record_socket_players(game, players, time) do
     :telemetry.execute([:gossip, :statistics, :players, :record], length(players), %{time: time})
 
     %PlayerStatistic{}
-    |> PlayerStatistic.changeset(game, players, time)
+    |> PlayerStatistic.socket_changeset(game, players, time)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Record a game's player count at a specific time on MSSP
+  """
+  def record_mssp_players(game, player_count, time) do
+    :telemetry.execute([:gossip, :statistics, :players, :record], player_count, %{time: time})
+
+    %PlayerStatistic{}
+    |> PlayerStatistic.mssp_changeset(game, player_count, time)
     |> Repo.insert()
   end
 

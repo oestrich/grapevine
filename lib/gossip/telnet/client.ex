@@ -30,12 +30,7 @@ defmodule Gossip.Telnet.Client do
     Process.send_after(self(), {:text_mssp_request}, 10_000)
     Process.send_after(self(), {:stop}, 20_000)
 
-    state = %{
-      host: Keyword.get(opts, :host),
-      port: Keyword.get(opts, :port),
-      channel: Keyword.get(opts, :channel, nil),
-      data: <<>>
-    }
+    state = generate_state(opts)
 
     :telemetry.execute([:gossip, :telnet, :mssp, :start], 1, state)
 
@@ -43,7 +38,8 @@ defmodule Gossip.Telnet.Client do
   end
 
   def handle_continue(:connect, state) do
-    {:ok, socket} = :gen_tcp.connect(String.to_charlist(state.host), state.port, [:binary, {:packet, 0}])
+    host = String.to_charlist(state.host)
+    {:ok, socket} = :gen_tcp.connect(host, state.port, [:binary, {:packet, 0}])
     :telemetry.execute([:gossip, :telnet, :mssp, :connected], 1, state)
     {:noreply, Map.put(state, :socket, socket)}
   end
@@ -90,33 +86,109 @@ defmodule Gossip.Telnet.Client do
         {:noreply, %{state | data: <<>>}}
 
       Options.mssp_data?(options) ->
-        {:mssp, data} = Options.get_mssp_data(options)
-        maybe_forward("mssp/received", data, state)
-        Telnet.record_mssp_response(state.host, state.port, data)
-        :telemetry.execute([:gossip, :telnet, :mssp, :option, :success], 1, state)
-
-        {:stop, :normal, state}
+        record_option_mssp(options, state, fn data ->
+          state.module.record_option(state, data)
+        end)
 
       Options.text_mssp?(state.data) ->
-        case Options.parse_mssp_text(state.data) do
-          :error ->
-            {:noreply, state}
-
-          data ->
-            maybe_forward("mssp/received", data, state)
-            Telnet.record_mssp_response(state.host, state.port, data)
-            :telemetry.execute([:gossip, :telnet, :mssp, :text, :success], 1, state)
-
-            {:stop, :normal, state}
-        end
+        record_text_mssp(state, fn data ->
+          state.module.record_text(state, data)
+        end)
 
       true ->
         {:noreply, state}
     end
   end
 
+  defmodule Record do
+    @moduledoc """
+    Record player counts from MSSP
+    """
+
+    alias Gossip.Statistics
+
+    def init(opts, state) do
+      connection = Keyword.get(opts, :connection)
+
+      state
+      |> Map.put(:module, Gossip.Telnet.Client.Record)
+      |> Map.put(:game, connection.game)
+      |> Map.put(:host, connection.host)
+      |> Map.put(:port, connection.port)
+    end
+
+    def record_option(state, data) do
+      players = String.to_integer(data["PLAYERS"])
+      Statistics.record_mssp_players(state.game, players, Timex.now())
+    end
+
+    def record_text(state, data) do
+      players = String.to_integer(data["PLAYERS"])
+      Statistics.record_mssp_players(state.game, players, Timex.now())
+    end
+  end
+
+  defmodule Check do
+    @moduledoc """
+    Check MSSP for a game
+    """
+
+    alias Gossip.Telnet
+
+    def init(opts, state) do
+      state
+      |> Map.put(:module, Gossip.Telnet.Client.Check)
+      |> Map.put(:host, Keyword.get(opts, :host))
+      |> Map.put(:port, Keyword.get(opts, :port))
+      |> Map.put(:channel, Keyword.get(opts, :channel))
+    end
+
+    def record_option(state, data) do
+      Telnet.record_mssp_response(state.host, state.port, data)
+    end
+
+    def record_text(state, data) do
+      Telnet.record_mssp_response(state.host, state.port, data)
+    end
+  end
+
+  defp generate_state(opts) do
+    state = %{data: <<>>}
+
+    case opts[:type] do
+      :check ->
+        Gossip.Telnet.Client.Check.init(opts, state)
+
+      :record ->
+        Gossip.Telnet.Client.Record.init(opts, state)
+    end
+  end
+
+  def record_option_mssp(options, state, fun) do
+    {:mssp, data} = Options.get_mssp_data(options)
+    maybe_forward("mssp/received", data, state)
+    fun.(data)
+    :telemetry.execute([:gossip, :telnet, :mssp, :option, :success], 1, state)
+
+    {:stop, :normal, state}
+  end
+
+  def record_text_mssp(state, fun) do
+    case Options.parse_mssp_text(state.data) do
+      :error ->
+        {:noreply, state}
+
+      data ->
+        maybe_forward("mssp/received", data, state)
+        fun.(data)
+        :telemetry.execute([:gossip, :telnet, :mssp, :text, :success], 1, state)
+
+        {:stop, :normal, state}
+    end
+  end
+
   defp maybe_forward(event, message, state) do
-    case state.channel do
+    case Map.get(state, :channel) do
       nil ->
         :ok
 

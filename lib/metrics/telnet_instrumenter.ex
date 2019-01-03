@@ -58,7 +58,7 @@ defmodule Metrics.TelnetInstrumenter do
   end
 
   def handle_event([:gossip, :telnet, :mssp, :option, :success], _count, state, _config) do
-    Logger.info("Received MSSP from #{state.host}:#{state.port} - port version", type: :mssp)
+    Logger.info("Received MSSP from #{state.host}:#{state.port} - option version", type: :mssp)
     Counter.inc(name: :gossip_telnet_mssp_option_success_count)
   end
 
