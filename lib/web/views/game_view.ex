@@ -1,6 +1,7 @@
 defmodule Web.GameView do
   use Web, :view
 
+  alias Gossip.Channels
   alias Gossip.UserAgents
   alias Web.ConnectionView
   alias Web.ReactView
@@ -117,6 +118,16 @@ defmodule Web.GameView do
 
       _ ->
         {:ok, user_agent}
+    end
+  end
+
+  def display_channel?(channel) do
+    case Channels.get(channel) do
+      {:ok, channel} ->
+        !channel.hidden
+
+      _ ->
+        false
     end
   end
 end

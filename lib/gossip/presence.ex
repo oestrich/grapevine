@@ -25,14 +25,9 @@ defmodule Gossip.Presence do
   @doc """
   Update a game and their players presence
   """
-  @spec update_game(Game.t(), supports(), players()) :: :ok
-  def update_game(game, supports, players) do
-    GenServer.call(__MODULE__, {:update, game, supports, players})
-  end
-
   @spec update_game(Socket.state()) :: :ok
   def update_game(state) do
-    GenServer.call(__MODULE__, {:update, state.game, state.supports, state.players})
+    GenServer.call(__MODULE__, {:update, state.game, state.supports, state.channels, state.players})
   end
 
   @spec track(Socket.state()) :: :ok
@@ -42,7 +37,7 @@ defmodule Gossip.Presence do
         :ok
 
       %Game{} ->
-        message = {:track, self(), state.game, state.supports, state.players}
+        message = {:track, self(), state.game, state.supports, state.channels, state.players}
         GenServer.call(__MODULE__, message)
     end
   end
@@ -74,15 +69,15 @@ defmodule Gossip.Presence do
     {:ok, initial_state()}
   end
 
-  def handle_call({:track, socket, game, supports, players}, _from, state) do
+  def handle_call({:track, socket, game, supports, channels, players}, _from, state) do
     Process.link(socket)
     {:ok, state} = Server.track(state, socket, game)
-    {:ok, state} = Server.update_game(state, game, supports, players)
+    {:ok, state} = Server.update_game(state, game, supports, channels, players)
     {:reply, :ok, state}
   end
 
-  def handle_call({:update, game, supports, players}, _from, state) do
-    {:ok, state} = Server.update_game(state, game, supports, players)
+  def handle_call({:update, game, supports, channels, players}, _from, state) do
+    {:ok, state} = Server.update_game(state, game, supports, channels, players)
     {:reply, :ok, state}
   end
 

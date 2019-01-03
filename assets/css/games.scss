@@ -21,3 +21,32 @@
     margin-right: 16px;
   }
 }
+
+.games {
+  .user-agent {
+    margin-bottom: 4px;
+  }
+}
+
+.players {
+  .player {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid $green;
+    border-radius: 4px;
+  }
+}
+
+.channels {
+  padding-bottom: 4px;
+
+  .channel-name {
+    font-size: 12px;
+    display: inline-block;
+    margin: 2px;
+    padding: 2px;
+    border: 2px solid $medium-grey;
+    border-radius: 4px;
+  }
+}

@@ -14,12 +14,23 @@
     <p>No games are online currently</p>
   <% end %>
 
-  <div class="card-columns">
-    <%= Enum.map(@games, fn %{game: game, players: players} -> %>
+  <div class="card-columns games">
+    <%= Enum.map(@games, fn %{game: game, channels: channels, players: players} -> %>
       <div class="card">
         <div class="card-body">
           <h4 class="card-title"><%= game.name %></h4>
-          <p class="card-text"><%= user_agent(game) %></p>
+          <p class="user-agent"><%= user_agent(game) %></p>
+
+          <%= unless Enum.empty?(channels) do %>
+            <div class="channels">
+              <%= Enum.map(channels, fn channel -> %>
+                <%= if display_channel?(channel) do %>
+                  <span class="channel-name" title="Subscribed Channel"><%= channel %></span>
+                <% end %>
+              <% end) %>
+            </div>
+          <% end %>
+
           <%= unless Enum.empty?(players) do %>
             <h5>Players (<%= Enum.count(players) %>)</h5>
             <div class="players">
@@ -28,6 +39,7 @@
               <% end) %>
             </div>
           <% end %>
+
           <%= if game.homepage_url do %>
             <%= link("Homepage", to: game.homepage_url, class: "card-link") %>
           <% end %>

@@ -15,7 +15,7 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(game, ["tells"], ["Player1"])
+      Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["Player1"]}))
       Web.Endpoint.subscribe("tells:#{game.short_name}")
 
       frame = %{
@@ -38,7 +38,7 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(game, ["tells"], ["Player1"])
+      Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["Player1"]}))
       Web.Endpoint.subscribe("tells:#{game.short_name}")
 
       frame = %{
@@ -61,7 +61,7 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(game, ["tells"], ["Player1"])
+      Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["Player1"]}))
       Web.Endpoint.subscribe("tells:#{game.short_name}")
 
       frame = %{
@@ -122,8 +122,8 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(state.game, ["tells"], [])
-      Presence.update_game(game, ["tells"], ["eric"])
+      Presence.update_game(presence_state(state.game, %{supports: ["tells"], players: []}))
+      Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["eric"]}))
 
       frame = %{
         "event" => "tells/send",
@@ -146,7 +146,7 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(game, ["tells"], ["Player1"])
+      Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["Player1"]}))
 
       frame = %{
         "event" => "tells/send",
@@ -169,7 +169,7 @@ defmodule Socket.TellsTest do
       state = %{state | supports: ["channels", "tells"]}
 
       game = create_game(user, %{name: "ExVenture 1", short_name: "EVOne"})
-      Presence.update_game(game, [], ["Player1"])
+      Presence.update_game(presence_state(game, %{supports: [], players: ["Player1"]}))
 
       frame = %{
         "event" => "tells/send",
@@ -276,7 +276,7 @@ defmodule Socket.TellsTest do
     game = create_game(user)
 
     Presence.reset()
-    Presence.update_game(game, ["tells"], ["Player"])
+    Presence.update_game(presence_state(game, %{supports: ["tells"], players: ["Player"]}))
 
     state = %State{
       status: "active",

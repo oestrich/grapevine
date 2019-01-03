@@ -62,6 +62,8 @@ defmodule Socket.Core do
          {:error, :not_subscribed} <- check_channel_subscribed_to(state, channel) do
       state = Map.put(state, :channels, [channel | state.channels])
 
+      Presence.update_game(state)
+
       :telemetry.execute([:gossip, :events, :channels, :subscribe], 1, %{channel: channel})
       Web.Endpoint.subscribe("channels:#{channel}")
 
@@ -86,6 +88,8 @@ defmodule Socket.Core do
     with {:ok, channel} <- Map.fetch(payload, "channel") do
       channels = List.delete(state.channels, channel)
       state = Map.put(state, :channels, channels)
+
+      Presence.update_game(state)
 
       :telemetry.execute([:gossip, :events, :channels, :unsubscribe], 1, %{channel: channel})
       Web.Endpoint.unsubscribe("channels:#{channel}")

@@ -33,8 +33,8 @@ defmodule Gossip.Presence.Server do
     {:ok, %{state | sockets: sockets}}
   end
 
-  def update_game(state, game, supports, players) do
-    :ets.insert(ets_key(), {ets_key(game), %{supports: supports, players: players, timestamp: Timex.now()}})
+  def update_game(state, game, supports, channels, players) do
+    :ets.insert(ets_key(), {ets_key(game), %{supports: supports, channels: channels, players: players, timestamp: Timex.now()}})
     {:ok, state}
   end
 
