@@ -45,6 +45,15 @@ defmodule Gossip.Telnet.ClientTest do
 
       assert values["NAME"] == "ExVenture MUD"
     end
+
+    test "multiple values" do
+      options = <<1>> <> "NAME" <> <<2>> <> "ExVenture" <> <<2>> <> "MUD"
+      options = String.to_charlist(options)
+
+      values = Client.Options.parse_mssp(options)
+
+      assert values["NAME"] == "ExVenture, MUD"
+    end
   end
 
   describe "parsing mssp text data" do

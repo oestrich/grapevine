@@ -356,6 +356,11 @@ defmodule Gossip.Telnet.Client do
     end
 
     def mssp([@mssp_val | data], current, stack) do
+      current =
+        current
+        |> Map.put(:type, :value)
+        |> Map.put(:value_start, true)
+
       mssp(data, Map.put(current, :type, :value), stack)
     end
 
@@ -365,10 +370,27 @@ defmodule Gossip.Telnet.Client do
           mssp(data, Map.put(current, :name, [byte | current.name]), stack)
 
         :value ->
-          mssp(data, Map.put(current, :value, [byte | current.value]), stack)
+          mssp(data, append_value(current, byte), stack)
 
         _ ->
           mssp(data, current, stack)
+      end
+    end
+
+    defp append_value(current, byte) do
+      case {current.value_start, current.value} do
+        {true, []} ->
+          current
+          |> Map.put(:value, [byte | current.value])
+          |> Map.put(:value_start, false)
+
+        {true, value} ->
+          current
+          |> Map.put(:value, [byte, " ", "," | value])
+          |> Map.put(:value_start, false)
+
+        {false, value} ->
+          Map.put(current, :value, [byte | value])
       end
     end
 
