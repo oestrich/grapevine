@@ -165,6 +165,28 @@ defmodule Gossip.GamesTest do
     end
   end
 
+  describe "marking a connection's mssp status" do
+    setup do
+      user = create_user()
+      %{user: user, game: create_game(user)}
+    end
+
+    test "with mssp", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} = Games.connection_has_mssp(connection)
+
+      assert connection.supports_mssp
+    end
+
+    test "without mssp", %{game: game} do
+      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} = Games.connection_has_mssp(connection)
+      {:ok, connection} = Games.connection_has_no_mssp(connection)
+
+      refute connection.supports_mssp
+    end
+  end
+
   describe "checking a redirect_uri matches a user" do
     setup do
       user = create_user()

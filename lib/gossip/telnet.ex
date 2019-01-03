@@ -4,7 +4,15 @@ defmodule Gossip.Telnet do
   """
 
   alias Gossip.Telnet.MSSPResponse
+  alias Gossip.Telnet.Worker
   alias Gossip.Repo
+
+  @doc """
+  Trigger a check for connection MSSP stats
+  """
+  def check_connection(connection) do
+    Worker.check_connection(connection)
+  end
 
   @doc """
   Record a successful response

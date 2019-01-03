@@ -8,6 +8,7 @@ defmodule Gossip.Games do
   alias Gossip.Games.Game
   alias Gossip.Games.RedirectURI
   alias Gossip.Repo
+  alias Gossip.Telnet
   alias Gossip.UserAgents
   alias Gossip.Versions
 
@@ -220,6 +221,7 @@ defmodule Gossip.Games do
   def telnet_connections() do
     Connection
     |> where([c], c.type == "telnet")
+    |> where([c], c.supports_mssp)
     |> preload([:game])
     |> Repo.all()
   end
@@ -259,10 +261,22 @@ defmodule Gossip.Games do
     case changeset |> Repo.insert() do
       {:ok, connection} ->
         broadcast_game_update(game.id)
+        maybe_check_mssp(connection)
         {:ok, connection}
 
       {:error, changeset} ->
         {:error, changeset}
+    end
+  end
+
+  defp maybe_check_mssp(connection) do
+    case connection.type do
+      "telnet" ->
+        connection = Repo.preload(connection, [:game])
+        Telnet.check_connection(connection)
+
+      _ ->
+        :ok
     end
   end
 
@@ -294,6 +308,24 @@ defmodule Gossip.Games do
       {:error, changeset} ->
         {:error, changeset}
     end
+  end
+
+  @doc """
+  Mark a connection as having mssp
+  """
+  def connection_has_mssp(connection) do
+    connection
+    |> Connection.mssp_changeset(true)
+    |> Repo.update()
+  end
+
+  @doc """
+  Mark a connection as not having mssp
+  """
+  def connection_has_no_mssp(connection) do
+    connection
+    |> Connection.mssp_changeset(false)
+    |> Repo.update()
   end
 
   @doc """

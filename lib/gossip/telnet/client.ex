@@ -69,6 +69,8 @@ defmodule Gossip.Telnet.Client do
     Telnet.record_no_mssp(state.host, state.port)
     :telemetry.execute([:gossip, :telnet, :mssp, :failed], 1, state)
 
+    state.module.record_fail(state)
+
     {:stop, :normal, state}
   end
 
@@ -105,6 +107,7 @@ defmodule Gossip.Telnet.Client do
     Record player counts from MSSP
     """
 
+    alias Gossip.Games
     alias Gossip.Statistics
 
     def init(opts, state) do
@@ -112,6 +115,7 @@ defmodule Gossip.Telnet.Client do
 
       state
       |> Map.put(:module, Gossip.Telnet.Client.Record)
+      |> Map.put(:connection, connection)
       |> Map.put(:game, connection.game)
       |> Map.put(:host, connection.host)
       |> Map.put(:port, connection.port)
@@ -119,12 +123,16 @@ defmodule Gossip.Telnet.Client do
 
     def record_option(state, data) do
       players = String.to_integer(data["PLAYERS"])
+      Games.connection_has_mssp(state.connection)
       Statistics.record_mssp_players(state.game, players, Timex.now())
     end
 
     def record_text(state, data) do
-      players = String.to_integer(data["PLAYERS"])
-      Statistics.record_mssp_players(state.game, players, Timex.now())
+      record_option(state, data)
+    end
+
+    def record_fail(state) do
+      Games.connection_has_no_mssp(state.connection)
     end
   end
 
@@ -149,6 +157,10 @@ defmodule Gossip.Telnet.Client do
 
     def record_text(state, data) do
       Telnet.record_mssp_response(state.host, state.port, data)
+    end
+
+    def record_fail(_state) do
+      :ok
     end
   end
 

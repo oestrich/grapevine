@@ -15,10 +15,19 @@ defmodule Gossip.Telnet.Worker do
     GenServer.start_link(__MODULE__, [], opts)
   end
 
+  def check_connection(connection, pid \\ __MODULE__) do
+    GenServer.cast(pid, {:check, connection})
+  end
+
   def init(_) do
     schedule_check(@initial_delay)
     Process.flag(:trap_exit, true)
     {:ok, %{}}
+  end
+
+  def handle_cast({:check, connection}, state) do
+    Client.start_link([type: :record, connection: connection])
+    {:noreply, state}
   end
 
   def handle_info({:record}, state) do

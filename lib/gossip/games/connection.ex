@@ -20,6 +20,8 @@ defmodule Gossip.Games.Connection do
     field(:host, :string)
     field(:port, :integer)
 
+    field(:supports_mssp, :boolean)
+
     belongs_to(:game, Game)
 
     timestamps()
@@ -37,6 +39,12 @@ defmodule Gossip.Games.Connection do
     struct
     |> cast(params, [:url, :host, :port])
     |> validate_by_type()
+  end
+
+  def mssp_changeset(struct, supports_mssp) do
+    struct
+    |> change()
+    |> put_change(:supports_mssp, supports_mssp)
   end
 
   defp validate_by_type(changeset) do
