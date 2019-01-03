@@ -17,6 +17,7 @@ defmodule Gossip.Telnet.Worker do
 
   def init(_) do
     schedule_check(@initial_delay)
+    Process.flag(:trap_exit, true)
     {:ok, %{}}
   end
 
@@ -28,6 +29,10 @@ defmodule Gossip.Telnet.Worker do
 
     schedule_check()
 
+    {:noreply, state}
+  end
+
+  def handle_info({:EXIT, _pid, _reason}, state) do
     {:noreply, state}
   end
 
