@@ -157,14 +157,14 @@ pre {
 
   &:not(:disabled):not(.disabled).active,
   &:not(:disabled):not(.disabled):active {
-    background-color: $dark-green;
-    border-color: $dark-green;
+    background-color: $light-green;
+    border-color: $light-green;
   }
 
   &:active,
   &:hover {
-    background-color: $dark-green;
-    border-color: $dark-green;
+    background-color: $light-green;
+    border-color: $light-green;
   }
 }
 
