@@ -1,23 +1,34 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Sign In</li>
+  </ol>
+</nav>
+
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <h3>Sign In</h3>
+    <section>
+      <nav>
+        <h3 class="name">Sign In</h3>
+      </nav>
 
-    <%= form_for @changeset, session_path(@conn, :create), [method: :post], fn (f) -> %>
-      <div class="form-group has-feedback">
-        <%= label f, :email, "Email" %>
-        <%= text_input f, :email, class: "form-control", placeholder: "Email", autofocus: "autofocus" %>
-        <%= error_tag f, :email %>
-      </div>
+      <%= form_for @changeset, session_path(@conn, :create), [method: :post], fn (f) -> %>
+        <div class="form-group has-feedback">
+          <%= label f, :email, "Email" %>
+          <%= text_input f, :email, class: "form-control", placeholder: "Email", autofocus: "autofocus" %>
+          <%= error_tag f, :email %>
+        </div>
 
-      <div class="form-group has-feedback mt-3">
-        <%= label f, :password %>
-        <%= text_input f, :password, type: "password", class: "form-control", placeholder: "Password" %>
-        <%= error_tag f, :password_hash %>
-      </div>
+        <div class="form-group has-feedback mt-3">
+          <%= label f, :password %>
+          <%= text_input f, :password, type: "password", class: "form-control", placeholder: "Password" %>
+          <%= error_tag f, :password_hash %>
+        </div>
 
-      <div class="actions">
-        <%= submit "Sign In", class: "btn btn-primary btn-block btn-flat" %>
-      </div>
-    <% end %>
+        <div class="actions">
+          <%= submit "Sign In", class: "btn btn-primary btn-flat" %>
+        </div>
+      <% end %>
+    </section>
   </div>
 </div>

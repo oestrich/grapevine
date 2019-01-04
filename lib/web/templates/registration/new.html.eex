@@ -1,31 +1,42 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Register</li>
+  </ol>
+</nav>
+
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <h3>Register an Account</h3>
+    <section>
+      <nav>
+        <h3 class="name">Register an Account</h3>
+      </nav>
 
-    <p class="lead">Create an account to register your game on the network.</p>
+      <p class="lead">Create an account to register your game on the network.</p>
 
-    <%= form_for @changeset, registration_path(@conn, :create), [method: :post], fn (f) -> %>
-      <div class="form-group has-feedback">
-        <%= label f, :email, "Email" %>
-        <%= text_input f, :email, class: "form-control", placeholder: "Email", autofocus: "autofocus" %>
-        <%= error_tag f, :email %>
-      </div>
+      <%= form_for @changeset, registration_path(@conn, :create), [method: :post], fn (f) -> %>
+        <div class="form-group has-feedback">
+          <%= label f, :email, "Email" %>
+          <%= text_input f, :email, class: "form-control", placeholder: "Email", autofocus: "autofocus" %>
+          <%= error_tag f, :email %>
+        </div>
 
-      <div class="form-group has-feedback mt-3">
-        <%= label f, :password %>
-        <%= text_input f, :password, type: "password", class: "form-control", placeholder: "Password" %>
-        <%= error_tag f, :password_hash %>
-      </div>
+        <div class="form-group has-feedback mt-3">
+          <%= label f, :password %>
+          <%= text_input f, :password, type: "password", class: "form-control", placeholder: "Password" %>
+          <%= error_tag f, :password_hash %>
+        </div>
 
-      <div class="form-group has-feedback">
-        <%= label f, :password_confirmation %>
-        <%= text_input f, :password_confirmation, type: "password", class: "form-control", placeholder: "Password Confirmation" %>
-        <%= error_tag f, :password_confirmation %>
-      </div>
+        <div class="form-group has-feedback">
+          <%= label f, :password_confirmation %>
+          <%= text_input f, :password_confirmation, type: "password", class: "form-control", placeholder: "Password Confirmation" %>
+          <%= error_tag f, :password_confirmation %>
+        </div>
 
-      <div class="actions">
-        <%= submit "Register", class: "btn btn-primary btn-block btn-flat" %>
-      </div>
-    <% end %>
+        <div class="actions">
+          <%= submit "Register", class: "btn btn-primary btn-flat" %>
+        </div>
+      <% end %>
+    </section>
   </div>
 </div>
