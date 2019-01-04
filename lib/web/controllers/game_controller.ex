@@ -73,11 +73,20 @@ defmodule Web.GameController do
   def update(conn, %{"id" => id, "game" => params}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, game} <- Games.get(user, id),
-         {:ok, game} <- Games.update(game, params) do
-      conn
-      |> put_flash(:info, "Game updated!")
-      |> redirect(to: game_path(conn, :show, game.id))
+    {:ok, game} = Games.get(user, id)
+
+    case Games.update(game, params) do
+      {:ok, game} ->
+        conn
+        |> put_flash(:info, "Game updated!")
+        |> redirect(to: game_path(conn, :show, game.id))
+
+      {:error, changeset} ->
+        conn
+        |> put_flash(:error, "There was a problem updating.")
+        |> assign(:game, game)
+        |> assign(:changeset, changeset)
+        |> render("edit.html")
     end
   end
 

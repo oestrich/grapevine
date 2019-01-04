@@ -45,6 +45,10 @@ defmodule Web.Router do
 
     get("/media", PageController, :media)
 
+    if Mix.env == :dev do
+      get("/colors", PageController, :colors)
+    end
+
     resources("/mssp", MSSPController, only: [:index])
 
     resources("/redirect-uris", RedirectURIController, only: [:delete])

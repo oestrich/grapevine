@@ -1,0 +1,73 @@
+<section style="background: white;">
+  <div class="colors">
+    <div class="color" style="background-color: hsla(120, 95%, 10%, 1)"></div>
+    <div class="color" style="background-color: hsla(120, 95%, 16%, 1)"></div>
+    <div class="color" style="background-color: hsla(118, 80%, 26%, 1)"></div>
+    <div class="color" style="background-color: hsla(116, 80%, 37%, 1)"></div>
+    <div class="color" style="background-color: hsla(112, 88%, 40%, 1)"></div>
+    <div class="color" style="background-color: hsla(107, 80%, 61%, 1)"></div>
+    <div class="color" style="background-color: hsla(102, 80%, 74%, 1)"></div>
+    <div class="color" style="background-color: hsla(97, 95%, 86%, 1)"></div>
+    <div class="color" style="background-color: hsla(92, 95%, 93%, 1)"></div>
+  </div>
+
+  <div class="colors">
+    <div class="color" style="background-color: hsla(212, 56%, 16%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 30%, 26%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 18%, 35%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 13%, 48%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 10%, 60%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 13%, 70%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 18%, 80%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 23%, 90%, 1)"></div>
+    <div class="color" style="background-color: hsla(212, 37%, 97%, 1)"></div>
+  </div>
+
+  <div class="colors">
+    <div class="color" style="background-color: hsla(260, 70%, 18%, 1)"></div>
+    <div class="color" style="background-color: hsla(263, 60%, 34%, 1)"></div>
+    <div class="color" style="background-color: hsla(268, 58%, 46%, 1)"></div>
+    <div class="color" style="background-color: hsla(270, 58%, 56%, 1)"></div>
+    <div class="color" style="background-color: hsla(272, 58%, 65%, 1)"></div>
+    <div class="color" style="background-color: hsla(276, 60%, 74%, 1)"></div>
+    <div class="color" style="background-color: hsla(280, 70%, 84%, 1)"></div>
+    <div class="color" style="background-color: hsla(282, 75%, 92%, 1)"></div>
+    <div class="color" style="background-color: hsla(284, 90%, 96%, 1)"></div>
+  </div>
+
+  <div class="colors">
+    <div class="color" style="background-color: hsla(31, 100%, 20%, 1)"></div>
+    <div class="color" style="background-color: hsla(38, 100%, 24%, 1)"></div>
+    <div class="color" style="background-color: hsla(42, 100%, 32%, 1)"></div>
+    <div class="color" style="background-color: hsla(44, 100%, 42%, 1)"></div>
+    <div class="color" style="background-color: hsla(48, 100%, 50%, 1)"></div>
+    <div class="color" style="background-color: hsla(52, 100%, 67%, 1)"></div>
+    <div class="color" style="background-color: hsla(55, 100%, 78%, 1)"></div>
+    <div class="color" style="background-color: hsla(57, 100%, 86%, 1)"></div>
+    <div class="color" style="background-color: hsla(58, 100%, 90%, 1)"></div>
+  </div>
+
+  <div class="colors">
+    <div class="color" style="background-color: hsla(0, 87%, 20%, 1)"></div>
+    <div class="color" style="background-color: hsla(1, 87%, 25%, 1)"></div>
+    <div class="color" style="background-color: hsla(1, 78%, 33%, 1)"></div>
+    <div class="color" style="background-color: hsla(2, 87%, 41%, 1)"></div>
+    <div class="color" style="background-color: hsla(3, 84%, 50%, 1)"></div>
+    <div class="color" style="background-color: hsla(10, 89%, 65%, 1)"></div>
+    <div class="color" style="background-color: hsla(11, 87%, 78%, 1)"></div>
+    <div class="color" style="background-color: hsla(12, 87%, 87%, 1)"></div>
+    <div class="color" style="background-color: hsla(14, 94%, 93%, 1)"></div>
+  </div>
+
+  <div class="colors">
+    <div class="color" style="background-color: hsla(230, 94%, 19%, 1)"></div>
+    <div class="color" style="background-color: hsla(225, 87%, 24%, 1)"></div>
+    <div class="color" style="background-color: hsla(223, 78%, 31%, 1)"></div>
+    <div class="color" style="background-color: hsla(221, 78%, 40%, 1)"></div>
+    <div class="color" style="background-color: hsla(220, 78%, 50%, 1)"></div>
+    <div class="color" style="background-color: hsla(218, 78%, 62%, 1)"></div>
+    <div class="color" style="background-color: hsla(217, 78%, 76%, 1)"></div>
+    <div class="color" style="background-color: hsla(217, 87%, 87%, 1)"></div>
+    <div class="color" style="background-color: hsla(210, 87%, 93%, 1)"></div>
+  </div>
+</section>

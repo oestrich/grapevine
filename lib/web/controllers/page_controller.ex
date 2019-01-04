@@ -23,4 +23,8 @@ defmodule Web.PageController do
   def media(conn, _params) do
     render(conn, "media.html")
   end
+
+  def colors(conn, _params) do
+    render(conn, "colors.html")
+  end
 end
