@@ -191,7 +191,10 @@ defmodule Gossip.Games do
     end
   end
 
-  defp record_metadata(game, user_agent_params) do
+  @doc """
+  Record metadata about a game, from the socket or MSSP
+  """
+  def record_metadata(game, user_agent_params) do
     changeset = game |> Game.metadata_changeset(user_agent_params)
 
     case changeset |> Repo.update() do

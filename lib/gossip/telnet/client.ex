@@ -124,6 +124,7 @@ defmodule Gossip.Telnet.Client do
     def record_option(state, data) do
       Games.seen_on_mssp(state.game)
       Games.connection_has_mssp(state.connection)
+      maybe_set_user_agent(state, data)
 
       players = String.to_integer(data["PLAYERS"])
       Statistics.record_mssp_players(state.game, players, Timex.now())
@@ -135,6 +136,16 @@ defmodule Gossip.Telnet.Client do
 
     def record_fail(state) do
       Games.connection_has_no_mssp(state.connection)
+    end
+
+    defp maybe_set_user_agent(state, data) do
+      case Map.get(data, "CODEBASE") do
+        nil ->
+          :ok
+
+        codebase ->
+          Games.record_metadata(state.game, %{user_agent: codebase})
+      end
     end
   end
 
