@@ -1,18 +1,24 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item active">Chat</li>
+    <li class="breadcrumb-item active">Channels</li>
   </ol>
 </nav>
 
-<div class="card-columns">
-  <%= Enum.map(Channels.all(), fn channel -> %>
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title"><%= channel.name %></h5>
-        <p class="card-text"><%= channel.description %></p>
-        <%= link("Open", to: chat_path(@conn, :show, channel.name), class: "btn btn-primary") %>
+<section>
+  <nav>
+    <h3 class="name">Channels</h3>
+  </nav>
+
+  <div class="card-columns">
+    <%= Enum.map(Channels.all(), fn channel -> %>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title"><%= channel.name %></h5>
+          <p class="card-text"><%= channel.description %></p>
+          <%= link("Open", to: chat_path(@conn, :show, channel.name), class: "btn btn-primary") %>
+        </div>
       </div>
-    </div>
-  <% end) %>
-</div>
+    <% end) %>
+  </div>
+</section>

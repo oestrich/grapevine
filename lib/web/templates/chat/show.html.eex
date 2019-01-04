@@ -1,15 +1,19 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item"><%= link("Chat", to: chat_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Channels", to: chat_path(@conn, :index)) %></li>
     <li class="breadcrumb-item active"><%= @channel.name %></li>
   </ol>
 </nav>
 
-<h2><%= @channel.name %></h2>
+<section>
+  <nav>
+    <h3 class="name"><%= @channel.name %></h3>
+  </nav>
 
-<div id="channel-<%= @channel.name %>" data-channel="<%= @channel.name %>" class="terminal channel">
-</div>
+  <div id="channel-<%= @channel.name %>" data-channel="<%= @channel.name %>" class="terminal channel">
+  </div>
+</section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(event) {
