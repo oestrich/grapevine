@@ -8,7 +8,7 @@
 </nav>
 
 <div class="row">
-  <div class="col-md-6 offset-md-3">
+  <div class="col-md-8 offset-md-2">
     <section>
       <h3>Edit <%= @game.name %></h3>
 

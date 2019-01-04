@@ -4,6 +4,7 @@ defmodule Web.GameView do
   alias Gossip.Channels
   alias Gossip.UserAgents
   alias Web.ConnectionView
+  alias Web.FormView
   alias Web.ReactView
   alias Web.RedirectURIView
 

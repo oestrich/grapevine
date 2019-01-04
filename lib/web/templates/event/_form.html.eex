@@ -1,27 +1,15 @@
 <%= form_for(@changeset, @url, fn f -> %>
-  <div class="form-group">
-    <%= label(f, :title) %>
-    <%= text_input(f, :title, class: "form-control") %>
-    <%= error_tag(f, :title) %>
-  </div>
+  <%= FormView.text_field(f, :title) %>
 
-  <div class="form-group">
-    <%= label(f, :description) %>
-    <%= textarea(f, :description, class: "form-control", rows: 5) %>
-    <%= error_tag(f, :description) %>
-  </div>
+  <%= FormView.textarea_field(f, :description, rows: 5) %>
 
-  <div class="form-group">
-    <%= label(f, :start_date) %>
-    <%= text_input(f, :start_date, class: "form-control") %>
-    <%= error_tag(f, :start_date) %>
-  </div>
+  <%= FormView.text_field(f, :start_date) %>
 
-  <div class="form-group">
-    <%= label(f, :end_date) %>
-    <%= text_input(f, :end_date, class: "form-control") %>
-    <%= error_tag(f, :end_date) %>
-  </div>
+  <%= FormView.text_field(f, :end_date) %>
 
-  <%= submit(@submit, class: "btn btn-primary") %>
+  <div class="row">
+    <div class="col-md-9 offset-md-3">
+      <%= submit(@submit, class: "btn btn-primary") %>
+    </div>
+  </div>
 <% end) %>
