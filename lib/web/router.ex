@@ -19,6 +19,8 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
+    resources("/achievements", AchievementController, only: [:edit, :update, :delete])
+
     resources("/chat", ChatController, only: [:index, :show])
 
     get("/conduct", PageController, :conduct)
@@ -32,6 +34,8 @@ defmodule Web.Router do
     resources("/games/mine", UserGameController, only: [:index])
 
     resources("/games", GameController, only: [:index, :show, :new, :create, :edit, :update]) do
+      resources("/achievements", AchievementController, only: [:index, :new, :create])
+
       resources("/connections", ConnectionController, only: [:create])
 
       resources("/events", EventController, only: [:index, :new, :create])
