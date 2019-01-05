@@ -1,0 +1,108 @@
+@import "colors";
+
+body {
+  color: $grey-04;
+}
+
+.text-muted {
+  color: $grey-01 !important;
+}
+
+.flex-equal > * {
+  -ms-flex: 1;
+  flex: 1;
+}
+@media (min-width: 768px) {
+  .flex-md-equal > * {
+    -ms-flex: 1;
+    flex: 1;
+  }
+}
+
+.btn-primary {
+  background-color: $green;
+  border-color: $green;
+
+  &:not(:disabled):not(.disabled):active:focus,
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:not(:disabled):not(.disabled).active,
+  &:not(:disabled):not(.disabled):active {
+    background-color: $green-01;
+    border-color: $green-01;
+  }
+
+  &:active,
+  &:hover {
+    background-color: $green-01;
+    border-color: $green-01;
+  }
+}
+
+.btn-secondary {
+  background-color: $grey-01;
+  border-color: $grey-01;
+
+  &:not(:disabled):not(.disabled):active:focus,
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:not(:disabled):not(.disabled).active,
+  &:not(:disabled):not(.disabled):active {
+    background-color: $grey;
+    border-color: $grey;
+  }
+
+  &:active,
+  &:hover {
+    background-color: $grey;
+    border-color: $grey;
+  }
+}
+
+.jumbotron {
+  background-color: $grey-4;
+}
+
+.card-dark {
+  background-color: $black;
+}
+
+.alert-primary {
+  color: $blue-03;
+  background: $blue-4;
+  border-color: $blue-4;
+}
+
+.alert-danger {
+  color: $red-04;
+  background-color: $red-4;
+  border-color: $red-4;
+}
+
+.breadcrumb {
+  background-color: $grey-3;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  color: $grey-02;
+}
+
+.breadcrumb-item.active {
+  color: $grey-02;
+}
+
+a {
+  color: $blue;
+}
+
+pre {
+  background-color: $grey-3;
+}
+
+code {
+  color: $red-01;
+}
