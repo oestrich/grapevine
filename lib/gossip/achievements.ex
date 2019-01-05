@@ -9,6 +9,8 @@ defmodule Gossip.Achievements do
   alias Gossip.Repo
   alias Gossip.Versions
 
+  @max_points 500
+
   @doc """
   New changeset for an achievement
   """
@@ -60,6 +62,16 @@ defmodule Gossip.Achievements do
   end
 
   @doc """
+  Get total points for a game
+  """
+  def total_points(game) do
+    Achievement
+    |> where([a], a.game_id == ^game.id)
+    |> select([a], fragment("coalesce(?, 0)", sum(a.points)))
+    |> Repo.one()
+  end
+
+  @doc """
   Get an achievement and preload it
   """
   def get(id) do
@@ -81,6 +93,18 @@ defmodule Gossip.Achievements do
       |> Ecto.build_assoc(:achievements)
       |> Achievement.changeset(params)
 
+    case total_points(game) < @max_points do
+      true ->
+        _create(game, changeset)
+
+      false ->
+        changeset
+        |> Ecto.Changeset.add_error(:points, "no points left")
+        |> Repo.insert()
+    end
+  end
+
+  defp _create(game, changeset) do
     case Repo.insert(changeset) do
       {:ok, achievement} ->
         :telemetry.execute([:gossip, :achievements, :create, :success], 1, %{game_id: game.id})

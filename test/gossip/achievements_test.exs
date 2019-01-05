@@ -23,6 +23,24 @@ defmodule Gossip.AchievementsTest do
 
       {:error, _changeset} = Achievements.create(game, %{})
     end
+
+    test "limited to 500 points total for a game" do
+      game = create_game(create_user())
+
+      Enum.each(1..5, fn _ ->
+        {:ok, _achievement} = Achievements.create(game, %{
+          title: "Achievement",
+          points: 100
+        })
+      end)
+
+      {:error, changeset} = Achievements.create(game, %{
+        title: "Achievement",
+        points: 10
+      })
+
+      assert changeset.errors[:points]
+    end
   end
 
   describe "updating an achievement" do
@@ -54,6 +72,27 @@ defmodule Gossip.AchievementsTest do
       })
 
       {:ok, _achievement} = Achievements.delete(achievement)
+    end
+  end
+
+  describe "total points for a game" do
+    test "sums up the total" do
+      game = create_game(create_user())
+
+      Enum.each(1..5, fn _ ->
+        {:ok, _achievement} = Achievements.create(game, %{
+          title: "Achievement",
+          points: 10
+        })
+      end)
+
+      assert Achievements.total_points(game) == 50
+    end
+
+    test "no achievements yet is 0" do
+      game = create_game(create_user())
+
+      assert Achievements.total_points(game) == 0
     end
   end
 end
