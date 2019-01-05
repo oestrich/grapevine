@@ -8,7 +8,7 @@ defmodule Gossip.Versions.Version do
   import Ecto.Changeset
 
   @actions ["create", "update", "delete"]
-  @schemas ["channels", "games", "events"]
+  @schemas ["achievements", "channels", "games", "events"]
 
   @type t :: %__MODULE__{}
 

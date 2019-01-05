@@ -1,0 +1,19 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item"><%= link("Achievements", to: game_achievement_path(@conn, :index, @game.id)) %></li>
+    <li class="breadcrumb-item active">New</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section>
+      <h3>Create a new Achievement</h3>
+
+      <%= render("_form.html", changeset: @changeset, url: game_achievement_path(@conn, :create, @game.id), submit: "Create Achievement") %>
+    </section>
+  </div>
+</div>

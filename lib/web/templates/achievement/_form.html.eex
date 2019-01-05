@@ -1,0 +1,32 @@
+<%= form_for(@changeset, @url, fn f -> %>
+  <%= FormView.text_field(f, :title) %>
+
+  <%= FormView.textarea_field(f, :description, rows: 5) %>
+
+  <%= FormView.number_field(f, :points) %>
+
+  <%= FormView.checkbox_field(f, :display, label: "Display achievement publicly?") do %>
+    <div class="help-block">
+      If checked, the achievement will be shown on the games page. If unchecked, the achievement
+      will be "blurred", still known but no data will be shown.
+    </div>
+  <% end %>
+
+  <%= FormView.checkbox_field(f, :partial_progress, label: "Partial Progress?") do %>
+    <div class="help-block">
+      Partial progress allows for displaying achievement progress without unlocking the achievement.
+    </div>
+  <% end %>
+
+  <%= FormView.number_field(f, :total_progress, label: "Total Progress") do %>
+    <div class="help-block">
+      If a partial progress achievement, this is the total number of progress points.
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-9 offset-md-3">
+      <%= submit(@submit, class: "btn btn-primary") %>
+    </div>
+  </div>
+<% end) %>

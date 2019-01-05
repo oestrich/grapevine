@@ -5,6 +5,7 @@ defmodule Gossip.Versions do
 
   import Ecto.Query
 
+  alias Gossip.Achievements.Achievement
   alias Gossip.Channels.Channel
   alias Gossip.Events.Event
   alias Gossip.Games.Game
@@ -47,9 +48,14 @@ defmodule Gossip.Versions do
     |> Repo.all()
   end
 
+  defp schema_for(%Achievement{}), do: "achievements"
   defp schema_for(%Channel{}), do: "channels"
   defp schema_for(%Event{}), do: "events"
   defp schema_for(%Game{}), do: "games"
+
+  defp payload_for(achievement = %Achievement{}) do
+    Map.take(achievement, Achievement.__schema__(:fields))
+  end
 
   defp payload_for(channel = %Channel{}) do
     Map.take(channel, Channel.__schema__(:fields))
