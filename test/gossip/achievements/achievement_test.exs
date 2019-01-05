@@ -11,5 +11,21 @@ defmodule Gossip.Achievements.AchievementTest do
       changeset = %Achievement{} |> Achievement.changeset(%{partial_progress: true})
       assert changeset.errors[:total_progress]
     end
+
+    test "points must be < 100" do
+      changeset = %Achievement{} |> Achievement.changeset(%{points: 10})
+      refute changeset.errors[:points]
+
+      changeset = %Achievement{} |> Achievement.changeset(%{points: 101})
+      assert changeset.errors[:points]
+    end
+
+    test "points must be > 0" do
+      changeset = %Achievement{} |> Achievement.changeset(%{points: 10})
+      refute changeset.errors[:points]
+
+      changeset = %Achievement{} |> Achievement.changeset(%{points: -1})
+      assert changeset.errors[:points]
+    end
   end
 end

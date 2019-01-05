@@ -28,6 +28,7 @@ defmodule Gossip.Achievements.Achievement do
     struct
     |> cast(params, [:title, :description, :display, :points, :partial_progress, :total_progress])
     |> validate_required([:title, :display, :points, :partial_progress])
+    |> validate_inclusion(:points, 0..100)
     |> validate_total_progress()
     |> foreign_key_constraint(:game_id)
   end
