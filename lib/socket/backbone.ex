@@ -35,6 +35,21 @@ defmodule Socket.Backbone do
   @doc """
   Process a system backbone message
   """
+  def process_event(state, %{event: "achievements/new", payload: version}) do
+    broadcast_achievements([version])
+    {:ok, state}
+  end
+
+  def process_event(state, %{event: "achievements/edit", payload: version}) do
+    broadcast_achievements([version])
+    {:ok, state}
+  end
+
+  def process_event(state, %{event: "achievements/delete", payload: version}) do
+    broadcast_achievements([version])
+    {:ok, state}
+  end
+
   def process_event(state, %{event: "channels/new", payload: version}) do
     Web.Endpoint.subscribe("channels:#{version.payload.name}")
     broadcast_channels([version])
@@ -76,6 +91,7 @@ defmodule Socket.Backbone do
     sync_channels(since)
     sync_games(since)
     sync_events(since)
+    sync_achievements(since)
     {:ok, state}
   end
 
@@ -164,6 +180,23 @@ defmodule Socket.Backbone do
     |> relay()
   end
 
+  @doc """
+  Send batches of `sync/achievements` events to newly connected sockets
+  """
+  def sync_achievements(since \\ nil) do
+    "achievements"
+    |> Versions.for(since)
+    |> Enum.chunk_every(10)
+    |> Enum.each(&broadcast_achievements/1)
+  end
+
+  defp broadcast_achievements(versions) do
+    token()
+    |> assign(:versions, versions)
+    |> event("sync/achievements")
+    |> relay()
+  end
+
   defmodule View do
     @moduledoc """
     "View" module for backbone events
@@ -180,6 +213,10 @@ defmodule Socket.Backbone do
         ref: UUID.uuid4(),
         payload: payload,
       }
+    end
+
+    def event("sync/achievements", %{versions: versions}) do
+      event("versions", %{event: "sync/achievements", versions: versions})
     end
 
     def event("sync/channels", %{versions: versions}) do
