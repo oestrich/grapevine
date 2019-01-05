@@ -34,7 +34,7 @@ defmodule Gossip.Achievements do
   def for(game) do
     Achievement
     |> where([a], a.game_id == ^game.id)
-    |> order_by([a], desc: a.title)
+    |> order_by([a], asc: a.title)
     |> Repo.all()
   end
 
