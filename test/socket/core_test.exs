@@ -325,6 +325,30 @@ defmodule Socket.CoreTest do
       assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.channels == []
     end
+
+    test "unsubscribe to a channel you are not subscribed to", %{state: state} do
+      frame = %{
+        "event" => "channels/unsubscribe",
+        "payload" => %{
+          "channel" => "unknown",
+        },
+      }
+
+      assert {:ok, :skip, state} = Router.receive(state, frame)
+      assert state.channels == ["gossip"]
+    end
+
+    test "unsubscribe to a channel, null channel", %{state: state} do
+      frame = %{
+        "event" => "channels/unsubscribe",
+        "payload" => %{
+          "channel" => nil,
+        },
+      }
+
+      assert {:ok, :skip, state} = Router.receive(state, frame)
+      assert state.channels == ["gossip"]
+    end
   end
 
   describe "available supports" do

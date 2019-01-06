@@ -85,7 +85,8 @@ defmodule Socket.Core do
   Event: "channels/unsubscribe"
   """
   def channel_unsubscribe(state, %{"payload" => payload}) do
-    with {:ok, channel} <- Map.fetch(payload, "channel") do
+    with {:ok, channel} <- Map.fetch(payload, "channel"),
+         {:ok, channel} <- check_channel_subscribed_to(state, channel) do
       channels = List.delete(state.channels, channel)
       state = Map.put(state, :channels, channels)
 
