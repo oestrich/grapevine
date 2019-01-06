@@ -15,7 +15,7 @@ defmodule Socket.AchievementsTest do
         "ref" => UUID.uuid4()
       }
 
-      :skip = Achievements.sync(state, frame)
+      {:ok, :skip, _state} = Achievements.sync(state, frame)
 
       assert_receive {:broadcast, %{"event" => "achievements/sync"}}, 50
     end
@@ -29,7 +29,7 @@ defmodule Socket.AchievementsTest do
         "ref" => UUID.uuid4()
       }
 
-      :skip = Achievements.sync(state, frame)
+      {:ok, :skip, _state} = Achievements.sync(state, frame)
 
       assert_receive {:broadcast, %{"event" => "achievements/sync"}}, 50
     end

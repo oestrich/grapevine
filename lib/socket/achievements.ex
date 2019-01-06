@@ -146,6 +146,12 @@ defmodule Socket.Achievements do
   end
 
   defmodule View do
+    @moduledoc """
+    "View" module for achievements
+
+    Helps contain what each event looks look as a response
+    """
+
     alias Web.ErrorHelpers
 
     def event("delete", %{ref: ref, achievement: achievement}) do
