@@ -832,7 +832,7 @@ This is a TLS secured telnet connection.
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
 
-<%= DocView.flag_header("games", "Game Events") %>
+<%= DocView.flag_header("achievements", "Achievement Events") %>
 
 <p><b>Since 2.3.0</b></p>
 
