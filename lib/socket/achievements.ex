@@ -42,7 +42,7 @@ defmodule Socket.Achievements do
           |> assign(:ref, ref)
           |> assign(:event, "achievements/create")
           |> assign(:achievement, achievement)
-          |> event("show")
+          |> event("update")
 
         {:ok, response.payload, state}
 
@@ -74,7 +74,7 @@ defmodule Socket.Achievements do
           |> assign(:ref, ref)
           |> assign(:event, "achievements/update")
           |> assign(:achievement, achievement)
-          |> event("show")
+          |> event("update")
 
         {:ok, response.payload, state}
     else
@@ -152,6 +152,7 @@ defmodule Socket.Achievements do
       %{
         "event" => "achievements/delete",
         "ref" => ref,
+        "status" => "success",
         "payload" => %{
           "key" => achievement.key
         }
@@ -164,6 +165,7 @@ defmodule Socket.Achievements do
       %{
         "event" => event,
         "ref" => ref,
+        "status" => "failure",
         "payload" => %{
           "errors" => errors
         }
@@ -174,17 +176,10 @@ defmodule Socket.Achievements do
       %{
         "event" => event,
         "ref" => ref,
+        "status" => "failure",
         "payload" => %{
           "errors" => %{"key" => ["not found"]}
         }
-      }
-    end
-
-    def event("show", %{ref: ref, event: event, achievement: achievement}) do
-      %{
-        "event" => event,
-        "ref" => ref,
-        "payload" => payload("show", %{achievement: achievement})
       }
     end
 
@@ -198,6 +193,15 @@ defmodule Socket.Achievements do
             payload("show", %{achievement: achievement})
           end)
         }
+      }
+    end
+
+    def event("update", %{ref: ref, event: event, achievement: achievement}) do
+      %{
+        "event" => event,
+        "ref" => ref,
+        "status" => "success",
+        "payload" => payload("show", %{achievement: achievement})
       }
     end
 
