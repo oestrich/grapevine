@@ -12,6 +12,7 @@ defmodule Gossip.Achievements.Achievement do
   @type t :: %__MODULE__{}
 
   schema "achievements" do
+    field(:key, Ecto.UUID, read_after_writes: true)
     field(:title, :string)
     field(:description, :string)
     field(:display, :boolean, default: true)

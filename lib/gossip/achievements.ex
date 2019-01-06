@@ -62,6 +62,19 @@ defmodule Gossip.Achievements do
   end
 
   @doc """
+  Get by the key
+  """
+  def get_by_key(game, key) do
+    case Repo.get_by(Achievement, game_id: game.id, key: key) do
+      nil ->
+        {:error, :not_found}
+
+      achievement ->
+        {:ok, achievement}
+    end
+  end
+
+  @doc """
   Get total points for a game
   """
   def total_points(game) do

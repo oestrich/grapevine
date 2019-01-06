@@ -38,6 +38,13 @@ defmodule Web.Socket.Router do
     module(Games, "games") do
       event("games/status", :request_status)
     end
+
+    module(Achievements, "achievements") do
+      event("achievements/sync", :sync)
+      event("achievements/create", :create)
+      event("achievements/update", :update)
+      event("achievements/delete", :delete)
+    end
   end
 
   def receive(state = %{status: "inactive"}, event = %{"event" => "authenticate"}) do
