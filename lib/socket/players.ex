@@ -71,7 +71,7 @@ defmodule Socket.Players do
   Receive a new player sign out, broadcast it
   """
   def player_sign_out(state, %{"payload" => %{"name" => name}}) do
-    :telemetry.execute([:gossip, :events, :players, :sign_], 1, %{name: name})
+    :telemetry.execute([:gossip, :events, :players, :sign_out], 1, %{name: name})
 
     case name in state.players do
       true ->

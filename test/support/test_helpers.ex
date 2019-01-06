@@ -1,5 +1,6 @@
 defmodule Gossip.TestHelpers do
   alias Gossip.Accounts
+  alias Gossip.Achievements
   alias Gossip.Applications
   alias Gossip.Channels
   alias Gossip.Games
@@ -62,5 +63,16 @@ defmodule Gossip.TestHelpers do
       channels: [],
       players: []
     }, state)
+  end
+
+  def create_achievement(game, attributes \\ %{}) do
+    attributes = Map.merge(%{
+      "title" => "Adventuring",
+      "description" => "You made it to level 2!",
+      "points" => 10
+    }, attributes)
+
+    {:ok, achievement} = Achievements.create(game, attributes)
+    achievement
   end
 end

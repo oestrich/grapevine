@@ -155,4 +155,3 @@ defmodule Socket.Core.Authenticate do
     |> Enum.each(&Core.subscribe_channel/1)
   end
 end
-

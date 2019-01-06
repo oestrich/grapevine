@@ -15,7 +15,7 @@ defmodule Socket.Core do
   alias Gossip.Text
   alias Socket.Core.Authenticate
 
-  @valid_supports ["channels", "players", "tells", "games"]
+  @valid_supports ["achievements", "channels", "games", "players", "tells"]
 
   @doc """
   Authenticate event

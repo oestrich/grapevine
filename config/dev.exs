@@ -52,7 +52,8 @@ config :phoenix, :stacktrace_depth, 20
 config :gossip, Gossip.Repo,
   database: "gossip_dev",
   hostname: "localhost",
-  pool_size: 10
+  pool_size: 10,
+  log: false
 
 config :phoenix, :plug_init_mode, :runtime
 

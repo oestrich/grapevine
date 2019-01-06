@@ -58,6 +58,15 @@
           </ul>
         </li>
         <li>
+          <%= link("Achievement Events", to: "#achievements") %>
+          <ul>
+            <li><%= link("achievements/sync", to: "#achievements-sync") %></li>
+            <li><%= link("achievements/create", to: "#achievements-create") %></li>
+            <li><%= link("achievements/update", to: "#achievements-update") %></li>
+            <li><%= link("achievements/delete", to: "#achievements-delete") %></li>
+          </ul>
+        </li>
+        <li>
           <%= link("Grapevine Login", to: "#grapevine-login") %>
           <ul>
             <li><%= link("Redirect URIs", to: "#redirect-uris") %></li>
@@ -822,6 +831,205 @@ This is a TLS secured telnet connection.
 }</pre>
 
 <p>You will only receive an update for that game. It will look the same as above.</p>
+
+<%= DocView.flag_header("games", "Game Events") %>
+
+<p><b>Since 2.3.0</b></p>
+
+<p>These events are related to the <code>achievements</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
+
+<hr />
+
+<%= DocView.event_header("achievements/sync") %>
+
+<p><b>Since 2.3.0</b></p>
+
+<p>You can request a series of events that send all of the achievements that the connecting game has.</p>
+
+<pre>{
+  "event": "achievements/sync",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90"
+}</pre>
+
+<ul>
+  <li><code>ref</code> is required.</li>
+</ul>
+
+<p>The events you will get will look similar to this. You will receive an set of events that each contain at most 10 achievements. Each event will contain the total number of achievements for the ref. This way you can know when the full list has been sent.</p>
+
+<pre>{
+  "event": "achievements/sync",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "payload": {
+    "total": 15,
+    "achievements": [
+      {
+        "key": "ea7fb436-a99e-4e78-ad10-46acc6fb6912",
+        "title": "Level Up!",
+        "description": "You leveled up to level 10!",
+        "points": 10,
+        "display": true,
+        "partial_progress": false,
+        "total_progress": null,
+      }
+    ]
+  }
+}</pre>
+
+<ul>
+  <li><code>total</code> is the total number of achievements.</li>
+  <li><code>achievements</code> is an array of achievements. See below for their properties.</li>
+</ul>
+
+<p>The achievement attributes match the same attributes you would enter in from the Gossip website itself.</p>
+
+<ul>
+  <li><code>key</code> is an ID you will use in other events, read only.</li>
+  <li><code>title</code> is a string.</li>
+  <li><code>description</code> is a string.</li>
+  <li><code>points</code> is an integer.</li>
+  <li><code>display</code> is a boolean, if false the achievement will be "blurred" out on Grapevine until unlocked.</li>
+  <li><code>partial_progress</code> is a boolean, if true total_progress must be provided.</li>
+  <li><code>total_progress</code> is an integer.</li>
+</ul>
+
+<hr />
+
+<%= DocView.event_header("achievements/create") %>
+
+<p><b>Since 2.3.0</b></p>
+
+<p>You can create new achievements with this event.</p>
+
+<pre>{
+  "event": "achievements/create",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90"
+  "payload": {
+    "title": "Level Up!",
+    "points": 10
+  }
+}</pre>
+
+<ul>
+  <li><code>ref</code> is required.</li>
+</ul>
+
+<p>The payload should contain all of the attributes of an achievement that you wish to set. See achievement attributes above for more explanation.</p>
+
+<p>You will receive a response with the <code>key</code> and full attributes of the achievement.</p>
+
+<pre>{
+  "event": "achievements/create",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "status": "success",
+  "payload": {
+    "key": "ea7fb436-a99e-4e78-ad10-46acc6fb6912",
+    "title": "Level Up!",
+    "description": "You leveled up to level 10!",
+    "points": 10,
+    "display": true,
+    "partial_progress": false,
+    "total_progress": null,
+  }
+}</pre>
+
+<p>You may receive an errors response, if there are errors.</p>
+
+<pre>{
+  "event": "achievements/update",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "status": "failure",
+  "payload": {
+    "errors": {
+      "title": ["can't be blank"]
+    }
+  }
+}</pre>
+
+<hr />
+
+<%= DocView.event_header("achievements/update") %>
+
+<p><b>Since 2.3.0</b></p>
+
+<p>You can update achievements with this event.</p>
+
+<pre>{
+  "event": "achievements/create",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90"
+  "payload": {
+    "key": "ea7fb436-a99e-4e78-ad10-46acc6fb6912",
+    "title": "Leveled Up!",
+    "points": 15
+  }
+}</pre>
+
+<ul>
+  <li><code>ref</code> is required.</li>
+</ul>
+
+<p>The payload should contain all of the attributes of an achievement that you wish to update. See achievement attributes above for more explanation.</p>
+
+<p>You will receive a response with the <code>key</code> and full attributes of the achievement.</p>
+
+<pre>{
+  "event": "achievements/update",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "status": "success",
+  "payload": {
+    "key": "ea7fb436-a99e-4e78-ad10-46acc6fb6912",
+    "title": "Leveled Up!",
+    "description": "You leveled up to level 10!",
+    "points": 15,
+    "display": true,
+    "partial_progress": false,
+    "total_progress": null,
+  }
+}</pre>
+
+<p>You may receive an errors response, if there are errors.</p>
+
+<pre>{
+  "event": "achievements/update",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "status": "failure",
+  "payload": {
+    "errors": {
+      "title": ["can't be blank"]
+    }
+  }
+}</pre>
+
+<hr />
+
+<%= DocView.event_header("achievements/delete") %>
+
+<p><b>Since 2.3.0</b></p>
+
+<p>You can delete achievements with this event.</p>
+
+<pre>{
+  "event": "achievements/key",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90"
+  "payload": {
+    "key": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  }
+}</pre>
+
+<ul>
+  <li><code>ref</code> is required.</li>
+</ul>
+
+<p>You will receive a response with the <code>key</code>.</p>
+
+<pre>{
+  "event": "achievements/delete",
+  "ref": "1dfae6f6-c0a8-4da5-a1e3-3ba656880d90",
+  "status": "success",
+  "payload": {
+    "key": "ea7fb436-a99e-4e78-ad10-46acc6fb6912"
+  }
+}</pre>
 
 <h3 id="grapevine-login">
   <%= link(to: "#grapevine-login") do %>
