@@ -24,7 +24,7 @@ defmodule Socket.Achievements do
         |> Enum.each(&broadcast_achievements(ref, &1, total))
     end
 
-    :skip
+    {:ok, :skip, state}
   end
 
   def sync(_state, _frame), do: :error
