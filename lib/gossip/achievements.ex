@@ -12,6 +12,18 @@ defmodule Gossip.Achievements do
   @max_points 500
 
   @doc """
+  Re-sync all achievements
+
+  NOTE: This must be run in the same node as the socket connections
+  """
+  def resync() do
+    Achievement
+    |> select([a], a.id)
+    |> Repo.all()
+    |> Enum.map(&broadcast_achievement_update/1)
+  end
+
+  @doc """
   New changeset for an achievement
   """
   def new(game) do
