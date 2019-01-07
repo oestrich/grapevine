@@ -46,9 +46,13 @@ defmodule Metrics.TelnetInstrumenter do
   end
 
   def handle_event([:gossip, :telnet, :mssp, :failed], _count, state, _config) do
-    Logger.debug(fn ->
-      "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
-    end, type: :mssp)
+    Logger.debug(
+      fn ->
+        "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
+      end,
+      type: :mssp
+    )
+
     Counter.inc(name: :gossip_telnet_mssp_failed_count)
   end
 

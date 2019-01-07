@@ -8,10 +8,11 @@ defmodule Gossip.GamesTest do
     test "successful" do
       user = create_user()
 
-      {:ok, game} = Games.register(user, %{
-        name: "A MUD",
-        short_name: "AM",
-      })
+      {:ok, game} =
+        Games.register(user, %{
+          name: "A MUD",
+          short_name: "AM"
+        })
 
       assert game.name == "A MUD"
       assert game.client_id
@@ -37,17 +38,27 @@ defmodule Gossip.GamesTest do
     end
 
     test "saves the user agent if available", %{game: game} do
-      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"user_agent" => "ExVenture 0.23.0"})
+      assert {:ok, game} =
+               Games.validate_socket(game.client_id, game.client_secret, %{
+                 "user_agent" => "ExVenture 0.23.0"
+               })
+
       assert game.user_agent == "ExVenture 0.23.0"
     end
 
     test "registers the user agent locally", %{game: game} do
-      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"user_agent" => "ExVenture 0.23.0"})
+      assert {:ok, game} =
+               Games.validate_socket(game.client_id, game.client_secret, %{
+                 "user_agent" => "ExVenture 0.23.0"
+               })
+
       assert {:ok, _user_agent} = UserAgents.get_user_agent(game.user_agent)
     end
 
     test "saves the version if available", %{game: game} do
-      assert {:ok, game} = Games.validate_socket(game.client_id, game.client_secret, %{"version" => "1.1.0"})
+      assert {:ok, game} =
+               Games.validate_socket(game.client_id, game.client_secret, %{"version" => "1.1.0"})
+
       assert game.version == "1.1.0"
     end
 
@@ -78,13 +89,15 @@ defmodule Gossip.GamesTest do
     end
 
     test "is owned", %{user: user, game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
       assert Games.user_owns_connection?(user, connection)
     end
 
     test "is not owned", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
       user = create_user(%{email: "other@example.com"})
       refute Games.user_owns_connection?(user, connection)
@@ -98,7 +111,8 @@ defmodule Gossip.GamesTest do
     end
 
     test "web", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
       assert connection.game_id == game.id
       assert connection.type == "web"
@@ -106,7 +120,8 @@ defmodule Gossip.GamesTest do
     end
 
     test "telnet", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
 
       assert connection.game_id == game.id
       assert connection.type == "telnet"
@@ -115,7 +130,8 @@ defmodule Gossip.GamesTest do
     end
 
     test "secure telnet", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
 
       assert connection.game_id == game.id
       assert connection.type == "secure telnet"
@@ -131,21 +147,27 @@ defmodule Gossip.GamesTest do
     end
 
     test "web", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
       {:ok, connection} = Games.update_connection(connection, %{url: "http://example.com/"})
 
       assert connection.url == "http://example.com/"
     end
 
     test "telnet", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+
       {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
 
       assert connection.host == "game.example.com"
     end
 
     test "secure telnet", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+
       {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
 
       assert connection.host == "game.example.com"
@@ -159,7 +181,8 @@ defmodule Gossip.GamesTest do
     end
 
     test "deletes it", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
       {:ok, _connection} = Games.delete_connection(connection)
     end
@@ -172,14 +195,18 @@ defmodule Gossip.GamesTest do
     end
 
     test "with mssp", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
       {:ok, connection} = Games.connection_has_mssp(connection)
 
       assert connection.supports_mssp
     end
 
     test "without mssp", %{game: game} do
-      {:ok, connection} = Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
       {:ok, connection} = Games.connection_has_mssp(connection)
       {:ok, connection} = Games.connection_has_no_mssp(connection)
 

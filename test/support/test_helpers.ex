@@ -6,10 +6,14 @@ defmodule Gossip.TestHelpers do
   alias Gossip.Games
 
   def create_channel(attributes \\ %{}) do
-    attributes = Map.merge(%{
-      name: "gossip",
-      desription: "A channel",
-    }, attributes)
+    attributes =
+      Map.merge(
+        %{
+          name: "gossip",
+          desription: "A channel"
+        },
+        attributes
+      )
 
     {:ok, channel} = Channels.create(attributes)
 
@@ -17,11 +21,15 @@ defmodule Gossip.TestHelpers do
   end
 
   def create_user(attributes \\ %{}) do
-    attributes = Map.merge(%{
-      email: "admin@example.com",
-      password: "password",
-      password_confirmation: "password",
-    }, attributes)
+    attributes =
+      Map.merge(
+        %{
+          email: "admin@example.com",
+          password: "password",
+          password_confirmation: "password"
+        },
+        attributes
+      )
 
     {:ok, game} = Accounts.register(attributes)
 
@@ -39,17 +47,24 @@ defmodule Gossip.TestHelpers do
   end
 
   def game_attributes(attributes) do
-    Map.merge(%{
-      name: "A MUD",
-      short_name: "AM",
-    }, attributes)
+    Map.merge(
+      %{
+        name: "A MUD",
+        short_name: "AM"
+      },
+      attributes
+    )
   end
 
   def create_application(attributes \\ %{}) do
-    attributes = Map.merge(%{
-      name: "Grapevine",
-      short_name: "Grapevine",
-    }, attributes)
+    attributes =
+      Map.merge(
+        %{
+          name: "Grapevine",
+          short_name: "Grapevine"
+        },
+        attributes
+      )
 
     {:ok, application} = Applications.create(attributes)
 
@@ -57,20 +72,27 @@ defmodule Gossip.TestHelpers do
   end
 
   def presence_state(game, state) do
-    Map.merge(%{
-      game: game,
-      supports: [],
-      channels: [],
-      players: []
-    }, state)
+    Map.merge(
+      %{
+        game: game,
+        supports: [],
+        channels: [],
+        players: []
+      },
+      state
+    )
   end
 
   def create_achievement(game, attributes \\ %{}) do
-    attributes = Map.merge(%{
-      "title" => "Adventuring",
-      "description" => "You made it to level 2!",
-      "points" => 10
-    }, attributes)
+    attributes =
+      Map.merge(
+        %{
+          "title" => "Adventuring",
+          "description" => "You made it to level 2!",
+          "points" => 10
+        },
+        attributes
+      )
 
     {:ok, achievement} = Achievements.create(game, attributes)
     achievement

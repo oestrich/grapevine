@@ -124,6 +124,7 @@ defmodule Socket.Backbone do
 
   defp subscribe_to_all() do
     channels = Channels.all(include_hidden: true)
+
     Enum.each(channels, fn channel ->
       Web.Endpoint.subscribe("channels:#{channel.name}")
     end)
@@ -211,7 +212,7 @@ defmodule Socket.Backbone do
       %{
         event: event,
         ref: UUID.uuid4(),
-        payload: payload,
+        payload: payload
       }
     end
 

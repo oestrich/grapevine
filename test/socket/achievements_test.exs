@@ -59,7 +59,7 @@ defmodule Socket.AchievementsTest do
           "title" => "Adventuring",
           "description" => "You made it to level 2!",
           "points" => 10
-        },
+        }
       }
 
       {:ok, response, _state} = Achievements.create(state, frame)
@@ -100,17 +100,18 @@ defmodule Socket.AchievementsTest do
       game = create_game(create_user())
       state = %State{game: game}
 
-      achievement = create_achievement(game, %{
-        "name" => "Title"
-      })
+      achievement =
+        create_achievement(game, %{
+          "name" => "Title"
+        })
 
       frame = %{
         "event" => "achievements/update",
         "ref" => UUID.uuid4(),
         "payload" => %{
           "key" => achievement.key,
-          "title" => "Updated",
-        },
+          "title" => "Updated"
+        }
       }
 
       {:ok, response, _state} = Achievements.update(state, frame)
@@ -129,8 +130,8 @@ defmodule Socket.AchievementsTest do
         "ref" => UUID.uuid4(),
         "payload" => %{
           "key" => achievement.key,
-          "title" => nil,
-        },
+          "title" => nil
+        }
       }
 
       {:ok, response, _state} = Achievements.update(state, frame)
@@ -171,16 +172,17 @@ defmodule Socket.AchievementsTest do
       game = create_game(create_user())
       state = %State{game: game}
 
-      achievement = create_achievement(game, %{
-        "name" => "Title"
-      })
+      achievement =
+        create_achievement(game, %{
+          "name" => "Title"
+        })
 
       frame = %{
         "event" => "achievements/delete",
         "ref" => UUID.uuid4(),
         "payload" => %{
-          "key" => achievement.key,
-        },
+          "key" => achievement.key
+        }
       }
 
       {:ok, response, _state} = Achievements.delete(state, frame)

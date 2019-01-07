@@ -6,7 +6,7 @@ defmodule Web.RegistrationControllerTest do
       params = %{
         email: "admin@example.com",
         password: "password",
-        password_confirmation: "password",
+        password_confirmation: "password"
       }
 
       conn = post(conn, Routes.registration_path(conn, :create), user: params)
@@ -16,7 +16,7 @@ defmodule Web.RegistrationControllerTest do
 
     test "failure", %{conn: conn} do
       params = %{
-        email: "admin@example.com",
+        email: "admin@example.com"
       }
 
       conn = post(conn, Routes.registration_path(conn, :create), user: params)

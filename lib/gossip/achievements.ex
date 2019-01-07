@@ -150,12 +150,18 @@ defmodule Gossip.Achievements do
 
     case Repo.update(changeset) do
       {:ok, achievement} ->
-        :telemetry.execute([:gossip, :achievements, :update, :success], 1, %{game_id: achievement.game_id})
+        :telemetry.execute([:gossip, :achievements, :update, :success], 1, %{
+          game_id: achievement.game_id
+        })
+
         broadcast_achievement_update(achievement.id)
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :achievements, :update, :failure], 1, %{game_id: achievement.game_id})
+        :telemetry.execute([:gossip, :achievements, :update, :failure], 1, %{
+          game_id: achievement.game_id
+        })
+
         {:error, changeset}
     end
   end
@@ -166,12 +172,18 @@ defmodule Gossip.Achievements do
   def delete(achievement) do
     case Repo.delete(achievement) do
       {:ok, achievement} ->
-        :telemetry.execute([:gossip, :achievements, :delete, :success], 1, %{game_id: achievement.game_id})
+        :telemetry.execute([:gossip, :achievements, :delete, :success], 1, %{
+          game_id: achievement.game_id
+        })
+
         broadcast_achievement_delete(achievement)
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :achievements, :delete, :failure], 1, %{game_id: achievement.game_id})
+        :telemetry.execute([:gossip, :achievements, :delete, :failure], 1, %{
+          game_id: achievement.game_id
+        })
+
         {:error, changeset}
     end
   end

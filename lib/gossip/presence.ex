@@ -27,7 +27,10 @@ defmodule Gossip.Presence do
   """
   @spec update_game(Socket.state()) :: :ok
   def update_game(state) do
-    GenServer.call(__MODULE__, {:update, state.game, state.supports, state.channels, state.players})
+    GenServer.call(
+      __MODULE__,
+      {:update, state.game, state.supports, state.channels, state.players}
+    )
   end
 
   @spec track(Socket.state()) :: :ok
@@ -44,7 +47,11 @@ defmodule Gossip.Presence do
 
   @doc false
   def delay_disconnect(type, game_id) do
-    Process.send_after(__MODULE__, {:disconnected, type, game_id}, :timer.seconds(Client.timeout_seconds()))
+    Process.send_after(
+      __MODULE__,
+      {:disconnected, type, game_id},
+      :timer.seconds(Client.timeout_seconds())
+    )
   end
 
   # for tests

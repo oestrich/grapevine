@@ -4,7 +4,6 @@ defmodule Web.GameStatisticController do
   alias Gossip.Games
   alias Gossip.Statistics
 
-
   def players(conn, %{"game_id" => short_name}) do
     grapevine_url = Application.get_env(:gossip, :grapevine)[:cors_host]
 

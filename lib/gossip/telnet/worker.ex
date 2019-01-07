@@ -26,14 +26,14 @@ defmodule Gossip.Telnet.Worker do
   end
 
   def handle_cast({:check, connection}, state) do
-    Client.start_link([type: :record, connection: connection])
+    Client.start_link(type: :record, connection: connection)
     {:noreply, state}
   end
 
   def handle_info({:record}, state) do
     Games.telnet_connections()
     |> Enum.each(fn connection ->
-      Client.start_link([type: :record, connection: connection])
+      Client.start_link(type: :record, connection: connection)
     end)
 
     schedule_check()

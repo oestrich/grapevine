@@ -2,20 +2,21 @@ defmodule Web.Router do
   use Web, :router
 
   pipeline :browser do
-    plug :accepts, ["html", "json"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug Web.Plugs.FetchUser
+    plug(:accepts, ["html", "json"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(Web.Plugs.FetchUser)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", Web do
-    pipe_through :browser # Use the default browser stack
+    # Use the default browser stack
+    pipe_through(:browser)
 
     get("/", PageController, :index)
 
@@ -49,7 +50,7 @@ defmodule Web.Router do
 
     get("/media", PageController, :media)
 
-    if Mix.env == :dev do
+    if Mix.env() == :dev do
       get("/colors", PageController, :colors)
     end
 

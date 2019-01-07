@@ -15,7 +15,7 @@ defmodule Metrics.GameEventInstrumenter do
       [:gossip, :game_events, :update, :success],
       [:gossip, :game_events, :update, :failure],
       [:gossip, :game_events, :delete, :success],
-      [:gossip, :game_events, :delete, :failure],
+      [:gossip, :game_events, :delete, :failure]
     ]
 
     :telemetry.attach_many("gossip-game-events", events, &handle_event/4, nil)

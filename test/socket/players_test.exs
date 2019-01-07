@@ -15,8 +15,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-in",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -32,8 +32,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-in",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -48,8 +48,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-in",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -63,7 +63,7 @@ defmodule Socket.PlayersTest do
 
       frame = %{
         "event" => "players/sign-in",
-        "payload" => %{},
+        "payload" => %{}
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -79,8 +79,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-out",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -97,8 +97,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-out",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -114,8 +114,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-out",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -127,8 +127,8 @@ defmodule Socket.PlayersTest do
       frame = %{
         "event" => "players/sign-out",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -139,8 +139,8 @@ defmodule Socket.PlayersTest do
         "event" => "players/sign-out",
         "ref" => "ref",
         "payload" => %{
-          "name" => "Player",
-        },
+          "name" => "Player"
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -162,10 +162,22 @@ defmodule Socket.PlayersTest do
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
-      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => ^game_name}}}, 50
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
-      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVThree"}}}, 50
+
+      refute_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => ^game_name}}},
+                     50
+
+      assert_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}},
+                     50
+
+      assert_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}},
+                     50
+
+      refute_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => "EVThree"}}},
+                     50
     end
 
     test "request game status updates for a single game", %{state: state} do
@@ -173,14 +185,19 @@ defmodule Socket.PlayersTest do
         "event" => "players/status",
         "ref" => UUID.uuid4(),
         "payload" => %{
-          "game" => "EVTwo",
+          "game" => "EVTwo"
         }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
-      refute_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}}, 50
-      assert_receive {:broadcast, %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}}, 50
+      refute_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => "EVOne"}}},
+                     50
+
+      assert_receive {:broadcast,
+                      %{"event" => "players/status", "payload" => %{"game" => "EVTwo"}}},
+                     50
     end
   end
 
@@ -194,7 +211,7 @@ defmodule Socket.PlayersTest do
       status: "active",
       supports: ["channels"],
       players: [],
-      game: game,
+      game: game
     }
 
     %{state: state, user: user, game: game}

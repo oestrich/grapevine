@@ -64,7 +64,7 @@ defmodule Gossip.Presence.Notices do
   defp check_only_socket(state, socket, type, game_id) do
     sockets =
       state.sockets
-      |> Enum.reject(&elem(&1, 2) == socket)
+      |> Enum.reject(&(elem(&1, 2) == socket))
       |> Enum.filter(&(elem(&1, 0) == type && elem(&1, 1) == game_id))
 
     case Enum.empty?(sockets) do

@@ -7,11 +7,12 @@ defmodule Gossip.EventsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, event} = Events.create(game, %{
-        title: "Adventuring",
-        start_date: "2018-11-21",
-        end_date: "2018-11-23"
-      })
+      {:ok, event} =
+        Events.create(game, %{
+          title: "Adventuring",
+          start_date: "2018-11-21",
+          end_date: "2018-11-23"
+        })
 
       assert event.title == "Adventuring"
       assert event.start_date == ~D[2018-11-21]
@@ -21,11 +22,12 @@ defmodule Gossip.EventsTest do
     test "failure" do
       game = create_game(create_user())
 
-      {:error, _changeset} = Events.create(game, %{
-        title: "Adventuring",
-        start_date: "2018-11-21",
-        end_date: "2018-11-20"
-      })
+      {:error, _changeset} =
+        Events.create(game, %{
+          title: "Adventuring",
+          start_date: "2018-11-21",
+          end_date: "2018-11-20"
+        })
     end
   end
 
@@ -33,15 +35,17 @@ defmodule Gossip.EventsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, event} = Events.create(game, %{
-        title: "Adventuring",
-        start_date: "2018-11-21",
-        end_date: "2018-11-23"
-      })
+      {:ok, event} =
+        Events.create(game, %{
+          title: "Adventuring",
+          start_date: "2018-11-21",
+          end_date: "2018-11-23"
+        })
 
-      {:ok, event} = Events.update(event, %{
-        end_date: "2018-11-24"
-      })
+      {:ok, event} =
+        Events.update(event, %{
+          end_date: "2018-11-24"
+        })
 
       assert event.end_date == ~D[2018-11-24]
     end
@@ -51,11 +55,12 @@ defmodule Gossip.EventsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, event} = Events.create(game, %{
-        title: "Adventuring",
-        start_date: "2018-11-21",
-        end_date: "2018-11-23"
-      })
+      {:ok, event} =
+        Events.create(game, %{
+          title: "Adventuring",
+          start_date: "2018-11-21",
+          end_date: "2018-11-23"
+        })
 
       {:ok, _event} = Events.delete(event)
     end

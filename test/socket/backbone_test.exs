@@ -17,7 +17,12 @@ defmodule Socket.BackboneTest do
     test "new channel subscribes to that new channel", %{state: state} do
       payload = %Version{action: "create", payload: %{name: "newChannel"}}
 
-      message = %Phoenix.Socket.Broadcast{topic: "system:backbone", event: "channels/new", payload: payload}
+      message = %Phoenix.Socket.Broadcast{
+        topic: "system:backbone",
+        event: "channels/new",
+        payload: payload
+      }
+
       Backbone.process_event(state, message)
 
       Web.Endpoint.broadcast("channels:newChannel", "channels/broadcast", %{message: "hi"})
@@ -65,7 +70,10 @@ defmodule Socket.BackboneTest do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/new",
-        payload: %Version{action: "create", payload: %{name: "game", connections: [], redirect_uris: []}}
+        payload: %Version{
+          action: "create",
+          payload: %{name: "game", connections: [], redirect_uris: []}
+        }
       }
 
       Backbone.process_event(state, message)
@@ -77,7 +85,10 @@ defmodule Socket.BackboneTest do
       message = %Phoenix.Socket.Broadcast{
         topic: "system:backbone",
         event: "games/edit",
-        payload: %Version{action: "update", payload: %{name: "game", connections: [], redirect_uris: []}}
+        payload: %Version{
+          action: "update",
+          payload: %{name: "game", connections: [], redirect_uris: []}
+        }
       }
 
       Backbone.process_event(state, message)
@@ -110,6 +121,7 @@ defmodule Socket.BackboneTest do
       now = Timex.now()
 
       channel = create_channel(%{name: "gossip"})
+
       Enum.each(1..12, fn i ->
         Versions.log("update", channel, now |> Timex.shift(minutes: -1 * i))
       end)
@@ -134,10 +146,11 @@ defmodule Socket.BackboneTest do
 
     test "batches into groups of 10" do
       user = create_user()
+
       Enum.each(1..12, fn i ->
         create_game(user, %{
           name: "gossip#{[?a + i]}",
-          short_name: "gossip#{[?a + i]}",
+          short_name: "gossip#{[?a + i]}"
         })
       end)
 

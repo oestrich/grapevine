@@ -7,11 +7,12 @@ defmodule Gossip.AchievementsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, achievement} = Achievements.create(game, %{
-        title: "Level 2",
-        description: "You made it to level 2!",
-        points: 10
-      })
+      {:ok, achievement} =
+        Achievements.create(game, %{
+          title: "Level 2",
+          description: "You made it to level 2!",
+          points: 10
+        })
 
       assert achievement.title == "Level 2"
       assert achievement.description
@@ -28,16 +29,18 @@ defmodule Gossip.AchievementsTest do
       game = create_game(create_user())
 
       Enum.each(1..5, fn _ ->
-        {:ok, _achievement} = Achievements.create(game, %{
-          title: "Achievement",
-          points: 100
-        })
+        {:ok, _achievement} =
+          Achievements.create(game, %{
+            title: "Achievement",
+            points: 100
+          })
       end)
 
-      {:error, changeset} = Achievements.create(game, %{
-        title: "Achievement",
-        points: 10
-      })
+      {:error, changeset} =
+        Achievements.create(game, %{
+          title: "Achievement",
+          points: 10
+        })
 
       assert changeset.errors[:points]
     end
@@ -47,15 +50,17 @@ defmodule Gossip.AchievementsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, achievement} = Achievements.create(game, %{
-        title: "Adventuring",
-        description: "You made it to level 2!",
-        points: 10
-      })
+      {:ok, achievement} =
+        Achievements.create(game, %{
+          title: "Adventuring",
+          description: "You made it to level 2!",
+          points: 10
+        })
 
-      {:ok, achievement} = Achievements.update(achievement, %{
-        points: 11
-      })
+      {:ok, achievement} =
+        Achievements.update(achievement, %{
+          points: 11
+        })
 
       assert achievement.points == 11
     end
@@ -65,11 +70,12 @@ defmodule Gossip.AchievementsTest do
     test "successful" do
       game = create_game(create_user())
 
-      {:ok, achievement} = Achievements.create(game, %{
-        title: "Adventuring",
-        description: "You made it to level 2!",
-        points: 10
-      })
+      {:ok, achievement} =
+        Achievements.create(game, %{
+          title: "Adventuring",
+          description: "You made it to level 2!",
+          points: 10
+        })
 
       {:ok, _achievement} = Achievements.delete(achievement)
     end
@@ -80,10 +86,11 @@ defmodule Gossip.AchievementsTest do
       game = create_game(create_user())
 
       Enum.each(1..5, fn _ ->
-        {:ok, _achievement} = Achievements.create(game, %{
-          title: "Achievement",
-          points: 10
-        })
+        {:ok, _achievement} =
+          Achievements.create(game, %{
+            title: "Achievement",
+            points: 10
+          })
       end)
 
       assert Achievements.total_points(game) == 50

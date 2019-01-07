@@ -30,6 +30,7 @@ defmodule Gossip.StatisticsTest do
       game = create_game(create_user())
 
       now = Timex.now()
+
       Enum.each(1..15, fn i ->
         now = Timex.shift(now, minutes: -15 * i)
         {:ok, _stats} = Statistics.record_socket_players(game, ["Guard", "Bandit"], now)

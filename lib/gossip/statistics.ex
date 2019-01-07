@@ -56,7 +56,7 @@ defmodule Gossip.Statistics do
       |> where([ps], ps.recorded_at >= ^last_few_days)
       |> Repo.all()
 
-    interval = Timex.Interval.new([from: last_few_days, until: Timex.now(), step: [hours: 1] ])
+    interval = Timex.Interval.new(from: last_few_days, until: Timex.now(), step: [hours: 1])
 
     Enum.map(interval, fn time ->
       {time, find_nearest_stats(stats, time)}
@@ -64,10 +64,11 @@ defmodule Gossip.Statistics do
   end
 
   defp find_nearest_stats(stats, time) do
-    values = Enum.filter(stats, fn stat ->
-      interval = Timex.Interval.new([from: time, until: [hours: 1]])
-      stat.recorded_at in interval
-    end)
+    values =
+      Enum.filter(stats, fn stat ->
+        interval = Timex.Interval.new(from: time, until: [hours: 1])
+        stat.recorded_at in interval
+      end)
 
     case Enum.empty?(values) do
       true ->
@@ -75,7 +76,7 @@ defmodule Gossip.Statistics do
 
       false ->
         values
-        |> Enum.map(&(&1.player_count))
+        |> Enum.map(& &1.player_count)
         |> Enum.max()
     end
   end

@@ -27,7 +27,7 @@ defmodule Socket.TellsTest do
           "to_name" => "Player1",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
@@ -50,7 +50,7 @@ defmodule Socket.TellsTest do
           "to_name" => "Player1",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
@@ -73,7 +73,7 @@ defmodule Socket.TellsTest do
           "to_name" => "player1",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, %{"ref" => "ref"}, _state} = Router.receive(state, frame)
@@ -90,7 +90,7 @@ defmodule Socket.TellsTest do
           "from_name" => "Player",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -110,7 +110,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -134,7 +134,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -157,7 +157,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -180,7 +180,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -197,7 +197,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -213,7 +213,7 @@ defmodule Socket.TellsTest do
           "to_name" => "eric",
           "sent_at" => "2018-07-17T13:12:28Z",
           "message" => "hi"
-        },
+        }
       }
 
       assert {:ok, response, _state} = Router.receive(state, frame)
@@ -282,7 +282,7 @@ defmodule Socket.TellsTest do
       status: "active",
       supports: ["channels"],
       players: [],
-      game: game,
+      game: game
     }
 
     %{state: state, user: user, game: game}

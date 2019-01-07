@@ -15,7 +15,7 @@ defmodule Web.SocketHelper do
       scheme: scheme(),
       host: @host,
       path: "/socket",
-      port: port(),
+      port: port()
     }
 
     URI.to_string(uri)
@@ -23,7 +23,7 @@ defmodule Web.SocketHelper do
 
   if @tls do
     defp scheme(), do: "wss"
-  else 
+  else
     defp scheme(), do: "ws"
   end
 

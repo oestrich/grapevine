@@ -20,8 +20,8 @@ defmodule Socket.CoreTest do
           "client_secret" => game.client_secret,
           "supports" => ["channels"],
           "channels" => ["gossip"],
-          "players" => ["player"],
-        },
+          "players" => ["player"]
+        }
       }
 
       {:ok, response, state} = Router.receive(state, frame)
@@ -41,8 +41,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "client_id" => game.client_id,
           "client_secret" => "bad",
-          "supports" => ["channels"],
-        },
+          "supports" => ["channels"]
+        }
       }
 
       {:disconnect, response, state} = Router.receive(state, frame)
@@ -56,8 +56,8 @@ defmodule Socket.CoreTest do
         "event" => "authenticate",
         "payload" => %{
           "client_id" => game.client_id,
-          "client_secret" => game.client_secret,
-        },
+          "client_secret" => game.client_secret
+        }
       }
 
       {:disconnect, response, state} = Router.receive(state, frame)
@@ -72,8 +72,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
-          "supports" => [],
-        },
+          "supports" => []
+        }
       }
 
       {:disconnect, response, state} = Router.receive(state, frame)
@@ -88,8 +88,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
-          "supports" => ["channels", "other"],
-        },
+          "supports" => ["channels", "other"]
+        }
       }
 
       {:disconnect, response, state} = Router.receive(state, frame)
@@ -105,8 +105,8 @@ defmodule Socket.CoreTest do
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
           "supports" => ["channels"],
-          "channels" => ["this is bad"],
-        },
+          "channels" => ["this is bad"]
+        }
       }
 
       {:ok, response, _state} = Router.receive(state, frame)
@@ -126,8 +126,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "client_id" => application.client_id,
           "client_secret" => application.client_secret,
-          "supports" => ["channels"],
-        },
+          "supports" => ["channels"]
+        }
       }
 
       {:ok, response, state} = Router.receive(state, frame)
@@ -148,8 +148,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "client_id" => application.client_id,
           "client_secret" => "bad secret",
-          "supports" => ["channels"],
-        },
+          "supports" => ["channels"]
+        }
       }
 
       {:disconnect, response, state} = Router.receive(state, frame)
@@ -178,8 +178,8 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "heartbeat",
         "payload" => %{
-          "players" => ["player"],
-        },
+          "players" => ["player"]
+        }
       }
 
       {:ok, :skip, state} = Router.receive(state, frame)
@@ -198,7 +198,7 @@ defmodule Socket.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["gossip"],
+        channels: ["gossip"]
       }
 
       %{state: state, game: game}
@@ -212,8 +212,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "channel" => "gossip",
           "name" => "Player",
-          "message" => "Hello!",
-        },
+          "message" => "Hello!"
+        }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -230,8 +230,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "channel" => "gossip",
           "name" => "Player",
-          "message" => "<b>Hello!</b>",
-        },
+          "message" => "<b>Hello!</b>"
+        }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -247,8 +247,8 @@ defmodule Socket.CoreTest do
         "payload" => %{
           "channel" => "general",
           "name" => "Player",
-          "message" => "Hello!",
-        },
+          "message" => "Hello!"
+        }
       }
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
@@ -267,7 +267,7 @@ defmodule Socket.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["gossip"],
+        channels: ["gossip"]
       }
 
       %{state: state, game: game}
@@ -277,8 +277,8 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/subscribe",
         "payload" => %{
-          "channel" => "general",
-        },
+          "channel" => "general"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -289,7 +289,7 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/subscribe",
         "payload" => %{
-          "channel" => "general",
+          "channel" => "general"
         }
       }
 
@@ -304,8 +304,8 @@ defmodule Socket.CoreTest do
         "event" => "channels/subscribe",
         "ref" => "123",
         "payload" => %{
-          "channel" => "bad channel",
-        },
+          "channel" => "bad channel"
+        }
       }
 
       assert {:ok, response, state} = Router.receive(state, frame)
@@ -318,8 +318,8 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/unsubscribe",
         "payload" => %{
-          "channel" => "gossip",
-        },
+          "channel" => "gossip"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -330,8 +330,8 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/unsubscribe",
         "payload" => %{
-          "channel" => "unknown",
-        },
+          "channel" => "unknown"
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -342,8 +342,8 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/unsubscribe",
         "payload" => %{
-          "channel" => nil,
-        },
+          "channel" => nil
+        }
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
@@ -379,7 +379,7 @@ defmodule Socket.CoreTest do
       status: "active",
       supports: ["channels"],
       players: [],
-      game: game,
+      game: game
     }
 
     %{state: state, user: user, game: game}

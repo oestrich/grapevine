@@ -43,8 +43,22 @@ defmodule Gossip.Games.Game do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name, :short_name, :homepage_url, :description, :display, :allow_character_registration])
-    |> validate_required([:name, :short_name, :display, :user_id, :display, :allow_character_registration])
+    |> cast(params, [
+      :name,
+      :short_name,
+      :homepage_url,
+      :description,
+      :display,
+      :allow_character_registration
+    ])
+    |> validate_required([
+      :name,
+      :short_name,
+      :display,
+      :user_id,
+      :display,
+      :allow_character_registration
+    ])
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)
     |> maybe_strip_carriage_returns_from_description()

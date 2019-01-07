@@ -12,7 +12,7 @@ defmodule Metrics.Events.ChannelsInstrumenter do
     events = [
       {:channels, :send},
       {:channels, :subscribe},
-      {:channels, :unsubscribe},
+      {:channels, :unsubscribe}
     ]
 
     Enum.each(events, fn {module, event} ->
@@ -22,9 +22,10 @@ defmodule Metrics.Events.ChannelsInstrumenter do
       )
     end)
 
-    events = Enum.map(events, fn {module, event} ->
-      [:gossip, :events, module, event]
-    end)
+    events =
+      Enum.map(events, fn {module, event} ->
+        [:gossip, :events, module, event]
+      end)
 
     :telemetry.attach_many("gossip-events-channels", events, &handle_event/4, nil)
   end
@@ -33,7 +34,12 @@ defmodule Metrics.Events.ChannelsInstrumenter do
     Counter.inc(name: :gossip_events_channels_send_count)
   end
 
-  def handle_event([:gossip, :events, :channels, :subscribe], _value, %{channel: channel_name}, _config) do
+  def handle_event(
+        [:gossip, :events, :channels, :subscribe],
+        _value,
+        %{channel: channel_name},
+        _config
+      ) do
     Logger.debug(fn ->
       "A socket subscribed to #{channel_name}"
     end)
@@ -41,7 +47,12 @@ defmodule Metrics.Events.ChannelsInstrumenter do
     Counter.inc(name: :gossip_events_channels_subscribe_count)
   end
 
-  def handle_event([:gossip, :events, :channels, :unsubscribe], _value, %{channel: channel_name}, _config) do
+  def handle_event(
+        [:gossip, :events, :channels, :unsubscribe],
+        _value,
+        %{channel: channel_name},
+        _config
+      ) do
     Logger.debug(fn ->
       "A socket unsubscribed to #{channel_name}"
     end)

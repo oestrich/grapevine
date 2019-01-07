@@ -111,7 +111,8 @@ defmodule Socket.Players do
   @doc """
   Request player status, of connected games
   """
-  def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
+  def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}})
+      when ref != nil do
     :telemetry.execute([:gossip, :events, :players, :status], 1, %{game: game_name})
 
     Presence.online_games()
@@ -125,7 +126,7 @@ defmodule Socket.Players do
     :telemetry.execute([:gossip, :events, :players, :status], 1, %{all: true})
 
     Presence.online_games()
-    |> Enum.filter(&(&1.game.display))
+    |> Enum.filter(& &1.game.display)
     |> Core.remove_self_from_game_list(state)
     |> Enum.each(&relay_state(&1, ref))
 

@@ -10,7 +10,7 @@ defmodule Metrics.StatisticsInstrumenter do
   @doc false
   def setup() do
     events = [
-      {:players, :record},
+      {:players, :record}
     ]
 
     Enum.each(events, fn {noun, event} ->
@@ -20,9 +20,10 @@ defmodule Metrics.StatisticsInstrumenter do
       )
     end)
 
-    events = Enum.map(events, fn {module, event} ->
-      [:gossip, :statistics, module, event]
-    end)
+    events =
+      Enum.map(events, fn {module, event} ->
+        [:gossip, :statistics, module, event]
+      end)
 
     :telemetry.attach_many("gossip-statistics", events, &handle_event/4, nil)
   end

@@ -12,7 +12,7 @@ defmodule Metrics.Events.PlayersInstrumenter do
     events = [
       {:players, :sign_in},
       {:players, :sign_out},
-      {:players, :status},
+      {:players, :status}
     ]
 
     Enum.each(events, fn {module, event} ->
@@ -22,9 +22,10 @@ defmodule Metrics.Events.PlayersInstrumenter do
       )
     end)
 
-    events = Enum.map(events, fn {module, event} ->
-      [:gossip, :events, module, event]
-    end)
+    events =
+      Enum.map(events, fn {module, event} ->
+        [:gossip, :events, module, event]
+      end)
 
     :telemetry.attach_many("gossip-events-players", events, &handle_event/4, nil)
   end

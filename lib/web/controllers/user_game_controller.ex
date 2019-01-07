@@ -1,7 +1,7 @@
 defmodule Web.UserGameController do
   use Web, :controller
 
-  plug Web.Plugs.VerifyUser
+  plug(Web.Plugs.VerifyUser)
 
   alias Gossip.Games
 

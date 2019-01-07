@@ -5,10 +5,11 @@ defmodule Gossip.ApplicationsTest do
 
   describe "generating a system level application" do
     test "successfully" do
-      {:ok, application} = Applications.create(%{
-        name: "Grapevine",
-        short_name: "Grapevine",
-      })
+      {:ok, application} =
+        Applications.create(%{
+          name: "Grapevine",
+          short_name: "Grapevine"
+        })
 
       assert application.name == "Grapevine"
       assert application.short_name == "Grapevine"
@@ -23,7 +24,8 @@ defmodule Gossip.ApplicationsTest do
     end
 
     test "when valid", %{application: application} do
-      assert {:ok, _application} = Applications.validate_socket(application.client_id, application.client_secret)
+      assert {:ok, _application} =
+               Applications.validate_socket(application.client_id, application.client_secret)
     end
 
     test "when bad secret", %{application: application} do

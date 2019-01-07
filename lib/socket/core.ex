@@ -192,7 +192,7 @@ defmodule Socket.Core do
       %{
         event: "channels/subscribe",
         status: "failure",
-        error: ~s(Could not subscribe to '#{name}'),
+        error: ~s(Could not subscribe to '#{name}')
       }
     end
 
@@ -202,7 +202,7 @@ defmodule Socket.Core do
         "game" => game.short_name,
         "game_id" => game.client_id,
         "name" => name,
-        "message" => message,
+        "message" => message
       }
     end
   end

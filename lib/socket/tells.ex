@@ -119,7 +119,9 @@ defmodule Socket.Tells do
   Check if a send payload is valid
   """
   def valid_payload?(payload) do
-    keys_present? = Enum.sort(Map.keys(payload)) == ["from_name", "message", "sent_at", "to_game", "to_name"]
+    keys_present? =
+      Enum.sort(Map.keys(payload)) == ["from_name", "message", "sent_at", "to_game", "to_name"]
+
     all_strings? = Enum.all?(Map.values(payload), &is_binary/1)
 
     keys_present? && all_strings? && valid_sent_at?(payload)

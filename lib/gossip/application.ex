@@ -14,12 +14,13 @@ defmodule Gossip.Application do
       {Gossip.Presence, []},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
-      {Gossip.Telnet.Worker, [name: Gossip.Telnet.Worker]},
+      {Gossip.Telnet.Worker, [name: Gossip.Telnet.Worker]}
     ]
 
     Metrics.Setup.setup()
 
     report_errors = Application.get_env(:gossip, :errors)[:report]
+
     if report_errors do
       {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     end
@@ -37,7 +38,7 @@ defmodule Gossip.Application do
     [
       measurements: [
         {Metrics.GameInstrumenter, :dispatch_game_count, []},
-        {Metrics.SocketInstrumenter, :dispatch_socket_count, []},
+        {Metrics.SocketInstrumenter, :dispatch_socket_count, []}
       ],
       period: 10_000
     ]

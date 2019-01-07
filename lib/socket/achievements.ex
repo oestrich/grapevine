@@ -69,14 +69,14 @@ defmodule Socket.Achievements do
     with {:ok, key} <- Map.fetch(params, "key"),
          {:ok, achievement} <- Achievements.get_by_key(state.game, key),
          {:ok, achievement} <- Achievements.update(achievement, params) do
-        response =
-          token()
-          |> assign(:ref, ref)
-          |> assign(:event, "achievements/update")
-          |> assign(:achievement, achievement)
-          |> event("update")
+      response =
+        token()
+        |> assign(:ref, ref)
+        |> assign(:event, "achievements/update")
+        |> assign(:achievement, achievement)
+        |> event("update")
 
-        {:ok, response.payload, state}
+      {:ok, response.payload, state}
     else
       :error ->
         not_found(state, ref, "achievements/update")
@@ -107,14 +107,14 @@ defmodule Socket.Achievements do
     with {:ok, key} <- Map.fetch(params, "key"),
          {:ok, achievement} <- Achievements.get_by_key(state.game, key),
          {:ok, achievement} <- Achievements.delete(achievement) do
-        response =
-          token()
-          |> assign(:ref, ref)
-          |> assign(:event, "achievements/delete")
-          |> assign(:achievement, achievement)
-          |> event("delete")
+      response =
+        token()
+        |> assign(:ref, ref)
+        |> assign(:event, "achievements/delete")
+        |> assign(:achievement, achievement)
+        |> event("delete")
 
-        {:ok, response.payload, state}
+      {:ok, response.payload, state}
     else
       :error ->
         not_found(state, ref, "achievements/delete")
@@ -195,9 +195,10 @@ defmodule Socket.Achievements do
         "ref" => ref,
         "payload" => %{
           "total" => total,
-          "achievements" => Enum.map(achievements, fn achievement ->
-            payload("show", %{achievement: achievement})
-          end)
+          "achievements" =>
+            Enum.map(achievements, fn achievement ->
+              payload("show", %{achievement: achievement})
+            end)
         }
       }
     end
@@ -213,8 +214,13 @@ defmodule Socket.Achievements do
 
     def payload("show", %{achievement: achievement}) do
       Map.take(achievement, [
-        :key, :title, :description, :display, :points,
-        :partial_progress, :total_progress
+        :key,
+        :title,
+        :description,
+        :display,
+        :points,
+        :partial_progress,
+        :total_progress
       ])
     end
   end

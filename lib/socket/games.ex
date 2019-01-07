@@ -32,7 +32,8 @@ defmodule Socket.Games do
 
   Can request a single game
   """
-  def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}}) when ref != nil do
+  def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}})
+      when ref != nil do
     :telemetry.execute([:gossip, :events, :games, :status], 1, %{game: game_name})
 
     Presence.online_games()
@@ -46,7 +47,7 @@ defmodule Socket.Games do
     :telemetry.execute([:gossip, :events, :games, :status], 1, %{all: true})
 
     Presence.online_games()
-    |> Enum.filter(&(&1.game.display))
+    |> Enum.filter(& &1.game.display)
     |> Core.remove_self_from_game_list(state)
     |> Enum.each(&relay_state(&1, ref))
 
@@ -129,10 +130,11 @@ defmodule Socket.Games do
     def event("game", %{ref: ref, presence: presence}) do
       game_payload = GameView.render("status.json", %{game: presence.game})
 
-      payload = Map.merge(game_payload, %{
-        supports: presence.supports,
-        player_online_count: length(presence.players),
-      })
+      payload =
+        Map.merge(game_payload, %{
+          supports: presence.supports,
+          player_online_count: length(presence.players)
+        })
 
       %{
         "event" => "games/status",

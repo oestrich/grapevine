@@ -43,7 +43,7 @@ defmodule Gossip.Accounts do
   end
 
   defp preload(user) do
-    Repo.preload(user, [games: from(g in Game, order_by: [g.id])])
+    Repo.preload(user, games: from(g in Game, order_by: [g.id]))
   end
 
   @doc """

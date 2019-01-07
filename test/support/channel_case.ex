@@ -25,13 +25,13 @@ defmodule Web.ChannelCase do
     end
   end
 
-
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gossip.Repo)
+
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Gossip.Repo, {:shared, self()})
     end
+
     :ok
   end
-
 end

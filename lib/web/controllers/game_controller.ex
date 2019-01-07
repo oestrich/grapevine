@@ -4,10 +4,10 @@ defmodule Web.GameController do
   alias Gossip.Games
   alias Gossip.Presence
 
-  plug Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate]
+  plug(Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate])
 
   def index(conn, _params) do
-    games = Enum.filter(Presence.online_games(), &(&1.game.display))
+    games = Enum.filter(Presence.online_games(), & &1.game.display)
 
     conn
     |> assign(:games, games)

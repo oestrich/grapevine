@@ -4,7 +4,7 @@ defmodule Web.EventController do
   alias Gossip.Games
   alias Gossip.Events
 
-  plug Web.Plugs.VerifyUser
+  plug(Web.Plugs.VerifyUser)
 
   def index(conn, %{"game_id" => game_id}) do
     %{current_user: user} = conn.assigns

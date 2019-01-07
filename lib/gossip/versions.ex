@@ -25,7 +25,7 @@ defmodule Gossip.Versions do
       schema: schema_for(schema),
       schema_id: schema.id,
       payload: payload_for(schema),
-      logged_at: logged_at,
+      logged_at: logged_at
     }
 
     %Version{}
@@ -92,7 +92,7 @@ defmodule Gossip.Versions do
   end
 
   defp format_redirect_uris(redirect_uris) do
-    Enum.map(redirect_uris, &(&1.uri))
+    Enum.map(redirect_uris, & &1.uri)
   end
 
   defp user_agent_repo_url(nil), do: nil

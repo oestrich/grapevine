@@ -19,10 +19,15 @@ defmodule Web.Socket.GamesTest do
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
-      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: ^game_name}}}, 50
+
+      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: ^game_name}}},
+                     50
+
       assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVOne"}}}, 50
       assert_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVTwo"}}}, 50
-      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVThree"}}}, 50
+
+      refute_receive {:broadcast, %{"event" => "games/status", "payload" => %{game: "EVThree"}}},
+                     50
     end
 
     test "does not support the games feature - ref", %{state: state} do
@@ -44,7 +49,7 @@ defmodule Web.Socket.GamesTest do
         "event" => "games/status",
         "ref" => UUID.uuid4(),
         "payload" => %{
-          "game" => "EVTwo",
+          "game" => "EVTwo"
         }
       }
 
@@ -65,7 +70,7 @@ defmodule Web.Socket.GamesTest do
       status: "active",
       supports: ["channels"],
       players: [],
-      game: game,
+      game: game
     }
 
     %{state: state, user: user, game: game}

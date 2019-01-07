@@ -5,11 +5,12 @@ defmodule Gossip.AccountsTest do
 
   describe "registering a new account" do
     test "successful" do
-      {:ok, game} = Accounts.register(%{
-        email: "admin@example.com",
-        password: "password",
-        password_confirmation: "password",
-      })
+      {:ok, game} =
+        Accounts.register(%{
+          email: "admin@example.com",
+          password: "password",
+          password_confirmation: "password"
+        })
 
       assert game.email == "admin@example.com"
       assert game.password_hash

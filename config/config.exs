@@ -15,13 +15,16 @@ config :gossip, Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
-  http: [dispatch: [
-    {:_, [
-      {"/socket", Web.SocketHandler, []},
-      {:_, Phoenix.Endpoint.Cowboy2Handler, {Web.Endpoint, []}}
-    ]}]],
-  pubsub: [name: Gossip.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  http: [
+    dispatch: [
+      {:_,
+       [
+         {"/socket", Web.SocketHandler, []},
+         {:_, Phoenix.Endpoint.Cowboy2Handler, {Web.Endpoint, []}}
+       ]}
+    ]
+  ],
+  pubsub: [name: Gossip.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :gossip, :socket, tls: false
 
@@ -42,4 +45,4 @@ config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

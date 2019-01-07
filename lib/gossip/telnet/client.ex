@@ -301,24 +301,24 @@ defmodule Gossip.Telnet.Client do
       [Enum.reverse(current) | stack]
     end
 
-    def options(<<@iac, @sb, data :: binary>>, current, stack) do
+    def options(<<@iac, @sb, data::binary>>, current, stack) do
       {sub, data} = parse_sub_negotiation(<<@iac, @sb>> <> data)
       options(data, [], [sub, Enum.reverse(current) | stack])
     end
 
-    def options(<<@iac, @will, byte :: size(8), data :: binary>>, current, stack) do
+    def options(<<@iac, @will, byte::size(8), data::binary>>, current, stack) do
       options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack])
     end
 
-    def options(<<@iac, @iac_do, byte :: size(8), data :: binary>>, current, stack) do
+    def options(<<@iac, @iac_do, byte::size(8), data::binary>>, current, stack) do
       options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack])
     end
 
-    def options(<<@iac, data :: binary>>, current, stack) do
+    def options(<<@iac, data::binary>>, current, stack) do
       options(data, [@iac], [Enum.reverse(current) | stack])
     end
 
-    def options(<<byte :: size(8), data :: binary>>, current, stack) do
+    def options(<<byte::size(8), data::binary>>, current, stack) do
       options(data, [byte | current], stack)
     end
 
@@ -332,11 +332,11 @@ defmodule Gossip.Telnet.Client do
 
     def sub_option(<<>>, stack), do: {stack, <<>>}
 
-    def sub_option(<<byte :: size(8), @iac, @se, data :: binary>>, stack) do
+    def sub_option(<<byte::size(8), @iac, @se, data::binary>>, stack) do
       {[byte | stack], data}
     end
 
-    def sub_option(<<byte :: size(8), data :: binary>>, stack) do
+    def sub_option(<<byte::size(8), data::binary>>, stack) do
       sub_option(data, [byte | stack])
     end
 

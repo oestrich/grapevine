@@ -92,7 +92,7 @@ defmodule Web.SocketHandler do
         message = %{
           event: message.event,
           ref: UUID.uuid4(),
-          payload: Map.delete(message.payload, "game_id"),
+          payload: Map.delete(message.payload, "game_id")
         }
 
         {:reply, {:text, Jason.encode!(message)}, state}
