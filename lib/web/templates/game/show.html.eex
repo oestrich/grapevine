@@ -32,7 +32,8 @@
 
       <div class="form-group">
         <label>Client Secret</label>
-        <input class="form-control" type="text" value="<%= @game.client_secret %>" readonly="readonly" />
+        <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
+        <%= link("Toggle Secret", to: "#", class: "show-secret") %>
       </div>
 
       <%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
@@ -108,3 +109,20 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  var toggle = document.querySelector(".show-secret");
+
+  toggle.addEventListener("click", function(e) {
+    e.preventDefault();
+    var clientSecret = document.querySelector("#client-secret")
+
+    if (clientSecret.type === "password") {
+      clientSecret.type = "text";
+    } else {
+      clientSecret.type = "password";
+    }
+  });
+});
+</script>
