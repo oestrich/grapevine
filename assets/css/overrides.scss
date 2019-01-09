@@ -65,10 +65,12 @@ body {
 
 .jumbotron {
   background-color: $grey-4;
+  margin-bottom: 24px;
 }
 
 .card-dark {
   background-color: $black;
+  border-radius: 4px;
 }
 
 .alert-primary {
