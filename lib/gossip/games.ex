@@ -107,7 +107,9 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.insert() do
       {:ok, game} ->
+        :telemetry.execute([:gossip, :games, :create], 1, %{id: game.id})
         broadcast_game_create(game.id)
+
         {:ok, game}
 
       {:error, changeset} ->

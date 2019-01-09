@@ -10,12 +10,18 @@ defmodule Metrics.GameInstrumenter do
   @doc false
   def setup() do
     Gauge.declare(
-      name: :gossip_game_count,
+      name: :gossip_game_online_count,
       help: "Number of games connected to gossip"
     )
 
+    Counter.declare(
+      name: :gossip_game_create_total,
+      help: "Number of created games"
+    )
+
     events = [
-      [:gossip, :games, :online]
+      [:gossip, :games, :online],
+      [:gossip, :games, :create]
     ]
 
     :telemetry.attach_many("gossip-games", events, &handle_event/4, nil)
@@ -27,6 +33,10 @@ defmodule Metrics.GameInstrumenter do
   end
 
   def handle_event([:gossip, :games, :online], count, _metadata, _config) do
-    Gauge.set([name: :gossip_game_count], count)
+    Gauge.set([name: :gossip_game_online_count], count)
+  end
+
+  def handle_event([:gossip, :games, :create], _count, _metadata, _config) do
+    Counter.inc(name: :gossip_game_create_total)
   end
 end
