@@ -55,7 +55,7 @@ defmodule Gossip.Mixfile do
       {:prometheus_plugs, "~> 1.1.1"},
       {:sentry, "~> 7.0"},
       {:telemetry, "~> 0.3"},
-      {:telemetry_poller, git: "https://github.com/beam-telemetry/telemetry_poller.git"},
+      {:telemetry_poller, "~> 0.2"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"}
     ]
