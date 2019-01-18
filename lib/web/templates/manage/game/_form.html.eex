@@ -9,7 +9,9 @@
     <div class="help-block">Link to the game's homepage.</div>
   <% end %>
 
-  <%= FormView.text_field(f, :tagline) %>
+  <%= FormView.text_field(f, :tagline) do %>
+    <div class="help-block">Should be under 70 characters.</div>
+  <% end %>
 
   <%= FormView.textarea_field(f, :description, rows: 5) %>
 
