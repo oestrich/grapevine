@@ -65,6 +65,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :gossip, :grapevine, cors_host: "http://localhost:4002"
 
+config :gossip, Gossip.Mailer, adapter: Bamboo.LocalAdapter
+
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
 end

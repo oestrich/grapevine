@@ -1,0 +1,38 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Sign In</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <section>
+      <nav>
+        <h3 class="name">Password Reset</h3>
+      </nav>
+
+      <p class="lead">You can only reset your password if an email was attached to the account.</p>
+
+      <%= form_for @changeset, registration_reset_path(@conn, :create), [method: :post], fn (f) -> %>
+        <div class="form-group row">
+          <div class="col-md-3">
+            <%= label f, :email, "Email" %>
+          </div>
+          <div class="col-md-9">
+            <%= text_input f, :email, class: "form-control", autofocus: "autofocus" %>
+            <%= error_tag f, :email %>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="row">
+            <div class="col-md-9 offset-md-3">
+              <%= submit "Start Reset", class: "btn btn-primary btn-flat" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>
