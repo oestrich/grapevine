@@ -1,0 +1,42 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Games", to: game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: game_path(@conn, :show, @game.short_name)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Achievement</li>
+  </ol>
+</nav>
+
+<section>
+  <nav>
+    <h3 class="name">Achievements for <%= @game.name %></h3>
+  </nav>
+
+  <p><%= Enum.count(@achievements) %> Achievements</p>
+
+  <ul class="achievements">
+    <%= Enum.map(@achievements, fn achievement -> %>
+      <%= if achievement.display do %>
+        <li class="achievement">
+          <div class="points">
+            <span><%= achievement.points %> pts</span>
+          </div>
+          <div class="information">
+            <h4 class="title"><%= achievement.title %></h4>
+            <span class="description"><%= achievement.description %></span>
+          </div>
+        </li>
+      <% else %>
+        <li class="achievement">
+          <div class="points">
+            <span>? pts</span>
+          </div>
+          <div class="information">
+            <h4 class="title">?</h4>
+            <span class="description">&nbsp;</span>
+          </div>
+        </li>
+      <% end %>
+    <% end) %>
+  </ul>
+</section>

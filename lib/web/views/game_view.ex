@@ -2,6 +2,7 @@ defmodule Web.GameView do
   use Web, :view
 
   alias Gossip.Channels
+  alias Gossip.Presence
   alias Gossip.UserAgents
 
   def render("online.json", %{games: games}) do
@@ -57,6 +58,54 @@ defmodule Web.GameView do
 
       _ ->
         false
+    end
+  end
+
+  def online_players(game) do
+    presence =
+      Enum.find(Presence.online_games(), fn presence ->
+        presence.game.id == game.id
+      end)
+
+    case presence do
+      nil ->
+        []
+
+      presence ->
+        presence.players
+    end
+  end
+
+  def online_status(game) do
+    active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
+
+    case Timex.before?(active_cutoff, game.last_seen_at) do
+      true ->
+        content_tag(:i, "", class: "fa fa-circle online", alt: "Game Online", title: "Online")
+
+      _ ->
+        mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+
+        case Timex.before?(mssp_cutoff, game.mssp_last_seen_at) do
+          true ->
+            content_tag(:i, "", class: "fa fa-adjust online", alt: "Seen on MSSP", title: "Seen on MSSP")
+
+          _ ->
+            content_tag(:i, "", class: "fa fa-circle offline", alt: "Game Offline", title: "Offline")
+        end
+    end
+  end
+
+  def connection_info(connection) do
+    case connection.type do
+      "web" ->
+        link(connection.url, to: connection.url, target: "_blank")
+
+      "telnet" ->
+        "#{connection.host}:#{connection.port}"
+
+      "secure telnet" ->
+        "#{connection.host}:#{connection.port}"
     end
   end
 end

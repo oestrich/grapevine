@@ -23,6 +23,8 @@ defmodule Gossip.Games.Game do
     field(:version, :string, default: "1.0.0")
     field(:display, :boolean, default: true)
     field(:allow_character_registration, :boolean, default: true)
+
+    field(:last_seen_at, :utc_datetime)
     field(:mssp_last_seen_at, :utc_datetime)
 
     field(:description, :string)
@@ -80,6 +82,12 @@ defmodule Gossip.Games.Game do
 
   def metadata_changeset(struct, params) do
     cast(struct, params, [:user_agent, :version])
+  end
+
+  def seen_changeset(struct, seen_at) do
+    struct
+    |> change()
+    |> put_change(:last_seen_at, DateTime.truncate(seen_at, :second))
   end
 
   def seen_on_mssp_changeset(struct, seen_at) do

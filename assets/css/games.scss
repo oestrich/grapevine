@@ -3,6 +3,10 @@
 .game {
   border-radius: .25rem;
 
+  .online {
+    color: $green;
+  }
+
   .add {
     margin-top: 16px;
   }

@@ -1,0 +1,30 @@
+@import "colors";
+
+.achievements {
+  list-style: none;
+  padding-left: 0;
+}
+
+.achievement {
+  border: 2px solid $grey-01;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+
+  .points {
+    flex: 1;
+    font-size: 28px;
+
+    span {
+      width: 100%;
+      text-align: center;
+      display: block;
+    }
+  }
+
+  .information {
+    flex: 7;
+  }
+}
