@@ -116,7 +116,7 @@ defmodule Socket.Games do
     Helps contain what each event looks look as a response
     """
 
-    alias Web.GameView
+    alias Web.Manage.GameView
 
     def event("unknown", %{ref: ref}) do
       %{

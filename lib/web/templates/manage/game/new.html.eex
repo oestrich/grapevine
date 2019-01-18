@@ -1,0 +1,19 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: manage_user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">New</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section>
+      <h3>Create a Game</h3>
+
+      <p class="lead">You will have a chance to fill in information, such as connection info, after entering in basic data.</p>
+
+      <%= render("_form.html", changeset: @changeset, url: manage_game_path(@conn, :create), submit: "Create Game", mode: :create) %>
+    </section>
+  </div>
+</div>

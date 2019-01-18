@@ -1,0 +1,47 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: manage_user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Achievements</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">
+      <%= @game.name %> Achievements
+    </h3>
+
+    <div class="actions">
+      <%= link("New Achievement", to: manage_game_achievement_path(@conn, :new, @game.id), class: "btn btn-primary") %>
+    </div>
+  </nav>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Points</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <%= Enum.map(@achievements, fn achievement -> %>
+      <tr>
+        <td><%= achievement.title %></td>
+        <td>
+          <%= if achievement.description do %>
+            <%= text_to_html(achievement.description) %>
+          <% end %>
+        </td>
+        <td><%= achievement.points %> points</td>
+        <td>
+          <%= link("Edit", to: manage_achievement_path(@conn, :edit, achievement.id), class: "btn btn-flat") %>
+          <%= link("Delete", to: manage_achievement_path(@conn, :delete, achievement.id), method: :delete, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
+        </td>
+      </tr>
+    <% end) %>
+  </table>
+</section>

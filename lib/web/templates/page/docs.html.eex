@@ -93,7 +93,7 @@
   <% end %>
 </h3>
 
-<p>Once you have an account, visit your <%= link("configuration page", to: user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+<p>Once you have an account, visit your <%= link("configuration page", to: manage_user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
 
 <h3 id="channels-basic">
   <%= link(to: "#channels-basic") do %>
@@ -226,7 +226,7 @@
 <ul>
   <li><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</li>
   <li><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</li>
-  <li><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: game_path(@conn, :index)) %> page.</li>
+  <li><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: manage_game_path(@conn, :index)) %> page.</li>
   <li><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Gossip updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</li>
 </ul>
 
@@ -1051,7 +1051,7 @@ This is a TLS secured telnet connection.
   <% end %>
 </h4>
 
-<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: user_game_path(@conn, :index)) %> page.
+<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: manage_user_game_path(@conn, :index)) %> page.
 
 <p>The <code>redirect_uri</code> <b>must</b> be a secure <code>https</code> URI or a <code>localhost</code> URI for development purposes.</p>
 

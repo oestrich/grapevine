@@ -12,7 +12,7 @@ defmodule Gossip.Versions do
   alias Gossip.Repo
   alias Gossip.UserAgents
   alias Gossip.Versions.Version
-  alias Web.ConnectionView
+  alias Web.Manage.ConnectionView
 
   @doc """
   Log a new action on a supported schema

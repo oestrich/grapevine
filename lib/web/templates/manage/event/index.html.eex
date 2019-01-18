@@ -1,0 +1,47 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: manage_user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Events</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">
+      <%= @game.name %> Events
+    </h3>
+
+    <div class="actions">
+      <%= link("New Event", to: manage_game_event_path(@conn, :new, @game.id), class: "btn btn-primary") %>
+    </div>
+  </nav>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Dates</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <%= Enum.map(@events, fn event -> %>
+      <tr>
+        <td><%= event.title %></td>
+        <td>
+          <%= if event.description do %>
+            <%= text_to_html(event.description) %>
+          <% end %>
+        </td>
+        <td><%= event.start_date %> to <%= event.end_date %></td>
+        <td>
+          <%= link("Edit", to: manage_event_path(@conn, :edit, event.id), class: "btn btn-flat") %>
+          <%= link("Delete", to: manage_event_path(@conn, :delete, event.id), method: :delete, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
+        </td>
+      </tr>
+    <% end) %>
+  </table>
+</section>
