@@ -6,8 +6,7 @@ config :gossip, Web.Endpoint,
   http: [port: 4001],
   server: false
 
-# Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :error
 
 # Configure your database
 config :gossip, Gossip.Repo,
@@ -16,3 +15,5 @@ config :gossip, Gossip.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :bcrypt_elixir, :log_rounds, 4
+
+config :gossip, Gossip.Mailer, adapter: Bamboo.TestAdapter

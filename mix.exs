@@ -33,6 +33,8 @@ defmodule Gossip.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bamboo, "~> 1.1"},
+      {:bamboo_smtp, "~> 1.5"},
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:cowboy, "~> 2.0"},

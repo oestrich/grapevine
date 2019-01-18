@@ -9,10 +9,12 @@
   <div class="col-md-6 offset-md-3">
     <section>
       <nav>
-        <h3 class="name">Sign In</h3>
+        <h3 class="name">Password Reset</h3>
       </nav>
 
-      <%= form_for @changeset, session_path(@conn, :create), [method: :post], fn (f) -> %>
+      <p class="lead">You can only reset your password if an email was attached to the account.</p>
+
+      <%= form_for @changeset, registration_reset_path(@conn, :create), [method: :post], fn (f) -> %>
         <div class="form-group row">
           <div class="col-md-3">
             <%= label f, :email, "Email" %>
@@ -23,20 +25,11 @@
           </div>
         </div>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <%= label f, :password %>
-          </div>
-          <div class="col-md-9">
-            <%= text_input f, :password, type: "password", class: "form-control" %>
-            <%= error_tag f, :password_hash %>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-9 offset-md-3">
-            <%= submit "Sign In", class: "btn btn-primary btn-flat" %>
-            <%= link("Forgot your password?", to: registration_reset_path(@conn, :new), class: "btn btn-flat") %>
+        <div class="actions">
+          <div class="row">
+            <div class="col-md-9 offset-md-3">
+              <%= submit "Start Reset", class: "btn btn-primary btn-flat" %>
+            </div>
           </div>
         </div>
       <% end %>
