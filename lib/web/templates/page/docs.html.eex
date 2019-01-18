@@ -93,7 +93,7 @@
   <% end %>
 </h3>
 
-<p>Once you have an account, visit your <%= link("configuration page", to: manage_user_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+<p>Once you have an account, visit your <%= link("configuration page", to: manage_game_path(@conn, :index)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
 
 <h3 id="channels-basic">
   <%= link(to: "#channels-basic") do %>
@@ -1051,7 +1051,7 @@ This is a TLS secured telnet connection.
   <% end %>
 </h4>
 
-<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: manage_user_game_path(@conn, :index)) %> page.
+<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: manage_game_path(@conn, :index)) %> page.
 
 <p>The <code>redirect_uri</code> <b>must</b> be a secure <code>https</code> URI or a <code>localhost</code> URI for development purposes.</p>
 

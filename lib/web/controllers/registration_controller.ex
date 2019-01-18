@@ -17,7 +17,7 @@ defmodule Web.RegistrationController do
         conn
         |> put_flash(:info, "Your game has been registered! Welcome!")
         |> put_session(:user_token, user.token)
-        |> redirect(to: manage_user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
 
       {:error, changeset} ->
         conn

@@ -33,6 +33,8 @@ defmodule Web.Router do
 
     resources("/mssp", MSSPController, only: [:index])
 
+    get("/games/online", GameController, :online)
+
     resources("/games", GameController, only: []) do
       get("/stats/players", GameStatisticController, :players, as: :statistic)
     end
@@ -56,8 +58,6 @@ defmodule Web.Router do
     resources("/connections", ConnectionController, only: [:delete])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
-
-    resources("/games/mine", UserGameController, only: [:index])
 
     resources("/games", GameController, only: [:index, :show, :new, :create, :edit, :update]) do
       resources("/achievements", AchievementController, only: [:index, :new, :create])

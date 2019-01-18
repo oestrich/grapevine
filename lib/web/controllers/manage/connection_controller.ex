@@ -34,7 +34,7 @@ defmodule Web.Manage.ConnectionController do
       _ ->
         conn
         |> put_flash(:error, "Could not delete the connection!")
-        |> redirect(to: manage_user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
     end
   end
 end

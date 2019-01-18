@@ -2,16 +2,15 @@ defmodule Web.Manage.GameController do
   use Web, :controller
 
   alias Gossip.Games
-  alias Gossip.Presence
 
-  plug(Web.Plugs.VerifyUser when action in [:edit, :update, :regenerate])
+  plug(Web.Plugs.VerifyUser)
 
   def index(conn, _params) do
-    games = Enum.filter(Presence.online_games(), & &1.game.display)
+    %{current_user: user} = conn.assigns
 
     conn
-    |> assign(:games, games)
-    |> render(:index)
+    |> assign(:games, Games.for_user(user))
+    |> render("index.html")
   end
 
   def show(conn, %{"id" => id}) do
@@ -43,7 +42,7 @@ defmodule Web.Manage.GameController do
       {:ok, _game} ->
         conn
         |> put_flash(:info, "Game created!")
-        |> redirect(to: manage_user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
 
       {:error, changeset} ->
         conn
@@ -66,7 +65,7 @@ defmodule Web.Manage.GameController do
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Could not find that game.")
-        |> redirect(to: manage_user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
     end
   end
 
@@ -102,7 +101,7 @@ defmodule Web.Manage.GameController do
       {:error, _} ->
         conn
         |> put_flash(:error, "An error occurred, please try again.")
-        |> redirect(to: manage_user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
     end
   end
 end
