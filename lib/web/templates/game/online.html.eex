@@ -1,7 +1,8 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item active">Games</li>
+    <li class="breadcrumb-item"><%= link("Games", to: game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Online</li>
   </ol>
 </nav>
 

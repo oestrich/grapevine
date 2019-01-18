@@ -37,6 +37,19 @@ defmodule Gossip.Events do
   end
 
   @doc """
+  Get recent events for a game
+  """
+  def recent(game) do
+    last_week = Timex.now() |> Timex.shift(weeks: -1)
+
+    Event
+    |> where([e], e.game_id == ^game.id)
+    |> where([e], e.start_date >= ^last_week)
+    |> order_by([e], asc: e.start_date, asc: e.end_date)
+    |> Repo.all()
+  end
+
+  @doc """
   Get an event for a user
 
   Scoped to the user

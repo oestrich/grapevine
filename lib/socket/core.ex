@@ -11,6 +11,7 @@ defmodule Socket.Core do
 
   alias Gossip.Applications.Application
   alias Gossip.Channels
+  alias Gossip.Games
   alias Gossip.Presence
   alias Gossip.Text
   alias Socket.Core.Authenticate
@@ -46,6 +47,7 @@ defmodule Socket.Core do
       |> Map.put(:heartbeat_count, 0)
       |> Map.put(:players, players)
 
+    Games.seen_on_socket(state.game)
     Presence.update_game(state)
 
     {:ok, :skip, state}

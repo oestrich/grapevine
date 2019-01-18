@@ -1,0 +1,36 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Games</li>
+  </ol>
+</nav>
+
+<section>
+  <nav>
+    <h3 class="name">Games</h3>
+
+    <div class="actions">
+      <%= link("Online Games", to: game_path(@conn, :online), class: "btn btn-flat") %>
+    </div>
+  </nav>
+
+  <table class="table games">
+    <thead>
+      <th scope="col">Name</th>
+      <th scope="col">Server</th>
+    </thead>
+    <tbody>
+      <%= Enum.map(@games, fn game -> %>
+        <tr class="game">
+          <td>
+            <%= online_status(game) %>
+            <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
+          </td>
+          <td><%= game.user_agent %></td>
+        </tr>
+      <% end) %>
+    </tbody>
+  </table>
+
+  <p><%= Enum.count(@games) %> Games</p>
+</section>

@@ -1,0 +1,105 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Games", to: game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @game.name %></li>
+  </ol>
+</nav>
+
+<section class="game">
+  <nav>
+    <h3 class="name">
+      <%= online_status(@game) %>
+
+      <%= @game.name %>
+
+      <%= if @game.homepage_url do %>
+        <span class="home-page"><%= link(@game.homepage_url, to: @game.homepage_url) %></span>
+      <% end %>
+    </h3>
+
+    <div class="actions">
+      <%= link("Achievements", to: game_achievement_path(@conn, :index, @game.short_name), class: "btn btn-flat") %>
+    </div>
+  </nav>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-md-6">
+      <%= if @game.description do %>
+        <p><%= text_to_html(@game.description) %></p>
+      <% end %>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>Gossip Name</th>
+            <td><%= @game.short_name %></td>
+          </tr>
+          <%= if @game.user_agent do %>
+            <tr>
+              <th>Server</th>
+              <td><%= display_user_agent(@game.user_agent) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= unless Enum.empty?(@game.connections) do %>
+      <div class="col-md-6">
+        <h4>Ways to Connect</h4>
+
+        <%= Enum.map(@game.connections, fn connection -> %>
+          <%= render("_connection.html", %{connection: connection}) %>
+        <% end) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <%= if !Enum.empty?(online_players(@game)) do %>
+      <div class="col-md-12">
+        <h4>Online Players</h4>
+        <div class="players">
+          <%= Enum.map(online_players(@game), fn player -> %>
+            <span class="player"><%= player %></span>
+          <% end) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <h3>Player Stats</h3>
+      <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
+        <canvas></canvas>
+      </div>
+    </div>
+  </div>
+
+  <%= unless Enum.empty?(@events) do %>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h3>In Game Events</h3>
+        <div class="row">
+          <%= Enum.map(@events, fn event -> %>
+            <div class="col-md-3">
+              <div class="card mt-3">
+                <div class="card-body">
+                  <h5 class="card-title"><%= event.title %></h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
+                  <%= if event.description do %>
+                    <p class="card-text"><%= text_to_html(event.description) %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</section>

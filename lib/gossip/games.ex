@@ -36,11 +36,29 @@ defmodule Gossip.Games do
   @doc """
   Get all games
   """
-  @spec all() :: [Game.t()]
   def all() do
     Game
     |> preload([:connections, :redirect_uris])
     |> Repo.all()
+  end
+
+  def all(opts) do
+    Game
+    |> preload([:connections])
+    |> sort(opts)
+    |> Repo.all()
+  end
+
+  defp sort(query, opts) do
+    case Keyword.get(opts, :sort, :name) do
+      :online ->
+        active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
+        mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+
+        query
+        |> order_by([g], fragment("coalesce(?, ?) > ? or coalesce(?, ?) > ? desc nulls last", g.last_seen_at, ^active_cutoff, ^active_cutoff, g.mssp_last_seen_at, ^mssp_cutoff, ^mssp_cutoff))
+        |> order_by([g], g.name)
+    end
   end
 
   @doc """
@@ -84,9 +102,8 @@ defmodule Gossip.Games do
   @doc """
   Fetch a game by the short name
   """
-  @spec get_by_short(short_name()) :: Game.t()
-  def get_by_short(short_name) do
-    case Repo.get_by(Game, short_name: short_name) do
+  def get_by_short(short_name, opts \\ []) do
+    case Repo.get_by(Game, Keyword.merge(opts, [short_name: short_name])) do
       nil ->
         {:error, :not_found}
 
@@ -217,6 +234,21 @@ defmodule Gossip.Games do
 
       user_agent ->
         UserAgents.register_user_agent(user_agent)
+    end
+  end
+
+  @doc """
+  Update the timestamp for a game's last seen status
+  """
+  def seen_on_socket(game, seen_at \\ Timex.now()) do
+    changeset = Game.seen_changeset(game, seen_at)
+
+    case changeset |> Repo.update() do
+      {:ok, game} ->
+        {:ok, game}
+
+      {:error, changeset} ->
+        {:error, changeset}
     end
   end
 

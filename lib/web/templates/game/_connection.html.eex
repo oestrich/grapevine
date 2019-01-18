@@ -1,0 +1,6 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title"><%= String.capitalize(@connection.type) %></h5>
+    <p class="card-text"><%= connection_info(@connection) %></p>
+  </div>
+</div>
