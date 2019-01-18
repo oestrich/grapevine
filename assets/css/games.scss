@@ -1,7 +1,8 @@
 @import "colors";
 
 .filter {
-  background-color: $grey-3;
+  background-color: $white;
+  border: 2px solid $grey;
   border-radius: 4px;
 
   padding: 16px;
@@ -12,7 +13,8 @@
   padding-left: 0;
 
   .game {
-    border: 2px solid $grey-01;
+    background-color: $white;
+    border: 2px solid $grey;
     border-radius: 4px;
     margin-bottom: 12px;
     padding: 8px;
