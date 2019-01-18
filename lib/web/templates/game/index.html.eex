@@ -14,23 +14,50 @@
     </div>
   </nav>
 
-  <table class="table games">
-    <thead>
-      <th scope="col">Name</th>
-      <th scope="col">Server</th>
-    </thead>
-    <tbody>
-      <%= Enum.map(@games, fn game -> %>
-        <tr class="game">
-          <td>
-            <%= online_status(game) %>
-            <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
-          </td>
-          <td><%= game.user_agent %></td>
-        </tr>
-      <% end) %>
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="filter">
+        <h5>Filter</h5>
+        <%= form_tag game_path(@conn, :index), method: :get do %>
+          <div class="form-group">
+            <%= label(:games, :name) %>
+            <%= text_input(:games, :name, value: @filter["name"], class: "form-control") %>
+          </div>
 
-  <p><%= Enum.count(@games) %> Games</p>
+          <div class="form-group">
+            <%= label(:games, :server, "Server Type") %>
+            <%= select(:games, :server, @user_agents, value: @filter["server"], class: "form-control", prompt: "Select") %>
+          </div>
+
+          <%= submit "Search", class: "btn btn-primary" %>
+          <%= link("Clear", to: game_path(@conn, :index), class: "btn btn-flat") %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <ul class="games">
+        <%= Enum.map(@games, fn game -> %>
+          <li class="game">
+            <div class="status">
+              <%= online_status(game) %>
+            </div>
+            <div class="information">
+              <h4 class="title">
+                <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
+
+                <%= if game.user_agent do %>
+                  <span class="user-agent float-right"><%= game.user_agent %></span>
+                <% end %>
+              </h4>
+
+              <p class="tagline"><%= game.tagline %></p>
+            </div>
+          </li>
+        <% end) %>
+      </ul>
+
+      <p><%= Enum.count(@games) %> Games</p>
+    </div>
+  </div>
 </section>

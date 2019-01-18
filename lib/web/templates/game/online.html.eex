@@ -15,7 +15,7 @@
     <p>No games are online currently</p>
   <% end %>
 
-  <div class="card-columns games">
+  <div class="card-columns games online">
     <%= Enum.map(@games, fn %{game: game, channels: channels, players: players} -> %>
       <div class="card">
         <div class="card-body">

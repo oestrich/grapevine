@@ -4,6 +4,7 @@ defmodule Gossip.Games do
   """
 
   alias Gossip.Accounts.User
+  alias Gossip.Filter
   alias Gossip.Games.Connection
   alias Gossip.Games.Game
   alias Gossip.Games.RedirectURI
@@ -42,24 +43,34 @@ defmodule Gossip.Games do
     |> Repo.all()
   end
 
-  def all(opts) do
+  def public(opts) do
+    opts = Enum.into(opts, %{})
+
     Game
     |> preload([:connections])
     |> where([g], g.display == true)
-    |> sort(opts)
+    |> sort_online()
+    |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
   end
 
-  defp sort(query, opts) do
-    case Keyword.get(opts, :sort, :name) do
-      :online ->
-        active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
-        mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+  def filter_on_attribute({"name", value}, query) do
+    where(query, [g], ilike(g.name, ^"%#{value}%"))
+  end
 
-        query
-        |> order_by([g], fragment("coalesce(?, ?) > ? or coalesce(?, ?) > ? desc nulls last", g.last_seen_at, ^active_cutoff, ^active_cutoff, g.mssp_last_seen_at, ^mssp_cutoff, ^mssp_cutoff))
-        |> order_by([g], g.name)
-    end
+  def filter_on_attribute({"server", value}, query) do
+    where(query, [g], g.user_agent == ^value)
+  end
+
+  def filter_on_attribute(_, query), do: query
+
+  defp sort_online(query) do
+    active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
+    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+
+    query
+    |> order_by([g], fragment("coalesce(?, ?) > ? or coalesce(?, ?) > ? desc nulls last", g.last_seen_at, ^active_cutoff, ^active_cutoff, g.mssp_last_seen_at, ^mssp_cutoff, ^mssp_cutoff))
+    |> order_by([g], g.name)
   end
 
   @doc """
@@ -236,6 +247,16 @@ defmodule Gossip.Games do
       user_agent ->
         UserAgents.register_user_agent(user_agent)
     end
+  end
+
+  @doc """
+  Get a list of all user agents currently in use
+  """
+  def user_agents_in_use() do
+    Game
+    |> select([g], g.user_agent)
+    |> distinct(:user_agent)
+    |> Repo.all()
   end
 
   @doc """

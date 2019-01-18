@@ -9,6 +9,8 @@
     <div class="help-block">Link to the game's homepage.</div>
   <% end %>
 
+  <%= FormView.text_field(f, :tagline) %>
+
   <%= FormView.textarea_field(f, :description, rows: 5) %>
 
   <%= if @mode == :edit do %>

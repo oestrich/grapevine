@@ -27,6 +27,7 @@ defmodule Gossip.Games.Game do
     field(:last_seen_at, :utc_datetime)
     field(:mssp_last_seen_at, :utc_datetime)
 
+    field(:tagline, :string)
     field(:description, :string)
     field(:homepage_url, :string)
 
@@ -49,6 +50,7 @@ defmodule Gossip.Games.Game do
       :name,
       :short_name,
       :homepage_url,
+      :tagline,
       :description,
       :display,
       :allow_character_registration
@@ -64,7 +66,8 @@ defmodule Gossip.Games.Game do
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)
     |> maybe_strip_carriage_returns_from_description()
-    |> validate_length(:short_name, less_than_or_equal_to: 15)
+    |> validate_length(:short_name, max: 15)
+    |> validate_length(:tagline, max: 70)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/.+\./)
     |> Gossip.Schema.ensure(:client_id, UUID.uuid4())

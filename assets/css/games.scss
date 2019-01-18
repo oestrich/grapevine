@@ -1,5 +1,55 @@
 @import "colors";
 
+.filter {
+  background-color: $grey-3;
+  border-radius: 4px;
+
+  padding: 16px;
+}
+
+.games {
+  list-style: none;
+  padding-left: 0;
+
+  .game {
+    border: 2px solid $grey-01;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+
+    h4 a {
+      color: $blue;
+      text-decoration: none;
+    }
+
+    .user-agent {
+      font-size: 16px;
+    }
+
+    .tagline {
+      height: 20px;
+      overflow-y: hidden;
+    }
+
+    .status {
+      flex: 1;
+      font-size: 28px;
+
+      i {
+        width: 100%;
+        text-align: center;
+        display: block;
+      }
+    }
+
+    .information {
+      flex: 9;
+    }
+  }
+}
+
 .game {
   border-radius: .25rem;
 
@@ -26,7 +76,7 @@
   }
 }
 
-.games {
+.games.online {
   .user-agent {
     margin-bottom: 4px;
   }

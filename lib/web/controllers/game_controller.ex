@@ -5,9 +5,14 @@ defmodule Web.GameController do
   alias Gossip.Games
   alias Gossip.Presence
 
-  def index(conn, _params) do
+  def index(conn, params) do
+    filter = Map.get(params, "games", %{})
+    games = Games.public(filter: filter)
+
     conn
-    |> assign(:games, Games.all(sort: :online))
+    |> assign(:games, games)
+    |> assign(:user_agents, Games.user_agents_in_use())
+    |> assign(:filter, filter)
     |> assign(:title, "Games on Gossip")
     |> assign(:open_graph_title, "Games on Gossip")
     |> assign(:open_graph_description, "View a listing of games that are on the Gossip network.")
