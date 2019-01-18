@@ -35,7 +35,8 @@
 
         <div class="row">
           <div class="col-md-9 offset-md-3">
-            <%= submit "Sign In", class: "btn btn-primary btn-flat" %>
+            <%= submit("Sign In", class: "btn btn-primary btn-flat") %>
+            <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary btn-flat") %>
             <%= link("Forgot your password?", to: registration_reset_path(@conn, :new), class: "btn btn-flat") %>
           </div>
         </div>
