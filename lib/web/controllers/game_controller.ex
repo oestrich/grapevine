@@ -6,7 +6,7 @@ defmodule Web.GameController do
   alias Gossip.Presence
 
   def index(conn, params) do
-    filter = Map.get(params, "games", %{})
+    filter = Map.get(params, "games", %{"online" => "yes"})
     games = Games.public(filter: filter)
 
     conn

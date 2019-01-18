@@ -62,6 +62,13 @@ defmodule Gossip.Games do
     where(query, [g], g.user_agent == ^value)
   end
 
+  def filter_on_attribute({"online", "yes"}, query) do
+    active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
+    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+
+    where(query, [g], g.last_seen_at > ^active_cutoff or g.mssp_last_seen_at > ^mssp_cutoff)
+  end
+
   def filter_on_attribute(_, query), do: query
 
   defp sort_online(query) do

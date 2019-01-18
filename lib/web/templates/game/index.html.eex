@@ -25,6 +25,11 @@
           </div>
 
           <div class="form-group">
+            <%= label(:games, :online, "Online Status") %>
+            <%= select(:games, :online, [{"Yes", "yes"}, {"All", "all"}], value: @filter["online"], class: "form-control") %>
+          </div>
+
+          <div class="form-group">
             <%= label(:games, :server, "Server Type") %>
             <%= select(:games, :server, @user_agents, value: @filter["server"], class: "form-control", prompt: "Select") %>
           </div>
