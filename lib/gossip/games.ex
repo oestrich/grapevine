@@ -45,6 +45,7 @@ defmodule Gossip.Games do
   def all(opts) do
     Game
     |> preload([:connections])
+    |> where([g], g.display == true)
     |> sort(opts)
     |> Repo.all()
   end
