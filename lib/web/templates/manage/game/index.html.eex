@@ -10,7 +10,7 @@
     <h3 class="name">Your Games</h3>
 
     <div class="actions">
-      <%= link("Register a Game", to: game_path(@conn, :new), class: "btn btn-flat") %>
+      <%= link("Register a Game", to: manage_game_path(@conn, :new), class: "btn btn-flat") %>
     </div>
   </nav>
 
@@ -28,8 +28,8 @@
           <td><%= game.name %></td>
           <td><%= game.short_name %></td>
           <td>
-            <%= link("View", to: game_path(@conn, :show, game.id), class: "btn btn-flat") %>
-            <%= link("Edit", to: game_path(@conn, :edit, game.id), class: "btn btn-flat") %>
+            <%= link("View", to: manage_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
+            <%= link("Edit", to: manage_game_path(@conn, :edit, game.id), class: "btn btn-flat") %>
           </td>
         </tr>
       <% end) %>

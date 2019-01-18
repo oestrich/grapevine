@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item"><%= link("Your Games", to: user_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: manage_game_path(@conn, :index)) %></li>
     <li class="breadcrumb-item active"><%= @game.name %></li>
   </ol>
 </nav>
@@ -15,9 +15,9 @@
     </h3>
 
     <div class="actions">
-      <%= link("Edit", to: game_path(@conn, :edit, @game.id), class: "btn btn-flat") %>
-      <%= link("Achievements", to: game_achievement_path(@conn, :index, @game.id), class: "btn btn-flat") %>
-      <%= link("Events", to: game_event_path(@conn, :index, @game.id), class: "btn btn-flat") %>
+      <%= link("Edit", to: manage_game_path(@conn, :edit, @game.id), class: "btn btn-flat") %>
+      <%= link("Achievements", to: manage_game_achievement_path(@conn, :index, @game.id), class: "btn btn-flat") %>
+      <%= link("Events", to: manage_game_event_path(@conn, :index, @game.id), class: "btn btn-flat") %>
     </div>
   </nav>
 
@@ -36,7 +36,7 @@
         <%= link("Toggle Secret", to: "#", class: "show-secret") %>
       </div>
 
-      <%= link("Reset Client ID and Client Secret", to: game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
+      <%= link("Reset Client ID and Client Secret", to: manage_game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
     </div>
 
     <div class="col-md-6">
@@ -79,7 +79,7 @@
           <% end) %>
         </div>
 
-        <%= ReactView.react_component("Components.RedirectURI", action: game_redirect_uri_path(@conn, :create, @game.id)) %>
+        <%= ReactView.react_component("Components.RedirectURI", action: manage_game_redirect_uri_path(@conn, :create, @game.id)) %>
       </div>
     </div>
 
@@ -95,7 +95,7 @@
           <%= render(ConnectionView, "show.html", connection: connection, conn: @conn) %>
         <% end) %>
 
-        <%= ReactView.react_component("Components.Connection", game_id: @game.id, action: game_connection_path(@conn, :create, @game.id)) %>
+        <%= ReactView.react_component("Components.Connection", game_id: @game.id, action: manage_game_connection_path(@conn, :create, @game.id)) %>
       </div>
     </div>
   </div>

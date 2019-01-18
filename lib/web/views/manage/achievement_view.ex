@@ -1,4 +1,4 @@
-defmodule Web.EventView do
+defmodule Web.Manage.AchievementView do
   use Web, :view
 
   alias Web.FormView

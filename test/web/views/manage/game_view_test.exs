@@ -1,7 +1,7 @@
-defmodule Web.GameViewTest do
+defmodule Web.Manage.GameViewTest do
   use Gossip.DataCase
 
-  alias Web.GameView
+  alias Web.Manage.GameView
 
   describe "games/status json" do
     setup do

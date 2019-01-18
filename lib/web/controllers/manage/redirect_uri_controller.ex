@@ -1,4 +1,4 @@
-defmodule Web.RedirectURIController do
+defmodule Web.Manage.RedirectURIController do
   use Web, :controller
 
   plug(Web.Plugs.VerifyUser)
@@ -12,12 +12,12 @@ defmodule Web.RedirectURIController do
          {:ok, connection} <- Games.create_redirect_uri(game, uri) do
       conn
       |> put_flash(:info, "Saved the redirect URI")
-      |> redirect(to: game_path(conn, :show, connection.game_id))
+      |> redirect(to: manage_game_path(conn, :show, connection.game_id))
     else
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "URI was invalid")
-        |> redirect(to: game_path(conn, :show, game_id))
+        |> redirect(to: manage_game_path(conn, :show, game_id))
     end
   end
 
@@ -29,12 +29,12 @@ defmodule Web.RedirectURIController do
          {:ok, redirect_uri} <- Games.delete_redirect_uri(redirect_uri) do
       conn
       |> put_flash(:info, "Deleted the URI")
-      |> redirect(to: game_path(conn, :show, redirect_uri.game_id))
+      |> redirect(to: manage_game_path(conn, :show, redirect_uri.game_id))
     else
       _ ->
         conn
         |> put_flash(:error, "Could not delete the URI")
-        |> redirect(to: user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule Web.ConnectionController do
+defmodule Web.Manage.ConnectionController do
   use Web, :controller
 
   plug(Web.Plugs.VerifyUser)
@@ -12,12 +12,12 @@ defmodule Web.ConnectionController do
          {:ok, connection} <- Games.create_connection(game, params) do
       conn
       |> put_flash(:info, "Created the connection!")
-      |> redirect(to: game_path(conn, :show, connection.game_id))
+      |> redirect(to: manage_game_path(conn, :show, connection.game_id))
     else
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Coult not create the connection!")
-        |> redirect(to: game_path(conn, :show, game_id))
+        |> redirect(to: manage_game_path(conn, :show, game_id))
     end
   end
 
@@ -29,12 +29,12 @@ defmodule Web.ConnectionController do
          {:ok, connection} <- Games.delete_connection(connection) do
       conn
       |> put_flash(:info, "Deleted the connection!")
-      |> redirect(to: game_path(conn, :show, connection.game_id))
+      |> redirect(to: manage_game_path(conn, :show, connection.game_id))
     else
       _ ->
         conn
         |> put_flash(:error, "Could not delete the connection!")
-        |> redirect(to: user_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :index))
     end
   end
 end

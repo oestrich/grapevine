@@ -1,4 +1,0 @@
-<div class="redirect-uri">
-  <code><%= @redirect_uri.uri %></code>
-  <%= link("Delete", to: redirect_uri_path(@conn, :delete, @redirect_uri.id), method: "delete", class: "btn btn-sm btn-flat", data: [confirm: "Are you sure?"]) %>
-</div>

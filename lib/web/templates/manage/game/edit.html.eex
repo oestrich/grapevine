@@ -1,0 +1,18 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Your Games", to: manage_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Edit</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section>
+      <h3>Edit <%= @game.name %></h3>
+
+      <%= render("_form.html", changeset: @changeset, url: manage_game_path(@conn, :update, @game.id), submit: "Update Game", mode: :edit) %>
+    </section>
+  </div>
+</div>

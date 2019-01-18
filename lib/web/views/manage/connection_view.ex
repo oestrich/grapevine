@@ -1,4 +1,4 @@
-defmodule Web.ConnectionView do
+defmodule Web.Manage.ConnectionView do
   use Web, :view
 
   def render("show.json", %{connection: connection}) do

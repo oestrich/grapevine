@@ -1,8 +1,8 @@
-defmodule Web.AchievementController do
+defmodule Web.Manage.EventController do
   use Web, :controller
 
   alias Gossip.Games
-  alias Gossip.Achievements
+  alias Gossip.Events
 
   plug(Web.Plugs.VerifyUser)
 
@@ -12,7 +12,7 @@ defmodule Web.AchievementController do
     with {:ok, game} <- Games.get(user, game_id) do
       conn
       |> assign(:game, game)
-      |> assign(:achievements, Achievements.for(game))
+      |> assign(:events, Events.for(game))
       |> render("index.html")
     end
   end
@@ -23,17 +23,17 @@ defmodule Web.AchievementController do
     with {:ok, game} <- Games.get(user, game_id) do
       conn
       |> assign(:game, game)
-      |> assign(:changeset, Achievements.new(game))
+      |> assign(:changeset, Events.new(game))
       |> render("new.html")
     end
   end
 
-  def create(conn, %{"game_id" => game_id, "achievement" => params}) do
+  def create(conn, %{"game_id" => game_id, "event" => params}) do
     %{current_user: user} = conn.assigns
 
     with {:ok, game} <- Games.get(user, game_id),
-         {:ok, _achievement} <- Achievements.create(game, params) do
-      redirect(conn, to: game_achievement_path(conn, :index, game.id))
+         {:ok, _event} <- Events.create(game, params) do
+      redirect(conn, to: manage_game_event_path(conn, :index, game.id))
     else
       {:error, changeset} ->
         {:ok, game} = Games.get(user, game_id)
@@ -48,29 +48,29 @@ defmodule Web.AchievementController do
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, achievement} = Achievements.get(user, id),
-         {:ok, game} = Games.get(user, achievement.game_id) do
+    with {:ok, event} = Events.get(user, id),
+         {:ok, game} = Games.get(user, event.game_id) do
       conn
-      |> assign(:achievement, achievement)
+      |> assign(:event, event)
       |> assign(:game, game)
-      |> assign(:changeset, Achievements.edit(achievement))
+      |> assign(:changeset, Events.edit(event))
       |> render("edit.html")
     end
   end
 
-  def update(conn, %{"id" => id, "achievement" => params}) do
+  def update(conn, %{"id" => id, "event" => params}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, achievement} <- Achievements.get(user, id),
-         {:ok, achievement} <- Achievements.update(achievement, params) do
-      redirect(conn, to: game_achievement_path(conn, :index, achievement.game_id))
+    with {:ok, event} <- Events.get(user, id),
+         {:ok, event} <- Events.update(event, params) do
+      redirect(conn, to: manage_game_event_path(conn, :index, event.game_id))
     else
       {:error, changeset} ->
-        {:ok, achievement} = Achievements.get(user, id)
-        {:ok, game} = Games.get(user, achievement.game_id)
+        {:ok, event} = Events.get(user, id)
+        {:ok, game} = Games.get(user, event.game_id)
 
         conn
-        |> assign(:achievement, achievement)
+        |> assign(:event, event)
         |> assign(:game, game)
         |> assign(:changeset, changeset)
         |> render("edit.html")
@@ -80,9 +80,9 @@ defmodule Web.AchievementController do
   def delete(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, achievement} <- Achievements.get(user, id),
-         {:ok, achievement} <- Achievements.delete(achievement) do
-      redirect(conn, to: game_achievement_path(conn, :index, achievement.game_id))
+    with {:ok, event} <- Events.get(user, id),
+         {:ok, event} <- Events.delete(event) do
+      redirect(conn, to: manage_game_event_path(conn, :index, event.game_id))
     end
   end
 end

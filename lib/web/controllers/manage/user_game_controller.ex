@@ -1,4 +1,4 @@
-defmodule Web.UserGameController do
+defmodule Web.Manage.UserGameController do
   use Web, :controller
 
   plug(Web.Plugs.VerifyUser)
