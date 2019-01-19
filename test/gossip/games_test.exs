@@ -99,7 +99,7 @@ defmodule Gossip.GamesTest do
       {:ok, connection} =
         Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
-      user = create_user(%{email: "other@example.com"})
+      user = create_user(%{username: "other", email: "other@example.com"})
       refute Games.user_owns_connection?(user, connection)
     end
   end
@@ -229,7 +229,7 @@ defmodule Gossip.GamesTest do
     test "is not owned", %{game: game} do
       {:ok, redirect_uri} = Games.create_redirect_uri(game, "https://example.com/callback")
 
-      user = create_user(%{email: "other@example.com"})
+      user = create_user(%{username: "other", email: "other@example.com"})
       refute Games.user_owns_redirect_uri?(user, redirect_uri)
     end
   end

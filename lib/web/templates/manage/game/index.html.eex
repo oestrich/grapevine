@@ -1,6 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
     <li class="breadcrumb-item active">Your Games</li>
   </ol>
 </nav>
@@ -14,25 +15,31 @@
     </div>
   </nav>
 
-  <table class="table">
-    <thead class="hidden">
-      <tr>
-        <th>Name</th>
-        <th>Short Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= Enum.map(@games, fn game -> %>
-        <tr>
-          <td><%= game.name %></td>
-          <td><%= game.short_name %></td>
-          <td>
-            <%= link("View", to: manage_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
-            <%= link("Edit", to: manage_game_path(@conn, :edit, game.id), class: "btn btn-flat") %>
-          </td>
-        </tr>
-      <% end) %>
-    </tbody>
-  </table>
+  <div class="row">
+    <%= SettingView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <thead class="hidden">
+          <tr>
+            <th>Name</th>
+            <th>Short Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@games, fn game -> %>
+            <tr>
+              <td><%= game.name %></td>
+              <td><%= game.short_name %></td>
+              <td>
+                <%= link("View", to: manage_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
+                <%= link("Edit", to: manage_game_path(@conn, :edit, game.id), class: "btn btn-flat") %>
+              </td>
+            </tr>
+          <% end) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>

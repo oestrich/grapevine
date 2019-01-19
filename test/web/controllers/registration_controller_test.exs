@@ -4,6 +4,7 @@ defmodule Web.RegistrationControllerTest do
   describe "registering a new game" do
     test "successful", %{conn: conn} do
       params = %{
+        username: "admin",
         email: "admin@example.com",
         password: "password",
         password_confirmation: "password"
@@ -11,7 +12,7 @@ defmodule Web.RegistrationControllerTest do
 
       conn = post(conn, Routes.registration_path(conn, :create), user: params)
 
-      assert redirected_to(conn) == Routes.manage_game_path(conn, :index)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "failure", %{conn: conn} do

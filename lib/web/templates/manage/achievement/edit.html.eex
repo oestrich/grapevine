@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item"><%= link("Your Games", to: manage_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
     <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
     <li class="breadcrumb-item"><%= link("Achievements", to: manage_game_achievement_path(@conn, :index, @game.id)) %></li>
     <li class="breadcrumb-item active"><%= @achievement.title %> Edit</li>

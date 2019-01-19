@@ -1,0 +1,66 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
+    <li class="breadcrumb-item active">Account</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Your Profile</h3>
+  </nav>
+
+  <div class="row">
+    <%= render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-4">
+      <%= form_for @changeset, manage_setting_path(@conn, :update), [method: :put], fn f -> %>
+        <div class="form-group">
+          <%= label f, :username %>
+          <%= if is_nil(@current_user.username) do %>
+            <%= text_input f, :username, class: "form-control" %>
+          <% else %>
+            <%= text_input f, :username, readonly: "true", class: "form-control" %>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= label f, :email %>
+          <%= text_input f, :email, class: "form-control" %>
+        </div>
+
+        <div class="row">
+          <div class="col-md-9 offset-md-3">
+            <%= submit("Update", class: "btn btn-primary") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-4 offset-md-1">
+      <%= form_tag(manage_setting_path(@conn, :update), [method: :put]) do %>
+        <div class="form-group">
+          <%= label :user, :current_password %>
+          <%= text_input :user, :current_password, type: "password", class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+          <%= label :user, :password %>
+          <%= text_input :user, :password, type: "password", class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+          <%= label :user, :password_confirmation %>
+          <%= text_input :user, :password_confirmation, type: "password", class: "form-control" %>
+        </div>
+
+        <div class="row">
+          <div class="col-md-9 offset-md-3">
+            <%= submit("Change Password", class: "btn btn-primary") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>

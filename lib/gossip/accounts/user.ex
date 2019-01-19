@@ -12,6 +12,8 @@ defmodule Gossip.Accounts.User do
   @type t :: %__MODULE__{}
 
   schema "users" do
+    field(:uid, Ecto.UUID, read_after_writes: true)
+    field(:username, :string)
     field(:email, :string)
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
@@ -29,13 +31,31 @@ defmodule Gossip.Accounts.User do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:email, :password, :password_confirmation])
-    |> validate_required([:email])
+    |> cast(params, [:username, :email, :password, :password_confirmation])
+    |> validate_required([:username, :email])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> Gossip.Schema.ensure(:token, UUID.uuid4())
     |> hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)
+    |> unique_constraint(:username)
+    |> unique_constraint(:email)
+  end
+
+  def update_with_username_changeset(struct, params) do
+    struct
+    |> cast(params, [:username, :email])
+    |> validate_required([:username, :email])
+    |> validate_format(:email, ~r/.+@.+\..+/)
+    |> unique_constraint(:username)
+    |> unique_constraint(:email)
+  end
+
+  def update_without_username_changeset(struct, params) do
+    struct
+    |> cast(params, [:email])
+    |> validate_required([:email])
+    |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email)
   end
 

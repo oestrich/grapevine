@@ -74,6 +74,8 @@ defmodule Web.Router do
     post("/games/:id/regenerate", GameController, :regenerate)
 
     resources("/redirect-uris", RedirectURIController, only: [:delete])
+
+    resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
   end
 
   if Mix.env() == :dev do

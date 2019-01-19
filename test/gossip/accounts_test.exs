@@ -8,21 +8,76 @@ defmodule Gossip.AccountsTest do
 
   describe "registering a new account" do
     test "successful" do
-      {:ok, game} =
+      {:ok, user} =
         Accounts.register(%{
+          username: "admin",
           email: "admin@example.com",
           password: "password",
           password_confirmation: "password"
         })
 
-      assert game.email == "admin@example.com"
-      assert game.password_hash
+      assert user.email == "admin@example.com"
+      assert user.password_hash
+    end
+  end
+
+  describe "updating a user" do
+    test "successful" do
+      user = create_user()
+
+      {:ok, user} = Accounts.update(user, %{
+        username: "user",
+        email: "user@example.com"
+      })
+
+      assert user.username == "admin"
+      assert user.email == "user@example.com"
+    end
+
+    test "editing username" do
+      user = create_user()
+      user = %{user | username: nil}
+
+      {:ok, user} = Accounts.update(user, %{
+        username: "user",
+        email: "user@example.com"
+      })
+
+      assert user.username == "user"
+      assert user.email == "user@example.com"
+    end
+  end
+
+  describe "changing a password" do
+    setup [:with_user]
+
+    test "correct current password", %{user: user} do
+      {:ok, user} = Accounts.change_password(user, "password", %{
+        password: "p@ssw0rd",
+        password_confirmation: "p@ssw0rd"
+      })
+
+      assert {:ok, _user} = Accounts.validate_login(user.email, "p@ssw0rd")
+    end
+
+    test "invalid current password", %{user: user} do
+      {:error, :invalid} = Accounts.change_password(user, "p2ssword", %{
+        password: "p@ssw0rd",
+        password_confirmation: "p@ssw0rd"
+      })
+    end
+
+    test "invalid new passwords", %{user: user} do
+      {:error, _changeset} = Accounts.change_password(user, "password", %{
+        password: "p@ssw0rd",
+        password_confirmation: "p@ssw0r"
+      })
     end
   end
 
   describe "verifying a password" do
     setup do
-      %{user: create_user(%{password: "password"})}
+      %{user: create_user(%{username: "user", password: "password"})}
     end
 
     test "when valid", %{user: user} do
@@ -91,6 +146,6 @@ defmodule Gossip.AccountsTest do
   end
 
   def with_user(_) do
-    %{user: create_user(%{email: "user@example.com"})}
+    %{user: create_user(%{username: "user", email: "user@example.com"})}
   end
 end
