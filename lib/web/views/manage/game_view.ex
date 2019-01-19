@@ -3,10 +3,11 @@ defmodule Web.Manage.GameView do
 
   alias Gossip.Channels
   alias Gossip.UserAgents
-  alias Web.Manage.ConnectionView
   alias Web.FormView
-  alias Web.ReactView
+  alias Web.Manage.ConnectionView
+  alias Web.Manage.SettingView
   alias Web.Manage.RedirectURIView
+  alias Web.ReactView
 
   def render("status.json", %{game: game}) do
     json = %{game: game.short_name, display_name: game.name}

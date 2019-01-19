@@ -22,6 +22,12 @@ defmodule Gossip.Accounts do
   def new(), do: %User{} |> User.changeset(%{})
 
   @doc """
+  Start editing a user
+  """
+  @spec edit(User.t()) :: Ecto.Changeset.t()
+  def edit(user), do: user |> User.changeset(%{})
+
+  @doc """
   Register a new user
   """
   @spec register(user_params()) :: {:ok, User.t()}
@@ -29,6 +35,40 @@ defmodule Gossip.Accounts do
     %User{}
     |> User.changeset(params)
     |> Repo.insert()
+  end
+
+  @doc """
+  Update a user
+  """
+  def update(user, params) do
+    case is_nil(user.username) do
+      true ->
+        user
+        |> User.update_with_username_changeset(params)
+        |> Repo.update()
+
+      false ->
+        user
+        |> User.update_without_username_changeset(params)
+        |> Repo.update()
+    end
+  end
+
+  @doc """
+  Change a user's password
+
+  Validates the password before changing
+  """
+  def change_password(user, current_password, params) do
+    case validate_login(user.email, current_password) do
+      {:error, :invalid} ->
+        {:error, :invalid}
+
+      {:ok, user} ->
+        user
+        |> User.password_changeset(params)
+        |> Repo.update()
+    end
   end
 
   @doc """
