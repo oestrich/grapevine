@@ -10,6 +10,7 @@ defmodule Gossip.Telnet.Client do
   @do_mssp <<255, 253, 70>>
   @will_term_type <<255, 251, 24>>
   @term_type <<255, 250, 24, 0>> <> "Gossip" <> <<255, 240>>
+  @wont_line_mode <<255, 252, 34>>
 
   alias Gossip.Telnet
   alias Gossip.Telnet.Client.Options
@@ -24,6 +25,10 @@ defmodule Gossip.Telnet.Client do
 
   defp send_term_type() do
     GenServer.cast(self(), {:send_term_type})
+  end
+
+  defp send_line_mode() do
+    GenServer.cast(self(), {:send_line_mode})
   end
 
   def init(opts) do
@@ -57,6 +62,12 @@ defmodule Gossip.Telnet.Client do
     {:noreply, state}
   end
 
+  def handle_cast({:send_line_mode}, state) do
+    :gen_tcp.send(state.socket, @wont_line_mode)
+    :telemetry.execute([:gossip, :telnet, :mssp, :line_mode, :sent], 1, state)
+    {:noreply, state}
+  end
+
   def handle_info({:text_mssp_request}, state) do
     :gen_tcp.send(state.socket, "mssp-request\n")
     :telemetry.execute([:gossip, :telnet, :mssp, :text, :sent], 1, state)
@@ -78,15 +89,11 @@ defmodule Gossip.Telnet.Client do
     state = %{state | data: state.data <> data}
     options = Options.parse(state.data)
 
+    Enum.each(options, fn option ->
+      send(self(), {:process, option})
+    end)
+
     cond do
-      Options.will_mssp?(options) ->
-        send_do_mssp()
-        {:noreply, %{state | data: <<>>}}
-
-      Options.do_term?(options) ->
-        send_term_type()
-        {:noreply, %{state | data: <<>>}}
-
       Options.mssp_data?(options) ->
         record_option_mssp(options, state, fn data ->
           state.module.record_option(state, data)
@@ -100,6 +107,29 @@ defmodule Gossip.Telnet.Client do
       true ->
         {:noreply, state}
     end
+  end
+
+  def handle_info({:process, option}, state) do
+    cond do
+      already_processed?(state, option) ->
+        {:noreply, state}
+
+      Options.will_mssp?(option) ->
+        send_do_mssp()
+        {:noreply, %{state | processed: [option | state.processed]}}
+
+      Options.do_term?(option) ->
+        send_term_type()
+        {:noreply, %{state | processed: [option | state.processed]}}
+
+      Options.do_line_mode?(option) ->
+        send_line_mode()
+        {:noreply, %{state | processed: [option | state.processed]}}
+    end
+  end
+
+  defp already_processed?(state, option) do
+    Enum.member?(state.processed, option)
   end
 
   defmodule Record do
@@ -178,7 +208,7 @@ defmodule Gossip.Telnet.Client do
   end
 
   defp generate_state(opts) do
-    state = %{data: <<>>}
+    state = %{data: <<>>, processed: []}
 
     case opts[:type] do
       :check ->
@@ -235,17 +265,22 @@ defmodule Gossip.Telnet.Client do
     @iac 255
 
     @term_type 24
+    @line_mode 34
 
     @mssp 70
     @mssp_var 1
     @mssp_val 2
 
-    def will_mssp?(options) do
-      Enum.member?(options, {:will, :mssp})
+    def will_mssp?(option) do
+      option == {:will, :mssp}
     end
 
-    def do_term?(options) do
-      Enum.member?(options, {:do, :term_type})
+    def do_term?(option) do
+      option == {:do, :term_type}
+    end
+
+    def do_line_mode?(option) do
+      option == {:do, :line_mode}
     end
 
     def mssp_data?(options) do
@@ -279,6 +314,9 @@ defmodule Gossip.Telnet.Client do
       case option do
         [@iac, @iac_do, @term_type] ->
           {:do, :term_type}
+
+        [@iac, @iac_do, @line_mode] ->
+          {:do, :line_mode}
 
         [@iac, @will, @mssp] ->
           {:will, :mssp}

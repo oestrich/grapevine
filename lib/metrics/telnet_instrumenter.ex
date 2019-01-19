@@ -13,6 +13,7 @@ defmodule Metrics.TelnetInstrumenter do
       [:start],
       [:connected],
       [:failed],
+      [:line_mode, :sent],
       [:option, :sent],
       [:option, :success],
       [:term_type, :sent],
@@ -64,6 +65,11 @@ defmodule Metrics.TelnetInstrumenter do
   def handle_event([:gossip, :telnet, :mssp, :option, :success], _count, state, _config) do
     Logger.info("Received MSSP from #{state.host}:#{state.port} - option version", type: :mssp)
     Counter.inc(name: :gossip_telnet_mssp_option_success_count)
+  end
+
+  def handle_event([:gossip, :telnet, :mssp, :line_mode, :sent], _count, _metadata, _config) do
+    Logger.debug("Sending line mode", type: :mssp)
+    Counter.inc(name: :gossip_telnet_mssp_line_mode_sent_count)
   end
 
   def handle_event([:gossip, :telnet, :mssp, :term_type, :sent], _count, _metadata, _config) do
