@@ -12,7 +12,7 @@ defmodule Web.RegistrationControllerTest do
 
       conn = post(conn, Routes.registration_path(conn, :create), user: params)
 
-      assert redirected_to(conn) == Routes.manage_setting_path(conn, :show)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "failure", %{conn: conn} do
