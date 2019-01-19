@@ -10,7 +10,7 @@ defmodule Gossip.AccountsTest do
     test "successful" do
       {:ok, user} =
         Accounts.register(%{
-          username: "admin",
+          username: "adminuser",
           email: "admin@example.com",
           password: "password",
           password_confirmation: "password"
@@ -30,7 +30,7 @@ defmodule Gossip.AccountsTest do
         email: "user@example.com"
       })
 
-      assert user.username == "admin"
+      assert user.username == "adminuser"
       assert user.email == "user@example.com"
     end
 

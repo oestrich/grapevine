@@ -24,7 +24,7 @@ defmodule Gossip.TestHelpers do
     attributes =
       Map.merge(
         %{
-          username: "admin",
+          username: "adminuser",
           email: "admin@example.com",
           password: "password",
           password_confirmation: "password"

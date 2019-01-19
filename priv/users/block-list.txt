@@ -1,0 +1,17 @@
+admin
+administrator
+chat
+games
+gossip
+grapevine
+imm
+immortal
+register
+root
+sign-in
+staff
+sysop
+vineyard
+vintner
+wiz
+wizard

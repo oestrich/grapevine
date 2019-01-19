@@ -7,6 +7,7 @@ defmodule Gossip.Accounts.User do
 
   import Ecto.Changeset
 
+  alias Gossip.Accounts
   alias Gossip.Games.Game
 
   @type t :: %__MODULE__{}
@@ -32,7 +33,10 @@ defmodule Gossip.Accounts.User do
   def changeset(struct, params) do
     struct
     |> cast(params, [:username, :email, :password, :password_confirmation])
+    |> trim(:username)
+    |> trim(:email)
     |> validate_required([:username, :email])
+    |> username_validation()
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> Gossip.Schema.ensure(:token, UUID.uuid4())
     |> hash_password()
@@ -46,6 +50,7 @@ defmodule Gossip.Accounts.User do
     struct
     |> cast(params, [:username, :email])
     |> validate_required([:username, :email])
+    |> username_validation()
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:username)
     |> unique_constraint(:email)
@@ -77,6 +82,23 @@ defmodule Gossip.Accounts.User do
     |> put_change(:password_reset_expires_at, Timex.now() |> Timex.shift(hours: 1))
   end
 
+  defp username_validation(changeset) do
+    changeset
+    |> check_username_against_block_list()
+    |> validate_format(:username, ~r/^[a-zA-Z0-9-]+$/)
+    |> validate_length(:username, min: 3, max: 50)
+  end
+
+  defp trim(changeset, field) do
+    case get_change(changeset, field) do
+      nil ->
+        changeset
+
+      value ->
+        put_change(changeset, field, String.trim(value))
+    end
+  end
+
   defp hash_password(changeset) do
     case changeset do
       %{valid?: true, changes: %{password: password}} ->
@@ -84,6 +106,22 @@ defmodule Gossip.Accounts.User do
 
       _ ->
         changeset
+    end
+  end
+
+  defp check_username_against_block_list(changeset) do
+    case get_change(changeset, :username) do
+      nil ->
+        changeset
+
+      username ->
+        case Enum.member?(Accounts.username_blocklist(), String.downcase(username)) do
+          true ->
+            add_error(changeset, :username, "is blocked")
+
+          false ->
+            changeset
+        end
     end
   end
 end

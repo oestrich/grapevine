@@ -13,6 +13,7 @@ defmodule Gossip.Accounts do
   alias Gossip.Repo
 
   @type user_params :: map()
+  @type username :: String.t()
   @type token :: String.t()
 
   @doc """
@@ -174,5 +175,22 @@ defmodule Gossip.Accounts do
       false ->
         {:ok, user}
     end
+  end
+
+  @doc """
+  Load the list of blocked usernames
+
+  File is in `priv/users/block-list.txt`
+
+  This file is a newline separated list of downcased names
+  """
+  @spec username_blocklist() :: [username()]
+  def username_blocklist() do
+    blocklist = Path.join(:code.priv_dir(:gossip), "users/block-list.txt")
+    {:ok, blocklist} = File.read(blocklist)
+
+    blocklist
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
   end
 end

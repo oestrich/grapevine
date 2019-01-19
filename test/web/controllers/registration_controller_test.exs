@@ -4,7 +4,7 @@ defmodule Web.RegistrationControllerTest do
   describe "registering a new game" do
     test "successful", %{conn: conn} do
       params = %{
-        username: "admin",
+        username: "adminuser",
         email: "admin@example.com",
         password: "password",
         password_confirmation: "password"
