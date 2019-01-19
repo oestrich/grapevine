@@ -15,7 +15,7 @@ defmodule Web.RegistrationController do
     case Accounts.register(params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "You have been registered! Welcome!")
+        |> put_flash(:info, "You have registered! Welcome!")
         |> put_session(:user_token, user.token)
         |> redirect(to: page_path(conn, :index))
 
