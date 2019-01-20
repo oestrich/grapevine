@@ -2,6 +2,7 @@ defmodule Web.RegistrationController do
   use Web, :controller
 
   alias Gossip.Accounts
+  alias Web.SessionController
 
   def new(conn, _params) do
     changeset = Accounts.new()
@@ -17,7 +18,7 @@ defmodule Web.RegistrationController do
         conn
         |> put_flash(:info, "You have registered! Welcome!")
         |> put_session(:user_token, user.token)
-        |> redirect(to: page_path(conn, :index))
+        |> SessionController.after_sign_in_redirect()
 
       {:error, changeset} ->
         conn
