@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddHiddenToChannels do
+defmodule Grapevine.Repo.Migrations.AddHiddenToChannels do
   use Ecto.Migration
 
   def change do

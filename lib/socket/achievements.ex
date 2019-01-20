@@ -5,7 +5,7 @@ defmodule Socket.Achievements do
 
   use Web.Socket.Module
 
-  alias Gossip.Achievements
+  alias Grapevine.Achievements
 
   @doc """
   Sync the list of achievements
@@ -33,7 +33,7 @@ defmodule Socket.Achievements do
   Create a new achievement
   """
   def create(state, %{"ref" => ref, "payload" => params}) when ref != nil do
-    :telemetry.execute([:gossip, :events, :achievements, :create], 1, %{})
+    :telemetry.execute([:grapevine, :events, :achievements, :create], 1, %{})
 
     case Achievements.create(state.game, params) do
       {:ok, achievement} ->
@@ -64,7 +64,7 @@ defmodule Socket.Achievements do
   Update an achievement
   """
   def update(state, %{"ref" => ref, "payload" => params}) when ref != nil do
-    :telemetry.execute([:gossip, :events, :achievements, :update], 1, %{})
+    :telemetry.execute([:grapevine, :events, :achievements, :update], 1, %{})
 
     with {:ok, key} <- Map.fetch(params, "key"),
          {:ok, achievement} <- Achievements.get_by_key(state.game, key),
@@ -102,7 +102,7 @@ defmodule Socket.Achievements do
   Delete an achievement
   """
   def delete(state, %{"ref" => ref, "payload" => params}) when ref != nil do
-    :telemetry.execute([:gossip, :events, :achievements, :delete], 1, %{})
+    :telemetry.execute([:grapevine, :events, :achievements, :delete], 1, %{})
 
     with {:ok, key} <- Map.fetch(params, "key"),
          {:ok, achievement} <- Achievements.get_by_key(state.game, key),

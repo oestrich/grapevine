@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.MoveUniqueIndexToLowercaseShortNameOnGames do
+defmodule Grapevine.Repo.Migrations.MoveUniqueIndexToLowercaseShortNameOnGames do
   use Ecto.Migration
 
   def up do

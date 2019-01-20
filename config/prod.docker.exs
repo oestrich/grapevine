@@ -1,14 +1,14 @@
 use Mix.Config
 
-config :gossip, Gossip.Repo,
+config :grapevine, Grapevine.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "gossip",
+  database: "grapevine",
   hostname: "postgres",
-  username: "gossip",
-  password: "gossip",
+  username: "grapevine",
+  password: "grapevine",
   pool_size: 10
 
-config :gossip, Web.Endpoint,
+config :grapevine, Web.Endpoint,
   http: [port: 4001],
   url: [host: {:system, "HOST"}, port: 443, scheme: "https"],
   server: true,

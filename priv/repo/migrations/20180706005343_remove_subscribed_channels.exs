@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.RemoveSubscribedChannels do
+defmodule Grapevine.Repo.Migrations.RemoveSubscribedChannels do
   use Ecto.Migration
 
   def change do

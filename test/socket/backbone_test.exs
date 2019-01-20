@@ -1,9 +1,9 @@
 defmodule Socket.BackboneTest do
-  use Gossip.DataCase
+  use Grapevine.DataCase
 
-  alias Gossip.Games
-  alias Gossip.Versions
-  alias Gossip.Versions.Version
+  alias Grapevine.Games
+  alias Grapevine.Versions
+  alias Grapevine.Versions.Version
   alias Socket.Backbone
 
   describe "backbone processing" do
@@ -99,7 +99,7 @@ defmodule Socket.BackboneTest do
 
   describe "syncing channels" do
     test "sends channel notices over the backbone" do
-      create_channel(%{name: "gossip"})
+      create_channel(%{name: "grapevine"})
 
       Backbone.sync_channels()
 
@@ -108,7 +108,7 @@ defmodule Socket.BackboneTest do
 
     test "batches into groups of 10" do
       Enum.each(1..12, fn i ->
-        create_channel(%{name: "gossip#{[?a + i]}"})
+        create_channel(%{name: "grapevine#{[?a + i]}"})
       end)
 
       Backbone.sync_channels()
@@ -120,7 +120,7 @@ defmodule Socket.BackboneTest do
     test "limits based on a timestamp if present" do
       now = Timex.now()
 
-      channel = create_channel(%{name: "gossip"})
+      channel = create_channel(%{name: "grapevine"})
 
       Enum.each(1..12, fn i ->
         Versions.log("update", channel, now |> Timex.shift(minutes: -1 * i))
@@ -149,8 +149,8 @@ defmodule Socket.BackboneTest do
 
       Enum.each(1..12, fn i ->
         create_game(user, %{
-          name: "gossip#{[?a + i]}",
-          short_name: "gossip#{[?a + i]}"
+          name: "grapevine#{[?a + i]}",
+          short_name: "grapevine#{[?a + i]}"
         })
       end)
 
@@ -183,7 +183,7 @@ defmodule Socket.BackboneTest do
     test "sends game notices over the backbone" do
       user = create_user()
       create_game(user)
-      create_channel(%{name: "gossip"})
+      create_channel(%{name: "grapevine"})
 
       Backbone.sync(%{}, %{"event" => "sync", "payload" => %{}})
 

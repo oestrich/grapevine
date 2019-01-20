@@ -20,8 +20,8 @@ body {
 }
 
 .btn-primary {
-  background-color: $green;
-  border-color: $green;
+  background-color: $purple;
+  border-color: $purple;
 
   &:not(:disabled):not(.disabled):active:focus,
   &:focus {
@@ -30,14 +30,14 @@ body {
 
   &:not(:disabled):not(.disabled).active,
   &:not(:disabled):not(.disabled):active {
-    background-color: $green-01;
-    border-color: $green-01;
+    background-color: $purple-01;
+    border-color: $purple-01;
   }
 
   &:active,
   &:hover {
-    background-color: $green-01;
-    border-color: $green-01;
+    background-color: $purple-01;
+    border-color: $purple-01;
   }
 }
 

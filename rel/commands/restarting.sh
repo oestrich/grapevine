@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/gossip rpc "Gossip.restart()"
+bin/grapevine rpc "Grapevine.restart()"

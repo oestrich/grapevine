@@ -1,9 +1,9 @@
-defmodule Gossip.Mixfile do
+defmodule Grapevine.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :gossip,
+      app: :grapevine,
       version: "2.3.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Gossip.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Gossip.Application, []},
+      mod: {Grapevine.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

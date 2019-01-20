@@ -1,11 +1,11 @@
 defmodule Web.ChatChannel do
   @moduledoc """
-  Follow along with the gossip from the site
+  Follow along with the grapevine from the site
   """
 
   use Phoenix.Channel
 
-  alias Gossip.Channels
+  alias Grapevine.Channels
 
   def join("channels:" <> channel, _message, socket) do
     assign_channel(socket, channel)

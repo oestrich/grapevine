@@ -1,8 +1,8 @@
-alias Gossip.Accounts
-alias Gossip.Applications
-alias Gossip.Channels
-alias Gossip.Games
-alias Gossip.Repo
+alias Grapevine.Accounts
+alias Grapevine.Applications
+alias Grapevine.Channels
+alias Grapevine.Games
+alias Grapevine.Repo
 
 {:ok, channel} = Channels.create(%{name: "gossip"})
 channel
@@ -33,6 +33,7 @@ application
 
 # Create a know user and game login
 {:ok, user} = Accounts.register(%{
+  username: "player",
   email: "admin@example.com",
   password: "password",
   password_confirmation: "password",

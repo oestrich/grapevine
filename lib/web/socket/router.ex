@@ -67,7 +67,7 @@ defmodule Web.Socket.Router do
   end
 
   def receive(state, frame) do
-    :telemetry.execute([:gossip, :sockets, :events, :unknown], 1, %{state: state, frame: frame})
+    :telemetry.execute([:grapevine, :sockets, :events, :unknown], 1, %{state: state, frame: frame})
     {:ok, %{status: "failure", error: "unknown"}, state}
   end
 end

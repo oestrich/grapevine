@@ -1,7 +1,7 @@
 defmodule Web.RegistrationController do
   use Web, :controller
 
-  alias Gossip.Accounts
+  alias Grapevine.Accounts
   alias Web.SessionController
 
   def new(conn, _params) do

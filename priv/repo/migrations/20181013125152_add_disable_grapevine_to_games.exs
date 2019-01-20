@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddDisableGrapevineToGames do
+defmodule Grapevine.Repo.Migrations.AddDisableGrapevineToGames do
   use Ecto.Migration
 
   def change do

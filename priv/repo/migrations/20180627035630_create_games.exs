@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.CreateGames do
+defmodule Grapevine.Repo.Migrations.CreateGames do
   use Ecto.Migration
 
   def change do

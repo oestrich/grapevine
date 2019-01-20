@@ -2,7 +2,7 @@ admin
 administrator
 chat
 games
-gossip
+grapevine
 grapevine
 imm
 immortal

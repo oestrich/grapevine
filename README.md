@@ -1,25 +1,25 @@
-# Gossip
+# Grapevine
 
-![Gossip](https://gossip.haus/images/gossip.png)
+![Grapevine](https://grapevine.haus/images/grapevine.png)
 
-Gossip is a MUD chat network.
+Grapevine is a MUD chat network.
 
 - [Grapevine](https://github.com/oestrich/grapevine)
 - [Raisin](https://github.com/oestrich/raisin)
 - [MUD Coders Slack](https://slack.mudcoders.com/)
-- [Docs](https://gossip.haus/docs)
+- [Docs](https://grapevine.haus/docs)
 - [Patreon](https://www.patreon.com/exventure)
 - [Discord](https://discord.gg/GPEa6dB)
 
 ## WebSocket Protocol
 
-View the websocket details on [Gossip][websocket-docs].
+View the websocket details on [Grapevine][websocket-docs].
 
 ## Server
 
 ### Requirements
 
-This is only required to run Gossip itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
+This is only required to run Grapevine itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
 
 - PostgreSQL 10
 - Elixir 1.7.2
@@ -49,13 +49,13 @@ mix test
 ### Docker
 
 ```bash
-docker-compose build gossip
+docker-compose build grapevine
 docker-compose up -d postgres
-docker-compose run --rm gossip migrate
-docker-compose up gossip
+docker-compose run --rm grapevine migrate
+docker-compose up grapevine
 ```
 
-[websocket-docs]: https://gossip.haus/docs
+[websocket-docs]: https://grapevine.haus/docs
 
 ## Sync Protocol
 

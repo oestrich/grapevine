@@ -34,7 +34,7 @@
       <table class="table">
         <tbody>
           <tr>
-            <th>Gossip Name</th>
+            <th>Grapevine Name</th>
             <td><%= @game.short_name %></td>
           </tr>
           <%= if @game.user_agent do %>

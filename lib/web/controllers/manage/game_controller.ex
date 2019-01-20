@@ -1,7 +1,7 @@
 defmodule Web.Manage.GameController do
   use Web, :controller
 
-  alias Gossip.Games
+  alias Grapevine.Games
 
   plug(Web.Plugs.VerifyUser)
 

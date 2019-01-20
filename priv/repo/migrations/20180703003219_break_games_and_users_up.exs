@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.BreakGamesAndUsersUp do
+defmodule Grapevine.Repo.Migrations.BreakGamesAndUsersUp do
   use Ecto.Migration
 
   def up do

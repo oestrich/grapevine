@@ -1,9 +1,9 @@
 defmodule Web.GameController do
   use Web, :controller
 
-  alias Gossip.Events
-  alias Gossip.Games
-  alias Gossip.Presence
+  alias Grapevine.Events
+  alias Grapevine.Games
+  alias Grapevine.Presence
 
   def index(conn, params) do
     filter = Map.get(params, "games", %{"online" => "yes"})
@@ -13,9 +13,9 @@ defmodule Web.GameController do
     |> assign(:games, games)
     |> assign(:user_agents, Games.user_agents_in_use())
     |> assign(:filter, filter)
-    |> assign(:title, "Games on Gossip")
-    |> assign(:open_graph_title, "Games on Gossip")
-    |> assign(:open_graph_description, "View a listing of games that are on the Gossip network.")
+    |> assign(:title, "Games on Grapevine")
+    |> assign(:open_graph_title, "Games on Grapevine")
+    |> assign(:open_graph_description, "View a listing of games that are on the Grapevine network.")
     |> assign(:open_graph_url, game_url(conn, :index))
     |> render("index.html")
   end
@@ -25,7 +25,7 @@ defmodule Web.GameController do
       conn
       |> assign(:game, game)
       |> assign(:events, Events.recent(game))
-      |> assign(:title, "#{game.name} - Gossip")
+      |> assign(:title, "#{game.name} - Grapevine")
       |> assign(:open_graph_title, game.name)
       |> assign(:open_graph_description, game.description)
       |> assign(:open_graph_url, game_url(conn, :show, game.short_name))

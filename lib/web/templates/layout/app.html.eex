@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The MUD Chat Network.">
-    <meta name="author" content="Gossip">
+    <meta name="author" content="Grapevine">
 
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
@@ -21,12 +21,12 @@
       <meta property="og:url" content="<%= @open_graph_url %>" />
     <% end %>
 
-    <meta property="og:site_name" content="Gossip" />
+    <meta property="og:site_name" content="Grapevine" />
 
     <%= if Map.has_key?(assigns, :title) do %>
       <title><%= @title %></title>
     <% else %>
-      <title>Gossip - MUD Chat Network</title>
+      <title>Grapevine - MUD Chat Network</title>
     <% end %>
 
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
@@ -38,7 +38,7 @@
       <nav class="navbar navbar-expand-md">
         <div class="container">
           <%= link(to: page_path(@conn, :index), class: "navbar-brand") do %>
-            <%= img_tag("/images/gossip.png", height: 30) %>
+            <%= img_tag("/images/grapevine.png", height: 30) %>
           <% end %>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

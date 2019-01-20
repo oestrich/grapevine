@@ -1,11 +1,11 @@
 defmodule Web.GameStatisticController do
   use Web, :controller
 
-  alias Gossip.Games
-  alias Gossip.Statistics
+  alias Grapevine.Games
+  alias Grapevine.Statistics
 
   def players(conn, %{"game_id" => short_name}) do
-    grapevine_url = Application.get_env(:gossip, :grapevine)[:cors_host]
+    grapevine_url = Application.get_env(:grapevine, :grapevine)[:cors_host]
 
     case Games.get_by_short(short_name) do
       {:ok, game} ->

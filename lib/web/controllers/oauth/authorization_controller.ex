@@ -3,7 +3,7 @@ defmodule Web.Oauth.AuthorizationController do
 
   plug(Web.Plugs.FetchGame when action in [:new])
 
-  alias Gossip.Authorizations
+  alias Grapevine.Authorizations
 
   def new(conn, params) do
     %{current_user: user} = conn.assigns

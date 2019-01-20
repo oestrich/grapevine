@@ -33,7 +33,7 @@ environment :prod do
   set cookie: :crypto.hash(:sha256, System.get_env("COOKIE")) |> Base.encode16 |> String.to_atom
 
   set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/gossip.config.exs"]}
+    {Mix.Releases.Config.Providers.Elixir, ["/etc/grapevine.config.exs"]}
   ]
 end
 
@@ -42,8 +42,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :gossip do
-  set version: current_version(:gossip)
+release :grapevine do
+  set version: current_version(:grapevine)
   set applications: [
     :parse_trans,
     :runtime_tools

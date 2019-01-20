@@ -1,5 +1,5 @@
 defmodule Socket.AchievementsTest do
-  use Gossip.DataCase
+  use Grapevine.DataCase
 
   alias Socket.Achievements
   alias Web.Socket.State

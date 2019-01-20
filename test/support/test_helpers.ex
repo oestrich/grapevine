@@ -1,17 +1,16 @@
-defmodule Gossip.TestHelpers do
-  alias Gossip.Accounts
-  alias Gossip.Achievements
-  alias Gossip.Applications
-  alias Gossip.Authorizations
-  alias Gossip.Channels
-  alias Gossip.Games
-  alias Gossip.Repo
+defmodule Grapevine.TestHelpers do
+  alias Grapevine.Accounts
+  alias Grapevine.Achievements
+  alias Grapevine.Applications
+  alias Grapevine.Authorizations
+  alias Grapevine.Channels
+  alias Grapevine.Games
 
   def create_channel(attributes \\ %{}) do
     attributes =
       Map.merge(
         %{
-          name: "gossip",
+          name: "grapevine",
           desription: "A channel"
         },
         attributes

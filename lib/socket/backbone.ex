@@ -14,9 +14,9 @@ defmodule Socket.Backbone do
 
   use Web.Socket.Module
 
-  alias Gossip.Applications.Application
-  alias Gossip.Channels
-  alias Gossip.Versions
+  alias Grapevine.Applications.Application
+  alias Grapevine.Channels
+  alias Grapevine.Versions
 
   @doc """
   Process a system backbone message

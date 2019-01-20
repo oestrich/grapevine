@@ -1,5 +1,5 @@
 defmodule Web.Endpoint do
-  use Phoenix.Endpoint, otp_app: :gossip
+  use Phoenix.Endpoint, otp_app: :grapevine
   use Plug.ErrorHandler
   use Sentry.Plug
 
@@ -11,7 +11,7 @@ defmodule Web.Endpoint do
   # when deploying your static files in production.
   plug(Plug.Static,
     at: "/",
-    from: :gossip,
+    from: :grapevine,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
   )
@@ -40,7 +40,7 @@ defmodule Web.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug(Plug.Session,
     store: :cookie,
-    key: "_gossip_key",
+    key: "_grapevine_key",
     signing_salt: "8eezNeWe"
   )
 

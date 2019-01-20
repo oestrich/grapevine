@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
-config :gossip, Web.Endpoint,
+config :grapevine, Web.Endpoint,
   http: [port: 4001],
   debug_errors: true,
   code_reloader: true,
@@ -37,7 +37,7 @@ config :gossip, Web.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :gossip, Web.Endpoint,
+config :grapevine, Web.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
@@ -55,17 +55,17 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
-config :gossip, Gossip.Repo,
-  database: "gossip_dev",
+config :grapevine, Grapevine.Repo,
+  database: "grapevine_dev",
   hostname: "localhost",
   pool_size: 10,
   log: false
 
 config :phoenix, :plug_init_mode, :runtime
 
-config :gossip, :grapevine, cors_host: "http://localhost:4002"
+config :grapevine, :grapevine, cors_host: "http://localhost:4002"
 
-config :gossip, Gossip.Mailer, adapter: Bamboo.LocalAdapter
+config :grapevine, Grapevine.Mailer, adapter: Bamboo.LocalAdapter
 
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")

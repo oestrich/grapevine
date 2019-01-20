@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddRedirectUrisToGames do
+defmodule Grapevine.Repo.Migrations.AddRedirectUrisToGames do
   use Ecto.Migration
 
   def change do

@@ -1,7 +1,7 @@
 defmodule Web.ChatController do
   use Web, :controller
 
-  alias Gossip.Channels
+  alias Grapevine.Channels
 
   def index(conn, _params) do
     render(conn, "index.html")
