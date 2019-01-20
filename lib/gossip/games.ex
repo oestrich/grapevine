@@ -119,6 +119,19 @@ defmodule Gossip.Games do
   end
 
   @doc """
+  Fetch a game based on the user
+  """
+  def get_by(opts) do
+    case Repo.get_by(Game, opts) do
+      nil ->
+        {:error, :not_found}
+
+      game ->
+        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
+    end
+  end
+
+  @doc """
   Fetch a game by the short name
   """
   def get_by_short(short_name, opts \\ []) do
