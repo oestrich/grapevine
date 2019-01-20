@@ -17,3 +17,5 @@ config :gossip, Gossip.Repo,
 config :bcrypt_elixir, :log_rounds, 4
 
 config :gossip, Gossip.Mailer, adapter: Bamboo.TestAdapter
+
+config :gossip, :modules, client: Test.FakeClient

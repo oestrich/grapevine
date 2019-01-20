@@ -4,6 +4,9 @@
       <%= link("Account", to: manage_setting_path(@conn, :show), class: "nav-link") %>
     </li>
     <li class="nav-item">
+      <%= link("Characters", to: manage_character_path(@conn, :index), class: "nav-link") %>
+    </li>
+    <li class="nav-item">
       <%= link("Games", to: manage_game_path(@conn, :index), class: "nav-link") %>
     </li>
   </ul>

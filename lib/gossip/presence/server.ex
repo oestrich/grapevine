@@ -9,6 +9,7 @@ defmodule Gossip.Presence.Server do
   alias Gossip.Games.Game
   alias Gossip.Presence.Client
   alias Gossip.Presence.Notices
+  alias Gossip.Presence.State
   alias Gossip.Statistics
 
   def track(state, socket, game) do
@@ -37,7 +38,7 @@ defmodule Gossip.Presence.Server do
     :ets.insert(
       ets_key(),
       {ets_key(game),
-       %{supports: supports, channels: channels, players: players, timestamp: Timex.now()}}
+       %State{supports: supports, channels: channels, players: players, timestamp: Timex.now()}}
     )
 
     {:ok, state}
