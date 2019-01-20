@@ -12,8 +12,10 @@ defmodule Gossip.Accounts do
   alias Gossip.Mailer
   alias Gossip.Repo
 
+  @type id :: integer()
   @type user_params :: map()
   @type username :: String.t()
+  @type registration_key :: UUID.t()
   @type token :: String.t()
 
   @doc """
@@ -73,6 +75,20 @@ defmodule Gossip.Accounts do
   end
 
   @doc """
+  Get a user by id
+  """
+  @spec get(id()) :: {:ok, User.t()} | {:error, :not_found}
+  def get(id) do
+    case Repo.get_by(User, id: id) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Find a user by the token
   """
   @spec from_token(token()) :: {:ok, User.t()} | {:error, :not_found}
@@ -88,6 +104,34 @@ defmodule Gossip.Accounts do
 
   defp preload(user) do
     Repo.preload(user, games: from(g in Game, order_by: [g.id]))
+  end
+
+  @doc """
+  Get a user by their registration key
+  """
+  @spec get_by_registration_key(registration_key()) :: {:ok, User.t()} | {:error, :not_found}
+  def get_by_registration_key(key) do
+    with {:ok, key} <- Ecto.UUID.cast(key) do
+      case Repo.get_by(User, registration_key: key) do
+        nil ->
+          {:error, :not_found}
+
+        user ->
+          {:ok, user}
+      end
+    else
+      _ ->
+        {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Regenerate the user's registration token
+  """
+  def regenerate_registration_key(user) do
+    user
+    |> User.regen_key_changeset()
+    |> Repo.update()
   end
 
   @doc """

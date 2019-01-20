@@ -3,5 +3,5 @@ defmodule Gossip.Presence.State do
   Struct for game presence
   """
 
-  defstruct [:game, :supports, :players, :timestamp]
+  defstruct [:type, :game, :players, :supports, :channels, :timestamp]
 end

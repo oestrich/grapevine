@@ -8,6 +8,7 @@ defmodule Gossip.Accounts.User do
   import Ecto.Changeset
 
   alias Gossip.Accounts
+  alias Gossip.Characters.Character
   alias Gossip.Games.Game
 
   @type t :: %__MODULE__{}
@@ -24,7 +25,9 @@ defmodule Gossip.Accounts.User do
     field(:password_reset_expires_at, :utc_datetime_usec)
 
     field(:token, Ecto.UUID)
+    field(:registration_key, Ecto.UUID, read_after_writes: true)
 
+    has_many(:characters, Character)
     has_many(:games, Game)
 
     timestamps()
@@ -80,6 +83,12 @@ defmodule Gossip.Accounts.User do
     |> change()
     |> put_change(:password_reset_token, UUID.uuid4())
     |> put_change(:password_reset_expires_at, Timex.now() |> Timex.shift(hours: 1))
+  end
+
+  def regen_key_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:registration_key, UUID.uuid4())
   end
 
   defp username_validation(changeset) do

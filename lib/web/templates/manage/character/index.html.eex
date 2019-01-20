@@ -1,0 +1,83 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
+    <li class="breadcrumb-item active">Your Characters</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Your Characters</h3>
+  </nav>
+
+  <div class="row">
+    <%= SettingView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <%= if Enum.empty?(@characters) do %>
+        <p>You haven't registered a character yet.</p>
+      <% end %>
+
+      <%= if !Enum.empty?(pending_characters(@characters)) do %>
+        <h4 class="mt-3">Pending Characters</h4>
+
+        <table class="table">
+          <thead class="hidden">
+            <tr>
+              <th>Game</th>
+              <th>Character</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= Enum.map(pending_characters(@characters), fn character -> %>
+              <tr>
+                <td><%= link(character.game.name, to: game_path(@conn, :show, character.game.short_name)) %></td>
+                <td><%= character.name %></td>
+                <td>
+                  <%= link("Approve", to: manage_character_action_path(@conn, :approve, character.id), method: :post, class: "btn btn-info") %>
+                  <%= link("Deny", to: manage_character_action_path(@conn, :deny, character.id), method: :post, class: "btn btn-danger") %>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
+      <% end %>
+
+      <%= if !Enum.empty?(approved_characters(@characters)) do %>
+        <h4>Characters</h4>
+
+        <table class="table">
+          <thead class="hidden">
+            <tr>
+              <th>Name</th>
+              <th>Game</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= Enum.map(approved_characters(@characters), fn character -> %>
+              <tr>
+                <td><%= character.name %></td>
+                <td><%= link(character.game.name, to: game_path(@conn, :show, character.game.short_name)) %></td>
+                <td>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
+      <% end %>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Register New Character</h5>
+          <p class="card-text">To register a new character from a game connected to Gossip:</p>
+          <p class="card-text">Send a tell to <code>system@gossip</code> with the message <code>register <%= @current_user.registration_key %></code>.</p>
+          <p class="card-text">This will start the registration process. Once Gossip has received the tell. Refresh this page to approve the registration request.</p>
+          <p class="card-text">Note that this registration code is single use, and will change after registering a character.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

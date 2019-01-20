@@ -57,6 +57,12 @@ defmodule Web.Router do
 
     resources("/achievements", AchievementController, only: [:edit, :update, :delete])
 
+    resources("/characters", CharacterController, only: [:index]) do
+      post("/approve", CharacterController, :approve, as: :action)
+
+      post("/deny", CharacterController, :deny, as: :action)
+    end
+
     resources("/connections", ConnectionController, only: [:delete])
 
     resources("/events", EventController, only: [:edit, :update, :delete])

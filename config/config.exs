@@ -30,6 +30,8 @@ config :gossip, :socket, tls: false
 
 config :gossip, :errors, report: false
 
+config :gossip, :modules, client: Gossip.Client.Server
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

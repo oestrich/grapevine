@@ -4,6 +4,7 @@ defmodule Gossip.Presence.Client do
   """
 
   alias Gossip.Applications
+  alias Gossip.Client
   alias Gossip.Games
 
   import Gossip.Presence, only: [ets_key: 0]
@@ -24,6 +25,11 @@ defmodule Gossip.Presence.Client do
     |> Enum.filter(&filter_online/1)
     |> Enum.map(&fetch_from_db/1)
     |> Enum.reject(&is_nil/1)
+    |> append_gossip()
+  end
+
+  defp append_gossip(games) do
+    [Client.presence() | games]
   end
 
   @doc """

@@ -12,6 +12,7 @@ defmodule Gossip.Application do
       supervisor(Gossip.Repo, []),
       supervisor(Web.Endpoint, []),
       {Gossip.Presence, []},
+      {Gossip.Client.Server, [name: Gossip.Client.Server]},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
       {Gossip.Telnet.Worker, [name: Gossip.Telnet.Worker]}
