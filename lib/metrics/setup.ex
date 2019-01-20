@@ -11,6 +11,7 @@ defmodule Metrics.Setup do
     Metrics.Events.TellsInstrumenter.setup()
     Metrics.GameEventInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
+    Metrics.OAuthInstrumenter.setup()
     Metrics.SocketInstrumenter.setup()
     Metrics.StatisticsInstrumenter.setup()
     Metrics.TelnetInstrumenter.setup()

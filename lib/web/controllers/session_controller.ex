@@ -17,7 +17,7 @@ defmodule Web.SessionController do
         conn
         |> put_flash(:info, "You have signed in.")
         |> put_session(:user_token, user.token)
-        |> redirect(to: page_path(conn, :index))
+        |> after_sign_in_redirect()
 
       {:error, :invalid} ->
         conn
@@ -30,5 +30,22 @@ defmodule Web.SessionController do
     conn
     |> clear_session()
     |> redirect(to: page_path(conn, :index))
+  end
+
+  @doc """
+  Redirect to the last seen page after being asked to sign in
+
+  Or the home page
+  """
+  def after_sign_in_redirect(conn) do
+    case get_session(conn, :last_path) do
+      nil ->
+        conn |> redirect(to: page_path(conn, :index))
+
+      path ->
+        conn
+        |> put_session(:last_path, nil)
+        |> redirect(to: path)
+    end
   end
 end

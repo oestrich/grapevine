@@ -8,6 +8,7 @@ defmodule Gossip.Accounts.User do
   import Ecto.Changeset
 
   alias Gossip.Accounts
+  alias Gossip.Authorizations.Authorization
   alias Gossip.Characters.Character
   alias Gossip.Games.Game
 
@@ -27,6 +28,7 @@ defmodule Gossip.Accounts.User do
     field(:token, Ecto.UUID)
     field(:registration_key, Ecto.UUID, read_after_writes: true)
 
+    has_many(:authorizations, Authorization)
     has_many(:characters, Character)
     has_many(:games, Game)
 

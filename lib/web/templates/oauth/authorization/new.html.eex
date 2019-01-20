@@ -1,0 +1,36 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Authorization</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <section>
+      <nav>
+        <h3 class="name">Authorize <%= @client_game.name %></h3>
+      </nav>
+
+      <p class="lead"><%= @client_game.name %> wants to connect with the following permissions:</p>
+
+      <ul>
+        <%= Enum.map(@authorization.scopes, fn scope -> %>
+          <li><%= render("_scope_#{scope}.html") %></li>
+        <% end) %>
+      </ul>
+
+      <%= form_tag authorization_path(@conn, :update), [method: :put] do %>
+        <%= hidden_input(:authorization, :id, value: @authorization.id) %>
+        <%= hidden_input(:authorization, :allow, value: true) %>
+        <%= submit "Authorize", class: "btn btn-primary btn-block btn-flat" %>
+      <% end %>
+
+      <%= form_tag authorization_path(@conn, :update), [class: "mt-3", method: :put] do %>
+        <%= hidden_input(:authorization, :id, value: @authorization.id) %>
+        <%= hidden_input(:authorization, :allow, value: false) %>
+        <%= submit "Deny", class: "btn btn-secondary btn-block btn-flat" %>
+      <% end %>
+    </section>
+  </div>
+</div>

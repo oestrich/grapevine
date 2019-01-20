@@ -2,8 +2,10 @@ defmodule Gossip.TestHelpers do
   alias Gossip.Accounts
   alias Gossip.Achievements
   alias Gossip.Applications
+  alias Gossip.Authorizations
   alias Gossip.Channels
   alias Gossip.Games
+  alias Gossip.Repo
 
   def create_channel(attributes \\ %{}) do
     attributes =
@@ -97,5 +99,16 @@ defmodule Gossip.TestHelpers do
 
     {:ok, achievement} = Achievements.create(game, attributes)
     achievement
+  end
+
+  def create_authorization(user, game) do
+    {:ok, authorization} = Authorizations.start_auth(user, game, %{
+      "state" => "my+state",
+      "redirect_uri" => "https://example.com/oauth/callback",
+      "scope" => "profile"
+    })
+    {:ok, authorization} = Authorizations.authorize(authorization)
+
+    authorization
   end
 end

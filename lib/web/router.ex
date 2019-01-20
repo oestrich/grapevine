@@ -12,6 +12,15 @@ defmodule Web.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
+    plug Web.Plugs.FetchUser, api: true
+  end
+
+  pipeline :api_authenticated do
+    plug Web.Plugs.EnsureUser, api: true
+  end
+
+  pipeline :logged_in do
+    plug Web.Plugs.EnsureUser
   end
 
   scope "/", Web do
@@ -82,6 +91,26 @@ defmodule Web.Router do
     resources("/redirect-uris", RedirectURIController, only: [:delete])
 
     resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
+  end
+
+  scope "/", Web do
+    pipe_through([:api, :api_authenticated])
+
+    get("/users/me", UserController, :show)
+  end
+
+  scope "/oauth", Web.Oauth do
+    pipe_through([:browser, :logged_in])
+
+    get("/authorize", AuthorizationController, :new)
+
+    resources("/authorizations", AuthorizationController, only: [:update], singleton: true)
+  end
+
+  scope "/oauth", Web.Oauth do
+    pipe_through([:api])
+
+    post("/token", TokenController, :create)
   end
 
   if Mix.env() == :dev do
