@@ -9,6 +9,7 @@ defmodule Web.Oauth.AuthorizationController do
     %{current_user: user} = conn.assigns
 
     with %{client_game: game} <- conn.assigns,
+         {:ok, user} <- Authorizations.check_for_username(user),
          {:ok, authorization} <- Authorizations.start_auth(user, game, params) do
       case authorization.active do
         true ->
@@ -21,6 +22,11 @@ defmodule Web.Oauth.AuthorizationController do
           |> render("new.html")
       end
     else
+      {:error, :no_username} ->
+        conn
+        |> put_flash(:error, "You must set your username before being able to use OAuth.")
+        |> redirect(to: manage_setting_path(conn, :show))
+
       _ ->
         conn
         |> put_flash(:error, "Unknown issue authenticating. Please try again")

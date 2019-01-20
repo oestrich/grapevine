@@ -11,6 +11,19 @@ defmodule Grapevine.Authorizations do
   alias Grapevine.Repo
 
   @doc """
+  Check for a username before allowing oauth to proceed
+  """
+  def check_for_username(user) do
+    case is_nil(user.username) do
+      true ->
+        {:error, :no_username}
+
+      false ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Start authorization
 
   Creates an authorization record
