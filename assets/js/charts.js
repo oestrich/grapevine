@@ -25,13 +25,14 @@ document.querySelectorAll(".chart").forEach(chartElement => {
           label: "Number of Players Online",
           data: values,
           fill: true,
+          lineTension: 0.3,
           borderColor: "#00FF00",
           backgroundColor: "rgba(0, 255, 0, 0.5)",
           pointBackgroundColor: "#00FF00",
           borderWidth: 2,
           pointHoverBackgroundColor: "#00FF00",
           pointRadius: 0,
-          pointHitRadius: 5
+          pointHitRadius: 8
         }]
       },
       options: {
@@ -43,6 +44,7 @@ document.querySelectorAll(".chart").forEach(chartElement => {
             ticks: {
               maxTicksLimit: 4,
               min: 0,
+              suggestedMax: 5,
               callback: function (value) { if (Number.isInteger(value)) { return value; } },
               fontColor: "#BBB",
             },
