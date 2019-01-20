@@ -1,10 +1,10 @@
-defmodule Gossip.AccountsTest do
-  use Gossip.DataCase
+defmodule Grapevine.AccountsTest do
+  use Grapevine.DataCase
   use Bamboo.Test
 
-  alias Gossip.Accounts
-  alias Gossip.Accounts.User
-  alias Gossip.Emails
+  alias Grapevine.Accounts
+  alias Grapevine.Accounts.User
+  alias Grapevine.Emails
 
   describe "registering a new account" do
     test "successful" do

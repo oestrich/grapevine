@@ -72,9 +72,9 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Register New Character</h5>
-          <p class="card-text">To register a new character from a game connected to Gossip:</p>
-          <p class="card-text">Send a tell to <code>system@gossip</code> with the message <code>register <%= @current_user.registration_key %></code>.</p>
-          <p class="card-text">This will start the registration process. Once Gossip has received the tell. Refresh this page to approve the registration request.</p>
+          <p class="card-text">To register a new character from a game connected to Grapevine:</p>
+          <p class="card-text">Send a tell to <code>system@grapevine</code> with the message <code>register <%= @current_user.registration_key %></code>.</p>
+          <p class="card-text">This will start the registration process. Once Grapevine has received the tell. Refresh this page to approve the registration request.</p>
           <p class="card-text">Note that this registration code is single use, and will change after registering a character.</p>
         </div>
       </div>

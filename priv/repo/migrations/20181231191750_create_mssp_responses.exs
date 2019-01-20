@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.CreateMsspResponses do
+defmodule Grapevine.Repo.Migrations.CreateMsspResponses do
   use Ecto.Migration
 
   def change do

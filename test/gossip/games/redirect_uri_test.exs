@@ -1,7 +1,7 @@
-defmodule Gossip.RedirectURIs.RedirectURITest do
+defmodule Grapevine.RedirectURIs.RedirectURITest do
   use ExUnit.Case
 
-  alias Gossip.Games.RedirectURI
+  alias Grapevine.Games.RedirectURI
 
   describe "uri validations" do
     test "uri must be https" do

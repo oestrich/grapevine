@@ -5,7 +5,7 @@ defmodule Socket.Players do
 
   use Web.Socket.Module
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
   alias Socket.Core
 
   @doc """
@@ -30,7 +30,7 @@ defmodule Socket.Players do
   Receive a new player sign in, broadcast it
   """
   def player_sign_in(state, %{"payload" => %{"name" => name}}) do
-    :telemetry.execute([:gossip, :events, :players, :sign_in], 1, %{name: name})
+    :telemetry.execute([:grapevine, :events, :players, :sign_in], 1, %{name: name})
 
     case name in state.players do
       true ->
@@ -71,7 +71,7 @@ defmodule Socket.Players do
   Receive a new player sign out, broadcast it
   """
   def player_sign_out(state, %{"payload" => %{"name" => name}}) do
-    :telemetry.execute([:gossip, :events, :players, :sign_out], 1, %{name: name})
+    :telemetry.execute([:grapevine, :events, :players, :sign_out], 1, %{name: name})
 
     case name in state.players do
       true ->
@@ -113,7 +113,7 @@ defmodule Socket.Players do
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}})
       when ref != nil do
-    :telemetry.execute([:gossip, :events, :players, :status], 1, %{game: game_name})
+    :telemetry.execute([:grapevine, :events, :players, :status], 1, %{game: game_name})
 
     Presence.online_games()
     |> Enum.find(&find_game(&1, game_name))
@@ -123,7 +123,7 @@ defmodule Socket.Players do
   end
 
   def request_status(state, %{"ref" => ref}) when ref != nil do
-    :telemetry.execute([:gossip, :events, :players, :status], 1, %{all: true})
+    :telemetry.execute([:grapevine, :events, :players, :status], 1, %{all: true})
 
     Presence.online_games()
     |> Enum.filter(& &1.game.display)

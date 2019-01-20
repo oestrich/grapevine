@@ -1,7 +1,7 @@
-defmodule Gossip.Accounts.UserTest do
-  use Gossip.DataCase
+defmodule Grapevine.Accounts.UserTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Accounts.User
+  alias Grapevine.Accounts.User
 
   describe "validations" do
     setup do

@@ -1,12 +1,12 @@
-defmodule Gossip.Client.Server do
+defmodule Grapevine.Client.Server do
   @moduledoc """
   A local fake "client" to the socket
   """
 
   use GenServer
 
-  alias Gossip.Client.Server.State
-  alias Gossip.Client.Tells
+  alias Grapevine.Client.Server.State
+  alias Grapevine.Client.Tells
 
   defmodule State do
     @moduledoc """
@@ -21,7 +21,7 @@ defmodule Gossip.Client.Server do
   """
   def send_tell(to_game, to_player, message) do
     Web.Endpoint.broadcast("tells:#{to_game}", "tells/receive", %{
-      from_game: "gossip",
+      from_game: "grapevine",
       from_name: "system",
       to_name: to_player,
       sent_at: Timex.now(),
@@ -43,7 +43,7 @@ defmodule Gossip.Client.Server do
 
   @impl true
   def handle_continue({:subscribe}, state) do
-    Web.Endpoint.subscribe("tells:gossip")
+    Web.Endpoint.subscribe("tells:grapevine")
     {:noreply, state}
   end
 

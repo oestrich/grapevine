@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddVersionToGames do
+defmodule Grapevine.Repo.Migrations.AddVersionToGames do
   use Ecto.Migration
 
   def change do

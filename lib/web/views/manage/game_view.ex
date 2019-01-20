@@ -1,8 +1,8 @@
 defmodule Web.Manage.GameView do
   use Web, :view
 
-  alias Gossip.Channels
-  alias Gossip.UserAgents
+  alias Grapevine.Channels
+  alias Grapevine.UserAgents
   alias Web.FormView
   alias Web.Manage.ConnectionView
   alias Web.Manage.SettingView

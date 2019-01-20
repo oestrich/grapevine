@@ -1,12 +1,12 @@
-defmodule Gossip.Telnet.Worker do
+defmodule Grapevine.Telnet.Worker do
   @moduledoc """
   Cron worker for checking telnet connection
   """
 
   use GenServer
 
-  alias Gossip.Games
-  alias Gossip.Telnet.Client
+  alias Grapevine.Games
+  alias Grapevine.Telnet.Client
 
   @initial_delay 60 * 1000
   @one_hour 60 * 60 * 1000

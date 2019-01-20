@@ -1,8 +1,8 @@
-defmodule Gossip.VersionsTest do
-  use Gossip.DataCase
+defmodule Grapevine.VersionsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Games
-  alias Gossip.Versions
+  alias Grapevine.Games
+  alias Grapevine.Versions
 
   describe "log a new action" do
     test "create action" do

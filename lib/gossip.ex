@@ -1,6 +1,6 @@
-defmodule Gossip do
+defmodule Grapevine do
   @moduledoc """
-  Gossip keeps the contexts that define your domain
+  Grapevine keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless
@@ -8,10 +8,10 @@ defmodule Gossip do
   """
 
   @doc """
-  Get the loaded version of Gossip, to send when connecting.
+  Get the loaded version of Grapevine, to send when connecting.
   """
   def version() do
-    to_string(elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :gossip)), 2))
+    to_string(elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :grapevine)), 2))
   end
 
   @doc """

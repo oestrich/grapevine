@@ -1,18 +1,18 @@
-defmodule Gossip.Statistics do
+defmodule Grapevine.Statistics do
   @moduledoc """
   Track statistics about a game
   """
 
   import Ecto.Query
 
-  alias Gossip.Repo
-  alias Gossip.Statistics.PlayerStatistic
+  alias Grapevine.Repo
+  alias Grapevine.Statistics.PlayerStatistic
 
   @doc """
   Record a game's player count at a specific time on the socket
   """
   def record_socket_players(game, players, time) do
-    :telemetry.execute([:gossip, :statistics, :players, :record], length(players), %{time: time})
+    :telemetry.execute([:grapevine, :statistics, :players, :record], length(players), %{time: time})
 
     %PlayerStatistic{}
     |> PlayerStatistic.socket_changeset(game, players, time)
@@ -23,7 +23,7 @@ defmodule Gossip.Statistics do
   Record a game's player count at a specific time on MSSP
   """
   def record_mssp_players(game, player_count, time) do
-    :telemetry.execute([:gossip, :statistics, :players, :record], player_count, %{time: time})
+    :telemetry.execute([:grapevine, :statistics, :players, :record], player_count, %{time: time})
 
     %PlayerStatistic{}
     |> PlayerStatistic.mssp_changeset(game, player_count, time)

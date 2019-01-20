@@ -1,10 +1,10 @@
-defmodule Gossip.AuthorizationsTest do
-  use Gossip.DataCase
+defmodule Grapevine.AuthorizationsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Authorizations
-  alias Gossip.Authorizations.AccessToken
-  alias Gossip.Authorizations.Authorization
-  alias Gossip.Games
+  alias Grapevine.Authorizations
+  alias Grapevine.Authorizations.AccessToken
+  alias Grapevine.Authorizations.Authorization
+  alias Grapevine.Games
 
   describe "starting to authenticate" do
     setup [:with_user, :with_game]

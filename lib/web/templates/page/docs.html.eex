@@ -80,7 +80,7 @@
     </div>
 
     <div class="col-md-8">
-<p>Thanks for checking out Gossip.</p>
+<p>Thanks for checking out Grapevine.</p>
 
 <%= if !Map.get(assigns, :current_user) do %>
   <p>Before continuing, you should <%= link("create an account", to: registration_path(@conn, :new)) %> or <%= link("sign in", to: session_path(@conn, :new)) %>.</p>
@@ -93,7 +93,7 @@
   <% end %>
 </h3>
 
-<p>Once you have an account, visit your <%= link("configuration page", to: manage_setting_path(@conn, :show)) %>. This will let you create a game on Gossip. It will then show you your Client ID and Client Secret which will be used to authenticate against the Gossip network.</p>
+<p>Once you have an account, visit your <%= link("configuration page", to: manage_setting_path(@conn, :show)) %>. This will let you create a game on Grapevine. It will then show you your Client ID and Client Secret which will be used to authenticate against the Grapevine network.</p>
 
 <h3 id="channels-basic">
   <%= link(to: "#channels-basic") do %>
@@ -102,7 +102,7 @@
   <% end %>
 </h3>
 
-<p>You also subscribe to the channels you want your game to pay attention to. Right now Gossip has the following channels:<p>
+<p>You also subscribe to the channels you want your game to pay attention to. Right now Grapevine has the following channels:<p>
 
 <ul>
   <%= Enum.map(Channels.all(), fn channel -> %>
@@ -123,15 +123,15 @@
   <% end %>
 </h3>
 
-<p>The following servers/frameworks have built-in support or a library to import for Gossip support:</p>
+<p>The following servers/frameworks have built-in support or a library to import for Grapevine support:</p>
 
 <ul>
-  <li><%= link("Crystal", to: "https://github.com/proxima/gossip-crystal") %></li>
-  <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
-  <li><%= link("ExVenture", to: "https://exventure.org/admin/gossip/") %></li>
-  <li><%= link("Javascript", to: "https://github.com/dinchak/node-gossiphaus") %></li>
+  <li><%= link("Crystal", to: "https://github.com/proxima/grapevine-crystal") %></li>
+  <li><%= link("Elixir", to: "https://github.com/oestrich/grapevine-elixir") %></li>
+  <li><%= link("ExVenture", to: "https://exventure.org/admin/grapevine/") %></li>
+  <li><%= link("Javascript", to: "https://github.com/dinchak/node-grapevinehaus") %></li>
   <li><%= link("Pinwheel", to: "https://github.com/azigler/pinwheel") %></li>
-  <li><%= link("Ranvier", to: "https://github.com/oestrich/gossip-ranvier") %></li>
+  <li><%= link("Ranvier", to: "https://github.com/oestrich/grapevine-ranvier") %></li>
 </ul>
 
 <h3 id="connecting">
@@ -141,7 +141,7 @@
   <% end %>
 </h3>
 
-<p>Once you have your Client ID and Client Secret, you can start connecting to the Gossip network. Point your websocket client at:</p>
+<p>Once you have your Client ID and Client Secret, you can start connecting to the Grapevine network. Point your websocket client at:</p>
 
 <pre><code><%= socket_url() %></code></pre>
 
@@ -154,12 +154,12 @@
   <% end %>
 </h3>
 
-<p>If you are connecting to the Gossip network, please know that you connect under the following assumptions:</p>
+<p>If you are connecting to the Grapevine network, please know that you connect under the following assumptions:</p>
 
 <ol>
-  <li>Gossip <em>will</em> go down sometime while you are connected. Most likely for a new deploy. Make sure your game does not crash because of this.</li>
-  <li>While Gossip is down, your app should transition channels to local only.</li>
-  <li>Similarly, you should reconnect back to Gossip when it comes back online.</li>
+  <li>Grapevine <em>will</em> go down sometime while you are connected. Most likely for a new deploy. Make sure your game does not crash because of this.</li>
+  <li>While Grapevine is down, your app should transition channels to local only.</li>
+  <li>Similarly, you should reconnect back to Grapevine when it comes back online.</li>
   <li>You must support UTF-8 at the server level. Several connected games allow UTF-8 input so you may receive it at any time.</li>
 </ol>
 
@@ -178,7 +178,7 @@
 
 <ul>
   <li><code>ref</code> is a unique reference that identifies an event in a request and response. This should be a UUID.</li>
-  <li><code>channel</code> is the name of a channel on Gossip.</li>
+  <li><code>channel</code> is the name of a channel on Grapevine.</li>
   <li><code>game</code> is the short name of a connected game.</li>
   <li><code>name</code> is the name of a player in a connected game.</li>
 </ul>
@@ -203,7 +203,7 @@
 
 <p><b>Since 1.0.0</b></p>
 
-<p>These are the core features of connecting to Gossip. These include authenticating, a heartbeat, basic public channels.</p>
+<p>These are the core features of connecting to Grapevine. These include authenticating, a heartbeat, basic public channels.</p>
 
 <%= DocView.event_header("authenticate") %>
 
@@ -217,7 +217,7 @@
     "client_id": "client id",
     "client_secret": "client secret",
     "supports": ["channels"],
-    "channels": ["gossip"],
+    "channels": ["grapevine"],
     "version": "1.0.0",
     "user_agent": "ExVenture 0.23.0"
   }
@@ -227,7 +227,7 @@
   <li><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</li>
   <li><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</li>
   <li><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: manage_game_path(@conn, :index)) %> page.</li>
-  <li><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Gossip updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</li>
+  <li><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Grapevine updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</li>
 </ul>
 
 <p>You will receive a response from this with a sucess or failure message.</p>
@@ -237,13 +237,13 @@
   "status": "success"
   "payload": {
     "unicode": "✔️",
-    "version": "<%= Gossip.version() %>"
+    "version": "<%= Grapevine.version() %>"
   }
 }</pre>
 
 <ul>
   <li><code>unicode</code> is present to ensure you properly parse unicode characters.</li>
-  <li><code>version</code> is the current version of Gossip.</li>
+  <li><code>version</code> is the current version of Grapevine.</li>
 </ul>
 
 <p>If you attempt to subscribe to bad channels, you may receive a failed subscribe message. <%= link("See more above about valid channel names.", to: "#channels-basic") %></p>
@@ -270,7 +270,7 @@
 }</pre>
 
 <ul>
-  <li><code>players</code> is optional but suggested. You should include your full player list to keep Gossip in sync with you. Gossip must know your players are online to forward remote tells.</li>
+  <li><code>players</code> is optional but suggested. You should include your full player list to keep Grapevine in sync with you. Grapevine must know your players are online to forward remote tells.</li>
 </ul>
 
 <p><b>NOTE:</b> If you do not respond to these heartbeats the socket will be closed after three failed beats.</p>
@@ -279,9 +279,9 @@
 
 <%= DocView.event_header("restart") %>
 
-<p>When Gossip knows a restart is imminent, you will receive this event. This event will be sent before a server restart due to a deploy.</p>
+<p>When Grapevine knows a restart is imminent, you will receive this event. This event will be sent before a server restart due to a deploy.</p>
 
-<p>After receiving this event, your connection to Gossip may drop at any moment.</p>
+<p>After receiving this event, your connection to Grapevine may drop at any moment.</p>
 
 <pre>{
   "event": "restart",
@@ -292,7 +292,7 @@
 }</pre>
 
 <ul>
-  <li><code>downtime</code> is a suggested amount of seconds you should wait before restarting. It is a hint from the server for how long it thinks Gossip will be down.</li>
+  <li><code>downtime</code> is a suggested amount of seconds you should wait before restarting. It is a hint from the server for how long it thinks Grapevine will be down.</li>
 </ul>
 
 <hr />
@@ -307,7 +307,7 @@
   "event": "channels/subscribe",
   "ref": "a6f8006d-ddac-465e-a3df-fb440e83189b",
   "payload": {
-    "channel": "gossip"
+    "channel": "grapevine"
   }
 }</pre>
 
@@ -344,7 +344,7 @@
   "event": "channels/unsubscribe",
   "ref": "e4d07334-4a4b-44ba-94dc-2b937160a466",
   "payload": {
-    "channel": "gossip"
+    "channel": "grapevine"
   }
 }</pre>
 
@@ -372,7 +372,7 @@
   "event": "channels/broadcast",
   "ref": "89036074-446f-41ab-b87a-44ef1f962f2e",
   "payload": {
-    "channel": "gossip",
+    "channel": "grapevine",
     "message": "Hello everyone!",
     "game": "ExVenture",
     "name": "Player"
@@ -401,7 +401,7 @@
   "event": "channels/send",
   "ref": "28523394-6dcf-4c2a-ad1d-2d0ef8bb823b",
   "payload": {
-    "channel": "gossip",
+    "channel": "grapevine",
     "name": "Player",
     "message": "Hello everyone!"
   }
@@ -434,7 +434,7 @@
 
 <p><b>Since 1.0.0</b></p>
 
-<p>When a player signs into your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
+<p>When a player signs into your game, send this message. It will broadcast to other games and also update Grapevine's tracking of who is signed in.</p>
 
 <p>You will not receive a <code>players/sign-in</code> event back for messages you send.</p>
 
@@ -479,7 +479,7 @@
 
 <p><b>Since 1.0.0</b></p>
 
-<p>When a player signs out of your game, send this message. It will broadcast to other games and also update Gossip's tracking of who is signed in.</p>
+<p>When a player signs out of your game, send this message. It will broadcast to other games and also update Grapevine's tracking of who is signed in.</p>
 
 <p>You will not receive a <code>players/sign-out</code> event back for messages you send.</p>
 
@@ -577,7 +577,7 @@
 
 <p>These events are related to the <code>tells</code> support flag. Add this to your <code>supports</code> array when connecting.</p>
 
-<p>It is suggested to also support the <code>players</code> flag, as you can keep your players' status more up to date on Gossip. Players must be online on Gossip to receive tells.</p>
+<p>It is suggested to also support the <code>players</code> flag, as you can keep your players' status more up to date on Grapevine. Players must be online on Grapevine to receive tells.</p>
 
 <%= DocView.event_header("tells/send") %>
 
@@ -881,7 +881,7 @@ This is a TLS secured telnet connection.
   <li><code>achievements</code> is an array of achievements. See below for their properties.</li>
 </ul>
 
-<p>The achievement attributes match the same attributes you would enter in from the Gossip website itself.</p>
+<p>The achievement attributes match the same attributes you would enter in from the Grapevine website itself.</p>
 
 <ul>
   <li><code>key</code> is an ID you will use in other events, read only.</li>
@@ -1038,7 +1038,7 @@ This is a TLS secured telnet connection.
   <% end %>
 </h3>
 
-<p><%= link("Grapevine", to: "https://grapevine.haus/") %> is the player half of Gossip. You can integrate a common login through Grapevine by using OAuth 2.0.</p>
+<p>You can integrate a common login through Grapevine by using OAuth 2.0.</p>
 
 <p>For more information on the OAuth 2.0 flow, please check out the spec at <%= link("OAuth.net", to: "https://oauth.net/2/") %>.</p>
 
@@ -1051,7 +1051,7 @@ This is a TLS secured telnet connection.
   <% end %>
 </h4>
 
-<p>Before starting your integration, make sure to setup your redirect URIs on Gossip. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: manage_setting_path(@conn, :show)) %> page.
+<p>Before starting your integration, make sure to setup your redirect URIs on Grapevine. For each game you are integrating, set all of the allowed redirect URIs from the "View" link on the <%= link("Your Games", to: manage_setting_path(@conn, :show)) %> page.
 
 <p>The <code>redirect_uri</code> <b>must</b> be a secure <code>https</code> URI or a <code>localhost</code> URI for development purposes.</p>
 

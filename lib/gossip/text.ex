@@ -1,4 +1,4 @@
-defmodule Gossip.Text do
+defmodule Grapevine.Text do
   @moduledoc """
   Incoming text modifications
 

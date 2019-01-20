@@ -1,4 +1,4 @@
-defmodule Gossip.Presence.State do
+defmodule Grapevine.Presence.State do
   @moduledoc """
   Struct for game presence
   """

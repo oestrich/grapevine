@@ -1,4 +1,4 @@
-defmodule Gossip.Filter do
+defmodule Grapevine.Filter do
   @moduledoc """
   Filter an `Ecto.Query` by a map of parameters. Modules that use this should follow it's behaviour.
   """

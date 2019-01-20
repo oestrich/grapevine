@@ -1,8 +1,8 @@
-defmodule Gossip.GamesTest do
-  use Gossip.DataCase
+defmodule Grapevine.GamesTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Games
-  alias Gossip.UserAgents
+  alias Grapevine.Games
+  alias Grapevine.UserAgents
 
   describe "registering a new game" do
     test "successful" do
@@ -257,7 +257,7 @@ defmodule Gossip.GamesTest do
 
       {:ok, redirect_uri} = Games.delete_redirect_uri(redirect_uri)
 
-      refute Gossip.Repo.get(Games.RedirectURI, redirect_uri.id)
+      refute Grapevine.Repo.get(Games.RedirectURI, redirect_uri.id)
     end
   end
 

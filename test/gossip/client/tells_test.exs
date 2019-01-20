@@ -1,14 +1,14 @@
-defmodule Gossip.Client.TellsTest do
-  use Gossip.DataCase
+defmodule Grapevine.Client.TellsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Accounts
-  alias Gossip.Client.Tells
+  alias Grapevine.Accounts
+  alias Grapevine.Client.Tells
 
   describe "receiving tells" do
     test "unknown operation" do
       :ok = Tells.receive_tell("ExVenture", "player", "hello")
 
-      assert_receive {:tell, {"ExVenture", "player", "Hello! This is Gossip" <> _}}
+      assert_receive {:tell, {"ExVenture", "player", "Hello! This is Grapevine" <> _}}
     end
   end
 

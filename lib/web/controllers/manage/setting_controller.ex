@@ -1,8 +1,8 @@
 defmodule Web.Manage.SettingController do
   use Web, :controller
 
-  alias Gossip.Accounts
-  alias Gossip.Games
+  alias Grapevine.Accounts
+  alias Grapevine.Games
 
   plug(Web.Plugs.VerifyUser)
 

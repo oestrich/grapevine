@@ -1,7 +1,7 @@
-defmodule Gossip.PresenceTest do
-  use Gossip.DataCase
+defmodule Grapevine.PresenceTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
 
   describe "updating presence of a game" do
     test "on update the game is shown as online" do

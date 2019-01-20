@@ -1,7 +1,7 @@
 defmodule Web.PageController do
   use Web, :controller
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
   alias Web.Game
 
   def index(conn, _params) do

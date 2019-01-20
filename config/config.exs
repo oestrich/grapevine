@@ -6,12 +6,12 @@
 use Mix.Config
 
 # General application configuration
-config :gossip,
+config :grapevine,
   namespace: Web,
-  ecto_repos: [Gossip.Repo]
+  ecto_repos: [Grapevine.Repo]
 
 # Configures the endpoint
-config :gossip, Web.Endpoint,
+config :grapevine, Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
@@ -24,13 +24,13 @@ config :gossip, Web.Endpoint,
        ]}
     ]
   ],
-  pubsub: [name: Gossip.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Grapevine.PubSub, adapter: Phoenix.PubSub.PG2]
 
-config :gossip, :socket, tls: false
+config :grapevine, :socket, tls: false
 
-config :gossip, :errors, report: false
+config :grapevine, :errors, report: false
 
-config :gossip, :modules, client: Gossip.Client.Server
+config :grapevine, :modules, client: Grapevine.Client.Server
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -40,7 +40,7 @@ config :logger, :console,
 config :distillery, no_warn_missing: [:elixir_make]
 
 config :sentry,
-  filter: Gossip.SentryFilter,
+  filter: Grapevine.SentryFilter,
   json_library: Jason
 
 config :phoenix, :json_library, Jason

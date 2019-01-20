@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddTypeToPlayerStatistics do
+defmodule Grapevine.Repo.Migrations.AddTypeToPlayerStatistics do
   use Ecto.Migration
 
   def change do

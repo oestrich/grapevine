@@ -1,13 +1,13 @@
-defmodule Gossip.Achievements do
+defmodule Grapevine.Achievements do
   @moduledoc """
   Contect for managing a game's achievements
   """
 
   import Ecto.Query
 
-  alias Gossip.Achievements.Achievement
-  alias Gossip.Repo
-  alias Gossip.Versions
+  alias Grapevine.Achievements.Achievement
+  alias Grapevine.Repo
+  alias Grapevine.Versions
 
   @max_points 500
 
@@ -132,12 +132,12 @@ defmodule Gossip.Achievements do
   defp _create(game, changeset) do
     case Repo.insert(changeset) do
       {:ok, achievement} ->
-        :telemetry.execute([:gossip, :achievements, :create, :success], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :achievements, :create, :success], 1, %{game_id: game.id})
         broadcast_achievement_create(achievement.id)
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :achievements, :create, :failure], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :achievements, :create, :failure], 1, %{game_id: game.id})
         {:error, changeset}
     end
   end
@@ -150,7 +150,7 @@ defmodule Gossip.Achievements do
 
     case Repo.update(changeset) do
       {:ok, achievement} ->
-        :telemetry.execute([:gossip, :achievements, :update, :success], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :update, :success], 1, %{
           game_id: achievement.game_id
         })
 
@@ -158,7 +158,7 @@ defmodule Gossip.Achievements do
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :achievements, :update, :failure], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :update, :failure], 1, %{
           game_id: achievement.game_id
         })
 
@@ -172,7 +172,7 @@ defmodule Gossip.Achievements do
   def delete(achievement) do
     case Repo.delete(achievement) do
       {:ok, achievement} ->
-        :telemetry.execute([:gossip, :achievements, :delete, :success], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :delete, :success], 1, %{
           game_id: achievement.game_id
         })
 
@@ -180,7 +180,7 @@ defmodule Gossip.Achievements do
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :achievements, :delete, :failure], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :delete, :failure], 1, %{
           game_id: achievement.game_id
         })
 

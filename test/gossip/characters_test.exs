@@ -1,7 +1,7 @@
-defmodule Gossip.CharactersTest do
-  use Gossip.DataCase
+defmodule Grapevine.CharactersTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Characters
+  alias Grapevine.Characters
 
   describe "registration" do
     test "starts registration" do

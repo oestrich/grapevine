@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.CreateNetworkApplications do
+defmodule Grapevine.Repo.Migrations.CreateNetworkApplications do
   use Ecto.Migration
 
   def change do

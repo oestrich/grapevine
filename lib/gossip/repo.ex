@@ -1,6 +1,6 @@
-defmodule Gossip.Repo do
+defmodule Grapevine.Repo do
   use Ecto.Repo,
-    otp_app: :gossip,
+    otp_app: :grapevine,
     adapter: Ecto.Adapters.Postgres
 
   @doc """

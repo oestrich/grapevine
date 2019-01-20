@@ -1,4 +1,4 @@
-defmodule Gossip.DataCase do
+defmodule Grapevine.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,21 +16,21 @@ defmodule Gossip.DataCase do
 
   using do
     quote do
-      alias Gossip.Repo
+      alias Grapevine.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Gossip.DataCase
-      import Gossip.TestHelpers
+      import Grapevine.DataCase
+      import Grapevine.TestHelpers
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gossip.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Grapevine.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gossip.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Grapevine.Repo, {:shared, self()})
     end
 
     :ok

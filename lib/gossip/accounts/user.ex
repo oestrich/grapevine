@@ -1,4 +1,4 @@
-defmodule Gossip.Accounts.User do
+defmodule Grapevine.Accounts.User do
   @moduledoc """
   User schema
   """
@@ -7,10 +7,10 @@ defmodule Gossip.Accounts.User do
 
   import Ecto.Changeset
 
-  alias Gossip.Accounts
-  alias Gossip.Authorizations.Authorization
-  alias Gossip.Characters.Character
-  alias Gossip.Games.Game
+  alias Grapevine.Accounts
+  alias Grapevine.Authorizations.Authorization
+  alias Grapevine.Characters.Character
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 
@@ -43,7 +43,7 @@ defmodule Gossip.Accounts.User do
     |> validate_required([:username, :email])
     |> username_validation()
     |> validate_format(:email, ~r/.+@.+\..+/)
-    |> Gossip.Schema.ensure(:token, UUID.uuid4())
+    |> Grapevine.Schema.ensure(:token, UUID.uuid4())
     |> hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)

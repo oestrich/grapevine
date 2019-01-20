@@ -1,7 +1,7 @@
-defmodule Gossip.TextTest do
+defmodule Grapevine.TextTest do
   use ExUnit.Case
 
-  alias Gossip.Text
+  alias Grapevine.Text
 
   describe "strip mxp" do
     test "removes tags" do

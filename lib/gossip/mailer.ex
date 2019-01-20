@@ -1,5 +1,5 @@
-defmodule Gossip.Mailer do
+defmodule Grapevine.Mailer do
   @moduledoc false
 
-  use Bamboo.Mailer, otp_app: :gossip
+  use Bamboo.Mailer, otp_app: :grapevine
 end

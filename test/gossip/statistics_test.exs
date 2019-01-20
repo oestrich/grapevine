@@ -1,7 +1,7 @@
-defmodule Gossip.StatisticsTest do
-  use Gossip.DataCase
+defmodule Grapevine.StatisticsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Statistics
+  alias Grapevine.Statistics
 
   describe "record player count for a game" do
     test "from the socket" do

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo -u postgres pg_dump gossip > /opt/backups/gossip-`date +%FT%R`.sql
+sudo -u postgres pg_dump grapevine > /opt/backups/grapevine-`date +%FT%R`.sql

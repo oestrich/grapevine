@@ -1,4 +1,4 @@
-defmodule Gossip.Versions.Version do
+defmodule Grapevine.Versions.Version do
   @moduledoc """
   Game Schema
   """

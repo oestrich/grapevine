@@ -1,4 +1,4 @@
-defmodule Gossip.Emails do
+defmodule Grapevine.Emails do
   @moduledoc """
   Generate emails to send out
   """
@@ -11,12 +11,12 @@ defmodule Gossip.Emails do
   def password_reset(user) do
     base_email()
     |> to(user.email)
-    |> subject("Password reset for Gossip")
+    |> subject("Password reset for Grapevine")
     |> render("password-reset.html", user: user)
   end
 
   def base_email() do
     new_email()
-    |> from("no-reply@gossip.haus")
+    |> from("no-reply@grapevine.haus")
   end
 end

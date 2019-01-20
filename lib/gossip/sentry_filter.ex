@@ -1,4 +1,4 @@
-defmodule Gossip.SentryFilter do
+defmodule Grapevine.SentryFilter do
   @moduledoc false
 
   @behaviour Sentry.EventFilter

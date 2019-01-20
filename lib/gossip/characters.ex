@@ -1,12 +1,12 @@
-defmodule Gossip.Characters do
+defmodule Grapevine.Characters do
   @moduledoc """
   Characters context
   """
 
   import Ecto.Query
 
-  alias Gossip.Characters.Character
-  alias Gossip.Repo
+  alias Grapevine.Characters.Character
+  alias Grapevine.Repo
 
   @type id :: integer()
 

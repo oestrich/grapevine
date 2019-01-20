@@ -1,7 +1,7 @@
-defmodule Gossip.AchievementsTest do
-  use Gossip.DataCase
+defmodule Grapevine.AchievementsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Achievements
+  alias Grapevine.Achievements
 
   describe "create a new achievement" do
     test "successful" do

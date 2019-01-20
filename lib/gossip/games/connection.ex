@@ -1,4 +1,4 @@
-defmodule Gossip.Games.Connection do
+defmodule Grapevine.Games.Connection do
   @moduledoc """
   Connection Schema
   """
@@ -7,7 +7,7 @@ defmodule Gossip.Games.Connection do
 
   import Ecto.Changeset
 
-  alias Gossip.Games.Game
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 

@@ -1,17 +1,17 @@
-defmodule Gossip.Versions do
+defmodule Grapevine.Versions do
   @moduledoc """
   Context around tracking schema versions for sync
   """
 
   import Ecto.Query
 
-  alias Gossip.Achievements.Achievement
-  alias Gossip.Channels.Channel
-  alias Gossip.Events.Event
-  alias Gossip.Games.Game
-  alias Gossip.Repo
-  alias Gossip.UserAgents
-  alias Gossip.Versions.Version
+  alias Grapevine.Achievements.Achievement
+  alias Grapevine.Channels.Channel
+  alias Grapevine.Events.Event
+  alias Grapevine.Games.Game
+  alias Grapevine.Repo
+  alias Grapevine.UserAgents
+  alias Grapevine.Versions.Version
   alias Web.Manage.ConnectionView
 
   @doc """

@@ -1,8 +1,8 @@
 ## Contributing to ExVenture
 
-Thanks for being interested in contributing to Gossip!
+Thanks for being interested in contributing to Grapevine!
 
-Note: any contributions will be licensed under the license used by Gossip.
+Note: any contributions will be licensed under the license used by Grapevine.
 
 ### Issues
 
@@ -10,7 +10,7 @@ If you have a support question, please ask on the [Discord][discord] instead of 
 
 ### Pull Requests
 
-To start contributing code back to Gossip follow these steps:
+To start contributing code back to Grapevine follow these steps:
 
 1. Fork the project to your own account and clone this locally
 

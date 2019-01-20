@@ -3,9 +3,9 @@ defmodule Web.SocketHelper do
   Helpers for the socket url
   """
 
-  @tls Application.get_env(:gossip, :socket)[:tls]
-  @host Application.get_env(:gossip, Web.Endpoint)[:url][:host]
-  @port Application.get_env(:gossip, Web.Endpoint)[:http][:port]
+  @tls Application.get_env(:grapevine, :socket)[:tls]
+  @host Application.get_env(:grapevine, Web.Endpoint)[:url][:host]
+  @port Application.get_env(:grapevine, Web.Endpoint)[:http][:port]
 
   @doc """
   Generate the socket URL based on the phoenix configuration

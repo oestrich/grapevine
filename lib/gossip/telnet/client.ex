@@ -1,4 +1,4 @@
-defmodule Gossip.Telnet.Client do
+defmodule Grapevine.Telnet.Client do
   @moduledoc """
   A client to check for MSSP data
   """
@@ -9,11 +9,11 @@ defmodule Gossip.Telnet.Client do
 
   @do_mssp <<255, 253, 70>>
   @will_term_type <<255, 251, 24>>
-  @term_type <<255, 250, 24, 0>> <> "Gossip" <> <<255, 240>>
+  @term_type <<255, 250, 24, 0>> <> "Grapevine" <> <<255, 240>>
   @wont_line_mode <<255, 252, 34>>
 
-  alias Gossip.Telnet
-  alias Gossip.Telnet.Client.Options
+  alias Grapevine.Telnet
+  alias Grapevine.Telnet.Client.Options
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts)
@@ -37,7 +37,7 @@ defmodule Gossip.Telnet.Client do
 
     state = generate_state(opts)
 
-    :telemetry.execute([:gossip, :telnet, :mssp, :start], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :start], 1, state)
 
     {:ok, state, {:continue, :connect}}
   end
@@ -45,32 +45,32 @@ defmodule Gossip.Telnet.Client do
   def handle_continue(:connect, state) do
     host = String.to_charlist(state.host)
     {:ok, socket} = :gen_tcp.connect(host, state.port, [:binary, {:packet, 0}])
-    :telemetry.execute([:gossip, :telnet, :mssp, :connected], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :connected], 1, state)
     {:noreply, Map.put(state, :socket, socket)}
   end
 
   def handle_cast({:send_do_mssp}, state) do
     :gen_tcp.send(state.socket, @do_mssp)
-    :telemetry.execute([:gossip, :telnet, :mssp, :option, :sent], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :option, :sent], 1, state)
     {:noreply, state}
   end
 
   def handle_cast({:send_term_type}, state) do
     :gen_tcp.send(state.socket, @will_term_type)
     :gen_tcp.send(state.socket, @term_type)
-    :telemetry.execute([:gossip, :telnet, :mssp, :term_type, :sent], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :term_type, :sent], 1, state)
     {:noreply, state}
   end
 
   def handle_cast({:send_line_mode}, state) do
     :gen_tcp.send(state.socket, @wont_line_mode)
-    :telemetry.execute([:gossip, :telnet, :mssp, :line_mode, :sent], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :line_mode, :sent], 1, state)
     {:noreply, state}
   end
 
   def handle_info({:text_mssp_request}, state) do
     :gen_tcp.send(state.socket, "mssp-request\n")
-    :telemetry.execute([:gossip, :telnet, :mssp, :text, :sent], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :text, :sent], 1, state)
 
     {:noreply, %{state | data: <<>>}}
   end
@@ -78,7 +78,7 @@ defmodule Gossip.Telnet.Client do
   def handle_info({:stop}, state) do
     maybe_forward("mssp/terminated", %{}, state)
     Telnet.record_no_mssp(state.host, state.port)
-    :telemetry.execute([:gossip, :telnet, :mssp, :failed], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :failed], 1, state)
 
     state.module.record_fail(state)
 
@@ -137,14 +137,14 @@ defmodule Gossip.Telnet.Client do
     Record player counts from MSSP
     """
 
-    alias Gossip.Games
-    alias Gossip.Statistics
+    alias Grapevine.Games
+    alias Grapevine.Statistics
 
     def init(opts, state) do
       connection = Keyword.get(opts, :connection)
 
       state
-      |> Map.put(:module, Gossip.Telnet.Client.Record)
+      |> Map.put(:module, Grapevine.Telnet.Client.Record)
       |> Map.put(:connection, connection)
       |> Map.put(:game, connection.game)
       |> Map.put(:host, connection.host)
@@ -184,11 +184,11 @@ defmodule Gossip.Telnet.Client do
     Check MSSP for a game
     """
 
-    alias Gossip.Telnet
+    alias Grapevine.Telnet
 
     def init(opts, state) do
       state
-      |> Map.put(:module, Gossip.Telnet.Client.Check)
+      |> Map.put(:module, Grapevine.Telnet.Client.Check)
       |> Map.put(:host, Keyword.get(opts, :host))
       |> Map.put(:port, Keyword.get(opts, :port))
       |> Map.put(:channel, Keyword.get(opts, :channel))
@@ -212,10 +212,10 @@ defmodule Gossip.Telnet.Client do
 
     case opts[:type] do
       :check ->
-        Gossip.Telnet.Client.Check.init(opts, state)
+        Grapevine.Telnet.Client.Check.init(opts, state)
 
       :record ->
-        Gossip.Telnet.Client.Record.init(opts, state)
+        Grapevine.Telnet.Client.Record.init(opts, state)
     end
   end
 
@@ -223,7 +223,7 @@ defmodule Gossip.Telnet.Client do
     {:mssp, data} = Options.get_mssp_data(options)
     maybe_forward("mssp/received", data, state)
     fun.(data)
-    :telemetry.execute([:gossip, :telnet, :mssp, :option, :success], 1, state)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :option, :success], 1, state)
 
     {:stop, :normal, state}
   end
@@ -236,7 +236,7 @@ defmodule Gossip.Telnet.Client do
       data ->
         maybe_forward("mssp/received", data, state)
         fun.(data)
-        :telemetry.execute([:gossip, :telnet, :mssp, :text, :success], 1, state)
+        :telemetry.execute([:grapevine, :telnet, :mssp, :text, :success], 1, state)
 
         {:stop, :normal, state}
     end

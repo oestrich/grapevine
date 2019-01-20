@@ -1,10 +1,10 @@
-defmodule Gossip.Presence.Notices do
+defmodule Grapevine.Presence.Notices do
   @moduledoc """
   Send a notice if a game comes online or goes offline
   """
 
-  alias Gossip.Presence
-  alias Gossip.Presence.Client
+  alias Grapevine.Presence
+  alias Grapevine.Presence.Client
   alias Socket.Games
 
   @doc """

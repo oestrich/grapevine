@@ -1,5 +1,5 @@
 defmodule Web.Manage.GameViewTest do
-  use Gossip.DataCase
+  use Grapevine.DataCase
 
   alias Web.Manage.GameView
 

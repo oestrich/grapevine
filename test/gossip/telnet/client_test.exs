@@ -1,7 +1,7 @@
-defmodule Gossip.Telnet.ClientTest do
+defmodule Grapevine.Telnet.ClientTest do
   use ExUnit.Case
 
-  alias Gossip.Telnet.Client
+  alias Grapevine.Telnet.Client
 
   describe "parsing telnet options" do
     test "a string" do
@@ -17,9 +17,9 @@ defmodule Gossip.Telnet.ClientTest do
     end
 
     test "parsing sub negotitation" do
-      options = <<255, 250, 70, 1>> <> "name" <> <<2>> <> "gossip" <> <<255, 240, 85>>
+      options = <<255, 250, 70, 1>> <> "name" <> <<2>> <> "grapevine" <> <<255, 240, 85>>
 
-      [mssp: %{"name" => "gossip"}] = Client.Options.parse(options)
+      [mssp: %{"name" => "grapevine"}] = Client.Options.parse(options)
     end
 
     test "sub negotiation options" do

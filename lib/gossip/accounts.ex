@@ -1,4 +1,4 @@
-defmodule Gossip.Accounts do
+defmodule Grapevine.Accounts do
   @moduledoc """
   Context for accounts
   """
@@ -6,11 +6,11 @@ defmodule Gossip.Accounts do
   import Ecto.Query
   require Logger
 
-  alias Gossip.Accounts.User
-  alias Gossip.Emails
-  alias Gossip.Games.Game
-  alias Gossip.Mailer
-  alias Gossip.Repo
+  alias Grapevine.Accounts.User
+  alias Grapevine.Emails
+  alias Grapevine.Games.Game
+  alias Grapevine.Mailer
+  alias Grapevine.Repo
 
   @type id :: integer()
   @type user_params :: map()
@@ -230,7 +230,7 @@ defmodule Gossip.Accounts do
   """
   @spec username_blocklist() :: [username()]
   def username_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:gossip), "users/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine), "users/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

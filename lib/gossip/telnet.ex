@@ -1,11 +1,11 @@
-defmodule Gossip.Telnet do
+defmodule Grapevine.Telnet do
   @moduledoc """
   Telnet context, for finding MSSP data on a MUD
   """
 
-  alias Gossip.Telnet.MSSPResponse
-  alias Gossip.Telnet.Worker
-  alias Gossip.Repo
+  alias Grapevine.Telnet.MSSPResponse
+  alias Grapevine.Telnet.Worker
+  alias Grapevine.Repo
 
   @doc """
   Trigger a check for connection MSSP stats

@@ -1,9 +1,9 @@
 defmodule Web.GameView do
   use Web, :view
 
-  alias Gossip.Channels
-  alias Gossip.Presence
-  alias Gossip.UserAgents
+  alias Grapevine.Channels
+  alias Grapevine.Presence
+  alias Grapevine.UserAgents
 
   def render("online.json", %{games: games}) do
     %{

@@ -1,7 +1,7 @@
 defmodule Socket.CoreTest do
-  use Gossip.DataCase
+  use Grapevine.DataCase
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
   alias Socket.Core
   alias Socket.Core.Heartbeat
   alias Web.Socket.Router
@@ -19,7 +19,7 @@ defmodule Socket.CoreTest do
           "client_id" => game.client_id,
           "client_secret" => game.client_secret,
           "supports" => ["channels"],
-          "channels" => ["gossip"],
+          "channels" => ["grapevine"],
           "players" => ["player"]
         }
       }
@@ -198,19 +198,19 @@ defmodule Socket.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["gossip"]
+        channels: ["grapevine"]
       }
 
       %{state: state, game: game}
     end
 
     test "broadcasts the message", %{state: state, game: game} do
-      Web.Endpoint.subscribe("channels:gossip")
+      Web.Endpoint.subscribe("channels:grapevine")
 
       frame = %{
         "event" => "channels/send",
         "payload" => %{
-          "channel" => "gossip",
+          "channel" => "grapevine",
           "name" => "Player",
           "message" => "Hello!"
         }
@@ -219,16 +219,16 @@ defmodule Socket.CoreTest do
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
-      assert_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}
+      assert_receive %{payload: %{"channel" => "grapevine", "game" => ^game_name}}
     end
 
     test "strips out mxp data", %{state: state} do
-      Web.Endpoint.subscribe("channels:gossip")
+      Web.Endpoint.subscribe("channels:grapevine")
 
       frame = %{
         "event" => "channels/send",
         "payload" => %{
-          "channel" => "gossip",
+          "channel" => "grapevine",
           "name" => "Player",
           "message" => "<b>Hello!</b>"
         }
@@ -236,11 +236,11 @@ defmodule Socket.CoreTest do
 
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
-      assert_receive %{payload: %{"channel" => "gossip", "message" => "Hello!"}}
+      assert_receive %{payload: %{"channel" => "grapevine", "message" => "Hello!"}}
     end
 
     test "does not broadcast the message if you are not subscribed", %{state: state, game: game} do
-      Web.Endpoint.subscribe("channels:gossip")
+      Web.Endpoint.subscribe("channels:grapevine")
 
       frame = %{
         "event" => "channels/send",
@@ -254,7 +254,7 @@ defmodule Socket.CoreTest do
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
-      refute_receive %{payload: %{"channel" => "gossip", "game" => ^game_name}}, 50
+      refute_receive %{payload: %{"channel" => "grapevine", "game" => ^game_name}}, 50
     end
   end
 
@@ -267,7 +267,7 @@ defmodule Socket.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["gossip"]
+        channels: ["grapevine"]
       }
 
       %{state: state, game: game}
@@ -282,7 +282,7 @@ defmodule Socket.CoreTest do
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
-      assert state.channels == ["general", "gossip"]
+      assert state.channels == ["general", "grapevine"]
     end
 
     test "subscribes only once", %{state: state} do
@@ -296,7 +296,7 @@ defmodule Socket.CoreTest do
       {:ok, :skip, state} = Router.receive(state, frame)
       {:ok, :skip, state} = Router.receive(state, frame)
 
-      assert state.channels == ["general", "gossip"]
+      assert state.channels == ["general", "grapevine"]
     end
 
     test "subscribe to a new channel - failure", %{state: state} do
@@ -310,7 +310,7 @@ defmodule Socket.CoreTest do
 
       assert {:ok, response, state} = Router.receive(state, frame)
 
-      assert state.channels == ["gossip"]
+      assert state.channels == ["grapevine"]
       assert response["error"] == ~s(Could not subscribe to "bad channel")
     end
 
@@ -318,7 +318,7 @@ defmodule Socket.CoreTest do
       frame = %{
         "event" => "channels/unsubscribe",
         "payload" => %{
-          "channel" => "gossip"
+          "channel" => "grapevine"
         }
       }
 
@@ -335,7 +335,7 @@ defmodule Socket.CoreTest do
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
-      assert state.channels == ["gossip"]
+      assert state.channels == ["grapevine"]
     end
 
     test "unsubscribe to a channel, null channel", %{state: state} do
@@ -347,7 +347,7 @@ defmodule Socket.CoreTest do
       }
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
-      assert state.channels == ["gossip"]
+      assert state.channels == ["grapevine"]
     end
   end
 

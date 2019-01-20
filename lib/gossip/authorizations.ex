@@ -1,14 +1,14 @@
-defmodule Gossip.Authorizations do
+defmodule Grapevine.Authorizations do
   @moduledoc """
   Authorize remote logins
   """
 
   import Ecto.Query
 
-  alias Gossip.Authorizations.AccessToken
-  alias Gossip.Authorizations.Authorization
-  alias Gossip.Games
-  alias Gossip.Repo
+  alias Grapevine.Authorizations.AccessToken
+  alias Grapevine.Authorizations.Authorization
+  alias Grapevine.Games
+  alias Grapevine.Repo
 
   @doc """
   Start authorization

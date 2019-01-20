@@ -1,8 +1,8 @@
 defmodule Web.Manage.AchievementController do
   use Web, :controller
 
-  alias Gossip.Games
-  alias Gossip.Achievements
+  alias Grapevine.Games
+  alias Grapevine.Achievements
 
   plug(Web.Plugs.VerifyUser)
 

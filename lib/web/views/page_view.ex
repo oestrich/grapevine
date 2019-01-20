@@ -3,11 +3,11 @@ defmodule Web.PageView do
 
   import Web.SocketHelper
 
-  alias Gossip.Channels
+  alias Grapevine.Channels
   alias Web.DocView
 
   def render("_conduct.html", _assigns) do
-    :gossip
+    :grapevine
     |> :code.priv_dir()
     |> Path.join("pages/CODE_OF_CONDUCT.md")
     |> File.read!()

@@ -1,4 +1,4 @@
-defmodule Gossip.Applications.Application do
+defmodule Grapevine.Applications.Application do
   @moduledoc """
   Application Schema
   """
@@ -27,8 +27,8 @@ defmodule Gossip.Applications.Application do
     |> validate_required([:name, :short_name])
     |> validate_length(:short_name, less_than_or_equal_to: 15)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
-    |> Gossip.Schema.ensure(:client_id, UUID.uuid4())
-    |> Gossip.Schema.ensure(:client_secret, UUID.uuid4())
+    |> Grapevine.Schema.ensure(:client_id, UUID.uuid4())
+    |> Grapevine.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :applications_lower_name_index)
     |> unique_constraint(:short_name, name: :applications_lower_short_name_index)
     |> unique_constraint(:client_id)

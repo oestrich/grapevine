@@ -1,7 +1,7 @@
 # https://docs.docker.com/compose/compose-file/
 version: '3.6'
 services:
-  gossip:
+  grapevine:
     build: .
     depends_on:
       - postgres
@@ -11,9 +11,9 @@ services:
   postgres:
     image: postgres:10.4-alpine
     environment:
-      POSTGRES_DB: gossip
-      POSTGRES_PASSWORD: gossip
-      POSTGRES_USER: gossip
+      POSTGRES_DB: grapevine
+      POSTGRES_PASSWORD: grapevine
+      POSTGRES_USER: grapevine
     ports:
       - 15433:5432
     volumes:

@@ -1,4 +1,4 @@
-defmodule Gossip.UserAgents.UserAgent do
+defmodule Grapevine.UserAgents.UserAgent do
   @moduledoc """
   Game Schema
   """

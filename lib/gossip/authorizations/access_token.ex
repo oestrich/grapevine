@@ -1,4 +1,4 @@
-defmodule Gossip.Authorizations.AccessToken do
+defmodule Grapevine.Authorizations.AccessToken do
   @moduledoc """
   Access token schema
   """
@@ -7,7 +7,7 @@ defmodule Gossip.Authorizations.AccessToken do
 
   import Ecto.Changeset
 
-  alias Gossip.Authorizations.Authorization
+  alias Grapevine.Authorizations.Authorization
 
   @type t :: %__MODULE__{}
 

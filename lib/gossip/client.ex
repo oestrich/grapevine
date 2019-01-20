@@ -1,4 +1,4 @@
-defmodule Gossip.Client do
+defmodule Grapevine.Client do
   @moduledoc """
   A local fake "client" to the socket
   """
@@ -8,7 +8,7 @@ defmodule Gossip.Client do
   """
   @callback send_tell(to_game :: String.t(), to_player :: String.t(), message :: String.t()) :: :ok
 
-  @client Application.get_env(:gossip, :modules)[:client]
+  @client Application.get_env(:grapevine, :modules)[:client]
 
   @doc """
   Local client presence data
@@ -16,12 +16,12 @@ defmodule Gossip.Client do
   Gets injected to the online games
   """
   def presence() do
-    %Gossip.Presence.State{
-      game: %Gossip.Client.Application{},
+    %Grapevine.Presence.State{
+      game: %Grapevine.Client.Application{},
       players: ["system"],
       channels: [],
       supports: ["channels", "players", "tells"],
-      type: :gossip,
+      type: :grapevine,
       timestamp: Timex.now()
     }
   end

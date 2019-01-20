@@ -1,7 +1,7 @@
-defmodule Gossip.ApplicationsTest do
-  use Gossip.DataCase
+defmodule Grapevine.ApplicationsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Applications
+  alias Grapevine.Applications
 
   describe "generating a system level application" do
     test "successfully" do

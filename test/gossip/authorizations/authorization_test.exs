@@ -1,8 +1,8 @@
-defmodule Gossip.Authorizations.AuthorizationTest do
+defmodule Grapevine.Authorizations.AuthorizationTest do
   use ExUnit.Case
 
-  alias Gossip.Authorizations.Authorization
-  alias Gossip.Games.Game
+  alias Grapevine.Authorizations.Authorization
+  alias Grapevine.Games.Game
 
   describe "redirect_uri validations" do
     setup [:with_game]

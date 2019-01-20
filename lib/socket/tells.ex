@@ -5,7 +5,7 @@ defmodule Socket.Tells do
 
   use Web.Socket.Module
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
 
   @doc """
   Subscribe to the game's tells internal channel if the socket supports it
@@ -24,7 +24,7 @@ defmodule Socket.Tells do
   Send a tell to another game
   """
   def send(state, event) do
-    :telemetry.execute([:gossip, :events, :tells, :send], 1, %{})
+    :telemetry.execute([:grapevine, :events, :tells, :send], 1, %{})
 
     with {:ok, payload} <- check_payload(event),
          {:ok, sending_presence} <- check_game_online(state.game.short_name),

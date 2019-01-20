@@ -1,4 +1,4 @@
-defmodule Gossip.Achievements.Achievement do
+defmodule Grapevine.Achievements.Achievement do
   @moduledoc """
   Achievement Schema
   """
@@ -7,7 +7,7 @@ defmodule Gossip.Achievements.Achievement do
 
   import Ecto.Changeset
 
-  alias Gossip.Games.Game
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 

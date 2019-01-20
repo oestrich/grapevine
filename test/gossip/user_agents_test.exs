@@ -1,7 +1,7 @@
-defmodule Gossip.UserAgentsTest do
-  use Gossip.DataCase
+defmodule Grapevine.UserAgentsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.UserAgents
+  alias Grapevine.UserAgents
 
   describe "register a user agent" do
     test "successful" do

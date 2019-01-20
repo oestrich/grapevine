@@ -1,4 +1,4 @@
-defmodule Gossip.Events.Event do
+defmodule Grapevine.Events.Event do
   @moduledoc """
   Event Schema
   """
@@ -7,7 +7,7 @@ defmodule Gossip.Events.Event do
 
   import Ecto.Changeset
 
-  alias Gossip.Games.Game
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 

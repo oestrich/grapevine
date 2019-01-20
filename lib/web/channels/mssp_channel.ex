@@ -1,11 +1,11 @@
 defmodule Web.MSSPChannel do
   @moduledoc """
-  Follow along with the gossip from the site
+  Follow along with the grapevine from the site
   """
 
   use Phoenix.Channel
 
-  alias Gossip.Telnet
+  alias Grapevine.Telnet
 
   def join("mssp:" <> id, _message, socket) do
     {:ok, assign(socket, :id, id)}

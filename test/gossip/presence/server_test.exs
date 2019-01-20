@@ -1,9 +1,9 @@
-defmodule Gossip.Presence.ServerTest do
-  use Gossip.DataCase
+defmodule Grapevine.Presence.ServerTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Presence
-  alias Gossip.Presence.Server
-  alias Gossip.Statistics
+  alias Grapevine.Presence
+  alias Grapevine.Presence.Server
+  alias Grapevine.Statistics
 
   describe "recording online game stats" do
     test "saves state" do

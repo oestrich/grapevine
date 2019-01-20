@@ -1,4 +1,4 @@
-defmodule Gossip.Repo.Migrations.AddMsspLastSeenAtToGames do
+defmodule Grapevine.Repo.Migrations.AddMsspLastSeenAtToGames do
   use Ecto.Migration
 
   def change do

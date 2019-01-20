@@ -1,4 +1,4 @@
-defmodule Gossip.Schema do
+defmodule Grapevine.Schema do
   @moduledoc """
   Helper for setting up Ecto
   """

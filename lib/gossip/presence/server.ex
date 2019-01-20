@@ -1,16 +1,16 @@
-defmodule Gossip.Presence.Server do
+defmodule Grapevine.Presence.Server do
   @moduledoc """
   Implementation of the Presence server
   """
 
-  import Gossip.Presence, only: [ets_key: 0]
+  import Grapevine.Presence, only: [ets_key: 0]
 
-  alias Gossip.Applications.Application
-  alias Gossip.Games.Game
-  alias Gossip.Presence.Client
-  alias Gossip.Presence.Notices
-  alias Gossip.Presence.State
-  alias Gossip.Statistics
+  alias Grapevine.Applications.Application
+  alias Grapevine.Games.Game
+  alias Grapevine.Presence.Client
+  alias Grapevine.Presence.Notices
+  alias Grapevine.Presence.State
+  alias Grapevine.Statistics
 
   def track(state, socket, game) do
     state = Map.put(state, :sockets, [{type(game), game.id, socket} | state.sockets])

@@ -1,7 +1,7 @@
 defmodule Socket.TellsTest do
-  use Gossip.DataCase
+  use Grapevine.DataCase
 
-  alias Gossip.Presence
+  alias Grapevine.Presence
   alias Web.Socket.Router
   alias Web.Socket.State
   alias Socket.Tells

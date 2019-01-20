@@ -1,13 +1,13 @@
-defmodule Gossip.Channels do
+defmodule Grapevine.Channels do
   @moduledoc """
   Context for channels
   """
 
   import Ecto.Query
 
-  alias Gossip.Channels.Channel
-  alias Gossip.Repo
-  alias Gossip.Versions
+  alias Grapevine.Channels.Channel
+  alias Grapevine.Repo
+  alias Grapevine.Versions
 
   @type opts :: Keyword.t()
   @type name :: String.t()
@@ -104,7 +104,7 @@ defmodule Gossip.Channels do
   """
   @spec name_blocklist() :: [name()]
   def name_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:gossip), "channels/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine), "channels/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

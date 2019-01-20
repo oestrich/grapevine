@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/gossip eval 'Gossip.ReleaseTasks.migrate()'
+bin/grapevine eval 'Grapevine.ReleaseTasks.migrate()'

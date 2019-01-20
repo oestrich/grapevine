@@ -1,4 +1,4 @@
-defmodule Gossip.Characters.Character do
+defmodule Grapevine.Characters.Character do
   @moduledoc """
   Character schema
   """
@@ -7,8 +7,8 @@ defmodule Gossip.Characters.Character do
 
   import Ecto.Changeset
 
-  alias Gossip.Accounts.User
-  alias Gossip.Games.Game
+  alias Grapevine.Accounts.User
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 

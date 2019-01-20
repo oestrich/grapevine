@@ -1,4 +1,4 @@
-defmodule Gossip.Statistics.PlayerStatistic do
+defmodule Grapevine.Statistics.PlayerStatistic do
   @moduledoc """
   Player Statistic Schema
   """
@@ -7,7 +7,7 @@ defmodule Gossip.Statistics.PlayerStatistic do
 
   import Ecto.Changeset
 
-  alias Gossip.Games.Game
+  alias Grapevine.Games.Game
 
   @type t :: %__MODULE__{}
 

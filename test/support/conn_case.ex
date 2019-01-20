@@ -27,10 +27,10 @@ defmodule Web.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gossip.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Grapevine.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gossip.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Grapevine.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

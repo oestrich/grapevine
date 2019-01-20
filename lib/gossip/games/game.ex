@@ -1,4 +1,4 @@
-defmodule Gossip.Games.Game do
+defmodule Grapevine.Games.Game do
   @moduledoc """
   Game Schema
   """
@@ -7,12 +7,12 @@ defmodule Gossip.Games.Game do
 
   import Ecto.Changeset
 
-  alias Gossip.Accounts.User
-  alias Gossip.Achievements.Achievement
-  alias Gossip.Events.Event
-  alias Gossip.Games
-  alias Gossip.Games.Connection
-  alias Gossip.Games.RedirectURI
+  alias Grapevine.Accounts.User
+  alias Grapevine.Achievements.Achievement
+  alias Grapevine.Events.Event
+  alias Grapevine.Games
+  alias Grapevine.Games.Connection
+  alias Grapevine.Games.RedirectURI
 
   @type t :: %__MODULE__{}
 
@@ -70,8 +70,8 @@ defmodule Gossip.Games.Game do
     |> validate_length(:tagline, max: 70)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/.+\./)
-    |> Gossip.Schema.ensure(:client_id, UUID.uuid4())
-    |> Gossip.Schema.ensure(:client_secret, UUID.uuid4())
+    |> Grapevine.Schema.ensure(:client_id, UUID.uuid4())
+    |> Grapevine.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :games_lower_name_index)
     |> unique_constraint(:short_name, name: :games_lower_short_name_index)
   end

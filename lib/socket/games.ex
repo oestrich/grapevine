@@ -5,8 +5,8 @@ defmodule Socket.Games do
 
   use Web.Socket.Module
 
-  alias Gossip.Games
-  alias Gossip.Presence
+  alias Grapevine.Games
+  alias Grapevine.Presence
   alias Socket.Core
 
   @doc """
@@ -34,7 +34,7 @@ defmodule Socket.Games do
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}})
       when ref != nil do
-    :telemetry.execute([:gossip, :events, :games, :status], 1, %{game: game_name})
+    :telemetry.execute([:grapevine, :events, :games, :status], 1, %{game: game_name})
 
     Presence.online_games()
     |> Enum.find(&find_game(&1, game_name))
@@ -44,7 +44,7 @@ defmodule Socket.Games do
   end
 
   def request_status(state, %{"ref" => ref}) when ref != nil do
-    :telemetry.execute([:gossip, :events, :games, :status], 1, %{all: true})
+    :telemetry.execute([:grapevine, :events, :games, :status], 1, %{all: true})
 
     Presence.online_games()
     |> Enum.filter(& &1.game.display)
@@ -78,9 +78,9 @@ defmodule Socket.Games do
   end
 
   @doc """
-  Broadcast a game connecting for the first time to Gossip
+  Broadcast a game connecting for the first time to Grapevine
 
-  See `Gossip.Presence.Notices` as well
+  See `Grapevine.Presence.Notices` as well
   """
   def broadcast_connect_event(:game, game_id) do
     with {:ok, game} <- Games.get(game_id) do
@@ -94,9 +94,9 @@ defmodule Socket.Games do
   def broadcast_connect_event(:application, _app_id), do: :ok
 
   @doc """
-  Broadcast a game disconnecting completely from Gossip
+  Broadcast a game disconnecting completely from Grapevine
 
-  See `Gossip.Presence.Notices` as well
+  See `Grapevine.Presence.Notices` as well
   """
   def broadcast_disconnect_event(:game, game_id) do
     with {:ok, game} <- Games.get(game_id) do

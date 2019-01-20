@@ -1,13 +1,13 @@
-defmodule Gossip.Presence.Client do
+defmodule Grapevine.Presence.Client do
   @moduledoc """
   Implementation of the Presence client
   """
 
-  alias Gossip.Applications
-  alias Gossip.Client
-  alias Gossip.Games
+  alias Grapevine.Applications
+  alias Grapevine.Client
+  alias Grapevine.Games
 
-  import Gossip.Presence, only: [ets_key: 0]
+  import Grapevine.Presence, only: [ets_key: 0]
 
   @timeout_seconds 60
 
@@ -25,10 +25,10 @@ defmodule Gossip.Presence.Client do
     |> Enum.filter(&filter_online/1)
     |> Enum.map(&fetch_from_db/1)
     |> Enum.reject(&is_nil/1)
-    |> append_gossip()
+    |> append_grapevine()
   end
 
-  defp append_gossip(games) do
+  defp append_grapevine(games) do
     [Client.presence() | games]
   end
 

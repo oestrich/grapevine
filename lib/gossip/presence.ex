@@ -1,17 +1,17 @@
-defmodule Gossip.Presence do
+defmodule Grapevine.Presence do
   @moduledoc """
   Track online presence of games
   """
 
   use GenServer
 
-  alias Gossip.Applications.Application
-  alias Gossip.Games.Game
-  alias Gossip.Presence.Client
-  alias Gossip.Presence.Notices
-  alias Gossip.Presence.Server
+  alias Grapevine.Applications.Application
+  alias Grapevine.Games.Game
+  alias Grapevine.Presence.Client
+  alias Grapevine.Presence.Notices
+  alias Grapevine.Presence.Server
 
-  @ets_key :gossip_presence
+  @ets_key :grapevine_presence
 
   @record_statistics_tick 15 * 60 * 1000
 

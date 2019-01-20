@@ -13,35 +13,35 @@
     update_cache: "yes"
   become: true
 
-- name: Check that the gossip config exists
+- name: Check that the grapevine config exists
   stat:
-    path: /etc/gossip.config.exs
-  register: gossip_config
+    path: /etc/grapevine.config.exs
+  register: grapevine_config
 
-- name: copy gossip config
+- name: copy grapevine config
   copy:
-    src: gossip.config.exs
-    dest: /etc/gossip.config.exs
+    src: grapevine.config.exs
+    dest: /etc/grapevine.config.exs
     mode: 0644
-  when: not gossip_config.stat.exists
+  when: not grapevine_config.stat.exists
   become: yes
 
-- name: make gossip directory
+- name: make grapevine directory
   file:
-    dest: /home/deploy/gossip
+    dest: /home/deploy/grapevine
     state: directory
   become: yes
   become_user: deploy
 
 - name: Check that the nginx config exists
   stat:
-    path: /etc/nginx/sites-enabled/gossip
+    path: /etc/nginx/sites-enabled/grapevine
   register: nginx_config
 
 - name: copy nginx config
   copy:
     src: nginx.conf
-    dest: /etc/nginx/sites-enabled/gossip
+    dest: /etc/nginx/sites-enabled/grapevine
     mode: 0644
   when: not nginx_config.stat.exists
   become: yes
@@ -54,14 +54,14 @@
 
 - name: copy systemd file
   copy:
-    src: gossip.service
-    dest: /etc/systemd/system/gossip.service
+    src: grapevine.service
+    dest: /etc/systemd/system/grapevine.service
   become: yes
   notify: reload systemd
 
-- name: enable gossip service
+- name: enable grapevine service
   systemd:
-    name: gossip.service
+    name: grapevine.service
     enabled: yes
   become: yes
 
@@ -80,7 +80,7 @@
 
 - name: copy backup file
   copy:
-    src: backup-gossip.sh
+    src: backup-grapevine.sh
     dest: /opt/
     mode: 0744
   become: yes
@@ -90,5 +90,5 @@
     name: "pg dump"
     minute: "0"
     hour: "5"
-    job: "/opt/backup-gossip.sh"
+    job: "/opt/backup-grapevine.sh"
   become: yes

@@ -1,7 +1,7 @@
-defmodule Gossip.EventsTest do
-  use Gossip.DataCase
+defmodule Grapevine.EventsTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Events
+  alias Grapevine.Events
 
   describe "create a new event" do
     test "successful" do

@@ -5,10 +5,10 @@ defmodule Socket.Core.Authenticate do
 
   require Logger
 
-  alias Gossip.Applications
-  alias Gossip.Channels
-  alias Gossip.Games
-  alias Gossip.Presence
+  alias Grapevine.Applications
+  alias Grapevine.Channels
+  alias Grapevine.Games
+  alias Grapevine.Presence
   alias Socket.Backbone
   alias Socket.Core
   alias Socket.Games, as: SocketGames
@@ -18,14 +18,14 @@ defmodule Socket.Core.Authenticate do
   @disable_debug_seconds 300
 
   def process(state, payload) do
-    :telemetry.execute([:gossip, :sockets, :connect], 1, %{})
+    :telemetry.execute([:grapevine, :sockets, :connect], 1, %{})
 
     with {:ok, game} <- validate_socket(payload),
          {:ok, supports} <- validate_supports(payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
-        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
           reason: "invalid authenticat event"
         })
 
@@ -33,7 +33,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :missing_supports} ->
-        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
           reason: "missing supports"
         })
 
@@ -41,7 +41,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :must_support_channels} ->
-        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
           reason: "must support channels"
         })
 
@@ -49,7 +49,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :unknown_supports} ->
-        :telemetry.execute([:gossip, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
           reason: "unknown set of supports"
         })
 
@@ -80,7 +80,7 @@ defmodule Socket.Core.Authenticate do
 
     maybe_schedule_disable_debug(state)
 
-    :telemetry.execute([:gossip, :sockets, :connect, :success], 1, %{
+    :telemetry.execute([:grapevine, :sockets, :connect, :success], 1, %{
       game: game.name,
       channels: channels,
       supports: supports
@@ -93,7 +93,7 @@ defmodule Socket.Core.Authenticate do
       status: "success",
       payload: %{
         unicode: "✔️",
-        version: Gossip.version()
+        version: Grapevine.version()
       }
     }
 

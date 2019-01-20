@@ -1,4 +1,4 @@
-defmodule Gossip.Application do
+defmodule Grapevine.Application do
   @moduledoc false
 
   use Application
@@ -9,24 +9,24 @@ defmodule Gossip.Application do
     import Supervisor.Spec
 
     children = [
-      supervisor(Gossip.Repo, []),
+      supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
-      {Gossip.Presence, []},
-      {Gossip.Client.Server, [name: Gossip.Client.Server]},
+      {Grapevine.Presence, []},
+      {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
-      {Gossip.Telnet.Worker, [name: Gossip.Telnet.Worker]}
+      {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]}
     ]
 
     Metrics.Setup.setup()
 
-    report_errors = Application.get_env(:gossip, :errors)[:report]
+    report_errors = Application.get_env(:grapevine, :errors)[:report]
 
     if report_errors do
       {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     end
 
-    opts = [strategy: :one_for_one, name: Gossip.Supervisor]
+    opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
     Supervisor.start_link(children, opts)
   end
 

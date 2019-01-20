@@ -1,17 +1,17 @@
-defmodule Gossip.Games do
+defmodule Grapevine.Games do
   @moduledoc """
   Context for games
   """
 
-  alias Gossip.Accounts.User
-  alias Gossip.Filter
-  alias Gossip.Games.Connection
-  alias Gossip.Games.Game
-  alias Gossip.Games.RedirectURI
-  alias Gossip.Repo
-  alias Gossip.Telnet
-  alias Gossip.UserAgents
-  alias Gossip.Versions
+  alias Grapevine.Accounts.User
+  alias Grapevine.Filter
+  alias Grapevine.Games.Connection
+  alias Grapevine.Games.Game
+  alias Grapevine.Games.RedirectURI
+  alias Grapevine.Repo
+  alias Grapevine.Telnet
+  alias Grapevine.UserAgents
+  alias Grapevine.Versions
 
   import Ecto.Query
 
@@ -156,7 +156,7 @@ defmodule Gossip.Games do
 
     case changeset |> Repo.insert() do
       {:ok, game} ->
-        :telemetry.execute([:gossip, :games, :create], 1, %{id: game.id})
+        :telemetry.execute([:grapevine, :games, :create], 1, %{id: game.id})
         broadcast_game_create(game.id)
 
         {:ok, game}
@@ -488,7 +488,7 @@ defmodule Gossip.Games do
   """
   @spec name_blocklist() :: [game_name()]
   def name_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:gossip), "games/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine), "games/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

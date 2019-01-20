@@ -1,12 +1,12 @@
-defmodule Gossip.Client.Tells do
+defmodule Grapevine.Client.Tells do
   @moduledoc """
   Implementation details for the Tells GenServer
   """
 
-  alias Gossip.Accounts
-  alias Gossip.Characters
-  alias Gossip.Client
-  alias Gossip.Games
+  alias Grapevine.Accounts
+  alias Grapevine.Characters
+  alias Grapevine.Client
+  alias Grapevine.Games
 
   @doc """
   Receive a tell
@@ -17,7 +17,7 @@ defmodule Gossip.Client.Tells do
         register_character(from_game, from_player, message)
 
       _ ->
-        message = "Hello! This is Gossip. Please checkout https://gossip.haus/ for information on how to register a character."
+        message = "Hello! This is Grapevine. Please checkout https://grapevine.haus/ for information on how to register a character."
         Client.send_tell(from_game, from_player, message)
     end
   end

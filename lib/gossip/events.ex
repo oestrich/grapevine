@@ -1,13 +1,13 @@
-defmodule Gossip.Events do
+defmodule Grapevine.Events do
   @moduledoc """
   Contect for managing a game's events
   """
 
   import Ecto.Query
 
-  alias Gossip.Events.Event
-  alias Gossip.Repo
-  alias Gossip.Versions
+  alias Grapevine.Events.Event
+  alias Grapevine.Repo
+  alias Grapevine.Versions
 
   @doc """
   New changeset for an event
@@ -96,12 +96,12 @@ defmodule Gossip.Events do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        :telemetry.execute([:gossip, :game_events, :create, :success], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :game_events, :create, :success], 1, %{game_id: game.id})
         broadcast_event_create(event.id)
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :game_events, :create, :failure], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :game_events, :create, :failure], 1, %{game_id: game.id})
         {:error, changeset}
     end
   end
@@ -114,7 +114,7 @@ defmodule Gossip.Events do
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        :telemetry.execute([:gossip, :game_events, :update, :success], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :update, :success], 1, %{
           game_id: event.game_id
         })
 
@@ -122,7 +122,7 @@ defmodule Gossip.Events do
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :game_events, :update, :failure], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :update, :failure], 1, %{
           game_id: event.game_id
         })
 
@@ -136,7 +136,7 @@ defmodule Gossip.Events do
   def delete(event) do
     case Repo.delete(event) do
       {:ok, event} ->
-        :telemetry.execute([:gossip, :game_events, :delete, :success], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :delete, :success], 1, %{
           game_id: event.game_id
         })
 
@@ -144,7 +144,7 @@ defmodule Gossip.Events do
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:gossip, :game_events, :delete, :failure], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :delete, :failure], 1, %{
           game_id: event.game_id
         })
 

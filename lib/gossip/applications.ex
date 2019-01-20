@@ -1,10 +1,10 @@
-defmodule Gossip.Applications do
+defmodule Grapevine.Applications do
   @moduledoc """
   Context for system level applications
   """
 
-  alias Gossip.Applications.Application
-  alias Gossip.Repo
+  alias Grapevine.Applications.Application
+  alias Grapevine.Repo
 
   @type id :: integer()
   @type attributes :: map()

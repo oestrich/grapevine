@@ -1,7 +1,7 @@
-defmodule Gossip.Channels.ChannelTest do
-  use Gossip.DataCase
+defmodule Grapevine.Channels.ChannelTest do
+  use Grapevine.DataCase
 
-  alias Gossip.Channels.Channel
+  alias Grapevine.Channels.Channel
 
   describe "validations on channel" do
     test "letters only" do

@@ -7,34 +7,34 @@
 
 <section>
   <nav>
-    <h3 class="name">Gossip Media</h3>
+    <h3 class="name">Grapevine Media</h3>
   </nav>
 
   <h4>Logo</h4>
 
-  <%= img_tag("/images/gossip.png") %>
+  <%= img_tag("/images/grapevine.png") %>
 
-  <pre class="mt-3"><%= static_url(@conn, "/images/gossip.png") %></pre>
+  <pre class="mt-3"><%= static_url(@conn, "/images/grapevine.png") %></pre>
 
   <h4 class="mt-3">Icon</h4>
 
-  <%= img_tag("/images/gossip-icon.png") %>
+  <%= img_tag("/images/grapevine-icon.png") %>
 
-  <pre class="mt-3"><%= static_url(@conn, "/images/gossip-icon.png") %></pre>
+  <pre class="mt-3"><%= static_url(@conn, "/images/grapevine-icon.png") %></pre>
 
   <h4 class="mt-3">Footer</h4>
 
   <p>
     Member of
-    <a href="https://gossip.haus/" target="_blank">
-      <img src="https://gossip.haus/images/gossip.png" style="max-width: 50px; max-height: 50px;" title="Gossip Network">
+    <a href="https://grapevine.haus/" target="_blank">
+      <img src="https://grapevine.haus/images/grapevine.png" style="max-width: 50px; max-height: 50px;" title="Grapevine Network">
     </a>
   </p>
 
 <pre><code>&lt;p&gt;
   Member of
-  &lt;a href="https://gossip.haus/" target="_blank"&gt;
-    &lt;img src="https://gossip.haus/images/gossip.png" style="max-width: 50px; max-height: 50px;" title="Gossip Network"&gt;
+  &lt;a href="https://grapevine.haus/" target="_blank"&gt;
+    &lt;img src="https://grapevine.haus/images/grapevine.png" style="max-width: 50px; max-height: 50px;" title="Grapevine Network"&gt;
   &lt;/a&gt;
 &lt;/p&gt;</code></pre>
 </section>
