@@ -7,7 +7,6 @@ defmodule Grapevine.Events do
 
   alias Grapevine.Events.Event
   alias Grapevine.Repo
-  alias Grapevine.Versions
 
   @doc """
   New changeset for an event
@@ -97,7 +96,6 @@ defmodule Grapevine.Events do
     case Repo.insert(changeset) do
       {:ok, event} ->
         :telemetry.execute([:grapevine, :game_events, :create, :success], 1, %{game_id: game.id})
-        broadcast_event_create(event.id)
         {:ok, event}
 
       {:error, changeset} ->
@@ -118,7 +116,6 @@ defmodule Grapevine.Events do
           game_id: event.game_id
         })
 
-        broadcast_event_update(event.id)
         {:ok, event}
 
       {:error, changeset} ->
@@ -140,7 +137,6 @@ defmodule Grapevine.Events do
           game_id: event.game_id
         })
 
-        broadcast_event_delete(event)
         {:ok, event}
 
       {:error, changeset} ->
@@ -149,35 +145,6 @@ defmodule Grapevine.Events do
         })
 
         {:error, changeset}
-    end
-  end
-
-  defp broadcast_event_create(event_id) do
-    with {:ok, event} <- get(event_id),
-         {:ok, version} <- Versions.log("create", event) do
-      Web.Endpoint.broadcast("system:backbone", "events/new", version)
-    else
-      _ ->
-        :ok
-    end
-  end
-
-  defp broadcast_event_update(event_id) do
-    with {:ok, event} <- get(event_id),
-         {:ok, version} <- Versions.log("update", event) do
-      Web.Endpoint.broadcast("system:backbone", "events/edit", version)
-    else
-      _ ->
-        :ok
-    end
-  end
-
-  defp broadcast_event_delete(event) do
-    with {:ok, version} <- Versions.log("delete", event) do
-      Web.Endpoint.broadcast("system:backbone", "events/delete", version)
-    else
-      _ ->
-        :ok
     end
   end
 end

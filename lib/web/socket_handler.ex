@@ -71,16 +71,6 @@ defmodule Web.SocketHandler do
     {:reply, {:text, Jason.encode!(message)}, state}
   end
 
-  def websocket_info(message = %Phoenix.Socket.Broadcast{topic: "system:backbone"}, state) do
-    case Router.backbone_event(state, message) do
-      {:ok, state} ->
-        {:ok, state}
-
-      {:ok, response, state} ->
-        {:reply, {:text, Jason.encode!(response)}, state}
-    end
-  end
-
   def websocket_info(message = %Phoenix.Socket.Broadcast{}, state) do
     client_id = state.game.client_id
 

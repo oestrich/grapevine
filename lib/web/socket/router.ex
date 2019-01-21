@@ -7,14 +7,9 @@ defmodule Web.Socket.Router do
 
   require Logger
 
-  alias Socket.Backbone
   alias Socket.Core
 
   import Web.Socket.RouterMacro
-
-  def backbone_event(state, message) do
-    Backbone.handle_event(state, message)
-  end
 
   receives(Socket) do
     module(Core, "channels") do
@@ -51,13 +46,6 @@ defmodule Web.Socket.Router do
     state
     |> Core.authenticate(event)
     |> Response.wrap(event, "channels")
-    |> Response.respond_to(state)
-  end
-
-  def receive(state = %{status: "active"}, event = %{"event" => "sync"}) do
-    state
-    |> Backbone.sync(event)
-    |> Response.wrap(event, "sync")
     |> Response.respond_to(state)
   end
 

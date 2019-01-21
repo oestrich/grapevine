@@ -7,7 +7,6 @@ defmodule Grapevine.Channels do
 
   alias Grapevine.Channels.Channel
   alias Grapevine.Repo
-  alias Grapevine.Versions
 
   @type opts :: Keyword.t()
   @type name :: String.t()
@@ -22,7 +21,7 @@ defmodule Grapevine.Channels do
 
     case Repo.insert(changeset) do
       {:ok, channel} ->
-        broadcast_channel_create(channel.id)
+        :telemetry.execute([:grapevine, :channels, :create], 1, %{id: channel.id})
         {:ok, channel}
 
       {:error, changeset} ->
@@ -110,15 +109,5 @@ defmodule Grapevine.Channels do
     blocklist
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
-  end
-
-  defp broadcast_channel_create(channel_id) do
-    with {:ok, channel} <- get(channel_id),
-         {:ok, version} <- Versions.log("create", channel) do
-      Web.Endpoint.broadcast("system:backbone", "channels/new", version)
-    else
-      _ ->
-        :ok
-    end
   end
 end
