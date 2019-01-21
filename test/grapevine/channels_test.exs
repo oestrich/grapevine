@@ -9,13 +9,5 @@ defmodule Grapevine.ChannelsTest do
 
       assert channel.name == "grapevine"
     end
-
-    test "sends a notification about a new channel" do
-      Web.Endpoint.subscribe("system:backbone")
-
-      {:ok, _channel} = Channels.create(%{name: "grapevine"})
-
-      assert_receive %Phoenix.Socket.Broadcast{topic: "system:backbone", event: "channels/new"}
-    end
   end
 end

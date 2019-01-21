@@ -11,7 +11,6 @@ defmodule Grapevine.Games do
   alias Grapevine.Repo
   alias Grapevine.Telnet
   alias Grapevine.UserAgents
-  alias Grapevine.Versions
 
   import Ecto.Query
 
@@ -157,7 +156,6 @@ defmodule Grapevine.Games do
     case changeset |> Repo.insert() do
       {:ok, game} ->
         :telemetry.execute([:grapevine, :games, :create], 1, %{id: game.id})
-        broadcast_game_create(game.id)
 
         {:ok, game}
 
@@ -175,7 +173,6 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
-        broadcast_game_update(game.id)
         {:ok, game}
 
       {:error, changeset} ->
@@ -197,7 +194,6 @@ defmodule Grapevine.Games do
 
         case Repo.update(changeset) do
           {:ok, game} ->
-            broadcast_game_update(game.id)
             {:ok, game}
 
           {:error, changeset} ->
@@ -250,7 +246,6 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
-        broadcast_game_update(game.id)
         maybe_register_user_agent(game)
         {:ok, game}
 
@@ -302,7 +297,6 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
-        broadcast_game_update(game.id)
         {:ok, game}
 
       {:error, changeset} ->
@@ -355,7 +349,6 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.insert() do
       {:ok, connection} ->
-        broadcast_game_update(game.id)
         maybe_check_mssp(connection)
         {:ok, connection}
 
@@ -383,7 +376,6 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.update() do
       {:ok, connection} ->
-        broadcast_game_update(connection.game_id)
         {:ok, connection}
 
       {:error, changeset} ->
@@ -397,7 +389,6 @@ defmodule Grapevine.Games do
   def delete_connection(connection) do
     case Repo.delete(connection) do
       {:ok, connection} ->
-        broadcast_game_update(connection.game_id)
         {:ok, connection}
 
       {:error, changeset} ->
@@ -457,7 +448,6 @@ defmodule Grapevine.Games do
 
     case Repo.insert(changeset) do
       {:ok, redirect_uri} ->
-        broadcast_game_update(game.id)
         {:ok, redirect_uri}
 
       {:error, changeset} ->
@@ -471,7 +461,6 @@ defmodule Grapevine.Games do
   def delete_redirect_uri(redirect_uri) do
     case Repo.delete(redirect_uri) do
       {:ok, redirect_uri} ->
-        broadcast_game_update(redirect_uri.game_id)
         {:ok, redirect_uri}
 
       {:error, changeset} ->
@@ -494,25 +483,5 @@ defmodule Grapevine.Games do
     blocklist
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
-  end
-
-  defp broadcast_game_create(game_id) do
-    with {:ok, game} <- get(game_id),
-         {:ok, version} <- Versions.log("create", game) do
-      Web.Endpoint.broadcast("system:backbone", "games/new", version)
-    else
-      _ ->
-        :ok
-    end
-  end
-
-  defp broadcast_game_update(game_id) do
-    with {:ok, game} <- get(game_id),
-         {:ok, version} <- Versions.log("update", game) do
-      Web.Endpoint.broadcast("system:backbone", "games/edit", version)
-    else
-      _ ->
-        :ok
-    end
   end
 end

@@ -7,21 +7,8 @@ defmodule Grapevine.Achievements do
 
   alias Grapevine.Achievements.Achievement
   alias Grapevine.Repo
-  alias Grapevine.Versions
 
   @max_points 500
-
-  @doc """
-  Re-sync all achievements
-
-  NOTE: This must be run in the same node as the socket connections
-  """
-  def resync() do
-    Achievement
-    |> select([a], a.id)
-    |> Repo.all()
-    |> Enum.map(&broadcast_achievement_update/1)
-  end
 
   @doc """
   New changeset for an achievement
@@ -133,7 +120,6 @@ defmodule Grapevine.Achievements do
     case Repo.insert(changeset) do
       {:ok, achievement} ->
         :telemetry.execute([:grapevine, :achievements, :create, :success], 1, %{game_id: game.id})
-        broadcast_achievement_create(achievement.id)
         {:ok, achievement}
 
       {:error, changeset} ->
@@ -154,7 +140,6 @@ defmodule Grapevine.Achievements do
           game_id: achievement.game_id
         })
 
-        broadcast_achievement_update(achievement.id)
         {:ok, achievement}
 
       {:error, changeset} ->
@@ -176,7 +161,6 @@ defmodule Grapevine.Achievements do
           game_id: achievement.game_id
         })
 
-        broadcast_achievement_delete(achievement)
         {:ok, achievement}
 
       {:error, changeset} ->
@@ -185,35 +169,6 @@ defmodule Grapevine.Achievements do
         })
 
         {:error, changeset}
-    end
-  end
-
-  defp broadcast_achievement_create(achievement_id) do
-    with {:ok, achievement} <- get(achievement_id),
-         {:ok, version} <- Versions.log("create", achievement) do
-      Web.Endpoint.broadcast("system:backbone", "achievements/new", version)
-    else
-      _ ->
-        :ok
-    end
-  end
-
-  defp broadcast_achievement_update(achievement_id) do
-    with {:ok, achievement} <- get(achievement_id),
-         {:ok, version} <- Versions.log("update", achievement) do
-      Web.Endpoint.broadcast("system:backbone", "achievements/edit", version)
-    else
-      _ ->
-        :ok
-    end
-  end
-
-  defp broadcast_achievement_delete(achievement) do
-    with {:ok, version} <- Versions.log("delete", achievement) do
-      Web.Endpoint.broadcast("system:backbone", "achievements/delete", version)
-    else
-      _ ->
-        :ok
     end
   end
 end

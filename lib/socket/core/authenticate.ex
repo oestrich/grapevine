@@ -9,7 +9,6 @@ defmodule Socket.Core.Authenticate do
   alias Grapevine.Channels
   alias Grapevine.Games
   alias Grapevine.Presence
-  alias Socket.Backbone
   alias Socket.Core
   alias Socket.Games, as: SocketGames
   alias Socket.Players
@@ -76,7 +75,6 @@ defmodule Socket.Core.Authenticate do
     Players.maybe_listen_to_players_channel(state)
     SocketGames.maybe_listen_to_games_channel(state)
     Tells.maybe_subscribe(state)
-    Backbone.maybe_finalize_authenticate(state)
 
     maybe_schedule_disable_debug(state)
 
