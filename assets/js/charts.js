@@ -26,11 +26,11 @@ document.querySelectorAll(".chart").forEach(chartElement => {
           data: values,
           fill: true,
           lineTension: 0.3,
-          borderColor: "#00FF00",
-          backgroundColor: "rgba(0, 255, 0, 0.5)",
-          pointBackgroundColor: "#00FF00",
+          borderColor: "#aa74da",
+          backgroundColor: "rgba(170, 116, 218, 0.5)",
+          pointBackgroundColor: "#aa74da",
           borderWidth: 2,
-          pointHoverBackgroundColor: "#00FF00",
+          pointHoverBackgroundColor: "#aa74da",
           pointRadius: 0,
           pointHitRadius: 8
         }]
