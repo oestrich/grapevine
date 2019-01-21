@@ -1,24 +1,45 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item active">Channels</li>
+    <li class="breadcrumb-item active" aria-current="page">Chat</li>
   </ol>
 </nav>
 
 <section>
-  <nav>
-    <h3 class="name">Channels</h3>
-  </nav>
+  <div class="chat">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs">
+          <%= Enum.map(Enum.with_index(@channels), fn {channel, i} -> %>
+            <li class="channel-tab" data-channel="<%= channel.name %>">
+              <%= link(to: "#channel-#{channel.name}", class: "nav-link #{active(i)}", data: [toggle: "tab"]) do %>
+                <%= channel.name %> <i class="bell hidden fa fa-bell"></i>
+              <% end %>
+            </li>
+          <% end) %>
+        </ul>
+      </div>
+    </div>
 
-  <div class="card-columns">
-    <%= Enum.map(Channels.all(), fn channel -> %>
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title"><%= channel.name %></h5>
-          <p class="card-text"><%= channel.description %></p>
-          <%= link("Open", to: chat_path(@conn, :show, channel.name), class: "btn btn-primary") %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tab-content">
+          <%= Enum.map(Enum.with_index(@channels), fn {channel, i} -> %>
+            <div id="channel-<%= channel.name %>" data-channel="<%= channel.name %>" class="terminal channel chat-pane tab-pane <%= active(i) %>">
+            </div>
+          <% end) %>
         </div>
       </div>
-    <% end) %>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-11 col-9">
+        <input id="chat-prompt" name="prompt" type="text" class="form-control" autofocus="autofocus" />
+      </div>
+
+      <div class="col-md-1 col-2">
+        <button id="chat-send" class="btn btn-primary">Send</button>
+      </div>
+    </div>
   </div>
 </section>

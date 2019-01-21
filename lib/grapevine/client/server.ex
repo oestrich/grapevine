@@ -8,6 +8,10 @@ defmodule Grapevine.Client.Server do
   alias Grapevine.Client.Server.State
   alias Grapevine.Client.Tells
 
+  @behaviour Grapevine.Client
+
+  @client_id "grapevine-id"
+
   defmodule State do
     @moduledoc """
     State for the local client
@@ -16,9 +20,20 @@ defmodule Grapevine.Client.Server do
     defstruct []
   end
 
-  @doc """
-  Send a tell to a game
-  """
+  @impl true
+  def broadcast(message) do
+    Web.Endpoint.broadcast("channels:#{message.channel}", "channels/broadcast", %{
+      "channel" => message.channel,
+      "game" => "grapevine",
+      "game_id" => @client_id,
+      "name" => message.name,
+      "message" => message.message
+    })
+
+    :ok
+  end
+
+  @impl true
   def send_tell(to_game, to_player, message) do
     Web.Endpoint.broadcast("tells:#{to_game}", "tells/receive", %{
       from_game: "grapevine",

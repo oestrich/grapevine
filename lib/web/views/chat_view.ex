@@ -1,5 +1,6 @@
 defmodule Web.ChatView do
   use Web, :view
 
-  alias Grapevine.Channels
+  def active(0), do: "active"
+  def active(_), do: ""
 end
