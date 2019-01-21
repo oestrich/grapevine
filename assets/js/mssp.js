@@ -8,6 +8,9 @@ let guid = () => {
     s4() + '-' + s4() + s4() + s4();
 };
 
+var body = document.getElementById("body")
+var userToken = body.getAttribute("data-user-token")
+
 export default class MSSPSocket {
   constructor(responseSelector) {
     this.responseSelector = responseSelector;
@@ -15,7 +18,7 @@ export default class MSSPSocket {
   }
 
   connect() {
-    this.socket = new Socket("/chat");
+    this.socket = new Socket("/chat", {params: {token: userToken}})
     this.socket.connect();
 
     this.channel = this.socket.channel(`mssp:${guid()}`, {});

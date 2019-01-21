@@ -3,6 +3,15 @@ defmodule Grapevine.Client do
   A local fake "client" to the socket
   """
 
+  alias Grapevine.Client.Broadcast
+
+  @type broadcast_message :: %Broadcast{}
+
+  @doc """
+  Broadcast a message to a channel
+  """
+  @callback broadcast(broadcast_message()) :: :ok
+
   @doc """
   Send a tell to a player
   """
@@ -24,6 +33,13 @@ defmodule Grapevine.Client do
       type: :grapevine,
       timestamp: Timex.now()
     }
+  end
+
+  @doc """
+  Broadcast a message to a channel
+  """
+  def broadcast(message) do
+    @client.broadcast(message)
   end
 
   @doc """

@@ -126,6 +126,7 @@ defmodule Socket.Core do
       |> assign(:message, message)
       |> payload("send")
       |> broadcast("channels:#{channel}", "channels/broadcast")
+      |> broadcast("chat:#{channel}", "broadcast")
 
       {:ok, state}
     else

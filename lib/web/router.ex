@@ -28,8 +28,6 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
-    resources("/chat", ChatController, only: [:index, :show])
-
     get("/conduct", PageController, :conduct)
 
     get("/docs", PageController, :docs)
@@ -61,8 +59,14 @@ defmodule Web.Router do
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
   end
 
+  scope "/", Web do
+    pipe_through([:browser, :logged_in])
+
+    resources("/chat", ChatController, only: [:index])
+  end
+
   scope "/manage", Web.Manage, as: :manage do
-    pipe_through(:browser)
+    pipe_through([:browser, :logged_in])
 
     resources("/achievements", AchievementController, only: [:edit, :update, :delete])
 

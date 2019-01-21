@@ -4,20 +4,9 @@ defmodule Web.ChatController do
   alias Grapevine.Channels
 
   def index(conn, _params) do
-    render(conn, "index.html")
-  end
-
-  def show(conn, %{"id" => name}) do
-    case Channels.get(name) do
-      {:ok, channel} ->
-        conn
-        |> assign(:channel, channel)
-        |> render("show.html")
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Unknown channel")
-        |> redirect(to: chat_path(conn, :index))
-    end
+    conn
+    |> assign(:channels, Channels.all())
+    |> assign(:title, "Grapevine Chat")
+    |> render("index.html")
   end
 end

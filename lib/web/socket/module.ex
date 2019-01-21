@@ -52,5 +52,6 @@ defmodule Web.Socket.Module do
   """
   def broadcast(token, topic, event) do
     Web.Endpoint.broadcast(topic, event, token.payload)
+    token
   end
 end

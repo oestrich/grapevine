@@ -1,8 +1,8 @@
-import "phoenix_html"
-import "./charts"
+import "phoenix_html";
+import Sizzle from "sizzle";
 
-import ChatSocket from "./socket";
-window.ChatSocket = ChatSocket;
+import "./charts"
+import {Channels} from "./chat"
 
 import MSSPSocket from "./mssp";
 window.MSSPSocket = MSSPSocket;
@@ -38,4 +38,8 @@ class ReactPhoenix {
 
 document.addEventListener("DOMContentLoaded", e => {
   ReactPhoenix.init();
+
+  if (Sizzle(".chat").length > 0) {
+    new Channels().join()
+  }
 })
