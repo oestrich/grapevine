@@ -12,7 +12,7 @@ config :logger, level: :error
 config :grapevine, Grapevine.Repo,
   database: "grapevine_test",
   hostname: "localhost",
-  username: "exventure",
+  username: "grapevine",
   password: "password",
   port: 5433,
   pool: Ecto.Adapters.SQL.Sandbox
