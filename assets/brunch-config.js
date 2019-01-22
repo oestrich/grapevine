@@ -35,7 +35,7 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
-      presets: ['env', 'react'],
+      presets: ['@babel/env', '@babel/preset-react'],
       // Do not use ES6 compiler in vendor code
       ignore: [/vendor/]
     }
