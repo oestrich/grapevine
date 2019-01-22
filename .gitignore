@@ -33,3 +33,4 @@ npm-debug.log
 *.sql
 deploy/hosts_*
 .vagrant
+tmp/
