@@ -16,6 +16,8 @@
   <%= FormView.textarea_field(f, :description, rows: 5) %>
 
   <%= FormView.file_field(f, :cover, label: "Cover Image") do %>
+    <div class="help-block">Used on the homepage. Your image will be resized to fit the ratio of 3:2. This might mean parts of your image are cut off. Uploading some multiple of 300x200 is recommended. 2MB upload limit.</div>
+
     <%= if @mode == :edit && GameView.has_cover?(@game) do %>
       <p>Current image:</p>
       <%= GameView.cover_img(@game) %>
