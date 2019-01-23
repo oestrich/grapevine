@@ -25,7 +25,7 @@ defmodule Grapevine.Games.Images do
     key = UUID.uuid4()
     path = cover_path(game.id, "original", key)
 
-    case Storage.upload(file, path, extensions: ["jpg", "png", "gif"]) do
+    case Storage.upload(file, path, extensions: [".jpg", ".png", ".gif"]) do
       :ok ->
         game
         |> Game.cover_changeset(key)
@@ -48,11 +48,11 @@ defmodule Grapevine.Games.Images do
   def generate_cover_versions({:ok, game}, file) do
     path = cover_path(game.id, "thumbnail", game.cover_key)
 
-    {:ok, temp_path} = Briefly.create()
+    {:ok, temp_path} = Briefly.create(extname: ".jpg")
 
     case Porcelain.exec("convert", [file.path, "-resize", "300x200", temp_path]) do
       %{status: 0} ->
-        Storage.upload(temp_path, path, extensions: ["jpg"])
+        Storage.upload(%{path: temp_path}, path, extensions: [".jpg"])
 
         {:ok, game}
 
