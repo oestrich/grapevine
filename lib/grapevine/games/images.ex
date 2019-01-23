@@ -25,7 +25,7 @@ defmodule Grapevine.Games.Images do
     key = UUID.uuid4()
     path = cover_path(game.id, "original", key)
 
-    case Storage.upload(file, path) do
+    case Storage.upload(file, path, extensions: ["jpg", "png", "gif"]) do
       :ok ->
         game
         |> Game.cover_changeset(key)
@@ -33,7 +33,13 @@ defmodule Grapevine.Games.Images do
         |> generate_cover_versions(file)
 
       :error ->
-        game
+        changeset =
+          game
+          |> Ecto.Changeset.change()
+          |> Ecto.Changeset.add_error(:cover, "could not upload, please try again")
+          |> Map.put(:action, :update)
+
+        {:error, changeset}
     end
   end
 
@@ -46,7 +52,7 @@ defmodule Grapevine.Games.Images do
 
     case Porcelain.exec("convert", [file.path, "-resize", "300x200", temp_path]) do
       %{status: 0} ->
-        Storage.upload(temp_path, path)
+        Storage.upload(temp_path, path, extensions: ["jpg"])
 
         {:ok, game}
 

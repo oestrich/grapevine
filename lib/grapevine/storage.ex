@@ -20,8 +20,25 @@ defmodule Grapevine.Storage do
   @doc """
   Upload files to the remote storage
   """
-  def upload(file, key) do
-    backend().upload(file_path(file), key)
+  def upload(file, key, opts) do
+    path = file_path(file)
+
+    with {:ok, :extension} <- check_extensions(path, opts) do
+      backend().upload(path, key)
+    end
+  end
+
+  defp check_extensions(file, opts) do
+    allowed_extensions = Keyword.get(opts, :extensions, [])
+    extension = String.downcase(Path.extname(file.filename))
+
+    case extension in allowed_extensions do
+      true ->
+        {:ok, :extension}
+
+      false ->
+        :error
+    end
   end
 
   @doc """
