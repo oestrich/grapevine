@@ -12,7 +12,7 @@ defmodule Grapevine.Games.Images do
   end
 
   def cover_path(game_id, size, key) do
-    Path.join(["games", to_string(game_id), "cover", "#{size}-#{key}.png"])
+    Path.join(["games", to_string(game_id), "cover", "#{size}-#{key}.jpg"])
   end
 
   def maybe_upload_images(game, params) do
@@ -30,6 +30,7 @@ defmodule Grapevine.Games.Images do
         game
         |> Game.cover_changeset(key)
         |> Repo.update()
+        |> generate_cover_versions(file)
 
       :error ->
         game
@@ -37,4 +38,22 @@ defmodule Grapevine.Games.Images do
   end
 
   def maybe_upload_cover_image(game, _), do: {:ok, game}
+
+  def generate_cover_versions({:ok, game}, file) do
+    path = cover_path(game.id, "thumbnail", game.cover_key)
+
+    {:ok, temp_path} = Briefly.create()
+
+    case Porcelain.exec("convert", [file.path, "-resize", "300x200", temp_path]) do
+      %{status: 0} ->
+        Storage.upload(temp_path, path)
+
+        {:ok, game}
+
+      _ ->
+        {:ok, game}
+    end
+  end
+
+  def generate_cover_versions(result, _file), do: result
 end

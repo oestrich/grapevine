@@ -19,7 +19,7 @@ defmodule Web.GameView do
 
   def cover_img(game) do
     content_tag(:div, class: "cover") do
-      [img_tag(Storage.url(Images.cover_path(game, "original"))), content_tag(:div, "", class: "shadow")]
+      [img_tag(Storage.url(Images.cover_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
     end
   end
 

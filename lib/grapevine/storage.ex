@@ -49,7 +49,7 @@ defmodule Grapevine.Storage do
     %{filename: upload.filename, path: upload.path}
   end
 
-  def file_path(path) when is_binary(path) do
-    %{filename: Path.basename(path), path: path}
+  def file_path(upload) when is_map(upload) do
+    %{filename: Path.basename(upload.path), path: upload.path}
   end
 end
