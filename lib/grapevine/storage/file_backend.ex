@@ -8,6 +8,21 @@ defmodule Grapevine.Storage.FileBackend do
   @impl true
   def upload(file, key) do
     path = Path.join(:code.priv_dir(:grapevine), "files/#{key}")
-    File.copy(file, path)
+
+    dirname = Path.dirname(path)
+    File.mkdir_p(dirname)
+
+    case File.copy(file.path, path) do
+      {:ok, _} ->
+        :ok
+
+      _ ->
+        :error
+    end
+  end
+
+  @impl true
+  def url(key) do
+    "/uploads/#{key}"
   end
 end

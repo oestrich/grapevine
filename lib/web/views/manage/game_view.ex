@@ -2,12 +2,18 @@ defmodule Web.Manage.GameView do
   use Web, :view
 
   alias Grapevine.Channels
+  alias Grapevine.Games.Images
+  alias Grapevine.Storage
   alias Grapevine.UserAgents
   alias Web.FormView
   alias Web.Manage.ConnectionView
   alias Web.Manage.SettingView
   alias Web.Manage.RedirectURIView
   alias Web.ReactView
+
+  def cover_img(game) do
+    img_tag(Storage.url(Images.cover_path(game, "original")))
+  end
 
   def render("status.json", %{game: game}) do
     json = %{game: game.short_name, display_name: game.name}

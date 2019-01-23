@@ -21,6 +21,10 @@
     </div>
   </nav>
 
+  <%= if @game.cover_key do %>
+    <%= cover_img(@game) %>
+  <% end %>
+
   <p><%= @game.description %></p>
 
   <div class="row mt-3 mb-3">

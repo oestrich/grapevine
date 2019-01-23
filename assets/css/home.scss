@@ -1,24 +1,26 @@
 @import "colors";
 
-.homepage {
-  .games {
-    display: flex;
-    width: 100%;
+.homepage .games {
+  display: flex;
+  width: 100%;
 
-    .game {
-      width: 50%;
-      margin: 16px;
+  .game {
+    width: 50%;
+    margin: 16px;
 
-      .user-agent {
-        display: block;
-      }
+    .user-agent {
+      display: block;
+    }
 
-      .cover {
-        margin-right: 16px;
-        width: 300px;
-        height: 200px;
-        background-color: $purple;
-      }
+    .tagline {
+      overflow-y: inherit;
+    }
+
+    .cover {
+      margin-right: 16px;
+      width: 300px;
+      height: 200px;
+      background-color: $purple;
     }
   }
 }

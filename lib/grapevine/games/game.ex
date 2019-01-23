@@ -34,6 +34,8 @@ defmodule Grapevine.Games.Game do
     field(:client_id, Ecto.UUID)
     field(:client_secret, Ecto.UUID)
 
+    field(:cover_key, Ecto.UUID)
+
     belongs_to(:user, User)
 
     has_many(:achievements, Achievement)
@@ -85,6 +87,12 @@ defmodule Grapevine.Games.Game do
 
   def metadata_changeset(struct, params) do
     cast(struct, params, [:user_agent, :version])
+  end
+
+  def cover_changeset(struct, cover_key) do
+    struct
+    |> change()
+    |> put_change(:cover_key, cover_key)
   end
 
   def seen_changeset(struct, seen_at) do

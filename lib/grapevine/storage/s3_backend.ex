@@ -18,7 +18,14 @@ defmodule Grapevine.Storage.S3Backend do
     ]
 
     @bucket
-    |> S3.put_object(key, File.read!(file), meta)
-    |> ExAws.request!
+    |> S3.put_object(key, File.read!(file.path), meta)
+    |> ExAws.request!()
+
+    :ok
+  end
+
+  @impl true
+  def url(key) do
+    "https://s3.amazonaws.com/#{@bucket}/#{key}"
   end
 end

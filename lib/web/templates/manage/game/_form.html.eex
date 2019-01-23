@@ -1,4 +1,4 @@
-<%= form_for(@changeset, @url, fn f -> %>
+<%= form_for(@changeset, @url, [multipart: true], fn f -> %>
   <%= FormView.text_field(f, :name) %>
 
   <%= FormView.text_field(f, :short_name) do %>
@@ -14,6 +14,8 @@
   <% end %>
 
   <%= FormView.textarea_field(f, :description, rows: 5) %>
+
+  <%= FormView.file_field(f, :cover, label: "Cover Image") %>
 
   <%= if @mode == :edit do %>
     <%= FormView.checkbox_field(f, :display, label: "Display in Connected Games?") %>

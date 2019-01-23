@@ -19,10 +19,6 @@
             <div class="information">
               <h4 class="title">
                 <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
-
-                <%= if game.user_agent do %>
-                  <span class="user-agent"><%= game.user_agent %></span>
-                <% end %>
               </h4>
 
               <p class="tagline"><%= game.tagline %></p>
