@@ -7,8 +7,6 @@ defmodule Grapevine.Storage do
   alias Grapevine.Storage.MockBackend
   alias Grapevine.Storage.S3Backend
 
-  @backend Application.get_env(:grapevine, :storage)[:backend]
-
   @type file :: String.t()
   @type key :: String.t()
   @type url :: String.t()
@@ -50,7 +48,7 @@ defmodule Grapevine.Storage do
 
   @doc false
   def backend() do
-    case @backend do
+    case Application.get_env(:grapevine, :storage)[:backend] do
       :file ->
         FileBackend
 
