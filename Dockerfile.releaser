@@ -1,11 +1,5 @@
 FROM elixir:1.8 as builder
 
-ARG sha
-ENV SHA=${sha}
-
-ARG cookie
-ENV COOKIE=${cookie}
-
 RUN mix local.rebar --force && \
     mix local.hex --force
 
@@ -29,6 +23,13 @@ COPY assets /app
 RUN npm run deploy
 
 FROM builder as releaser
+
+ARG sha
+ENV SHA=${sha}
+
+ARG cookie
+ENV COOKIE=${cookie}
+
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
 RUN mix phx.digest
