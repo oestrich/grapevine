@@ -2,7 +2,6 @@ defmodule Web.PageController do
   use Web, :controller
 
   alias Grapevine.Presence
-  alias Web.Game
 
   def index(conn, _params) do
     conn

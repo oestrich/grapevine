@@ -31,6 +31,9 @@ npm-debug.log
 /env.sh
 /scp.sh
 *.sql
-deploy/hosts_*
-.vagrant
-tmp/
+/deploy/hosts_*
+/.vagrant
+/tmp/
+
+/priv/files/*
+!/priv/files/.gitkeep

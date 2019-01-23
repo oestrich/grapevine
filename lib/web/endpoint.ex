@@ -16,6 +16,10 @@ defmodule Web.Endpoint do
     only: ~w(css fonts images js favicon.ico robots.txt)
   )
 
+  if Mix.env == :dev do
+    plug(Plug.Static, at: "/uploads", from: "priv/files")
+  end
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
