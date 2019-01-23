@@ -10,9 +10,21 @@ defmodule Grapevine.Storage.S3Backend do
   def bucket(), do: Application.get_env(:grapevine, :storage)[:bucket]
 
   @impl true
+  def download(key) do
+    extname = Path.extname(key)
+    {:ok, temp_path} = Briefly.create(extname: extname)
+
+    bucket()
+    |> S3.download_file(key, temp_path)
+    |> ExAws.request()
+
+    {:ok, temp_path}
+  end
+
+  @impl true
   def upload(file, key) do
     meta = [
-      {:cache_control, "public, max-age=25200"},
+      {:cache_control, "public, max-age=3600"},
       {:content_type, "image/png"},
       {:acl, :public_read}
     ]

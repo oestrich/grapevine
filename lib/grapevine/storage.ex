@@ -11,11 +11,21 @@ defmodule Grapevine.Storage do
 
   @type file :: String.t()
   @type key :: String.t()
+  @type path :: Path.t()
   @type url :: String.t()
+
+  @callback download(key()) :: {:ok, path()}
 
   @callback upload(file(), key()) :: :ok | :error
 
   @callback url(key()) :: url()
+
+  @doc """
+  Download files from remote storage
+  """
+  def download(key) do
+    backend().download(key)
+  end
 
   @doc """
   Upload files to the remote storage

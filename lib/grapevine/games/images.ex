@@ -30,7 +30,7 @@ defmodule Grapevine.Games.Images do
         game
         |> Game.cover_changeset(key)
         |> Repo.update()
-        |> generate_cover_versions(file)
+        |> maybe_generate_cover_version(file)
 
       :error ->
         changeset =
@@ -45,8 +45,14 @@ defmodule Grapevine.Games.Images do
 
   def maybe_upload_cover_image(game, _), do: {:ok, game}
 
-  def generate_cover_versions({:ok, game}, file) do
-    path = cover_path(game.id, "thumbnail", game.cover_key)
+  defp maybe_generate_cover_version({:ok, game}, file) do
+    generate_cover_versions(game, file)
+  end
+
+  defp maybe_generate_cover_version(result, _file), do: result
+
+  def generate_cover_versions(game, file) do
+    path = cover_path(game, "thumbnail")
 
     {:ok, temp_path} = Briefly.create(extname: ".jpg")
 
@@ -63,5 +69,13 @@ defmodule Grapevine.Games.Images do
     end
   end
 
-  def generate_cover_versions(result, _file), do: result
+  @doc """
+  Regenerate the cover image for a game
+  """
+  def regenerate_cover(game) do
+    case Storage.download(cover_path(game, "original")) do
+      {:ok, temp_path} ->
+        generate_cover_versions(game, %{path: temp_path})
+    end
+  end
 end
