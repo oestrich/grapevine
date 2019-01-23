@@ -8,6 +8,7 @@
       - nginx
       - certbot
       - python-certbot-nginx
+      - imagemagick
     state: present
     force: "yes"
     update_cache: "yes"
