@@ -21,9 +21,7 @@
     </div>
   </nav>
 
-  <%= if @game.cover_key do %>
-    <%= cover_img(@game) %>
-  <% end %>
+  <%= GameView.cover_img_with_default(@conn, @game) %>
 
   <p><%= @game.description %></p>
 

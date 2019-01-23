@@ -5,6 +5,7 @@ defmodule Web.PageView do
 
   alias Grapevine.Channels
   alias Web.DocView
+  alias Web.GameView
 
   def render("_conduct.html", _assigns) do
     :grapevine

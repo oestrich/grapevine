@@ -13,7 +13,7 @@
           <li class="game">
             <div class="cover">
               <%= link(to: game_path(@conn, :show, game.short_name)) do %>
-                <%= img_tag(static_path(@conn, "/images/default.png")) %>
+                <%= GameView.cover_img_with_default(@conn, game) %>
               <% end %>
             </div>
             <div class="information">
