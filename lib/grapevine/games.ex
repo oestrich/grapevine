@@ -7,6 +7,7 @@ defmodule Grapevine.Games do
   alias Grapevine.Filter
   alias Grapevine.Games.Connection
   alias Grapevine.Games.Game
+  alias Grapevine.Games.Images
   alias Grapevine.Games.RedirectURI
   alias Grapevine.Repo
   alias Grapevine.Telnet
@@ -173,7 +174,7 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.update() do
       {:ok, game} ->
-        {:ok, game}
+        Images.maybe_upload_images(game, params)
 
       {:error, changeset} ->
         {:error, changeset}

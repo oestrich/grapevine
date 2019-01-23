@@ -2,8 +2,36 @@ defmodule Web.GameView do
   use Web, :view
 
   alias Grapevine.Channels
+  alias Grapevine.Games.Images
   alias Grapevine.Presence
+  alias Grapevine.Storage
   alias Grapevine.UserAgents
+
+  def cover_img_with_default(conn, game) do
+    case has_cover?(game) do
+      true ->
+        cover_img(game)
+
+      false ->
+        default_cover_img(conn)
+    end
+  end
+
+  def cover_img(game) do
+    content_tag(:div, class: "cover") do
+      [img_tag(Storage.url(Images.cover_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+    end
+  end
+
+  def default_cover_img(conn) do
+    content_tag(:div, class: "cover") do
+      [img_tag(static_path(conn, "/images/default-cover.png")), content_tag(:div, "", class: "shadow")]
+    end
+  end
+
+  def has_cover?(game) do
+    game.cover_key != nil
+  end
 
   def render("online.json", %{games: games}) do
     %{

@@ -20,6 +20,16 @@ defmodule Grapevine.GamesTest do
     end
   end
 
+  describe "uploading a new cover image" do
+    test "saves the key" do
+      game = create_game(create_user())
+
+      {:ok, game} = Games.update(game, %{cover: %{path: "test/fixtures/cover.png"}})
+
+      assert game.cover_key
+    end
+  end
+
   describe "verifying a client id and secret" do
     setup do
       %{game: create_game(create_user())}

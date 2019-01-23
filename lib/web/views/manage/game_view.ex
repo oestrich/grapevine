@@ -4,6 +4,7 @@ defmodule Web.Manage.GameView do
   alias Grapevine.Channels
   alias Grapevine.UserAgents
   alias Web.FormView
+  alias Web.GameView
   alias Web.Manage.ConnectionView
   alias Web.Manage.SettingView
   alias Web.Manage.RedirectURIView

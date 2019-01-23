@@ -44,7 +44,7 @@ defmodule Web.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-3"),
+        field_label(form, field, opts),
         content_tag(:div, class: "col-md-9") do
           [
             password_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
@@ -63,18 +63,9 @@ defmodule Web.FormView do
     opts = Keyword.merge(opts, dopts)
     number_opts = Keyword.take(opts, [:placeholder, :min, :max])
 
-    label =
-      case Keyword.get(opts, :label) do
-        nil ->
-          label(form, field, class: "col-md-3")
-
-        text ->
-          label(form, field, text, class: "col-md-3")
-      end
-
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label,
+        field_label(form, field, opts),
         content_tag(:div, class: "col-md-9") do
           [
             number_input(form, field, Keyword.merge([class: "form-control"], number_opts)),
@@ -123,6 +114,26 @@ defmodule Web.FormView do
           Keyword.get(opts, :do, "")
         ]
       end
+    end
+  end
+
+  @doc """
+  Generate a file field, styled properly
+  """
+  def file_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        field_label(form, field, opts),
+        content_tag(:div, class: "col-md-9") do
+          [
+            file_input(form, field, [class: "form-control"]),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
     end
   end
 

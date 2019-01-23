@@ -1,14 +1,13 @@
 defmodule Web.PageController do
   use Web, :controller
 
-  alias Grapevine.Presence
-  alias Web.Game
+  alias Grapevine.Games
 
   def index(conn, _params) do
-    game = Game.highlighted_game(Presence.online_games())
+    games = Games.public(filter: %{"online" => "yes"})
 
     conn
-    |> assign(:highlighted_game, game)
+    |> assign(:games, games)
     |> render("index.html")
   end
 

@@ -1,0 +1,19 @@
+@import "colors";
+
+.homepage .games {
+  display: flex;
+  width: 100%;
+
+  .game {
+    width: 50%;
+    margin: 16px;
+
+    .tagline {
+      overflow-y: inherit;
+    }
+
+    .cover {
+      margin-right: 16px;
+    }
+  }
+}
