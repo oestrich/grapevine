@@ -21,27 +21,14 @@
     </div>
   </nav>
 
-  <%= GameView.cover_img_with_default(@conn, @game) %>
-
-  <p><%= @game.description %></p>
-
-  <div class="row mt-3 mb-3">
-    <div class="col-md-6 keys">
-      <div class="form-group">
-        <label>Client ID</label>
-        <input class="form-control" type="text" value="<%= @game.client_id %>" readonly="readonly" />
-      </div>
-
-      <div class="form-group">
-        <label>Client Secret</label>
-        <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
-        <%= link("Toggle Secret", to: "#", class: "show-secret") %>
-      </div>
-
-      <%= link("Reset Client ID and Client Secret", to: manage_game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
+  <div class="row">
+    <div class="col-md-4">
+      <%= GameView.cover_img_with_default(@conn, @game) %>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
+      <p><%= @game.description %></p>
+
       <%= if @game.user_agent do %>
         The server is running <code><%= @game.user_agent %></code>.
       <% end %>
@@ -61,10 +48,25 @@
           Characters <b>cannot</b> be registered on <%= link("Grapevine", to: "https://grapevine.haus/") %>.
         <% end %>
       </div>
+
+      <hr />
+
+      <div class="form-group">
+        <label>Client ID</label>
+        <input class="form-control" type="text" value="<%= @game.client_id %>" readonly="readonly" />
+      </div>
+
+      <div class="form-group">
+        <label>Client Secret</label>
+        <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
+        <%= link("Toggle Secret", to: "#", class: "show-secret") %>
+      </div>
+
+      <%= link("Reset Client ID and Client Secret", to: manage_game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row mt-3 mb-3">
     <div class="col-md-6">
       <div class="redirect-uris">
         <h5>Redirect URIs</h5>
