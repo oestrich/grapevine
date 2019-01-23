@@ -5,10 +5,8 @@ defmodule Web.PageController do
   alias Web.Game
 
   def index(conn, _params) do
-    game = Game.highlighted_game(Presence.online_games())
-
     conn
-    |> assign(:highlighted_game, game)
+    |> assign(:games, Enum.map(Presence.online_games(), &(&1.game)))
     |> render("index.html")
   end
 

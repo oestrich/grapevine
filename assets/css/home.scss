@@ -1,0 +1,24 @@
+@import "colors";
+
+.homepage {
+  .games {
+    display: flex;
+    width: 100%;
+
+    .game {
+      width: 50%;
+      margin: 16px;
+
+      .user-agent {
+        display: block;
+      }
+
+      .cover {
+        margin-right: 16px;
+        width: 300px;
+        height: 200px;
+        background-color: $purple;
+      }
+    }
+  }
+}

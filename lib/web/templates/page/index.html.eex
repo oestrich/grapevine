@@ -1,32 +1,32 @@
-<div class="position-relative overflow-hidden text-center jumbotron">
-  <div class="col-md-6 mx-auto my-2">
-    <h1 class="display-4 font-weight-normal">Grapevine</h1>
-    <p class="lead font-weight-normal">Welcome to Grapevine, the MUD chat network.</p>
-
-    <%= if @highlighted_game do %>
-      <div class="card">
-        <div class="card-body">
-          <h6 class="card-subtitle mb-2 text-muted">Highlighted Game</h6>
-          <%= @highlighted_game.name %> - <%= link("Play Now", to: @highlighted_game.homepage_url, target: "_blank") %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
-
-<div class="d-md-flex flex-md-equal w-100 my-md-3">
-  <div class="card-dark pt-1 px-1 pt-md-3 px-md-3 mr-2 text-center text-white">
-    <div class="my-3 mb-md-0 pb-3">
-      <h2 class="display-5">Chat</h2>
-      <p class="lead">When you connect your game to Grapevine, players can communicate with a wider player base.</p>
-      <%= link("Learn How", to: page_path(@conn, :docs), class: "btn btn-secondary") %>
+<section>
+  <div class="position-relative text-center">
+    <div class="col-md-6 mx-auto my-2">
+      <h1 class="display-4 font-weight-normal">Grapevine</h1>
+      <p class="lead font-weight-normal">Where you heard it.</p>
     </div>
   </div>
-  <div class="card-dark pt-1 px-1 pt-md-3 px-md-3 ml-2 pb-sm-3 text-center text-white">
-    <div class="my-3 mb-md-0 pb-3">
-      <h2 class="display-5">Grapevine</h2>
-      <p class="lead">When you join Grapevine, players can register their characters to their Grapevine Account.</p>
-      <%= link("See Grapevine", to: "https://grapevine.haus/", class: "btn btn-secondary") %>
-    </div>
+
+  <div class="homepage">
+    <ul class="games">
+      <%= Enum.map(@games, fn game -> %>
+        <%= if game.display do %>
+          <li class="game">
+            <div class="cover">
+            </div>
+            <div class="information">
+              <h4 class="title">
+                <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
+
+                <%= if game.user_agent do %>
+                  <span class="user-agent"><%= game.user_agent %></span>
+                <% end %>
+              </h4>
+
+              <p class="tagline"><%= game.tagline %></p>
+            </div>
+          </li>
+        <% end %>
+      <% end) %>
+    </ul>
   </div>
-</div>
+</section>
