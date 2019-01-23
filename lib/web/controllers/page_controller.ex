@@ -1,11 +1,13 @@
 defmodule Web.PageController do
   use Web, :controller
 
-  alias Grapevine.Presence
+  alias Grapevine.Games
 
   def index(conn, _params) do
+    games = Games.public(filter: %{"online" => "yes"})
+
     conn
-    |> assign(:games, Enum.map(Presence.online_games(), &(&1.game)))
+    |> assign(:games, games)
     |> render("index.html")
   end
 
