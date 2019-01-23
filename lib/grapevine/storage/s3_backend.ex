@@ -7,7 +7,7 @@ defmodule Grapevine.Storage.S3Backend do
 
   @behaviour Grapevine.Storage
 
-  @bucket Application.get_env(:grapevine, :storage)[:bucket]
+  def bucket(), do: Application.get_env(:grapevine, :storage)[:bucket]
 
   @impl true
   def upload(file, key) do
@@ -17,7 +17,7 @@ defmodule Grapevine.Storage.S3Backend do
       {:acl, :public_read}
     ]
 
-    @bucket
+    bucket()
     |> S3.put_object(key, File.read!(file.path), meta)
     |> ExAws.request!()
 
@@ -26,6 +26,6 @@ defmodule Grapevine.Storage.S3Backend do
 
   @impl true
   def url(key) do
-    "https://s3.amazonaws.com/#{@bucket}/#{key}"
+    "https://s3.amazonaws.com/#{bucket()}/#{key}"
   end
 end
