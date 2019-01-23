@@ -2,11 +2,13 @@
 
 .homepage .games {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 
   .game {
     width: 50%;
     margin: 16px;
+    flex-basis: 47%;
 
     .tagline {
       overflow-y: inherit;
