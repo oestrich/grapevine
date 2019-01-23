@@ -24,8 +24,7 @@ defmodule Grapevine.GamesTest do
     test "saves the key" do
       game = create_game(create_user())
 
-      path = Path.join(:code.priv_dir(:grapevine), "static/images/default-cover.png")
-      {:ok, game} = Games.update(game, %{cover: %{path: path}})
+      {:ok, game} = Games.update(game, %{cover: %{path: "test/fixtures/cover.png"}})
 
       assert game.cover_key
     end
