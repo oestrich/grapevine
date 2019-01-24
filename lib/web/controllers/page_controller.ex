@@ -4,7 +4,7 @@ defmodule Web.PageController do
   alias Grapevine.Games
 
   def index(conn, _params) do
-    games = Games.public(filter: %{"online" => "yes"})
+    games = Games.public(filter: %{"online" => "yes", "cover" => "yes"})
 
     conn
     |> assign(:games, games)

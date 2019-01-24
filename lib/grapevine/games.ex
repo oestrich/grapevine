@@ -62,6 +62,10 @@ defmodule Grapevine.Games do
     where(query, [g], g.user_agent == ^value)
   end
 
+  def filter_on_attribute({"cover", "yes"}, query) do
+    where(query, [g], not is_nil(g.cover_key))
+  end
+
   def filter_on_attribute({"online", "yes"}, query) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
     mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
