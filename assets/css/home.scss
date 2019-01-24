@@ -18,5 +18,15 @@
     .cover {
       margin-right: 16px;
     }
+
+    @media only screen and (max-width: 600px) {
+      width: 100%;
+      flex-basis: 100%;
+      display: block;
+
+      .cover {
+        margin-right: 0;
+      }
+    }
   }
 }
