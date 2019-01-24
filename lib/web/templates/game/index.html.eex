@@ -41,7 +41,7 @@
     </div>
 
     <div class="col-md-8">
-      <ul class="games">
+      <ul class="games list">
         <%= Enum.map(@games, fn game -> %>
           <li class="game">
             <div class="status">

@@ -3,25 +3,69 @@
 .homepage .games {
   display: flex;
   flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
   width: 100%;
 
   .game {
-    width: 50%;
-    margin: 16px;
-    flex-basis: 47%;
+    padding: 16px;
+    flex-basis: 50%;
+
+    .container {
+      background-color: $white;
+      border: 2px solid $grey;
+      border-radius: 4px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    h4 a {
+      color: $blue;
+      text-decoration: none;
+    }
 
     .tagline {
       overflow-y: inherit;
       height: auto;
     }
 
-    .cover {
-      margin-right: 16px;
+    .information {
+      margin-left: 16px;
     }
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-device-width: 736px) {
       flex-basis: 100%;
-      display: block;
+
+      .container {
+        display: block;
+      }
+
+      img {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+      }
+
+      .information {
+        margin-left: 16px;
+      }
+
+      .cover {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+      }
+    }
+
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+      flex-basis: 100%;
+    }
+
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+      .container {
+        display: block;
+      }
 
       img {
         max-width: 100%;
@@ -30,7 +74,6 @@
       }
 
       .cover {
-        margin-right: 0;
         max-width: 100%;
         width: auto;
         height: auto;
