@@ -56,7 +56,7 @@ defmodule Grapevine.Games.Images do
 
     {:ok, temp_path} = Briefly.create(extname: ".jpg")
 
-    args = [file.path, "-resize", "x200", "-resize", "300x<", "-gravity", "Center", "-crop", "300x200+0+0", temp_path]
+    args = [file.path, "-thumbnail", "600x400^", "-gravity", "center", "-extent", "600x400", temp_path]
 
     case Porcelain.exec("convert", args) do
       %{status: 0} ->
