@@ -25,7 +25,6 @@ defmodule Grapevine.Storage.S3Backend do
   def upload(file, key) do
     meta = [
       {:cache_control, "public, max-age=3600"},
-      {:content_type, "image/png"},
       {:acl, :public_read}
     ]
 

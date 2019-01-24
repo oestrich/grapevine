@@ -35,6 +35,7 @@ defmodule Grapevine.Games.Game do
     field(:client_secret, Ecto.UUID)
 
     field(:cover_key, Ecto.UUID)
+    field(:cover_extension, :string)
 
     belongs_to(:user, User)
 
@@ -89,10 +90,11 @@ defmodule Grapevine.Games.Game do
     cast(struct, params, [:user_agent, :version])
   end
 
-  def cover_changeset(struct, cover_key) do
+  def cover_changeset(struct, key, extension) do
     struct
     |> change()
-    |> put_change(:cover_key, cover_key)
+    |> put_change(:cover_key, key)
+    |> put_change(:cover_extension, extension)
   end
 
   def seen_changeset(struct, seen_at) do
