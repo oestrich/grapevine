@@ -1,5 +1,6 @@
 defmodule Grapevine.Images do
   @moduledoc """
+  Common module for dealing with image conversion
   """
 
   @type opts() :: Keyword.t()
