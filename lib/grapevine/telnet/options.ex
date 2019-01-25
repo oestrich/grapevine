@@ -57,10 +57,18 @@ defmodule Grapevine.Telnet.Options do
       |> Enum.map(&transform/1)
       |> Enum.reject(&is_unknown_option?/1)
 
-    {options, leftover}
+    {options, strip_to_iac(leftover)}
   end
 
   defp is_unknown_option?(option), do: option == :unknown
+
+  defp strip_to_iac(<<>>), do: <<>>
+
+  defp strip_to_iac(<<@iac, data::binary>>), do: <<@iac>> <> data
+
+  defp strip_to_iac(<<_byte::size(8), data::binary>>) do
+    strip_to_iac(data)
+  end
 
   @doc """
   Parse options out of a binary stream
