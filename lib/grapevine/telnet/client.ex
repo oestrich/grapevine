@@ -13,7 +13,8 @@ defmodule Grapevine.Telnet.Client do
   @wont_line_mode <<255, 252, 34>>
 
   alias Grapevine.Telnet
-  alias Grapevine.Telnet.Client.Options
+  alias Grapevine.Telnet.MSSP
+  alias Grapevine.Telnet.Options
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts)
@@ -125,6 +126,9 @@ defmodule Grapevine.Telnet.Client do
       Options.do_line_mode?(option) ->
         send_line_mode()
         {:noreply, %{state | processed: [option | state.processed]}}
+
+      true ->
+        {:noreply, %{state | processed: [option | state.processed]}}
     end
   end
 
@@ -229,7 +233,7 @@ defmodule Grapevine.Telnet.Client do
   end
 
   def record_text_mssp(state, fun) do
-    case Options.parse_mssp_text(state.data) do
+    case MSSP.parse_text(state.data) do
       :error ->
         {:noreply, state}
 
@@ -249,242 +253,6 @@ defmodule Grapevine.Telnet.Client do
 
       channel ->
         Web.Endpoint.broadcast("mssp:#{channel}", event, message)
-    end
-  end
-
-  defmodule Options do
-    @moduledoc """
-    Parse telnet IAC options coming from the game
-    """
-
-    @se 240
-    @sb 250
-    @will 251
-    @wont 252
-    @iac_do 253
-    @iac 255
-
-    @term_type 24
-    @line_mode 34
-
-    @mssp 70
-    @mssp_var 1
-    @mssp_val 2
-
-    def will_mssp?(option) do
-      option == {:will, :mssp}
-    end
-
-    def do_term?(option) do
-      option == {:do, :term_type}
-    end
-
-    def do_line_mode?(option) do
-      option == {:do, :line_mode}
-    end
-
-    def mssp_data?(options) do
-      Enum.any?(options, fn option ->
-        match?({:mssp, _}, option)
-      end)
-    end
-
-    def text_mssp?(string) do
-      string =~ "MSSP-REPLY-START"
-    end
-
-    def get_mssp_data(options) do
-      Enum.find(options, fn option ->
-        match?({:mssp, _}, option)
-      end)
-    end
-
-    @doc """
-    Parse binary data from a MUD into any telnet options found and known
-    """
-    def parse(binary) do
-      binary
-      |> options([], [])
-      |> Enum.reverse()
-      |> Enum.map(&transform/1)
-      |> Enum.reject(&is_nil/1)
-    end
-
-    def transform(option) do
-      case option do
-        [@iac, @iac_do, @term_type] ->
-          {:do, :term_type}
-
-        [@iac, @iac_do, @line_mode] ->
-          {:do, :line_mode}
-
-        [@iac, @will, @mssp] ->
-          {:will, :mssp}
-
-        [@iac, @wont, @mssp] ->
-          {:wont, :mssp}
-
-        [@iac, @sb, @mssp | data] when data != [] ->
-          {:mssp, parse_mssp(data)}
-
-        _ ->
-          nil
-      end
-    end
-
-    @doc """
-    Parse options out of a binary stream
-    """
-    def options(<<>>, current, stack) do
-      [Enum.reverse(current) | stack]
-    end
-
-    def options(<<@iac, @sb, data::binary>>, current, stack) do
-      {sub, data} = parse_sub_negotiation(<<@iac, @sb>> <> data)
-      options(data, [], [sub, Enum.reverse(current) | stack])
-    end
-
-    def options(<<@iac, @will, byte::size(8), data::binary>>, current, stack) do
-      options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack])
-    end
-
-    def options(<<@iac, @iac_do, byte::size(8), data::binary>>, current, stack) do
-      options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack])
-    end
-
-    def options(<<@iac, data::binary>>, current, stack) do
-      options(data, [@iac], [Enum.reverse(current) | stack])
-    end
-
-    def options(<<byte::size(8), data::binary>>, current, stack) do
-      options(data, [byte | current], stack)
-    end
-
-    @doc """
-    Parse sub negotiation options out of a stream
-    """
-    def parse_sub_negotiation(data) do
-      {stack, data} = sub_option(data, [])
-      {Enum.reverse(stack), data}
-    end
-
-    def sub_option(<<>>, stack), do: {stack, <<>>}
-
-    def sub_option(<<byte::size(8), @iac, @se, data::binary>>, stack) do
-      {[byte | stack], data}
-    end
-
-    def sub_option(<<byte::size(8), data::binary>>, stack) do
-      sub_option(data, [byte | stack])
-    end
-
-    @doc """
-    Parse MSSP subnegotiation options
-    """
-    def parse_mssp(data) do
-      data
-      |> mssp(nil, [])
-      |> Enum.reject(&is_nil/1)
-      |> Enum.into(%{}, fn map ->
-        {to_string(Enum.reverse(map[:name])), to_string(Enum.reverse(map[:value]))}
-      end)
-    end
-
-    def mssp([], current, stack) do
-      [current | stack]
-    end
-
-    def mssp([@iac | data], current, stack) do
-      mssp(data, current, stack)
-    end
-
-    def mssp([@se | data], current, stack) do
-      mssp(data, current, stack)
-    end
-
-    def mssp([@mssp_var | data], current, stack) do
-      mssp(data, %{type: :name, name: [], value: []}, [current | stack])
-    end
-
-    def mssp([@mssp_val | data], current, stack) do
-      current =
-        current
-        |> Map.put(:type, :value)
-        |> Map.put(:value_start, true)
-
-      mssp(data, Map.put(current, :type, :value), stack)
-    end
-
-    def mssp([byte | data], current, stack) do
-      case current[:type] do
-        :name ->
-          mssp(data, Map.put(current, :name, [byte | current.name]), stack)
-
-        :value ->
-          mssp(data, append_value(current, byte), stack)
-
-        _ ->
-          mssp(data, current, stack)
-      end
-    end
-
-    defp append_value(current, byte) do
-      case {current.value_start, current.value} do
-        {true, []} ->
-          current
-          |> Map.put(:value, [byte | current.value])
-          |> Map.put(:value_start, false)
-
-        {true, value} ->
-          current
-          |> Map.put(:value, [byte, " ", "," | value])
-          |> Map.put(:value_start, false)
-
-        {false, value} ->
-          Map.put(current, :value, [byte | value])
-      end
-    end
-
-    @doc """
-    Parse text as a response to `mssp-request`
-
-    Should include MSSP-REPLY-START and end with MSSP-REPLY-END
-    """
-    def parse_mssp_text(text) do
-      data =
-        text
-        |> String.replace("\r", "")
-        |> String.split("\n")
-        |> find_mssp_text([])
-
-      case data do
-        :error ->
-          :error
-
-        data ->
-          Enum.into(data, %{}, &parse_mssp_text_line/1)
-      end
-    end
-
-    def find_mssp_text([], _stack) do
-      :error
-    end
-
-    def find_mssp_text(["MSSP-REPLY-START" | data], _stack) do
-      find_mssp_text(data, [])
-    end
-
-    def find_mssp_text(["MSSP-REPLY-END" | _data], stack) do
-      stack
-    end
-
-    def find_mssp_text([line | data], stack) do
-      find_mssp_text(data, [line | stack])
-    end
-
-    def parse_mssp_text_line(line) do
-      [name | values] = String.split(line, "\t")
-      {name, Enum.join(values, "\t")}
     end
   end
 end
