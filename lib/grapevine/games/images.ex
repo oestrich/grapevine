@@ -4,6 +4,7 @@ defmodule Grapevine.Games.Images do
   """
 
   alias Grapevine.Games.Game
+  alias Grapevine.Images
   alias Grapevine.Storage
   alias Grapevine.Repo
 
@@ -77,17 +78,12 @@ defmodule Grapevine.Games.Images do
   def generate_cover_versions(game, file) do
     path = cover_path(game, "thumbnail")
 
-    {:ok, temp_path} = Briefly.create(extname: ".png")
-
-    args = [file.path, "-thumbnail", "600x400^", "-gravity", "center", "-extent", "600x400", temp_path]
-
-    case Porcelain.exec("convert", args) do
-      %{status: 0} ->
+    case Images.convert(file, [extname: ".png", thumbnail: "600x400"]) do
+      {:ok, temp_path} ->
         Storage.upload(%{path: temp_path}, path, extensions: [".png"])
-
         {:ok, game}
 
-      _ ->
+      {:error, :convert} ->
         {:ok, game}
     end
   end
