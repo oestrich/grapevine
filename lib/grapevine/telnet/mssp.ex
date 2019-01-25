@@ -15,15 +15,31 @@ defmodule Grapevine.Telnet.MSSP do
   Parse MSSP subnegotiation options
   """
   def parse(data) do
-    data
-    |> mssp(nil, [])
-    |> Enum.reject(&is_nil/1)
-    |> Enum.into(%{}, fn map ->
-      {to_string(Enum.reverse(map[:name])), to_string(Enum.reverse(map[:value]))}
-    end)
+    case mssp(data, :start, []) do
+      :error ->
+        :error
+
+      data ->
+        data =
+          data
+          |> Enum.reject(&is_start?/1)
+          |> Enum.into(%{}, fn map ->
+            {to_string(Enum.reverse(map[:name])), to_string(Enum.reverse(map[:value]))}
+          end)
+
+        {:ok, data}
+    end
   end
 
-  def mssp([], current, stack) do
+  defp is_start?(:start), do: true
+
+  defp is_start?(_), do: false
+
+  def mssp([], _current, _stack) do
+    :error
+  end
+
+  def mssp([@iac, @se | _data], current, stack) do
     [current | stack]
   end
 
@@ -48,6 +64,10 @@ defmodule Grapevine.Telnet.MSSP do
     mssp(data, Map.put(current, :type, :value), stack)
   end
 
+  def mssp([_byte | data], :start, stack) do
+    mssp(data, :start, stack)
+  end
+
   def mssp([byte | data], current, stack) do
     case current[:type] do
       :name ->
@@ -55,9 +75,6 @@ defmodule Grapevine.Telnet.MSSP do
 
       :value ->
         mssp(data, append_value(current, byte), stack)
-
-      _ ->
-        mssp(data, current, stack)
     end
   end
 

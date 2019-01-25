@@ -87,8 +87,8 @@ defmodule Grapevine.Telnet.Client do
   end
 
   def handle_info({:tcp, _port, data}, state) do
-    state = %{state | data: state.data <> data}
-    options = Options.parse(state.data)
+    {options, data} = Options.parse(state.data <> data)
+    state = %{state | data: data}
 
     Enum.each(options, fn option ->
       send(self(), {:process, option})

@@ -49,11 +49,15 @@ defmodule Grapevine.Telnet.Options do
   Parse binary data from a MUD into any telnet options found and known
   """
   def parse(binary) do
-    binary
-    |> options([], [])
-    |> Enum.reverse()
-    |> Enum.map(&transform/1)
-    |> Enum.reject(&is_unknown_option?/1)
+    {options, leftover} = options(binary, [], [], binary)
+
+    options =
+      options
+      |> Enum.reverse()
+      |> Enum.map(&transform/1)
+      |> Enum.reject(&is_unknown_option?/1)
+
+    {options, leftover}
   end
 
   defp is_unknown_option?(option), do: option == :unknown
@@ -61,43 +65,53 @@ defmodule Grapevine.Telnet.Options do
   @doc """
   Parse options out of a binary stream
   """
-  def options(<<>>, current, stack) do
-    [Enum.reverse(current) | stack]
+  def options(<<>>, current, stack, leftover) do
+    {[Enum.reverse(current) | stack], leftover}
   end
 
-  def options(<<@iac, @sb, data::binary>>, current, stack) do
-    {sub, data} = parse_sub_negotiation(<<@iac, @sb>> <> data)
-    options(data, [], [sub, Enum.reverse(current) | stack])
+  def options(<<@iac, @sb, data::binary>>, current, stack, leftover) do
+    case parse_sub_negotiation(<<@iac, @sb>> <> data) do
+      :error ->
+        options(data, [@sb, @iac | current], stack, leftover)
+
+      {sub, data} ->
+        options(data, [], [sub, Enum.reverse(current) | stack], data)
+    end
   end
 
-  def options(<<@iac, @will, byte::size(8), data::binary>>, current, stack) do
-    options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack])
+  def options(<<@iac, @will, byte::size(8), data::binary>>, current, stack, _leftover) do
+    options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack], data)
   end
 
-  def options(<<@iac, @iac_do, byte::size(8), data::binary>>, current, stack) do
-    options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack])
+  def options(<<@iac, @iac_do, byte::size(8), data::binary>>, current, stack, _leftover) do
+    options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack], data)
   end
 
-  def options(<<@iac, data::binary>>, current, stack) do
-    options(data, [@iac], [Enum.reverse(current) | stack])
+  def options(<<@iac, data::binary>>, current, stack, leftover) do
+    options(data, [@iac], [Enum.reverse(current) | stack], leftover)
   end
 
-  def options(<<byte::size(8), data::binary>>, current, stack) do
-    options(data, [byte | current], stack)
+  def options(<<byte::size(8), data::binary>>, current, stack, leftover) do
+    options(data, [byte | current], stack, leftover)
   end
 
   @doc """
   Parse sub negotiation options out of a stream
   """
   def parse_sub_negotiation(data) do
-    {stack, data} = sub_option(data, [])
-    {Enum.reverse(stack), data}
+    case sub_option(data, []) do
+      :error ->
+        :error
+
+      {stack, data} ->
+        {Enum.reverse(stack), data}
+    end
   end
 
-  def sub_option(<<>>, stack), do: {stack, <<>>}
+  def sub_option(<<>>, _stack), do: :error
 
   def sub_option(<<byte::size(8), @iac, @se, data::binary>>, stack) do
-    {[byte | stack], data}
+    {[@se, @iac, byte | stack], data}
   end
 
   def sub_option(<<byte::size(8), data::binary>>, stack) do
@@ -146,7 +160,15 @@ defmodule Grapevine.Telnet.Options do
 
   def transform([@iac, @will, @gmcp]), do: {:will, :gmcp}
 
-  def transform([@iac, @sb, @mssp | data]), do: {:mssp, MSSP.parse(data)}
+  def transform([@iac, @sb, @mssp | data]) when data != [] do
+    case MSSP.parse([@iac, @sb, @mssp | data]) do
+      :error ->
+        :unknown
+
+      {:ok, data} ->
+        {:mssp, data}
+    end
+  end
 
   def transform([@iac, @iac_do, byte]), do: {:do, byte}
 
