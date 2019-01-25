@@ -6,6 +6,14 @@ defmodule Grapevine.Storage.FileBackend do
   @behaviour Grapevine.Storage
 
   @impl true
+  def delete(key) do
+    path = Path.join(:code.priv_dir(:grapevine), "files/#{key}")
+    File.rm(path)
+
+    :ok
+  end
+
+  @impl true
   def download(key) do
     path = Path.join(:code.priv_dir(:grapevine), "files/#{key}")
     extname = Path.extname(path)

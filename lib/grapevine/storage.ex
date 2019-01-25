@@ -15,11 +15,20 @@ defmodule Grapevine.Storage do
   @type path :: Path.t()
   @type url :: String.t()
 
+  @callback delete(key()) :: :ok
+
   @callback download(key()) :: {:ok, path()}
 
   @callback upload(file(), key()) :: :ok | :error
 
   @callback url(key()) :: url()
+
+  @doc """
+  Delete files from remote storage
+  """
+  def delete(key) do
+    backend().delete(key)
+  end
 
   @doc """
   Download files from remote storage

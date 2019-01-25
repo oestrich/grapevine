@@ -6,6 +6,9 @@ defmodule Grapevine.Storage.MockBackend do
   @behaviour Grapevine.Storage
 
   @impl true
+  def delete(_key), do: :ok
+
+  @impl true
   def download(_key) do
     {:ok, "test/fixtures/cover.png"}
   end

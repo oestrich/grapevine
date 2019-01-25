@@ -22,7 +22,22 @@ defmodule Grapevine.Games.Images do
   def maybe_upload_images(game, params) do
     params = for {key, val} <- params, into: %{}, do: {to_string(key), val}
 
-    maybe_upload_cover_image(game, params)
+    game
+    |> maybe_delete_old_images()
+    |> maybe_upload_cover_image(params)
+  end
+
+  def maybe_delete_old_images(game) do
+    case is_nil(game.cover_key) do
+      true ->
+        game
+
+      false ->
+        Storage.delete(cover_path(game, "original"))
+        Storage.delete(cover_path(game, "thumbnail"))
+
+        game
+    end
   end
 
   def maybe_upload_cover_image(game, %{"cover" => file}) do

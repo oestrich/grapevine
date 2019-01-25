@@ -10,6 +10,15 @@ defmodule Grapevine.Storage.S3Backend do
   def bucket(), do: Application.get_env(:grapevine, :storage)[:bucket]
 
   @impl true
+  def delete(key) do
+    bucket()
+    |> S3.delete_object(key)
+    |> ExAws.request()
+
+    :ok
+  end
+
+  @impl true
   def download(key) do
     extname = Path.extname(key)
     {:ok, temp_path} = Briefly.create(extname: extname)
