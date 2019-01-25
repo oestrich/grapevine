@@ -7,21 +7,51 @@ defmodule Grapevine.Telnet.OptionsTest do
 
   describe "parsing telnet options" do
     test "a string" do
-      [] = Options.parse("this is a string")
+      {[], ""} = Options.parse("this is a string")
+    end
+
+    test "strips down to the first IAC byte" do
+      {[], <<255>>} = Options.parse("this is a string" <> <<255>>)
+    end
+
+    test "handles unicode" do
+      {[], ""} = Options.parse("unicode ✔️")
     end
 
     test "a single option" do
-      [will: :mssp] = Options.parse(<<255, 251, 70>>)
+      {[will: :mssp], <<>>} = Options.parse(<<255, 251, 70>>)
     end
 
     test "multiple options" do
-      [will: :mssp, will: :gmcp, will: 91] = Options.parse(<<255, 251, 70, 255, 251, 201, 255, 251, 91>>)
+      {opts, <<>>} = Options.parse(<<255, 251, 70, 255, 251, 201, 255, 251, 91>>)
+
+      assert opts == [will: :mssp, will: :gmcp, will: 91]
     end
 
-    test "parsing sub negotitation" do
-      options = <<255, 250, 70, 1>> <> "name" <> <<2>> <> "grapevine" <> <<255, 240, 85>>
+    test "options are midstream" do
+      {opts, <<255, 251>>} = Options.parse(<<255, 251, 70, 255, 251>>)
 
-      [mssp: %{"name" => "grapevine"}] = Options.parse(options)
+      assert opts == [will: :mssp]
+    end
+
+    test "parses data down to the last seen option" do
+      {opts, <<255, 251>>} = Options.parse("Text in the stream" <> <<255, 251, 70, 255, 251>>)
+
+      assert opts == [will: :mssp]
+    end
+
+    test "handles midstream sub negotiation" do
+      assert {[], <<255, 250, 70, 1>>} = Options.parse(<<255, 250, 70, 1>>)
+    end
+  end
+
+  describe "sub negotitation" do
+    test "parsing sub negotitation" do
+      options = <<255, 250, 70, 1>> <> "name" <> <<2>> <> "grapevine" <> <<255, 240, 255>>
+
+      {opts, <<255>>} = Options.parse(options)
+
+      assert opts == [mssp: %{"name" => "grapevine"}]
     end
 
     test "sub negotiation options" do

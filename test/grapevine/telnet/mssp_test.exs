@@ -5,66 +5,28 @@ defmodule Grapevine.Telnet.MSSPTest do
 
   describe "parsing MSSP variables" do
     test "pulls out variable names and values" do
-      options = [
-        1,
-        78,
-        65,
-        77,
-        69,
-        2,
-        69,
-        120,
-        86,
-        101,
-        110,
-        116,
-        117,
-        114,
-        101,
-        32,
-        77,
-        85,
-        68,
-        1,
-        80,
-        76,
-        65,
-        89,
-        69,
-        82,
-        83,
-        2,
-        48,
-        1,
-        85,
-        80,
-        84,
-        73,
-        77,
-        69,
-        2,
-        49,
-        53,
-        52,
-        54,
-        49,
-        50,
-        56,
-        54,
-        55,
-        50
-      ]
+      options = <<255, 250, 1>> <> "NAME" <> <<2>> <> "ExVenture MUD"
+      options = options <> <<1>> <> "PLAYERS" <> <<2>> <> "0"
+      options = options <> <<1>> <> "UPTIME" <> <<2>> <> "1546128672" <> <<255, 240>>
 
-      values = MSSP.parse(options)
+      options = :binary.bin_to_list(options)
+
+      {:ok, values} = MSSP.parse(options)
 
       assert values["NAME"] == "ExVenture MUD"
     end
 
-    test "multiple values" do
-      options = <<1>> <> "NAME" <> <<2>> <> "ExVenture" <> <<2>> <> "MUD"
-      options = String.to_charlist(options)
+    test "handles invalid/not complete MSSP sequenence" do
+      options = :binary.bin_to_list(<<255, 250, 1>> <> "NAME")
 
-      values = MSSP.parse(options)
+      assert :error = MSSP.parse(options)
+    end
+
+    test "multiple values" do
+      options = <<255, 250, 1>> <> "NAME" <> <<2>> <> "ExVenture" <> <<2>> <> "MUD" <> <<255, 240>>
+      options = :binary.bin_to_list(options)
+
+      {:ok, values} = MSSP.parse(options)
 
       assert values["NAME"] == "ExVenture, MUD"
     end
