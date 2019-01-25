@@ -4,6 +4,7 @@ defmodule Grapevine.Storage do
   """
 
   alias Grapevine.Storage.FileBackend
+  alias Grapevine.Storage.FileUpload
   alias Grapevine.Storage.MockBackend
   alias Grapevine.Storage.S3Backend
 
@@ -31,7 +32,7 @@ defmodule Grapevine.Storage do
   Upload files to the remote storage
   """
   def upload(file, key, opts) do
-    path = file_path(file)
+    path = prep_file(file)
 
     with {:ok, :extension} <- check_extensions(path, opts) do
       backend().upload(path, key)
@@ -72,11 +73,13 @@ defmodule Grapevine.Storage do
     end
   end
 
-  def file_path(upload = %Plug.Upload{}) do
-    %{filename: upload.filename, path: upload.path}
+  def prep_file(upload = %FileUpload{}), do: upload
+
+  def prep_file(upload = %Plug.Upload{}) do
+    %FileUpload{filename: upload.filename, path: upload.path}
   end
 
-  def file_path(upload) when is_map(upload) do
-    %{filename: Path.basename(upload.path), path: upload.path}
+  def prep_file(upload) when is_map(upload) do
+    %FileUpload{filename: Path.basename(upload.path), path: upload.path}
   end
 end

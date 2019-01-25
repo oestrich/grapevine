@@ -26,7 +26,7 @@ defmodule Grapevine.Games.Images do
   end
 
   def maybe_upload_cover_image(game, %{"cover" => file}) do
-    file = Storage.file_path(file)
+    file = Storage.prep_file(file)
 
     key = UUID.uuid4()
     extension = Path.extname(file.path)
