@@ -17,18 +17,6 @@ defmodule Grapevine.Telnet.Options do
   @mssp 70
   @gmcp 201
 
-  def will_mssp?(option) do
-    option == {:will, :mssp}
-  end
-
-  def do_term?(option) do
-    option == {:do, :term_type}
-  end
-
-  def do_line_mode?(option) do
-    option == {:do, :line_mode}
-  end
-
   def mssp_data?(options) do
     Enum.any?(options, fn option ->
       match?({:mssp, _}, option)
