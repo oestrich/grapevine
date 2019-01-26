@@ -1,10 +1,19 @@
 defmodule Grapevine.Telnet.MSSPClient do
+  @moduledoc """
+  Callbacks for specifically checking MSSP data
+  """
+
+  require Logger
+
   alias Grapevine.Telnet
   alias Grapevine.Telnet.MSSP
   alias Grapevine.Telnet.MSSPClient.Check
   alias Grapevine.Telnet.MSSPClient.Record
   alias Grapevine.Telnet.Options
 
+  @behaviour Telnet.Client
+
+  @impl true
   def init(state, opts) do
     Process.send_after(self(), {:text_mssp_request}, 10_000)
     Process.send_after(self(), {:stop}, 20_000)
@@ -21,16 +30,20 @@ defmodule Grapevine.Telnet.MSSPClient do
     end
   end
 
+  @impl true
   def process_option(state, {:mssp, data}) do
     maybe_forward("mssp/received", data, state)
     state.module.record_option(state, data)
     :telemetry.execute([:grapevine, :telnet, :mssp, :option, :success], 1, state)
 
+    Logger.debug("Shutting down MSSP check", type: :mssp)
+
     {:stop, :normal, state}
   end
 
-  def process_option(_state, _option), do: :ok
+  def process_option(state, _option), do: {:noreply, state}
 
+  @impl true
   def receive(state, data) do
     state = Map.put(state, :mssp_buffer, Map.get(state, :mssp_buffer, "") <> data)
 
@@ -43,6 +56,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     end
   end
 
+  @impl true
   def handle_info({:text_mssp_request}, state) do
     :gen_tcp.send(state.socket, "mssp-request\n")
     :telemetry.execute([:grapevine, :telnet, :mssp, :text, :sent], 1, state)
@@ -60,6 +74,9 @@ defmodule Grapevine.Telnet.MSSPClient do
     {:stop, :normal, state}
   end
 
+  @doc """
+  Record MSSP data sent via plain text
+  """
   def record_text_mssp(state) do
     case MSSP.parse_text(state.mssp_buffer) do
       :error ->

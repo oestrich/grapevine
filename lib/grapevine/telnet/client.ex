@@ -7,6 +7,39 @@ defmodule Grapevine.Telnet.Client do
 
   require Logger
 
+  @type message() :: any()
+  @type option() :: tuple()
+  @type result() :: {:noreply, state()} | {:stop, :normal, state()}
+  @type server_options() :: Keyword.t()
+  @type state() :: map()
+  @type telnet_data() :: binary()
+
+  @doc """
+  Callback used during client GenServer initialization
+
+  Add to the GenServer state during this hook
+  """
+  @callback init(state(), server_options()) :: state()
+
+  @doc """
+  Handle custom messages sent to the client GenServer
+
+  All unknown messages are sent down into the client callback module
+  """
+  @callback handle_info(message(), state()) :: result()
+
+  @doc """
+  A hook to process telnet options that the general client does not understand
+
+  Specifically to hook into MSSP telnet option data
+  """
+  @callback process_option(state(), option) :: result()
+
+  @doc """
+  New data was received over the telnet connection
+  """
+  @callback receive(state(), telnet_data()) :: result()
+
   @do_mssp <<255, 253, 70>>
   @will_term_type <<255, 251, 24>>
   @term_type <<255, 250, 24, 0>> <> "Grapevine" <> <<255, 240>>
@@ -98,8 +131,8 @@ defmodule Grapevine.Telnet.Client do
   end
 
   defp process_option(state, option) do
+    state = %{state | processed: [option | state.processed]}
     MSSPClient.process_option(state, option)
-    {:noreply, %{state | processed: [option | state.processed]}}
   end
 
   defp already_processed?(state, option) do
