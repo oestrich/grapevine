@@ -21,15 +21,20 @@ defmodule Grapevine.Telnet.MSSPClient do
     end
   end
 
-  def receive(state, options, data) do
+  def process_option(state, {:mssp, data}) do
+    maybe_forward("mssp/received", data, state)
+    state.module.record_option(state, data)
+    :telemetry.execute([:grapevine, :telnet, :mssp, :option, :success], 1, state)
+
+    {:stop, :normal, state}
+  end
+
+  def process_option(_state, _option), do: :ok
+
+  def receive(state, data) do
     state = Map.put(state, :mssp_buffer, Map.get(state, :mssp_buffer, "") <> data)
 
     cond do
-      Options.mssp_data?(options) ->
-        record_option_mssp(options, state, fn data ->
-          state.module.record_option(state, data)
-        end)
-
       Options.text_mssp?(state.mssp_buffer) ->
         record_text_mssp(state, fn data ->
           state.module.record_text(state, data)
@@ -53,15 +58,6 @@ defmodule Grapevine.Telnet.MSSPClient do
 
     Telnet.record_no_mssp(state.host, state.port)
     :telemetry.execute([:grapevine, :telnet, :mssp, :failed], 1, state)
-
-    {:stop, :normal, state}
-  end
-
-  def record_option_mssp(options, state, fun) do
-    {:mssp, data} = Options.get_mssp_data(options)
-    maybe_forward("mssp/received", data, state)
-    fun.(data)
-    :telemetry.execute([:grapevine, :telnet, :mssp, :option, :success], 1, state)
 
     {:stop, :normal, state}
   end

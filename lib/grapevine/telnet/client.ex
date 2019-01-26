@@ -61,7 +61,7 @@ defmodule Grapevine.Telnet.Client do
       send(self(), {:process, option})
     end)
 
-    MSSPClient.receive(state, options, data)
+    MSSPClient.receive(state, data)
   end
 
   def handle_info({:process, option}, state) do
@@ -98,6 +98,7 @@ defmodule Grapevine.Telnet.Client do
   end
 
   defp process_option(state, option) do
+    MSSPClient.process_option(state, option)
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
