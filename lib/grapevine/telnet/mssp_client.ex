@@ -34,13 +34,11 @@ defmodule Grapevine.Telnet.MSSPClient do
   def receive(state, data) do
     state = Map.put(state, :mssp_buffer, Map.get(state, :mssp_buffer, "") <> data)
 
-    cond do
-      Options.text_mssp?(state.mssp_buffer) ->
-        record_text_mssp(state, fn data ->
-          state.module.record_text(state, data)
-        end)
-
+    case Options.text_mssp?(state.mssp_buffer) do
       true ->
+        record_text_mssp(state)
+
+      false ->
         {:noreply, state}
     end
   end
@@ -62,14 +60,14 @@ defmodule Grapevine.Telnet.MSSPClient do
     {:stop, :normal, state}
   end
 
-  def record_text_mssp(state, fun) do
+  def record_text_mssp(state) do
     case MSSP.parse_text(state.mssp_buffer) do
       :error ->
         {:noreply, state}
 
       data ->
         maybe_forward("mssp/received", data, state)
-        fun.(data)
+        state.module.record_text(state, data)
         :telemetry.execute([:grapevine, :telnet, :mssp, :text, :success], 1, state)
 
         {:stop, :normal, state}
