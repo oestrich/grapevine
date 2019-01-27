@@ -5,6 +5,7 @@ defmodule Web.UserSocket do
 
   channel("chat:*", Web.ChatChannel)
   channel("mssp:*", Web.MSSPChannel)
+  channel("play:client", Web.PlayChannel)
 
   def connect(%{"token" => token}, socket) do
     case Phoenix.Token.verify(socket, "user socket", token, max_age: 86_400) do

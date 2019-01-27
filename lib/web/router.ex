@@ -63,6 +63,8 @@ defmodule Web.Router do
     pipe_through([:browser, :logged_in])
 
     resources("/chat", ChatController, only: [:index])
+
+    get("/play", PlayController, :show)
   end
 
   scope "/manage", Web.Manage, as: :manage do

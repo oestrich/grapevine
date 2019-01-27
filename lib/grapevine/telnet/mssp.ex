@@ -35,27 +35,27 @@ defmodule Grapevine.Telnet.MSSP do
 
   defp is_start?(_), do: false
 
-  def mssp([], _current, _stack) do
+  def mssp(<<>>, _current, _stack) do
     :error
   end
 
-  def mssp([@iac, @se | _data], current, stack) do
+  def mssp(<<@iac, @se, _data::binary>>, current, stack) do
     [current | stack]
   end
 
-  def mssp([@iac | data], current, stack) do
+  def mssp(<<@iac, data::binary>>, current, stack) do
     mssp(data, current, stack)
   end
 
-  def mssp([@se | data], current, stack) do
+  def mssp(<<@se, data::binary>>, current, stack) do
     mssp(data, current, stack)
   end
 
-  def mssp([@mssp_var | data], current, stack) do
+  def mssp(<<@mssp_var, data::binary>>, current, stack) do
     mssp(data, %{type: :name, name: [], value: []}, [current | stack])
   end
 
-  def mssp([@mssp_val | data], current, stack) do
+  def mssp(<<@mssp_val, data::binary>>, current, stack) do
     current =
       current
       |> Map.put(:type, :value)
@@ -64,11 +64,11 @@ defmodule Grapevine.Telnet.MSSP do
     mssp(data, Map.put(current, :type, :value), stack)
   end
 
-  def mssp([_byte | data], :start, stack) do
+  def mssp(<<_byte::size(8), data::binary>>, :start, stack) do
     mssp(data, :start, stack)
   end
 
-  def mssp([byte | data], current, stack) do
+  def mssp(<<byte::size(8), data::binary>>, current, stack) do
     case current[:type] do
       :name ->
         mssp(data, Map.put(current, :name, [byte | current.name]), stack)

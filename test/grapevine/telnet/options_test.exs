@@ -7,41 +7,45 @@ defmodule Grapevine.Telnet.OptionsTest do
 
   describe "parsing telnet options" do
     test "a string" do
-      {[], ""} = Options.parse("this is a string")
+      {[], "this is a string", ""} = Options.parse("this is a string")
     end
 
     test "strips down to the first IAC byte" do
-      {[], <<255>>} = Options.parse("this is a string" <> <<255>>)
+      {[], "string", <<255>>} = Options.parse("string" <> <<255>>)
     end
 
     test "handles unicode" do
-      {[], ""} = Options.parse("unicode ✔️")
+      {[], "unicode ✔️", ""} = Options.parse("unicode ✔️")
     end
 
     test "a single option" do
-      {[will: :mssp], <<>>} = Options.parse(<<255, 251, 70>>)
+      {[will: :mssp], <<>>, <<>>} = Options.parse(<<255, 251, 70>>)
     end
 
     test "multiple options" do
-      {opts, <<>>} = Options.parse(<<255, 251, 70, 255, 251, 201, 255, 251, 91>>)
+      {opts, <<>>, <<>>} = Options.parse(<<255, 251, 70, 255, 251, 201, 255, 251, 91>>)
 
       assert opts == [will: :mssp, will: :gmcp, will: 91]
     end
 
     test "options are midstream" do
-      {opts, <<255, 251>>} = Options.parse(<<255, 251, 70, 255, 251>>)
+      {opts, <<>>, <<255, 251>>} = Options.parse(<<255, 251, 70, 255, 251>>)
 
       assert opts == [will: :mssp]
     end
 
     test "parses data down to the last seen option" do
-      {opts, <<255, 251>>} = Options.parse("Text in the stream" <> <<255, 251, 70, 255, 251>>)
+      {opts, "Text in the stream", <<255, 251>>} = Options.parse("Text in the stream" <> <<255, 251, 70, 255, 251>>)
 
       assert opts == [will: :mssp]
     end
 
+    test "splits the text to last processed parts of data" do
+      {_opts, "string", <<255, 250, 70, 1>> <> "name"} = Options.parse("string" <> <<255, 251, 70, 255, 250, 70, 1>> <> "name")
+    end
+
     test "handles midstream sub negotiation" do
-      assert {[], <<255, 250, 70, 1>>} = Options.parse(<<255, 250, 70, 1>>)
+      assert {[], <<>>, <<255, 250, 70, 1>>} = Options.parse(<<255, 250, 70, 1>>)
     end
   end
 
@@ -49,7 +53,7 @@ defmodule Grapevine.Telnet.OptionsTest do
     test "parsing sub negotitation" do
       options = <<255, 250, 70, 1>> <> "name" <> <<2>> <> "grapevine" <> <<255, 240, 255>>
 
-      {opts, <<255>>} = Options.parse(options)
+      {opts, <<>>, <<255>>} = Options.parse(options)
 
       assert opts == [mssp: %{"name" => "grapevine"}]
     end
@@ -62,7 +66,7 @@ defmodule Grapevine.Telnet.OptionsTest do
 
       {sub, <<85>>} = Options.parse_sub_negotiation(options)
 
-      assert [255, 250 | _] = sub
+      assert <<255, 250, _data::binary>> = sub
     end
   end
 end

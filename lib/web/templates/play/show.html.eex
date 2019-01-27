@@ -1,0 +1,21 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Play</li>
+  </ol>
+</nav>
+
+<section class="play">
+  <div class="terminal">
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-11 col-9">
+      <input id="prompt" name="prompt" type="text" class="form-control" autofocus="autofocus" />
+    </div>
+
+    <div class="col-md-1 col-2">
+      <button id="send" class="btn btn-primary">Send</button>
+    </div>
+  </div>
+</section>

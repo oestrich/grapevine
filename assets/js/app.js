@@ -3,6 +3,7 @@ import Sizzle from "sizzle";
 
 import "./charts"
 import {Channels} from "./chat"
+import {ClientSocket} from "./play/client"
 
 import MSSPSocket from "./mssp";
 window.MSSPSocket = MSSPSocket;
@@ -41,5 +42,9 @@ document.addEventListener("DOMContentLoaded", e => {
 
   if (Sizzle(".chat").length > 0) {
     new Channels().join()
+  }
+
+  if (Sizzle(".play .terminal").length > 0) {
+    new ClientSocket().join()
   }
 })

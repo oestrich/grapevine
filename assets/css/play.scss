@@ -1,0 +1,16 @@
+@import "colors";
+
+.play {
+  .terminal {
+    width: 100%;
+    height: 600px;
+    overflow-y: scroll;
+    background-color: $black;
+    border-radius: 4px;
+    color: $grey-2;
+  }
+
+  pre {
+    height: 100%;
+  }
+}
