@@ -5,14 +5,14 @@ defmodule Web.MSSPChannel do
 
   use Phoenix.Channel
 
-  alias Grapevine.Telnet
+  alias Grapevine.Telnet.MSSPClient
 
   def join("mssp:" <> id, _message, socket) do
     {:ok, assign(socket, :id, id)}
   end
 
   def handle_in("check", options, socket) do
-    Telnet.Client.start_link(
+    MSSPClient.start_link(
       type: :check,
       host: options["host"],
       port: String.to_integer(options["port"]),

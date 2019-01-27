@@ -6,7 +6,7 @@ defmodule Grapevine.Telnet.Worker do
   use GenServer
 
   alias Grapevine.Games
-  alias Grapevine.Telnet.Client
+  alias Grapevine.Telnet.MSSPClient
 
   @initial_delay 60 * 1000
   @one_hour 60 * 60 * 1000
@@ -26,14 +26,14 @@ defmodule Grapevine.Telnet.Worker do
   end
 
   def handle_cast({:check, connection}, state) do
-    Client.start_link(type: :record, connection: connection)
+    MSSPClient.start_link(type: :record, connection: connection)
     {:noreply, state}
   end
 
   def handle_info({:record}, state) do
     Games.telnet_connections()
     |> Enum.each(fn connection ->
-      Client.start_link(type: :record, connection: connection)
+      MSSPClient.start_link(type: :record, connection: connection)
     end)
 
     schedule_check()

@@ -45,11 +45,10 @@ defmodule Grapevine.Telnet.Client do
   @term_type <<255, 250, 24, 0>> <> "Grapevine" <> <<255, 240>>
   @wont_line_mode <<255, 252, 34>>
 
-  alias Grapevine.Telnet.MSSPClient
   alias Grapevine.Telnet.Options
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts)
+  def start_link(callback_module, opts) do
+    GenServer.start_link(__MODULE__, [module: callback_module] ++ opts)
   end
 
   defp socket_send(iac, opts \\ []) do
@@ -57,8 +56,15 @@ defmodule Grapevine.Telnet.Client do
   end
 
   def init(opts) do
-    state = %{buffer: <<>>, processed: []}
-    state = MSSPClient.init(state, opts)
+    module = Keyword.get(opts, :module)
+
+    state = %{
+      module: module,
+      buffer: <<>>,
+      processed: []
+    }
+
+    state = module.init(state, opts)
 
     :telemetry.execute([:grapevine, :telnet, :start], 1, state)
 
@@ -94,7 +100,7 @@ defmodule Grapevine.Telnet.Client do
       send(self(), {:process, option})
     end)
 
-    MSSPClient.receive(state, data)
+    state.module.receive(state, data)
   end
 
   def handle_info({:process, option}, state) do
@@ -108,7 +114,7 @@ defmodule Grapevine.Telnet.Client do
   end
 
   def handle_info(message, state) do
-    MSSPClient.handle_info(message, state)
+    state.module.handle_info(message, state)
   end
 
   defp process_option(state, option = {:will, :mssp}) do
@@ -132,7 +138,7 @@ defmodule Grapevine.Telnet.Client do
 
   defp process_option(state, option) do
     state = %{state | processed: [option | state.processed]}
-    MSSPClient.process_option(state, option)
+    state.module.process_option(state, option)
   end
 
   defp already_processed?(state, option) do

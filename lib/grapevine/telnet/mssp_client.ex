@@ -6,12 +6,17 @@ defmodule Grapevine.Telnet.MSSPClient do
   require Logger
 
   alias Grapevine.Telnet
+  alias Grapevine.Telnet.Client
   alias Grapevine.Telnet.MSSP
   alias Grapevine.Telnet.MSSPClient.Check
   alias Grapevine.Telnet.MSSPClient.Record
   alias Grapevine.Telnet.Options
 
-  @behaviour Telnet.Client
+  @behaviour Client
+
+  def start_link(opts) do
+    Client.start_link(__MODULE__, opts)
+  end
 
   @impl true
   def init(state, opts) do
@@ -33,7 +38,7 @@ defmodule Grapevine.Telnet.MSSPClient do
   @impl true
   def process_option(state, {:mssp, data}) do
     maybe_forward("mssp/received", data, state)
-    state.module.record_option(state, data)
+    state.mssp_module.record_option(state, data)
     :telemetry.execute([:grapevine, :telnet, :mssp, :option, :success], 1, state)
 
     Logger.debug("Shutting down MSSP check", type: :mssp)
@@ -66,7 +71,7 @@ defmodule Grapevine.Telnet.MSSPClient do
 
   def handle_info({:stop}, state) do
     maybe_forward("mssp/terminated", %{}, state)
-    state.module.record_fail(state)
+    state.mssp_module.record_fail(state)
 
     Telnet.record_no_mssp(state.host, state.port)
     :telemetry.execute([:grapevine, :telnet, :mssp, :failed], 1, state)
@@ -84,7 +89,7 @@ defmodule Grapevine.Telnet.MSSPClient do
 
       data ->
         maybe_forward("mssp/received", data, state)
-        state.module.record_text(state, data)
+        state.mssp_module.record_text(state, data)
         :telemetry.execute([:grapevine, :telnet, :mssp, :text, :success], 1, state)
 
         {:stop, :normal, state}
@@ -113,7 +118,7 @@ defmodule Grapevine.Telnet.MSSPClient do
       connection = Keyword.get(opts, :connection)
 
       state
-      |> Map.put(:module, __MODULE__)
+      |> Map.put(:mssp_module, __MODULE__)
       |> Map.put(:connection, connection)
       |> Map.put(:game, connection.game)
       |> Map.put(:host, connection.host)
@@ -157,7 +162,7 @@ defmodule Grapevine.Telnet.MSSPClient do
 
     def init(opts, state) do
       state
-      |> Map.put(:module, __MODULE__)
+      |> Map.put(:mssp_module, __MODULE__)
       |> Map.put(:host, Keyword.get(opts, :host))
       |> Map.put(:port, Keyword.get(opts, :port))
       |> Map.put(:channel, Keyword.get(opts, :channel))
