@@ -6,6 +6,7 @@ defmodule Grapevine.Telnet.WebClient do
   require Logger
 
   alias Grapevine.Telnet.Client
+  alias Grapevine.Telnet.ClientSupervisor
 
   @behaviour Client
 
@@ -13,23 +14,49 @@ defmodule Grapevine.Telnet.WebClient do
     send(pid, {:recv, message})
   end
 
-  def start_link(opts) do
-    Client.start_link(__MODULE__, opts)
+  def connect(user, opts) do
+    case :global.whereis_name(pid(user, opts)) do
+      :undefined ->
+        ClientSupervisor.start_client(__MODULE__, opts ++ [name: {:global, pid(user, opts)}])
+
+      pid ->
+        set_channel(pid, opts[:channel_pid])
+        {:ok, pid}
+    end
+  end
+
+  defp pid(user, opts) do
+    {:webclient, {user.id, opts[:host], opts[:port]}}
+  end
+
+  defp set_channel(pid, channel_pid) do
+    send(pid, {:set, :channel_pid, channel_pid})
   end
 
   @impl true
   def init(state, opts) do
+    # Link against the channel process, then trap exits to know
+    # when the channel process is killed.
+    channel_pid = Keyword.get(opts, :channel_pid)
+    Process.flag(:trap_exit, true)
+    Process.link(channel_pid)
+
     state
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))
-    |> Map.put(:channel_pid, Keyword.get(opts, :channel_pid))
+    |> Map.put(:channel_pid, channel_pid)
   end
 
   @impl true
   def connected(state) do
-    send(state.channel_pid, {:echo, "\e[32mConnected.\e[0m\n"})
+    maybe_forward(state, "\e[32mConnected.\e[0m\n")
 
     :ok
+  end
+
+  @impl true
+  def disconnected(state) do
+    maybe_forward(state, "\e[31mDisconnected.\e[0m\n")
   end
 
   @impl true
@@ -37,7 +64,7 @@ defmodule Grapevine.Telnet.WebClient do
 
   @impl true
   def receive(state, data) do
-    send(state.channel_pid, {:echo, String.replace(data, "\r", "")})
+    maybe_forward(state, data)
 
     {:noreply, state}
   end
@@ -49,7 +76,32 @@ defmodule Grapevine.Telnet.WebClient do
     {:noreply, state}
   end
 
-  def handle_info(_, state) do
+  def handle_info({:set, :channel_pid, channel_pid}, state) do
+    if state.channel_pid != nil do
+      Process.unlink(state.channel_pid)
+    end
+    Process.link(channel_pid)
+
+    state = Map.put(state, :channel_pid, channel_pid)
+    connected(state)
+
     {:noreply, state}
   end
+
+  def handle_info({:EXIT, pid, _reason}, state) do
+    case state.channel_pid == pid do
+      true ->
+        state = Map.put(state, :channel_pid, nil)
+        {:noreply, state}
+
+      false ->
+        {:noreply, state}
+    end
+  end
+
+  defp maybe_forward(state = %{channel_pid: channel_pid}, data) when channel_pid != nil do
+    send(state.channel_pid, {:echo, String.replace(data, "\r", "")})
+  end
+
+  defp maybe_forward(_state, _data), do: :ok
 end

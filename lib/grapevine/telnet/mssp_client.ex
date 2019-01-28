@@ -39,6 +39,9 @@ defmodule Grapevine.Telnet.MSSPClient do
   def connected(_state), do: :ok
 
   @impl true
+  def disconnected(_state), do: :ok
+
+  @impl true
   def process_option(state, {:mssp, data}) do
     maybe_forward("mssp/received", data, state)
     state.mssp_module.record_option(state, data)

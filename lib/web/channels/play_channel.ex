@@ -31,7 +31,7 @@ defmodule Web.PlayChannel do
   end
 
   def start_client(socket) do
-    {:ok, pid} = WebClient.start_link(
+    {:ok, pid} = WebClient.connect(socket.assigns.user,
       host: "localhost",
       port: 5555,
       channel_pid: socket.channel_pid
