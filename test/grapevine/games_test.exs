@@ -148,6 +148,22 @@ defmodule Grapevine.GamesTest do
       assert connection.host == "example.com"
       assert connection.port == 4000
     end
+
+    test "limited to a single connection per type", %{game: game} do
+      {:ok, _connection} = Games.create_connection(game, %{
+        type: "secure telnet",
+        host: "example.com",
+        port: 4000
+      })
+
+      {:error, changeset} = Games.create_connection(game, %{
+        type: "secure telnet",
+        host: "example.com",
+        port: 4000
+      })
+
+      assert changeset.errors[:type]
+    end
   end
 
   describe "update a connection" do
