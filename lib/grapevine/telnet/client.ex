@@ -3,7 +3,7 @@ defmodule Grapevine.Telnet.Client do
   A client to check for MSSP data
   """
 
-  use GenServer
+  use GenServer, restart: :transient
 
   require Logger
 
@@ -20,6 +20,11 @@ defmodule Grapevine.Telnet.Client do
   Add to the GenServer state during this hook
   """
   @callback init(state(), server_options()) :: state()
+
+  @doc """
+  Called after the client has connected to the game
+  """
+  @callback connected(state()) :: :ok
 
   @doc """
   Handle custom messages sent to the client GenServer
@@ -40,6 +45,11 @@ defmodule Grapevine.Telnet.Client do
   """
   @callback receive(state(), telnet_data()) :: result()
 
+  @doc """
+  The TCP connection was dropped
+  """
+  @callback disconnected(state()) :: :ok
+
   @do_mssp <<255, 253, 70>>
   @will_term_type <<255, 251, 24>>
   @term_type <<255, 250, 24, 0>> <> "Grapevine" <> <<255, 240>>
@@ -49,6 +59,11 @@ defmodule Grapevine.Telnet.Client do
 
   def start_link(callback_module, opts) do
     GenServer.start_link(__MODULE__, [module: callback_module] ++ opts)
+  end
+
+  def start_link(opts) do
+    {server_opts, opts} = Keyword.split(opts, [:name])
+    GenServer.start_link(__MODULE__, opts, server_opts)
   end
 
   defp socket_send(iac, opts \\ []) do
@@ -75,6 +90,8 @@ defmodule Grapevine.Telnet.Client do
     host = String.to_charlist(state.host)
     {:ok, socket} = :gen_tcp.connect(host, state.port, [:binary, {:packet, :raw}])
     :telemetry.execute([:grapevine, :telnet, :connected], 1, state)
+    state.module.connected(state)
+
     {:noreply, Map.put(state, :socket, socket)}
   end
 
@@ -93,14 +110,19 @@ defmodule Grapevine.Telnet.Client do
   end
 
   def handle_info({:tcp, _port, data}, state) do
-    {options, buffer} = Options.parse(state.buffer <> data)
+    {options, string, buffer} = Options.parse(state.buffer <> data)
     state = %{state | buffer: buffer}
 
     Enum.each(options, fn option ->
       send(self(), {:process, option})
     end)
 
-    state.module.receive(state, data)
+    state.module.receive(state, string)
+  end
+
+  def handle_info({:tcp_closed, _port}, state) do
+    state.module.disconnected(state)
+    {:stop, :normal, state}
   end
 
   def handle_info({:process, option}, state) do

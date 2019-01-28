@@ -3,6 +3,7 @@ import Sizzle from "sizzle";
 
 import "./charts"
 import {Channels} from "./chat"
+import {ClientSocket} from "./play/client"
 
 import MSSPSocket from "./mssp";
 window.MSSPSocket = MSSPSocket;
@@ -12,6 +13,10 @@ import ReactDOM from "react-dom";
 
 import Connection from "./connection";
 import RedirectURI from "./redirect-uri";
+
+window.Play = {
+  ClientSocket,
+};
 
 window.Components = {
   Connection,

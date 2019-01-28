@@ -38,8 +38,10 @@ defmodule Metrics.TelnetInstrumenter do
     :telemetry.attach_many("grapevine-telnet", events, &handle_event/4, nil)
   end
 
-  def handle_event([:grapevine, :telnet, :start], _count, _metadata, _config) do
-    Logger.debug("Starting MSSP", type: :mssp)
+  def handle_event([:grapevine, :telnet, :start], _count, %{host: host, port: port}, _config) do
+    Logger.debug(fn ->
+      "Starting Telnet Client: #{host}:#{port}"
+    end, type: :mssp)
     Counter.inc(name: :grapevine_telnet_start_count)
   end
 

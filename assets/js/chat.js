@@ -7,7 +7,7 @@ var userToken = body.getAttribute("data-user-token")
 
 class Channels {
   join() {
-    this.socket = new Socket("/chat", {params: {token: userToken}})
+    this.socket = new Socket("/websocket", {params: {token: userToken}})
     this.socket.connect()
 
     this.channels = {};

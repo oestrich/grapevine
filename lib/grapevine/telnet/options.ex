@@ -6,10 +6,13 @@ defmodule Grapevine.Telnet.Options do
   alias Grapevine.Telnet.MSSP
 
   @se 240
+  @nop 241
+  @ga 249
   @sb 250
   @will 251
   @wont 252
   @iac_do 253
+  @dont 254
   @iac 255
 
   @term_type 24
@@ -37,18 +40,32 @@ defmodule Grapevine.Telnet.Options do
   Parse binary data from a MUD into any telnet options found and known
   """
   def parse(binary) do
-    {options, leftover} = options(binary, [], [], binary)
+    {options, leftover} = options(binary, <<>>, [], binary)
 
     options =
       options
-      |> Enum.reverse()
+      |> Enum.reject(&(&1 == <<>>))
       |> Enum.map(&transform/1)
-      |> Enum.reject(&is_unknown_option?/1)
 
-    {options, strip_to_iac(leftover)}
+    string =
+      options
+      |> Enum.filter(&is_string?/1)
+      |> Enum.map(&(elem(&1, 1)))
+      |> Enum.join()
+
+    options =
+      options
+      |> Enum.reject(&is_unknown_option?/1)
+      |> Enum.reject(&is_string?/1)
+
+    {options, string, strip_to_iac(leftover)}
   end
 
   defp is_unknown_option?(option), do: option == :unknown
+
+  defp is_string?({:string, _}), do: true
+
+  defp is_string?(_), do: false
 
   defp strip_to_iac(<<>>), do: <<>>
 
@@ -62,102 +79,124 @@ defmodule Grapevine.Telnet.Options do
   Parse options out of a binary stream
   """
   def options(<<>>, current, stack, leftover) do
-    {[Enum.reverse(current) | stack], leftover}
+    {stack ++ [current], leftover}
   end
 
   def options(<<@iac, @sb, data::binary>>, current, stack, leftover) do
     case parse_sub_negotiation(<<@iac, @sb>> <> data) do
       :error ->
-        options(data, [@sb, @iac | current], stack, leftover)
+        options(data, current <> <<@iac, @sb>>, stack, leftover)
 
       {sub, data} ->
-        options(data, [], [sub, Enum.reverse(current) | stack], data)
+        options(data, <<>>, stack ++ [current, sub], data)
     end
   end
 
   def options(<<@iac, @will, byte::size(8), data::binary>>, current, stack, _leftover) do
-    options(data, [], [[@iac, @will, byte], Enum.reverse(current) | stack], data)
+    options(data, <<>>, stack ++ [current, <<@iac, @will, byte>>], data)
+  end
+
+  def options(<<@iac, @wont, byte::size(8), data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @wont, byte>>], data)
   end
 
   def options(<<@iac, @iac_do, byte::size(8), data::binary>>, current, stack, _leftover) do
-    options(data, [], [[@iac, @iac_do, byte], Enum.reverse(current) | stack], data)
+    options(data, <<>>, stack ++ [current, <<@iac, @iac_do, byte>>], data)
+  end
+
+  def options(<<@iac, @dont, byte::size(8), data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @dont, byte>>], data)
+  end
+
+  def options(<<@iac, @ga, data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @ga>>], data)
+  end
+
+  def options(<<@iac, @nop, data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @nop>>], data)
   end
 
   def options(<<@iac, data::binary>>, current, stack, leftover) do
-    options(data, [@iac], [Enum.reverse(current) | stack], leftover)
+    options(data, <<@iac>>, stack ++ [current], leftover)
   end
 
   def options(<<byte::size(8), data::binary>>, current, stack, leftover) do
-    options(data, [byte | current], stack, leftover)
+    options(data, current <> <<byte>>, stack, leftover)
   end
 
   @doc """
   Parse sub negotiation options out of a stream
   """
-  def parse_sub_negotiation(data) do
-    case sub_option(data, []) do
-      :error ->
-        :error
+  def parse_sub_negotiation(data, stack \\ <<>>)
 
-      {stack, data} ->
-        {Enum.reverse(stack), data}
-    end
+  def parse_sub_negotiation(<<>>, _stack), do: :error
+
+  def parse_sub_negotiation(<<byte::size(8), @iac, @se, data::binary>>, stack) do
+    {stack <> <<byte, @iac, @se>>, data}
   end
 
-  def sub_option(<<>>, _stack), do: :error
-
-  def sub_option(<<byte::size(8), @iac, @se, data::binary>>, stack) do
-    {[@se, @iac, byte | stack], data}
-  end
-
-  def sub_option(<<byte::size(8), data::binary>>, stack) do
-    sub_option(data, [byte | stack])
+  def parse_sub_negotiation(<<byte::size(8), data::binary>>, stack) do
+    parse_sub_negotiation(data, stack <> <<byte>>)
   end
 
   @doc """
   Transform IAC binary data to actionable terms
 
-      iex> Options.transform([255, 253, 24])
+      iex> Options.transform(<<255, 253, 24>>)
       {:do, :term_type}
 
-      iex> Options.transform([255, 253, 34])
+      iex> Options.transform(<<255, 253, 34>>)
       {:do, :line_mode}
 
-      iex> Options.transform([255, 251, 70])
+      iex> Options.transform(<<255, 251, 70>>)
       {:will, :mssp}
 
-      iex> Options.transform([255, 252, 70])
+      iex> Options.transform(<<255, 252, 70>>)
       {:wont, :mssp}
 
-      iex> Options.transform([255, 251, 201])
+      iex> Options.transform(<<255, 251, 201>>)
       {:will, :gmcp}
 
   Returns a generic DO/WILL if the specific term is not known. For
   responding with the opposite command to reject.
 
-      iex> Options.transform([255, 251, 1])
+      iex> Options.transform(<<255, 251, 1>>)
       {:will, 1}
 
-      iex> Options.transform([255, 253, 1])
+      iex> Options.transform(<<255, 252, 1>>)
+      {:wont, 1}
+
+      iex> Options.transform(<<255, 253, 1>>)
       {:do, 1}
+
+      iex> Options.transform(<<255, 254, 1>>)
+      {:dont, 1}
 
   Everything else is parsed as `:unknown`
 
-      iex> Options.transform([255])
+      iex> Options.transform(<<255>>)
       :unknown
   """
-  def transform([@iac, @iac_do, @term_type]), do: {:do, :term_type}
+  def transform(<<@iac, @iac_do, @term_type>>), do: {:do, :term_type}
 
-  def transform([@iac, @iac_do, @line_mode]), do: {:do, :line_mode}
+  def transform(<<@iac, @iac_do, @line_mode>>), do: {:do, :line_mode}
 
-  def transform([@iac, @will, @mssp]), do: {:will, :mssp}
+  def transform(<<@iac, @iac_do, byte>>), do: {:do, byte}
 
-  def transform([@iac, @wont, @mssp]), do: {:wont, :mssp}
+  def transform(<<@iac, @dont, byte>>), do: {:dont, byte}
 
-  def transform([@iac, @will, @gmcp]), do: {:will, :gmcp}
+  def transform(<<@iac, @will, @mssp>>), do: {:will, :mssp}
 
-  def transform([@iac, @sb, @mssp | data]) when data != [] do
-    case MSSP.parse([@iac, @sb, @mssp | data]) do
+  def transform(<<@iac, @will, @gmcp>>), do: {:will, :gmcp}
+
+  def transform(<<@iac, @will, byte>>), do: {:will, byte}
+
+  def transform(<<@iac, @wont, @mssp>>), do: {:wont, :mssp}
+
+  def transform(<<@iac, @wont, byte>>), do: {:wont, byte}
+
+  def transform(<<@iac, @sb, @mssp, data::binary>>) do
+    case MSSP.parse(<<@iac, @sb, @mssp, data::binary>>) do
       :error ->
         :unknown
 
@@ -166,9 +205,17 @@ defmodule Grapevine.Telnet.Options do
     end
   end
 
-  def transform([@iac, @iac_do, byte]), do: {:do, byte}
+  def transform(<<@iac, @sb, _data::binary>>) do
+    :unknown
+  end
 
-  def transform([@iac, @will, byte]), do: {:will, byte}
+  def transform(<<@iac, @ga>>), do: {:ga}
 
-  def transform(_option), do: :unknown
+  def transform(<<@iac, @nop>>), do: {:nop}
+
+  def transform(<<@iac, _byte::size(8)>>), do: :unknown
+
+  def transform(<<@iac>>), do: :unknown
+
+  def transform(binary), do: {:string, binary}
 end

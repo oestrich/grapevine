@@ -33,6 +33,7 @@ defmodule Grapevine.Games.Connection do
     |> validate_required([:type])
     |> validate_inclusion(:type, @types)
     |> validate_by_type()
+    |> unique_constraint(:type, name: :connections_game_id_type_index)
   end
 
   def update_changeset(struct, params) do

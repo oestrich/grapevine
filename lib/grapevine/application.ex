@@ -15,6 +15,7 @@ defmodule Grapevine.Application do
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
+      {Grapevine.Telnet.ClientSupervisor, [name: Grapevine.Telnet.ClientSupervisor]},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]}
     ]
 

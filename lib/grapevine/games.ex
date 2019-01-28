@@ -186,6 +186,40 @@ defmodule Grapevine.Games do
   end
 
   @doc """
+  Check if the web client is enabled
+  """
+  @spec check_web_client(Game.t()) :: {:ok, Game.t()} | {:error, :disabled_client}
+  def check_web_client(game) do
+    with true <- game.enable_web_client,
+         {:ok, _connection} <- get_web_client_connection(game) do
+      {:ok, game}
+    else
+      _ ->
+        {:error, :disabled_client}
+    end
+  end
+
+  @doc """
+  Get the connection for a web client
+  """
+  def get_web_client_connection(game) do
+    game = Repo.preload(game, [:connections])
+
+    telnet =
+      Enum.find(game.connections, fn connection ->
+        connection.type == "telnet"
+      end)
+
+    case telnet do
+      nil ->
+        {:error, :not_found}
+
+      connection ->
+        {:ok, connection}
+    end
+  end
+
+  @doc """
   Update a game
   """
   @spec regenerate_client_tokens(User.t(), id()) :: {:ok, Game.t()}

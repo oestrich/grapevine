@@ -18,7 +18,7 @@ export default class MSSPSocket {
   }
 
   connect() {
-    this.socket = new Socket("/chat", {params: {token: userToken}})
+    this.socket = new Socket("/websocket", {params: {token: userToken}})
     this.socket.connect();
 
     this.channel = this.socket.channel(`mssp:${guid()}`, {});

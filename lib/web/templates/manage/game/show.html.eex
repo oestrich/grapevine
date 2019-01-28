@@ -43,9 +43,17 @@
 
       <div>
         <%= if @game.allow_character_registration do %>
-          Characters <b>can</b> be registered on <%= link("Grapevine", to: "https://grapevine.haus/") %>.
+          Characters <b>can</b> be registered.
         <% else %>
-          Characters <b>cannot</b> be registered on <%= link("Grapevine", to: "https://grapevine.haus/") %>.
+          Characters <b>cannot</b> be registered.
+        <% end %>
+      </div>
+
+      <div>
+        <%= if @game.enable_web_client do %>
+          Players <b>can</b> use the web client.
+        <% else %>
+          Players <b>cannot</b> use the web client.
         <% end %>
       </div>
 
