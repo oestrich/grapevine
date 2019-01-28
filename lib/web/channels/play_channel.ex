@@ -32,8 +32,8 @@ defmodule Web.PlayChannel do
 
   def start_client(socket) do
     {:ok, pid} = WebClient.start_link(
-      host: "mclmud.mclink.it",
-      port: 6000,
+      host: "localhost",
+      port: 5555,
       channel_pid: socket.channel_pid
     )
 

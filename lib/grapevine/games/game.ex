@@ -23,6 +23,7 @@ defmodule Grapevine.Games.Game do
     field(:version, :string, default: "1.0.0")
     field(:display, :boolean, default: true)
     field(:allow_character_registration, :boolean, default: true)
+    field(:enable_web_client, :boolean, default: false)
 
     field(:last_seen_at, :utc_datetime)
     field(:mssp_last_seen_at, :utc_datetime)
@@ -56,7 +57,8 @@ defmodule Grapevine.Games.Game do
       :tagline,
       :description,
       :display,
-      :allow_character_registration
+      :allow_character_registration,
+      :enable_web_client
     ])
     |> validate_required([
       :name,
@@ -64,7 +66,8 @@ defmodule Grapevine.Games.Game do
       :display,
       :user_id,
       :display,
-      :allow_character_registration
+      :allow_character_registration,
+      :enable_web_client
     ])
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)
