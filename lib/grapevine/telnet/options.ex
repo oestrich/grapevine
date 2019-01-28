@@ -6,6 +6,7 @@ defmodule Grapevine.Telnet.Options do
   alias Grapevine.Telnet.MSSP
 
   @se 240
+  @nop 241
   @ga 249
   @sb 250
   @will 251
@@ -107,8 +108,12 @@ defmodule Grapevine.Telnet.Options do
     options(data, <<>>, stack ++ [current, <<@iac, @dont, byte>>], data)
   end
 
-  def options(<<@iac, @ga, data::binary>>, current, stack, leftover) do
-    options(data, <<>>, stack ++ [current, <<@iac, @ga>>], leftover)
+  def options(<<@iac, @ga, data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @ga>>], data)
+  end
+
+  def options(<<@iac, @nop, data::binary>>, current, stack, _leftover) do
+    options(data, <<>>, stack ++ [current, <<@iac, @nop>>], data)
   end
 
   def options(<<@iac, data::binary>>, current, stack, leftover) do
@@ -205,6 +210,8 @@ defmodule Grapevine.Telnet.Options do
   end
 
   def transform(<<@iac, @ga>>), do: {:ga}
+
+  def transform(<<@iac, @nop>>), do: {:nop}
 
   def transform(<<@iac, _byte::size(8)>>), do: :unknown
 

@@ -1,9 +1,12 @@
 import {Socket} from "phoenix";
 import Sizzle from "sizzle"
 import _ from "underscore"
+import AnsiUp from 'ansi_up';
 
 var body = document.getElementById("body")
 var userToken = body.getAttribute("data-user-token")
+
+const ansi_up = new AnsiUp();
 
 class ClientSocket {
   join() {
@@ -44,10 +47,27 @@ class ClientSocket {
     });
   }
 
+  scrollToBottom(panelSelector, callback) {
+    let panel = _.first(Sizzle(panelSelector));
+
+    let visibleBottom = panel.scrollTop + panel.clientHeight;
+    let triggerScroll = !(visibleBottom + 250 < panel.scrollHeight);
+
+    if (callback != undefined) {
+      callback();
+    }
+
+    if (triggerScroll) {
+      panel.scrollTop = panel.scrollHeight;
+    }
+  }
+
   sendMessage() {
     let terminalPrompt = _.first(Sizzle("#prompt"));
 
-    if (terminalPrompt.value != "") {
+    if (terminalPrompt.value == "") {
+      this.channel.push("send", {message: "\n"});
+    } else {
       this.channel.push("send", {message: terminalPrompt.value});
       terminalPrompt.value = "";
     }
@@ -55,11 +75,13 @@ class ClientSocket {
 
   appendMessage(message) {
     var fragment = document.createDocumentFragment();
-    let html = document.createElement("div");
-    html.innerHTML = message;
+    let html = document.createElement("span");
+    html.innerHTML = ansi_up.ansi_to_html(message);
     fragment.appendChild(html);
 
-    this.terminalElement.appendChild(fragment);
+    this.scrollToBottom(".terminal", () => {
+      this.terminalElement.appendChild(fragment);
+    });
   }
 }
 

@@ -5,9 +5,10 @@
     width: 100%;
     height: 600px;
     overflow-y: scroll;
-    background-color: $black;
     border-radius: 4px;
+    background-color: $black;
     color: $grey-2;
+    white-space: pre-wrap;
   }
 
   pre {

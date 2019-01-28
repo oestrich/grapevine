@@ -31,16 +31,19 @@ defmodule Web.PlayChannel do
   end
 
   def start_client(socket) do
-    WebClient.start_link(
-      host: "atlantis.exventure.world",
-      port: 5555,
-      socket_pid: socket.channel_pid
+    {:ok, pid} = WebClient.start_link(
+      host: "mclmud.mclink.it",
+      port: 6000,
+      channel_pid: socket.channel_pid
     )
+
+    socket = assign(socket, :client_pid, pid)
 
     {:ok, socket}
   end
 
-  def handle_in("send", _message, socket) do
+  def handle_in("send", %{"message" => message}, socket) do
+    WebClient.recv(socket.assigns.client_pid, message)
     {:noreply, socket}
   end
 

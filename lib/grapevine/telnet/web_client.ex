@@ -9,6 +9,10 @@ defmodule Grapevine.Telnet.WebClient do
 
   @behaviour Client
 
+  def recv(pid, message) do
+    send(pid, {:recv, message})
+  end
+
   def start_link(opts) do
     Client.start_link(__MODULE__, opts)
   end
@@ -18,7 +22,7 @@ defmodule Grapevine.Telnet.WebClient do
     state
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))
-    |> Map.put(:socket_pid, Keyword.get(opts, :socket_pid))
+    |> Map.put(:channel_pid, Keyword.get(opts, :channel_pid))
   end
 
   @impl true
@@ -26,12 +30,18 @@ defmodule Grapevine.Telnet.WebClient do
 
   @impl true
   def receive(state, data) do
-    send(state.socket_pid, {:echo, data})
+    send(state.channel_pid, {:echo, String.replace(data, "\r", "")})
 
     {:noreply, state}
   end
 
   @impl true
+  def handle_info({:recv, message}, state) do
+    :gen_tcp.send(state.socket, message)
+
+    {:noreply, state}
+  end
+
   def handle_info(_, state) do
     {:noreply, state}
   end
