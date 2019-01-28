@@ -28,7 +28,7 @@ defmodule Grapevine.Telnet.WebClient do
   end
 
   defp pid(user, opts) do
-    {:webclient, {user.id, opts[:host], opts[:port]}}
+    {:webclient, {user.id, Keyword.fetch!(opts, :game_id)}}
   end
 
   defp set_channel(pid, channel_pid) do

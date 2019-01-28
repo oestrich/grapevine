@@ -14,6 +14,10 @@ import ReactDOM from "react-dom";
 import Connection from "./connection";
 import RedirectURI from "./redirect-uri";
 
+window.Play = {
+  ClientSocket,
+};
+
 window.Components = {
   Connection,
   RedirectURI,
@@ -42,9 +46,5 @@ document.addEventListener("DOMContentLoaded", e => {
 
   if (Sizzle(".chat").length > 0) {
     new Channels().join()
-  }
-
-  if (Sizzle(".play .terminal").length > 0) {
-    new ClientSocket().join()
   }
 })

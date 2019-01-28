@@ -51,7 +51,7 @@
     </div>
 
     <%= unless Enum.empty?(@game.connections) do %>
-      <div class="col-md-6">
+      <div class="col-md-6 mt-3">
         <h4>Ways to Connect</h4>
 
         <%= Enum.map(@game.connections, fn connection -> %>

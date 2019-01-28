@@ -64,7 +64,7 @@ defmodule Web.Router do
 
     resources("/chat", ChatController, only: [:index])
 
-    get("/play", PlayController, :show)
+    get("/games/:game_id/play", PlayController, :show)
   end
 
   scope "/manage", Web.Manage, as: :manage do

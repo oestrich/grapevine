@@ -9,18 +9,18 @@ var userToken = body.getAttribute("data-user-token")
 const ansi_up = new AnsiUp();
 
 class ClientSocket {
-  join() {
+  join(game) {
     this.socket = new Socket("/websocket", {params: {token: userToken}})
     this.socket.connect()
 
-    this.connect();
+    this.connect(game);
     this.connectSend();
   }
 
-  connect() {
+  connect(game) {
     this.terminalElement = _.first(Sizzle(".terminal"));
 
-    this.channel = this.socket.channel(`play:client`, {game: "DevGame"});
+    this.channel = this.socket.channel(`play:client`, {game: game});
 
     this.channel.on("echo", (data) => {
       this.appendMessage(data.message);

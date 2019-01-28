@@ -22,3 +22,9 @@
     </div>
   </div>
 </section>
+
+<script type="application/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+  new Play.ClientSocket().join("<%= @game.short_name %>");
+});
+</script>

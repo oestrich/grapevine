@@ -22,18 +22,22 @@ defmodule Web.PlayChannel do
 
   defp assign_game(socket, message) do
     with {:ok, short_name} <- Map.fetch(message, "game"),
-         {:ok, game} <- Games.get_by_short(short_name) do
+         {:ok, game} <- Games.get_by_short(short_name),
+         {:ok, game} <- Games.check_web_client(game) do
       {:ok, assign(socket, :game, game)}
     else
-      :error ->
+      _ ->
         {:error, %{reason: "must connect to a game"}}
     end
   end
 
   def start_client(socket) do
+    {:ok, connection} = Games.get_web_client_connection(socket.assigns.game)
+
     {:ok, pid} = WebClient.connect(socket.assigns.user,
-      host: "localhost",
-      port: 5555,
+      game_id: socket.assigns.game.id,
+      host: connection.host,
+      port: connection.port,
       channel_pid: socket.channel_pid
     )
 

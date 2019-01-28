@@ -22,10 +22,7 @@ defmodule Grapevine.Games.Images do
 
   def maybe_upload_images(game, params) do
     params = for {key, val} <- params, into: %{}, do: {to_string(key), val}
-
-    game
-    |> maybe_delete_old_images()
-    |> maybe_upload_cover_image(params)
+    maybe_upload_cover_image(game, params)
   end
 
   def maybe_delete_old_images(game) do
@@ -42,6 +39,8 @@ defmodule Grapevine.Games.Images do
   end
 
   def maybe_upload_cover_image(game, %{"cover" => file}) do
+    game = maybe_delete_old_images(game)
+
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
