@@ -6,8 +6,7 @@
 </nav>
 
 <section class="play">
-  <div class="terminal">
-  </div>
+  <div class="terminal"></div>
 
   <div class="row mt-3">
     <div class="col-md-11 col-9">

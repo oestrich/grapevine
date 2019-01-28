@@ -28,7 +28,7 @@ class ClientSocket {
 
     this.channel.join()
       .receive("ok", () => {
-        this.appendMessage("Connected");
+        this.appendMessage("\u001b[33mConnecting...\n\u001b[0m");
       });
   }
 

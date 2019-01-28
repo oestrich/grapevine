@@ -26,6 +26,13 @@ defmodule Grapevine.Telnet.WebClient do
   end
 
   @impl true
+  def connected(state) do
+    send(state.channel_pid, {:echo, "\e[32mConnected.\e[0m\n"})
+
+    :ok
+  end
+
+  @impl true
   def process_option(state, _option), do: {:noreply, state}
 
   @impl true

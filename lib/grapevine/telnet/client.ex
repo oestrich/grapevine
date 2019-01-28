@@ -22,6 +22,11 @@ defmodule Grapevine.Telnet.Client do
   @callback init(state(), server_options()) :: state()
 
   @doc """
+  Called after the client has connected to the game
+  """
+  @callback connected(state()) :: :ok
+
+  @doc """
   Handle custom messages sent to the client GenServer
 
   All unknown messages are sent down into the client callback module
@@ -75,6 +80,8 @@ defmodule Grapevine.Telnet.Client do
     host = String.to_charlist(state.host)
     {:ok, socket} = :gen_tcp.connect(host, state.port, [:binary, {:packet, :raw}])
     :telemetry.execute([:grapevine, :telnet, :connected], 1, state)
+    state.module.connected(state)
+
     {:noreply, Map.put(state, :socket, socket)}
   end
 
