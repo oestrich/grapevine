@@ -5,6 +5,10 @@
   </ol>
 </nav>
 
+<div class="alert alert-danger">
+  <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
+</div>
+
 <section class="play">
   <div class="terminal"></div>
 

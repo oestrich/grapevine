@@ -10,6 +10,8 @@ defmodule Grapevine.Telnet.WebClient do
 
   @behaviour Client
 
+  @idle_time 15_000
+
   def recv(pid, message) do
     send(pid, {:recv, message})
   end
@@ -45,6 +47,7 @@ defmodule Grapevine.Telnet.WebClient do
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))
     |> Map.put(:channel_pid, channel_pid)
+    |> Map.put(:channel_buffer, <<>>)
   end
 
   @impl true
@@ -66,7 +69,13 @@ defmodule Grapevine.Telnet.WebClient do
   def receive(state, data) do
     maybe_forward(state, data)
 
-    {:noreply, state}
+    buffer = String.split(state.channel_buffer <> data, "\n")
+    buffer =
+      buffer
+      |> Enum.take(-20)
+      |> Enum.join("\n")
+
+    {:noreply, %{state | channel_buffer: buffer}}
   end
 
   @impl true
@@ -84,6 +93,7 @@ defmodule Grapevine.Telnet.WebClient do
 
     state = Map.put(state, :channel_pid, channel_pid)
     connected(state)
+    maybe_forward(state, state.channel_buffer)
 
     {:noreply, state}
   end
@@ -91,8 +101,21 @@ defmodule Grapevine.Telnet.WebClient do
   def handle_info({:EXIT, pid, _reason}, state) do
     case state.channel_pid == pid do
       true ->
+        Process.send_after(self(), {:idle, :disconnect}, @idle_time)
         state = Map.put(state, :channel_pid, nil)
         {:noreply, state}
+
+      false ->
+        {:noreply, state}
+    end
+  end
+
+  def handle_info({:idle, :disconnect}, state) do
+    case is_nil(state.channel_pid) do
+      true ->
+        Logger.debug("Shutting down the client due to idle", type: :telnet)
+
+        {:stop, :normal, state}
 
       false ->
         {:noreply, state}

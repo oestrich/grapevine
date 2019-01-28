@@ -68,7 +68,7 @@ class ClientSocket {
     if (terminalPrompt.value == "") {
       this.channel.push("send", {message: "\n"});
     } else {
-      this.channel.push("send", {message: terminalPrompt.value});
+      this.channel.push("send", {message: `${terminalPrompt.value}\n`});
       terminalPrompt.value = "";
     }
   }
