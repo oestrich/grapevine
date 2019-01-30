@@ -3,17 +3,15 @@ defmodule Web.SocketHelper do
   Helpers for the socket url
   """
 
-  @tls Application.get_env(:grapevine, :socket)[:tls]
-  @host Application.get_env(:grapevine, Web.Endpoint)[:url][:host]
-  @port Application.get_env(:grapevine, Web.Endpoint)[:http][:port]
-
   @doc """
   Generate the socket URL based on the phoenix configuration
   """
   def socket_url() do
+    host = Application.get_env(:grapevine, Web.Endpoint)[:url][:host]
+
     uri = %URI{
       scheme: scheme(),
-      host: @host,
+      host: host,
       path: "/socket",
       port: port()
     }
@@ -21,15 +19,23 @@ defmodule Web.SocketHelper do
     URI.to_string(uri)
   end
 
-  if @tls do
-    defp scheme(), do: "wss"
-  else
-    defp scheme(), do: "ws"
+  defp scheme() do
+    case Application.get_env(:grapevine, :socket)[:tls] do
+      true ->
+        "wss"
+
+      false ->
+        "ws"
+    end
   end
 
-  if @port == 4001 do
-    defp port(), do: 4001
-  else
-    defp port(), do: nil
+  defp port() do
+    case Application.get_env(:grapevine, Web.Endpoint)[:http][:port] do
+      4001 ->
+        4001
+
+      _ ->
+        nil
+    end
   end
 end
