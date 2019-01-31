@@ -8,6 +8,7 @@ defmodule Web.PlayController do
          {:ok, game} <- Games.check_web_client(game) do
       conn
       |> assign(:game, game)
+      |> put_layout("fullscreen.html")
       |> render("show.html")
     else
       {:error, _} ->

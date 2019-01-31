@@ -1,14 +1,53 @@
 @import "colors";
 
 .play {
+  border-top: 2px solid $grey-02;
+  width: 100%;
+  position: absolute;
+  top: 58px;
+  bottom: 0px;
+
+  .window {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
+
   .terminal {
     width: 100%;
-    height: 600px;
+    padding: 16px;
+    flex-grow: 1;
     overflow-y: scroll;
-    border-radius: 4px;
     background-color: $black;
     color: $grey-2;
     white-space: pre-wrap;
+  }
+
+  .alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+
+    &.alert-danger {
+      background-color: rgba($red-3, 0.6);
+      border-color: rgba($red-2, 0.6);
+    }
+  }
+
+  .prompt {
+    display: flex;
+    flex-shrink: 0;
+    margin: 16px;
+
+    #prompt {
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    #send {
+      margin-left: 8px;
+    }
   }
 
   pre {

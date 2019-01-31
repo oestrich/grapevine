@@ -1,0 +1,32 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The MUD Chat Network.">
+  <meta name="author" content="Grapevine">
+
+  <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+
+  <%= if Map.has_key?(assigns, :open_graph_title) do %>
+    <meta property="og:title" content="<%= @open_graph_title %>" />
+  <% end %>
+
+  <%= if Map.has_key?(assigns, :open_graph_description) do %>
+    <meta property="og:description" content="<%= @open_graph_description %>" />
+  <% end %>
+
+  <%= if Map.has_key?(assigns, :open_graph_url) do %>
+    <meta property="og:url" content="<%= @open_graph_url %>" />
+  <% end %>
+
+  <meta property="og:site_name" content="Grapevine" />
+
+  <%= if Map.has_key?(assigns, :title) do %>
+    <title><%= @title %></title>
+  <% else %>
+    <title>Grapevine - MUD Chat Network</title>
+  <% end %>
+
+  <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+</head>

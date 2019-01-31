@@ -1,0 +1,43 @@
+<header>
+  <nav class="navbar navbar-expand-md">
+    <div class="container">
+      <%= link(to: page_path(@conn, :index), class: "navbar-brand") do %>
+        <%= img_tag("/images/grapevine.png", height: 30) %>
+      <% end %>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarLinks">
+        <ul class="navbar-nav ml-auto">
+          <%= if Map.get(assigns, :current_user) do %>
+            <li class="nav-item">
+              <%= link("Chat", to: chat_path(@conn, :index), class: "nav-link") %>
+            </li>
+          <% end %>
+          <li class="nav-item">
+            <%= link("Docs", to: page_path(@conn, :docs), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
+            <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
+          </li>
+          <%= if Map.get(assigns, :current_user) do %>
+            <li class="nav-item">
+              <%= link("Settings", to: manage_setting_path(@conn, :show), class: "nav-link") %>
+            </li>
+            <li class="nav-item">
+              <%= link("Sign Out", to: session_path(@conn, :delete), method: :delete, class: "nav-link") %>
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <%= link("Sign In", to: session_path(@conn, :new), class: "nav-link") %>
+            </li>
+          <% end %>
+        </ul>
+        <%= if !Map.get(assigns, :current_user) do %>
+          <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+</header>

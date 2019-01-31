@@ -1,82 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="The MUD Chat Network.">
-    <meta name="author" content="Grapevine">
-
-    <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
-
-    <%= if Map.has_key?(assigns, :open_graph_title) do %>
-      <meta property="og:title" content="<%= @open_graph_title %>" />
-    <% end %>
-
-    <%= if Map.has_key?(assigns, :open_graph_description) do %>
-      <meta property="og:description" content="<%= @open_graph_description %>" />
-    <% end %>
-
-    <%= if Map.has_key?(assigns, :open_graph_url) do %>
-      <meta property="og:url" content="<%= @open_graph_url %>" />
-    <% end %>
-
-    <meta property="og:site_name" content="Grapevine" />
-
-    <%= if Map.has_key?(assigns, :title) do %>
-      <title><%= @title %></title>
-    <% else %>
-      <title>Grapevine - MUD Chat Network</title>
-    <% end %>
-
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  </head>
+  <%= render("_head.html", assigns) %>
 
   <body id="body" data-user-token="<%= @conn |> user_token() %>">
-    <header>
-      <nav class="navbar navbar-expand-md">
-        <div class="container">
-          <%= link(to: page_path(@conn, :index), class: "navbar-brand") do %>
-            <%= img_tag("/images/grapevine.png", height: 30) %>
-          <% end %>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarLinks">
-            <ul class="navbar-nav ml-auto">
-              <%= if Map.get(assigns, :current_user) do %>
-                <li class="nav-item">
-                  <%= link("Chat", to: chat_path(@conn, :index), class: "nav-link") %>
-                </li>
-              <% end %>
-              <li class="nav-item">
-                <%= link("Docs", to: page_path(@conn, :docs), class: "nav-link") %>
-              </li>
-              <li class="nav-item">
-                <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
-              </li>
-              <%= if Map.get(assigns, :current_user) do %>
-                <li class="nav-item">
-                  <%= link("Settings", to: manage_setting_path(@conn, :show), class: "nav-link") %>
-                </li>
-                <li class="nav-item">
-                  <%= link("Sign Out", to: session_path(@conn, :delete), method: :delete, class: "nav-link") %>
-                </li>
-              <% else %>
-                <li class="nav-item">
-                  <%= link("Sign In", to: session_path(@conn, :new), class: "nav-link") %>
-                </li>
-              <% end %>
-            </ul>
-            <%= if !Map.get(assigns, :current_user) do %>
-              <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary") %>
-            <% end %>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <%= render("_header.html", assigns) %>
 
     <main>
       <div class="container">
@@ -110,16 +37,6 @@
 
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
-    <%= if analytics_configured?() do %>
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133231361-1"></script>
-      <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', '<%= analytics_id() %>');
-      </script>
-    <% end %>
+    <%= render("_analytics.html", assigns) %>
   </body>
 </html>
