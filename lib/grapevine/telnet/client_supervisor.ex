@@ -8,7 +8,7 @@ defmodule Grapevine.Telnet.ClientSupervisor do
   alias Grapevine.Telnet.Client
 
   def start_link(opts) do
-    DynamicSupervisor.start_link(__MODULE__, [], opts) 
+    DynamicSupervisor.start_link(__MODULE__, [], opts)
   end
 
   def start_client(callback_module, opts) do
