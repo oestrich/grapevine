@@ -214,7 +214,7 @@ defmodule Grapevine.AuthorizationsTest do
     end
 
     test "after expiration", %{access_token: access_token} do
-      yesterday = Timex.now() |> Timex.shift(days: -1)
+      yesterday = Timex.now() |> Timex.shift(minutes: -70)
       access_token = %{access_token | inserted_at: yesterday}
 
       refute Authorizations.valid_token?(access_token)
