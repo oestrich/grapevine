@@ -43,6 +43,8 @@ defmodule Grapevine.Telnet.WebClient do
     Process.flag(:trap_exit, true)
     Process.link(channel_pid)
 
+    Metrics.Server.client_online()
+
     state
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))

@@ -9,6 +9,7 @@ defmodule Metrics.Setup do
     Metrics.Events.GamesInstrumenter.setup()
     Metrics.Events.PlayersInstrumenter.setup()
     Metrics.Events.TellsInstrumenter.setup()
+    Metrics.ClientInstrumenter.setup()
     Metrics.GameEventInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
     Metrics.OAuthInstrumenter.setup()
