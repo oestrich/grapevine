@@ -3,6 +3,8 @@ import Sizzle from "sizzle"
 import _ from "underscore"
 import AnsiUp from 'ansi_up';
 
+import Keys from './keys';
+
 var body = document.getElementById("body")
 var userToken = body.getAttribute("data-user-token")
 
@@ -15,6 +17,14 @@ class ClientSocket {
 
     this.connect(game);
     this.connectSend();
+
+    this.keys = new Keys();
+
+    document.addEventListener('keydown', e => {
+      if (!this.keys.isModifierKeyPressed()) {
+        document.getElementById('prompt').focus();
+      }
+    });
   }
 
   connect(game) {
