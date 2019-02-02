@@ -101,7 +101,7 @@ defmodule Grapevine.Telnet.Client do
 
     case Keyword.has_key?(opts, :telemetry) do
       true ->
-        :telemetry.execute([:grapevine, :telnet] ++ opts[:telemetry], 1, state)
+        :telemetry.execute([:grapevine, :telnet] ++ opts[:telemetry], 1, Keyword.get(opts, :metadata, %{}))
 
       false ->
         :ok
@@ -147,12 +147,14 @@ defmodule Grapevine.Telnet.Client do
   end
 
   defp process_option(state, option = {:will, :gmcp}) do
-    socket_send(<<255, 253, 201>>, telemetry: [:mssp, :sent])
+    socket_send(<<255, 253, 201>>, telemetry: [:gmcp, :sent])
+    hello = Jason.encode!(%{client: "Grapevine", version: Grapevine.version()})
+    socket_send(<<255, 250, 201>> <> "Core.Hello #{hello}" <> <<255, 240>>, [])
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
   defp process_option(state, option = {:will, byte}) when is_integer(byte) do
-    socket_send(<<255, 254, byte>>, telementry: [:wont])
+    socket_send(<<255, 254, byte>>, telementry: [:wont], metadata: %{byte: byte})
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
@@ -163,18 +165,16 @@ defmodule Grapevine.Telnet.Client do
 
   defp process_option(state, option = {:do, :charset}) do
     socket_send(@will_charset, telemetry: [:charset, :sent])
-
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
   defp process_option(state, option = {:do, :line_mode}) do
     socket_send(@wont_line_mode, telemetry: [:line_mode, :sent])
-
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
   defp process_option(state, option = {:do, byte}) when is_integer(byte) do
-    socket_send(<<255, 252, byte>>, telemetry: [:dont])
+    socket_send(<<255, 252, byte>>, telemetry: [:dont], metadata: %{byte: byte})
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
@@ -212,17 +212,17 @@ defmodule Grapevine.Telnet.Client do
 
     case state.term_type do
       :grapevine ->
-        socket_send(start_term_type <> "Grapevine" <> end_term_type, telemetry: [:term_type, :sent])
+        socket_send(start_term_type <> "Grapevine" <> end_term_type, telemetry: [:term_type, :details])
         state = %{state | term_type: :ansi}
         {:noreply, state}
 
       :ansi ->
-        socket_send(start_term_type <> "ANSI-256COLOR" <> end_term_type, telemetry: [:term_type, :sent])
+        socket_send(start_term_type <> "ANSI-256COLOR" <> end_term_type, telemetry: [:term_type, :details])
         state = %{state | term_type: :mtts}
         {:noreply, state}
 
       :mtts ->
-        socket_send(start_term_type <> "MTTS #{mtts}" <> end_term_type, telemetry: [:term_type, :sent])
+        socket_send(start_term_type <> "MTTS #{mtts}" <> end_term_type, telemetry: [:term_type, :details])
         {:noreply, state}
     end
   end
