@@ -36,6 +36,10 @@ class ClientSocket {
       this.appendMessage(data.message);
     })
 
+    this.channel.on("gmcp", (data) => {
+      console.log("Received GMCP Message", data);
+    });
+
     this.channel.join()
       .receive("ok", () => {
         this.appendMessage("\u001b[33mConnecting...\n\u001b[0m");

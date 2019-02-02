@@ -54,22 +54,28 @@ defmodule Grapevine.Telnet.WebClient do
 
   @impl true
   def connected(state) do
-    maybe_forward(state, "\e[32mConnected.\e[0m\n")
+    maybe_forward(state, :echo, "\e[32mConnected.\e[0m\n")
 
     :ok
   end
 
   @impl true
   def disconnected(state) do
-    maybe_forward(state, "\e[31mDisconnected.\e[0m\n")
+    maybe_forward(state, :echo, "\e[31mDisconnected.\e[0m\n")
   end
 
   @impl true
+  def process_option(state, {:gmcp, module, data}) do
+    Logger.info("Received GMCP message #{module}")
+    maybe_forward(state, :gmcp, {module, data})
+    {:noreply, state}
+  end
+
   def process_option(state, _option), do: {:noreply, state}
 
   @impl true
   def receive(state, data) do
-    maybe_forward(state, data)
+    maybe_forward(state, :echo, data)
 
     buffer = String.split(state.channel_buffer <> data, "\n")
     buffer =
@@ -95,7 +101,7 @@ defmodule Grapevine.Telnet.WebClient do
 
     state = Map.put(state, :channel_pid, channel_pid)
     connected(state)
-    maybe_forward(state, state.channel_buffer)
+    maybe_forward(state, :echo, state.channel_buffer)
 
     {:noreply, state}
   end
@@ -124,9 +130,13 @@ defmodule Grapevine.Telnet.WebClient do
     end
   end
 
-  defp maybe_forward(state = %{channel_pid: channel_pid}, data) when channel_pid != nil do
+  defp maybe_forward(state = %{channel_pid: channel_pid}, :echo, data) when channel_pid != nil do
     send(state.channel_pid, {:echo, String.replace(data, "\r", "")})
   end
 
-  defp maybe_forward(_state, _data), do: :ok
+  defp maybe_forward(state = %{channel_pid: channel_pid}, :gmcp, {module, data}) when channel_pid != nil do
+    send(state.channel_pid, {:gmcp, module, data})
+  end
+
+  defp maybe_forward(_state, _type, _data), do: :ok
 end

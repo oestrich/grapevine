@@ -140,19 +140,18 @@ defmodule Grapevine.Telnet.Client do
     state.module.handle_info(message, state)
   end
 
-  defp process_option(state, option = {:do, :charset}) do
-    socket_send(@will_charset, telemetry: [:charset, :sent])
-
-    {:noreply, %{state | processed: [option | state.processed]}}
-  end
-
   defp process_option(state, option = {:will, :mssp}) do
     socket_send(@do_mssp, telemetry: [:mssp, :sent])
 
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
-  defp process_option(state, option = {:will, byte}) do
+  defp process_option(state, option = {:will, :gmcp}) do
+    socket_send(<<255, 253, 201>>, telemetry: [:mssp, :sent])
+    {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
+  defp process_option(state, option = {:will, byte}) when is_integer(byte) do
     socket_send(<<255, 254, byte>>, telementry: [:wont])
     {:noreply, %{state | processed: [option | state.processed]}}
   end
@@ -162,13 +161,19 @@ defmodule Grapevine.Telnet.Client do
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
+  defp process_option(state, option = {:do, :charset}) do
+    socket_send(@will_charset, telemetry: [:charset, :sent])
+
+    {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
   defp process_option(state, option = {:do, :line_mode}) do
     socket_send(@wont_line_mode, telemetry: [:line_mode, :sent])
 
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
-  defp process_option(state, option = {:do, byte}) do
+  defp process_option(state, option = {:do, byte}) when is_integer(byte) do
     socket_send(<<255, 252, byte>>, telemetry: [:dont])
     {:noreply, %{state | processed: [option | state.processed]}}
   end
@@ -176,7 +181,7 @@ defmodule Grapevine.Telnet.Client do
   defp process_option(state, {:charset, :request, sep, charsets}) do
     charsets =
       charsets
-      |> String.split(to_string(sep))
+      |> String.split(sep)
       |> Enum.map(&String.downcase/1)
 
     case Enum.member?(charsets, "utf-8") do
@@ -220,6 +225,10 @@ defmodule Grapevine.Telnet.Client do
         socket_send(start_term_type <> "MTTS #{mtts}" <> end_term_type, telemetry: [:term_type, :sent])
         {:noreply, state}
     end
+  end
+
+  defp process_option(state, option = {:gmcp, _, _}) do
+    state.module.process_option(state, option)
   end
 
   defp process_option(state, option) do

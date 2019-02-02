@@ -69,4 +69,12 @@ defmodule Grapevine.Telnet.OptionsTest do
       assert <<255, 250, _data::binary>> = sub
     end
   end
+
+  describe "charsets" do
+    test "parsing a request" do
+      option = <<255, 250, 42, 1>> <> " UTF-8" <> <<255, 240>>
+
+      {:charset, :request, " ", "UTF-8"} = Options.transform(option)
+    end
+  end
 end

@@ -3,6 +3,7 @@ defmodule Grapevine.Telnet.Options do
   Parse telnet IAC options coming from the game
   """
 
+  alias Grapevine.Telnet.GMCP
   alias Grapevine.Telnet.MSSP
 
   @se 240
@@ -146,11 +147,17 @@ defmodule Grapevine.Telnet.Options do
   @doc """
   Transform IAC binary data to actionable terms
 
+      iex> Options.transform(<<255, 253, 42>>)
+      {:do, :charset}
+
       iex> Options.transform(<<255, 253, 24>>)
       {:do, :term_type}
 
       iex> Options.transform(<<255, 253, 34>>)
       {:do, :line_mode}
+
+      iex> Options.transform(<<255, 251, 42>>)
+      {:will, :charset}
 
       iex> Options.transform(<<255, 251, 70>>)
       {:will, :mssp}
@@ -219,7 +226,17 @@ defmodule Grapevine.Telnet.Options do
 
   def transform(<<@iac, @sb, @charset, @charset_request, sep::size(8), data::binary>>) do
     data = parse_charset(data)
-    {:charset, :request, sep, data}
+    {:charset, :request, <<sep>>, data}
+  end
+
+  def transform(<<@iac, @sb, @gmcp, data::binary>>) do
+    case GMCP.parse(data) do
+      {:ok, module, data} ->
+        {:gmcp, module, data}
+
+      :error ->
+        :unknown
+    end
   end
 
   def transform(<<@iac, @sb, _data::binary>>) do
