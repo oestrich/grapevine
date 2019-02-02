@@ -156,9 +156,20 @@ defmodule Grapevine.Telnet.Client do
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
+  #   1 "ANSI"              Client supports all common ANSI color codes.
+  #   2 "VT100"             Client supports all common VT100 codes.
+  #   4 "UTF-8"             Client is using UTF-8 character encoding.
+  #   8 "256 COLORS"        Client supports all 256 color codes.
+  #  16 "MOUSE TRACKING"    Client supports xterm mouse tracking.
+  #  32 "OSC COLOR PALETTE" Client supports the OSC color palette.
+  #  64 "SCREEN READER"     Client is using a screen reader.
+  # 128 "PROXY"             Client is a proxy allowing different users to connect from the same IP address.
+  # 256 "TRUECOLOR"         Client supports all truecolor codes.
   defp process_option(state, {:send, :term_type}) do
     start_term_type = <<255, 250, 24, 0>>
     end_term_type = <<255, 240>>
+
+    mtts = 1 + 2 + 4 + 8 + 128 + 256
 
     case state.term_type do
       :grapevine ->
@@ -167,12 +178,12 @@ defmodule Grapevine.Telnet.Client do
         {:noreply, state}
 
       :ansi ->
-        socket_send(start_term_type <> "ANSI" <> end_term_type, telemetry: [:term_type, :sent])
+        socket_send(start_term_type <> "ANSI-256COLOR" <> end_term_type, telemetry: [:term_type, :sent])
         state = %{state | term_type: :mtts}
         {:noreply, state}
 
       :mtts ->
-        socket_send(start_term_type <> "MTTS 396" <> end_term_type, telemetry: [:term_type, :sent])
+        socket_send(start_term_type <> "MTTS #{mtts}" <> end_term_type, telemetry: [:term_type, :sent])
         {:noreply, state}
     end
   end
