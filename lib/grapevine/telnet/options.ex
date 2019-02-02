@@ -17,8 +17,11 @@ defmodule Grapevine.Telnet.Options do
 
   @term_type 24
   @line_mode 34
+  @charset 42
   @mssp 70
   @gmcp 201
+
+  @term_type_send 1
 
   def mssp_data?(options) do
     Enum.any?(options, fn option ->
@@ -189,6 +192,8 @@ defmodule Grapevine.Telnet.Options do
 
   def transform(<<@iac, @will, @gmcp>>), do: {:will, :gmcp}
 
+  def transform(<<@iac, @will, @charset>>), do: {:will, :charset}
+
   def transform(<<@iac, @will, byte>>), do: {:will, byte}
 
   def transform(<<@iac, @wont, @mssp>>), do: {:wont, :mssp}
@@ -203,6 +208,10 @@ defmodule Grapevine.Telnet.Options do
       {:ok, data} ->
         {:mssp, data}
     end
+  end
+
+  def transform(<<@iac, @sb, @term_type, @term_type_send, @iac, @se>>) do
+    {:send, :term_type}
   end
 
   def transform(<<@iac, @sb, _data::binary>>) do

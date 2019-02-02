@@ -52,7 +52,6 @@ defmodule Grapevine.Telnet.Client do
 
   @do_mssp <<255, 253, 70>>
   @will_term_type <<255, 251, 24>>
-  @term_type <<255, 250, 24, 0>> <> "Grapevine" <> <<255, 240>>
   @wont_line_mode <<255, 252, 34>>
 
   alias Grapevine.Telnet.Options
@@ -66,7 +65,7 @@ defmodule Grapevine.Telnet.Client do
     GenServer.start_link(__MODULE__, opts, server_opts)
   end
 
-  defp socket_send(iac, opts \\ []) do
+  defp socket_send(iac, opts) do
     GenServer.cast(self(), {:send, iac, opts})
   end
 
@@ -76,7 +75,8 @@ defmodule Grapevine.Telnet.Client do
     state = %{
       module: module,
       buffer: <<>>,
-      processed: []
+      processed: [],
+      term_type: :grapevine,
     }
 
     state = module.init(state, opts)
@@ -147,8 +147,6 @@ defmodule Grapevine.Telnet.Client do
 
   defp process_option(state, option = {:do, :term_type}) do
     socket_send(@will_term_type, telemetry: [:term_type, :sent])
-    socket_send(@term_type)
-
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
@@ -156,6 +154,27 @@ defmodule Grapevine.Telnet.Client do
     socket_send(@wont_line_mode, telemetry: [:line_mode, :sent])
 
     {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
+  defp process_option(state, {:send, :term_type}) do
+    start_term_type = <<255, 250, 24, 0>>
+    end_term_type = <<255, 240>>
+
+    case state.term_type do
+      :grapevine ->
+        socket_send(start_term_type <> "Grapevine" <> end_term_type, telemetry: [:term_type, :sent])
+        state = %{state | term_type: :ansi}
+        {:noreply, state}
+
+      :ansi ->
+        socket_send(start_term_type <> "ANSI" <> end_term_type, telemetry: [:term_type, :sent])
+        state = %{state | term_type: :mtts}
+        {:noreply, state}
+
+      :mtts ->
+        socket_send(start_term_type <> "MTTS 396" <> end_term_type, telemetry: [:term_type, :sent])
+        {:noreply, state}
+    end
   end
 
   defp process_option(state, option) do
