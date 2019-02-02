@@ -51,6 +51,7 @@ defmodule Grapevine.Telnet.Client do
   @callback disconnected(state()) :: :ok
 
   @do_mssp <<255, 253, 70>>
+  @will_charset <<255, 251, 42>>
   @will_term_type <<255, 251, 24>>
   @wont_line_mode <<255, 252, 34>>
 
@@ -139,6 +140,12 @@ defmodule Grapevine.Telnet.Client do
     state.module.handle_info(message, state)
   end
 
+  defp process_option(state, option = {:do, :charset}) do
+    socket_send(@will_charset, telemetry: [:charset, :sent])
+
+    {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
   defp process_option(state, option = {:will, :mssp}) do
     socket_send(@do_mssp, telemetry: [:mssp, :sent])
 
@@ -154,6 +161,23 @@ defmodule Grapevine.Telnet.Client do
     socket_send(@wont_line_mode, telemetry: [:line_mode, :sent])
 
     {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
+  defp process_option(state, {:charset, :request, sep, charsets}) do
+    charsets =
+      charsets
+      |> String.split(to_string(sep))
+      |> Enum.map(&String.downcase/1)
+
+    case Enum.member?(charsets, "utf-8") do
+      true ->
+        socket_send(<<255, 250, 42, 2>> <> "UTF-8" <> <<255, 240>>, telemetry: [:charset, :accepted])
+        {:noreply, state}
+
+      _ ->
+        socket_send(<<255, 250, 42, 3, 255, 240>>, telemetry: [:charset, :rejected])
+        {:noreply, state}
+    end
   end
 
   #   1 "ANSI"              Client supports all common ANSI color codes.

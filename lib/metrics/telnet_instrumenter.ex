@@ -12,6 +12,9 @@ defmodule Metrics.TelnetInstrumenter do
     events = [
       [:start],
       [:connected],
+      [:charset, :sent],
+      [:charset, :accepted],
+      [:charset, :rejected],
       [:line_mode, :sent],
       [:mssp, :sent],
       [:term_type, :sent],
@@ -48,6 +51,18 @@ defmodule Metrics.TelnetInstrumenter do
   def handle_event([:grapevine, :telnet, :connected], _count, _metadata, _config) do
     Logger.debug("Connected to game", type: :mssp)
     Counter.inc(name: :grapevine_telnet_connected_count)
+  end
+
+  def handle_event([:grapevine, :telnet, :charset, :sent], _count, _metadata, _config) do
+    Logger.debug("Sending charset", type: :mssp)
+  end
+
+  def handle_event([:grapevine, :telnet, :charset, :accepted], _count, _metadata, _config) do
+    Logger.debug("Accepting charset", type: :mssp)
+  end
+
+  def handle_event([:grapevine, :telnet, :charset, :rejected], _count, _metadata, _config) do
+    Logger.debug("Rejecting charset", type: :mssp)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :sent], _count, _metadata, _config) do

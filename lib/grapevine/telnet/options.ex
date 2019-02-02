@@ -21,6 +21,7 @@ defmodule Grapevine.Telnet.Options do
   @mssp 70
   @gmcp 201
 
+  @charset_request 1
   @term_type_send 1
 
   def mssp_data?(options) do
@@ -184,6 +185,8 @@ defmodule Grapevine.Telnet.Options do
 
   def transform(<<@iac, @iac_do, @line_mode>>), do: {:do, :line_mode}
 
+  def transform(<<@iac, @iac_do, @charset>>), do: {:do, :charset}
+
   def transform(<<@iac, @iac_do, byte>>), do: {:do, byte}
 
   def transform(<<@iac, @dont, byte>>), do: {:dont, byte}
@@ -214,6 +217,11 @@ defmodule Grapevine.Telnet.Options do
     {:send, :term_type}
   end
 
+  def transform(<<@iac, @sb, @charset, @charset_request, sep::size(8), data::binary>>) do
+    data = parse_charset(data)
+    {:charset, :request, sep, data}
+  end
+
   def transform(<<@iac, @sb, _data::binary>>) do
     :unknown
   end
@@ -227,4 +235,15 @@ defmodule Grapevine.Telnet.Options do
   def transform(<<@iac>>), do: :unknown
 
   def transform(binary), do: {:string, binary}
+
+  @doc """
+  Strip the final IAC SE from the charset
+  """
+  def parse_charset(<<@iac, @se>>) do
+    <<>>
+  end
+
+  def parse_charset(<<byte::size(8), data::binary>>) do
+    <<byte>> <> parse_charset(data)
+  end
 end
