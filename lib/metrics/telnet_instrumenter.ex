@@ -12,6 +12,8 @@ defmodule Metrics.TelnetInstrumenter do
     events = [
       [:start],
       [:connected],
+      [:wont],
+      [:dont],
       [:charset, :sent],
       [:charset, :accepted],
       [:charset, :rejected],
@@ -44,54 +46,62 @@ defmodule Metrics.TelnetInstrumenter do
   def handle_event([:grapevine, :telnet, :start], _count, %{host: host, port: port}, _config) do
     Logger.debug(fn ->
       "Starting Telnet Client: #{host}:#{port}"
-    end, type: :mssp)
+    end, type: :telnet)
     Counter.inc(name: :grapevine_telnet_start_count)
   end
 
   def handle_event([:grapevine, :telnet, :connected], _count, _metadata, _config) do
-    Logger.debug("Connected to game", type: :mssp)
+    Logger.debug("Connected to game", type: :telnet)
     Counter.inc(name: :grapevine_telnet_connected_count)
   end
 
+  def handle_event([:grapevine, :telnet, :wont], _count, _metadata, _config) do
+    Logger.debug("Rejecting a WONT", type: :telnet)
+  end
+
+  def handle_event([:grapevine, :telnet, :dont], _count, _metadata, _config) do
+    Logger.debug("Rejecting a DO", type: :telnet)
+  end
+
   def handle_event([:grapevine, :telnet, :charset, :sent], _count, _metadata, _config) do
-    Logger.debug("Sending charset", type: :mssp)
+    Logger.debug("Sending charset", type: :telnet)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :accepted], _count, _metadata, _config) do
-    Logger.debug("Accepting charset", type: :mssp)
+    Logger.debug("Accepting charset", type: :telnet)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :rejected], _count, _metadata, _config) do
-    Logger.debug("Rejecting charset", type: :mssp)
+    Logger.debug("Rejecting charset", type: :telnet)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :sent], _count, _metadata, _config) do
-    Logger.debug("Sending telnet option", type: :mssp)
+    Logger.debug("Sending telnet option", type: :telnet)
     Counter.inc(name: :grapevine_telnet_mssp_sent_count)
   end
 
   def handle_event([:grapevine, :telnet, :line_mode, :sent], _count, _metadata, _config) do
-    Logger.debug("Sending line mode", type: :mssp)
+    Logger.debug("Sending line mode", type: :telnet)
     Counter.inc(name: :grapevine_telnet_line_mode_sent_count)
   end
 
   def handle_event([:grapevine, :telnet, :term_type, :sent], _count, _metadata, _config) do
-    Logger.debug("Sending term type", type: :mssp)
+    Logger.debug("Sending term type", type: :telnet)
     Counter.inc(name: :grapevine_telnet_term_type_sent_count)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :option, :success], _count, state, _config) do
-    Logger.info("Received MSSP from #{state.host}:#{state.port} - option version", type: :mssp)
+    Logger.info("Received MSSP from #{state.host}:#{state.port} - option version", type: :telnet)
     Counter.inc(name: :grapevine_telnet_mssp_option_success_count)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :text, :sent], _count, _metadata, _config) do
-    Logger.debug("Sending a text version of mssp request", type: :mssp)
+    Logger.debug("Sending a text version of mssp request", type: :telnet)
     Counter.inc(name: :grapevine_telnet_mssp_text_sent_count)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :text, :success], _count, state, _config) do
-    Logger.info("Received MSSP from #{state.host}:#{state.port} - text version", type: :mssp)
+    Logger.info("Received MSSP from #{state.host}:#{state.port} - text version", type: :telnet)
     Counter.inc(name: :grapevine_telnet_mssp_text_success_count)
   end
 
@@ -100,7 +110,7 @@ defmodule Metrics.TelnetInstrumenter do
       fn ->
         "Terminating connection to #{state.host}:#{state.port} due to no MSSP being sent"
       end,
-      type: :mssp
+      type: :telnet
     )
 
     Counter.inc(name: :grapevine_telnet_mssp_failed_count)

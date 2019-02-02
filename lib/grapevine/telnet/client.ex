@@ -152,6 +152,11 @@ defmodule Grapevine.Telnet.Client do
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
+  defp process_option(state, option = {:will, byte}) do
+    socket_send(<<255, 254, byte>>, telementry: [:wont])
+    {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
   defp process_option(state, option = {:do, :term_type}) do
     socket_send(@will_term_type, telemetry: [:term_type, :sent])
     {:noreply, %{state | processed: [option | state.processed]}}
@@ -160,6 +165,11 @@ defmodule Grapevine.Telnet.Client do
   defp process_option(state, option = {:do, :line_mode}) do
     socket_send(@wont_line_mode, telemetry: [:line_mode, :sent])
 
+    {:noreply, %{state | processed: [option | state.processed]}}
+  end
+
+  defp process_option(state, option = {:do, byte}) do
+    socket_send(<<255, 252, byte>>, telemetry: [:dont])
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 
