@@ -91,6 +91,7 @@ defmodule Grapevine.Games do
   def for_user(user) do
     Game
     |> where([g], g.user_id == ^user.id)
+    |> order_by([g], g.name)
     |> Repo.all()
   end
 

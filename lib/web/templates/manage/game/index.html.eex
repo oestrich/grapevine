@@ -24,17 +24,20 @@
           <tr>
             <th>Name</th>
             <th>Short Name</th>
+            <th>Public</th>
+            <th>Web Client</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <%= Enum.map(@games, fn game -> %>
             <tr>
-              <td><%= game.name %></td>
+              <td><%= link(game.name, to: manage_game_path(@conn, :show, game.id)) %></td>
               <td><%= game.short_name %></td>
+              <td><%= if game.display, do: "Displayed", else: "Hidden"  %></td>
+              <td><%= if game.enable_web_client, do: "Web client enabled", else: "Web client disabled" %></td>
               <td>
-                <%= link("View", to: manage_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
-                <%= link("Edit", to: manage_game_path(@conn, :edit, game.id), class: "btn btn-flat") %>
+                <%= link("Show", to: game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
               </td>
             </tr>
           <% end) %>

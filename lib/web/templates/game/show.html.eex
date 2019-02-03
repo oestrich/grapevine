@@ -19,6 +19,9 @@
     </h3>
 
     <div class="actions">
+      <%= if Map.get(assigns, :current_user) && @game.user_id == @current_user.id do %>
+        <%= link("Edit", to: manage_game_path(@conn, :show, @game.id), class: "btn btn-flat") %>
+      <% end %>
       <%= link("Achievements", to: game_achievement_path(@conn, :index, @game.short_name), class: "btn btn-flat") %>
     </div>
   </nav>
