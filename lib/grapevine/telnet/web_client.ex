@@ -7,6 +7,7 @@ defmodule Grapevine.Telnet.WebClient do
 
   alias Grapevine.Telnet.Client
   alias Grapevine.Telnet.ClientSupervisor
+  alias Grapevine.Telnet.Features
 
   @behaviour Client
 
@@ -72,10 +73,17 @@ defmodule Grapevine.Telnet.WebClient do
   end
 
   @impl true
-  def process_option(state, {:gmcp, module, data}) do
-    Logger.info("Received GMCP message #{module}")
-    maybe_forward(state, :gmcp, {module, data})
-    {:noreply, state}
+  def process_option(state = %{features: %{gmcp: true}}, {:gmcp, message, data}) do
+    Logger.info("Received GMCP message #{message}")
+
+    case Features.message_enabled?(state, message) do
+      true ->
+        maybe_forward(state, :gmcp, {message, data})
+        {:noreply, state}
+
+      false ->
+        {:noreply, state}
+    end
   end
 
   def process_option(state, _option), do: {:noreply, state}

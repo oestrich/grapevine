@@ -7,6 +7,8 @@ defmodule Grapevine.Telnet.Client do
 
   require Logger
 
+  alias Grapevine.Telnet.Features
+
   @type message() :: any()
   @type option() :: tuple()
   @type result() :: {:noreply, state()} | {:stop, :normal, state()}
@@ -82,6 +84,7 @@ defmodule Grapevine.Telnet.Client do
       module: module,
       buffer: <<>>,
       processed: [],
+      features: %Features{},
       term_type: :grapevine,
     }
 
@@ -164,6 +167,8 @@ defmodule Grapevine.Telnet.Client do
     socket_send(<<255, 253, 201>>, telemetry: [:gmcp, :sent])
     hello = Jason.encode!(%{client: "Grapevine", version: Grapevine.version()})
     socket_send(<<255, 250, 201>> <> "Core.Hello #{hello}" <> <<255, 240>>, [])
+    state = Features.enable_gmcp(state)
+
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 

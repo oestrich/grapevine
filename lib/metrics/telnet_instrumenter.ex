@@ -55,7 +55,7 @@ defmodule Metrics.TelnetInstrumenter do
 
   def handle_event([:grapevine, :telnet, :connection, :connected], _count, _metadata, _config) do
     Logger.debug("Connected to game", type: :telnet)
-    Counter.inc(name: :grapevine_telnet_connected_count)
+    Counter.inc(name: :grapevine_telnet_connection_connected_count)
   end
 
   def handle_event([:grapevine, :telnet, :connection, :failed], _count, metadata, _config) do
