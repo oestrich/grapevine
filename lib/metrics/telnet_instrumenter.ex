@@ -11,7 +11,8 @@ defmodule Metrics.TelnetInstrumenter do
   def setup() do
     events = [
       [:start],
-      [:connected],
+      [:connection, :connected],
+      [:connection, :failed],
       [:wont],
       [:dont],
       [:charset, :sent],
@@ -52,9 +53,15 @@ defmodule Metrics.TelnetInstrumenter do
     Counter.inc(name: :grapevine_telnet_start_count)
   end
 
-  def handle_event([:grapevine, :telnet, :connected], _count, _metadata, _config) do
+  def handle_event([:grapevine, :telnet, :connection, :connected], _count, _metadata, _config) do
     Logger.debug("Connected to game", type: :telnet)
     Counter.inc(name: :grapevine_telnet_connected_count)
+  end
+
+  def handle_event([:grapevine, :telnet, :connection, :failed], _count, metadata, _config) do
+    Logger.debug(fn ->
+      "Could not connect to a game - #{metadata[:error]}"
+    end, type: :telnet)
   end
 
   def handle_event([:grapevine, :telnet, :wont], _count, metadata, _config) do

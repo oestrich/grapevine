@@ -39,6 +39,9 @@ defmodule Grapevine.Telnet.MSSPClient do
   def connected(_state), do: :ok
 
   @impl true
+  def connection_failed(_state, _error), do: :ok
+
+  @impl true
   def disconnected(_state), do: :ok
 
   @impl true

@@ -55,8 +55,15 @@ defmodule Grapevine.Telnet.WebClient do
   @impl true
   def connected(state) do
     maybe_forward(state, :echo, "\e[32mConnected.\e[0m\n")
+  end
 
-    :ok
+  @impl true
+  def connection_failed(state, :econnrefused) do
+    maybe_forward(state, :echo, "\e[31mConnection refused.\e[0m\n")
+  end
+
+  def connection_failed(state, _) do
+    maybe_forward(state, :echo, "\e[31mConnection failed.\e[0m\n")
   end
 
   @impl true
@@ -136,6 +143,7 @@ defmodule Grapevine.Telnet.WebClient do
 
   defp maybe_forward(state = %{channel_pid: channel_pid}, :gmcp, {module, data}) when channel_pid != nil do
     send(state.channel_pid, {:gmcp, module, data})
+    :ok
   end
 
   defp maybe_forward(_state, _type, _data), do: :ok

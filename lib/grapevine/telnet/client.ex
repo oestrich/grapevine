@@ -27,6 +27,11 @@ defmodule Grapevine.Telnet.Client do
   @callback connected(state()) :: :ok
 
   @doc """
+  Called after the client could not connect to the remote game
+  """
+  @callback connection_failed(state(), reason :: atom()) :: :ok
+
+  @doc """
   Handle custom messages sent to the client GenServer
 
   All unknown messages are sent down into the client callback module
@@ -89,11 +94,20 @@ defmodule Grapevine.Telnet.Client do
 
   def handle_continue(:connect, state) do
     host = String.to_charlist(state.host)
-    {:ok, socket} = :gen_tcp.connect(host, state.port, [:binary, {:packet, :raw}])
-    :telemetry.execute([:grapevine, :telnet, :connected], 1, state)
-    state.module.connected(state)
 
-    {:noreply, Map.put(state, :socket, socket)}
+    case :gen_tcp.connect(host, state.port, [:binary, {:packet, :raw}]) do
+      {:ok, socket} ->
+        :telemetry.execute([:grapevine, :telnet, :connection, :connected], 1, state)
+        state.module.connected(state)
+
+        {:noreply, Map.put(state, :socket, socket)}
+
+      {:error, error} ->
+        state.module.connection_failed(state, error)
+        :telemetry.execute([:grapevine, :telnet, :connection, :failed], 1, %{error: error})
+
+        {:stop, :normal, state}
+    end
   end
 
   def handle_cast({:send, iac, opts}, state) do
