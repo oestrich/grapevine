@@ -3,19 +3,22 @@ import Sizzle from "sizzle"
 import _ from "underscore"
 import AnsiUp from 'ansi_up';
 
+import {ClientSocket} from "./socket";
 import Keys from './keys';
 
-var body = document.getElementById("body")
-var userToken = body.getAttribute("data-user-token")
+let body = document.getElementById("body");
+let userToken = body.getAttribute("data-user-token");
 
 const ansi_up = new AnsiUp();
 
-class ClientSocket {
-  join(game) {
-    this.socket = new Socket("/websocket", {params: {token: userToken}})
-    this.socket.connect()
+class Client {
+  constructor(game) {
+    this.game = game;
+  }
 
-    this.connect(game);
+  join() {
+    this.socket = new ClientSocket(this, this.game, userToken);
+    this.socket.join();
     this.connectSend();
 
     this.keys = new Keys();
@@ -27,26 +30,8 @@ class ClientSocket {
     });
   }
 
-  connect(game) {
-    this.terminalElement = _.first(Sizzle(".terminal"));
-
-    this.channel = this.socket.channel(`play:client`, {game: game});
-
-    this.channel.on("echo", (data) => {
-      this.appendMessage(data.message);
-    })
-
-    this.channel.on("gmcp", (data) => {
-      console.log("Received GMCP Message", data);
-    });
-
-    this.channel.join()
-      .receive("ok", () => {
-        this.appendMessage("\u001b[33mConnecting...\n\u001b[0m");
-      });
-  }
-
   connectSend() {
+    this.terminalElement = _.first(Sizzle(".terminal"));
     let chatPrompt = _.first(Sizzle("#prompt"));
 
     chatPrompt.addEventListener("keypress", e => {
@@ -80,14 +65,14 @@ class ClientSocket {
     let terminalPrompt = _.first(Sizzle("#prompt"));
 
     if (terminalPrompt.value == "") {
-      this.channel.push("send", {message: "\n"});
+      this.socket.send("\n");
     } else {
-      this.channel.push("send", {message: `${terminalPrompt.value}\n`});
+      this.socket.send(`${terminalPrompt.value}\n`);
       terminalPrompt.value = "";
     }
   }
 
-  appendMessage(message) {
+  appendText(message) {
     var fragment = document.createDocumentFragment();
     let html = document.createElement("span");
     html.innerHTML = ansi_up.ansi_to_html(message);
@@ -99,4 +84,4 @@ class ClientSocket {
   }
 }
 
-export {ClientSocket}
+export {Client}
