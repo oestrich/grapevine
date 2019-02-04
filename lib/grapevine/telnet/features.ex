@@ -1,5 +1,6 @@
 defmodule Grapevine.Telnet.Features do
   @moduledoc """
+  Struct and functions for tracking Telnet option statuses
   """
 
   defstruct [gmcp: false, modules: []]

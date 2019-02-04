@@ -14,13 +14,12 @@ import ReactDOM from "react-dom";
 import Connection from "./connection";
 import RedirectURI from "./redirect-uri";
 
-window.Play = {
-  Client,
-};
-
 window.Components = {
   Connection,
   RedirectURI,
+  Play: {
+    Client
+  }
 }
 
 /**
