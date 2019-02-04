@@ -23,7 +23,7 @@ class ClientSocket {
     });
 
     this.channel.on("gmcp", (data) => {
-      console.log("Received GMCP Message", data);
+      this.client.receiveGMCP(data.module, data.data);
     });
 
     this.channel.join()

@@ -24,7 +24,8 @@ class SocketProvider extends React.Component {
     super(props);
 
     this.state = {
-      text: ""
+      text: "",
+      gmcp: {},
     }
 
     this.socket = new ClientSocket(this, this.props.game, userToken);
@@ -35,9 +36,17 @@ class SocketProvider extends React.Component {
     this.setState({text: this.state.text + message});
   }
 
+  receiveGMCP(message, data) {
+    console.log("Received GMCP", message, data);
+    this.setState({
+      gmcp: {...this.state.gmcp, [message]: data},
+    })
+  }
+
   getChildContext() {
     return {
       socket: this.socket,
+      gmcp: this.state.gmcp,
       text: this.state.text,
     };
   }
@@ -51,6 +60,7 @@ class SocketProvider extends React.Component {
 
 SocketProvider.childContextTypes = {
   text: PropTypes.string,
+  gmcp: PropTypes.object,
   socket: PropTypes.object,
 }
 
@@ -171,6 +181,43 @@ Terminal.contextTypes = {
   text: PropTypes.string,
 }
 
+class Gauges extends React.Component {
+  render() {
+    return (
+      <div className="gauges">
+        <Gauge name="hp" message="Char.Vitals" value="hp" max="maxhp" backgroundColor="hsla(3, 84%, 50%, 1)" color="white" />
+        <Gauge name="sp" message="Char.Vitals" value="sp" max="maxsp" backgroundColor="hsla(220, 78%, 50%, 1)" color="white" />
+      </div>
+    );
+  }
+}
+
+class Gauge extends React.Component {
+  render() {
+    let message = this.context.gmcp[this.props.message];
+
+    if (message) {
+      let current = message[this.props.value];
+      let max = message[this.props.max];
+
+      let width = current / max * 100;
+
+      return (
+        <div className="gauge" style={{color: this.props.color}}>
+          <div className="gauge-bar" style={{backgroundColor: this.props.backgroundColor, width: `${width}%`}} />
+          <span>{current}/{max} {this.props.name}</span>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+}
+
+Gauge.contextTypes = {
+  gmcp: PropTypes.object,
+}
+
 class Client extends React.Component {
   render() {
     return (
@@ -182,6 +229,7 @@ class Client extends React.Component {
 
           <div className="window">
             <Terminal />
+            <Gauges />
             <Prompt />
           </div>
         </div>
