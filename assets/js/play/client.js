@@ -1,4 +1,4 @@
-import AnsiUp from 'ansi_up';
+import Anser from "anser";
 import _ from "underscore"
 import PropTypes from 'prop-types';
 import React, {Fragment} from 'react';
@@ -18,8 +18,6 @@ document.addEventListener('keydown', e => {
     document.getElementById('prompt').focus();
   }
 });
-
-const ansi_up = new AnsiUp();
 
 class SocketProvider extends React.Component {
   constructor(props) {
@@ -114,6 +112,36 @@ Prompt.contextTypes = {
   socket: PropTypes.object,
 };
 
+class AnsiText extends React.Component {
+  textStyle(parsed) {
+    let style = {};
+
+    if (parsed.bg) {
+      style.backgroundColor = `rgb(${parsed.bg})`;
+    }
+
+    if (parsed.fg) {
+      style.color = `rgb(${parsed.fg})`;
+    }
+
+    return style;
+  }
+
+  render() {
+    let parsedText = Anser.ansiToJson(this.props.children);
+
+    return (
+      <Fragment>
+        {_.map(parsedText, (data, i) => {
+          return (
+            <span key={i} style={this.textStyle(data)}>{data.content}</span>
+          );
+        })}
+      </Fragment>
+    );
+  }
+}
+
 class Terminal extends React.Component {
   componentDidMount() {
     this.scrollToBottom();
@@ -128,11 +156,11 @@ class Terminal extends React.Component {
   }
 
   render() {
-    let text = ansi_up.ansi_to_html(this.context.text);
+    let text = this.context.text;
 
     return (
       <div className="terminal">
-        <div dangerouslySetInnerHTML={{__html: text}}></div>
+        <AnsiText>{text}</AnsiText>
         <div ref={el => { this.el = el; }} />
       </div>
     );
