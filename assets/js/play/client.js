@@ -37,7 +37,6 @@ class SocketProvider extends React.Component {
   }
 
   receiveGMCP(message, data) {
-    console.log("Received GMCP", message, data);
     this.setState({
       gmcp: {...this.state.gmcp, [message]: data},
     })

@@ -20,6 +20,7 @@ defmodule Metrics.TelnetInstrumenter do
       [:charset, :rejected],
       [:line_mode, :sent],
       [:gmcp, :sent],
+      [:gmcp, :received],
       [:mssp, :sent],
       [:term_type, :sent],
       [:term_type, :details],
@@ -62,34 +63,46 @@ defmodule Metrics.TelnetInstrumenter do
     Logger.debug(fn ->
       "Could not connect to a game - #{metadata[:error]}"
     end, type: :telnet)
+    Counter.inc(name: :grapevine_telnet_connection_failed_count)
   end
 
   def handle_event([:grapevine, :telnet, :wont], _count, metadata, _config) do
     Logger.debug(fn ->
       "Rejecting a WONT #{metadata[:byte]}"
     end, type: :telnet)
+    Counter.inc(name: :grapevine_telnet_wont_count)
   end
 
   def handle_event([:grapevine, :telnet, :dont], _count, metadata, _config) do
     Logger.debug(fn ->
       "Rejecting a DO #{metadata[:byte]}"
     end, type: :telnet)
+    Counter.inc(name: :grapevine_telnet_dont_count)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :sent], _count, _metadata, _config) do
     Logger.debug("Responding to CHARSET", type: :telnet)
+    Counter.inc(name: :grapevine_telnet_charset_sent_count)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :accepted], _count, _metadata, _config) do
     Logger.debug("Accepting charset", type: :telnet)
+    Counter.inc(name: :grapevine_telnet_charset_accept_count)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :rejected], _count, _metadata, _config) do
     Logger.debug("Rejecting charset", type: :telnet)
+    Counter.inc(name: :grapevine_telnet_charset_rejected_count)
   end
 
   def handle_event([:grapevine, :telnet, :gmcp, :sent], _count, _metadata, _config) do
     Logger.debug("Responding to GMCP", type: :telnet)
+    Counter.inc(name: :grapevine_telnet_gmcp_sent_count)
+  end
+
+  def handle_event([:grapevine, :telnet, :gmcp, :received], _count, _metadata, _config) do
+    Logger.debug("Received GMCP Message", type: :telnet)
+    Counter.inc(name: :grapevine_telnet_gmcp_received_count)
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :sent], _count, _metadata, _config) do

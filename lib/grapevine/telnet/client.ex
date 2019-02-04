@@ -253,6 +253,7 @@ defmodule Grapevine.Telnet.Client do
   end
 
   defp process_option(state, option = {:gmcp, _, _}) do
+    :telemetry.execute([:grapevine, :telnet, :gmcp, :received], 1)
     state.module.process_option(state, option)
   end
 
