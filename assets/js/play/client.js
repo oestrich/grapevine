@@ -46,7 +46,6 @@ class SocketProvider extends React.Component {
   getChildContext() {
     return {
       socket: this.socket,
-      gauges: this.props.gauges,
       gmcp: this.state.gmcp,
       text: this.state.text,
     };
@@ -63,6 +62,23 @@ SocketProvider.childContextTypes = {
   text: PropTypes.string,
   gmcp: PropTypes.object,
   socket: PropTypes.object,
+}
+
+class GaugeProvider extends React.Component {
+  getChildContext() {
+    return {
+      gauges: this.props.gauges,
+    };
+  }
+
+  render() {
+    return (
+      <div>{this.props.children}</div>
+    );
+  }
+}
+
+GaugeProvider.childContextTypes = {
   gauges: PropTypes.array,
 }
 
@@ -236,18 +252,20 @@ Gauge.contextTypes = {
 class Client extends React.Component {
   render() {
     return (
-      <SocketProvider game={this.props.game} gauges={this.props.gauges}>
-        <div className="play">
-          <div className="alert alert-danger">
-            <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
-          </div>
+      <SocketProvider game={this.props.game}>
+        <GaugeProvider gauges={this.props.gauges}>
+          <div className="play">
+            <div className="alert alert-danger">
+              <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
+            </div>
 
-          <div className="window">
-            <Terminal />
-            <Gauges />
-            <Prompt />
+            <div className="window">
+              <Terminal />
+              <Gauges />
+              <Prompt />
+            </div>
           </div>
-        </div>
+        </GaugeProvider>
       </SocketProvider>
     );
   }
