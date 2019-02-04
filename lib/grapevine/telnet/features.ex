@@ -58,7 +58,7 @@ defmodule Grapevine.Telnet.Features do
   @doc """
   Load all of the supported packages that the client should turn on
   """
-  def cache_supported_messages(state =%{game: game}) when game != nil do
+  def cache_supported_messages(state = %{game: game}) when game != nil do
     messages =
       game.gauges
       |> Enum.map(&(&1.message))
