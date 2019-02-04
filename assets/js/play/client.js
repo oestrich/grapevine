@@ -46,6 +46,7 @@ class SocketProvider extends React.Component {
   getChildContext() {
     return {
       socket: this.socket,
+      gauges: this.props.gauges,
       gmcp: this.state.gmcp,
       text: this.state.text,
     };
@@ -62,6 +63,7 @@ SocketProvider.childContextTypes = {
   text: PropTypes.string,
   gmcp: PropTypes.object,
   socket: PropTypes.object,
+  gauges: PropTypes.array,
 }
 
 class Prompt extends React.Component {
@@ -183,32 +185,42 @@ Terminal.contextTypes = {
 
 class Gauges extends React.Component {
   render() {
+    let gauges = this.context.gauges;
+
     return (
       <div className="gauges">
-        <Gauge name="HP" message="Character.Vitals" value="health_points" max="max_health_points" color="red" />
-        <Gauge name="SP" message="Character.Vitals" value="skill_points" max="max_skill_points" color="blue" />
-        <Gauge name="EP" message="Character.Vitals" value="endurance_points" max="max_endurance_points" color="green" />
+        {_.map(gauges, (gauge, i) => {
+          return (
+            <Gauge gauge={gauge} key={i} />
+          );
+        })}
       </div>
     );
   }
 }
 
+Gauges.contextTypes = {
+  gauges: PropTypes.array,
+}
+
 class Gauge extends React.Component {
   render() {
-    let message = this.context.gmcp[this.props.message];
+    let {name, message, value, max, color} = this.props.gauge;
 
-    if (message) {
-      let current = message[this.props.value];
-      let max = message[this.props.max];
+    let data = this.context.gmcp[message];
 
-      let width = current / max * 100;
+    if (data) {
+      let currentValue = data[value];
+      let maxValue = data[max];
 
-      let className = `gauge ${this.props.color}`;
+      let width = currentValue / maxValue * 100;
+
+      let className = `gauge ${color}`;
 
       return (
         <div className={className}>
           <div className="gauge-bar" style={{width: `${width}%`}} />
-          <span>{current}/{max} {this.props.name}</span>
+          <span>{currentValue}/{maxValue} {name}</span>
         </div>
       );
     } else {
@@ -224,7 +236,7 @@ Gauge.contextTypes = {
 class Client extends React.Component {
   render() {
     return (
-      <SocketProvider game={this.props.game}>
+      <SocketProvider game={this.props.game} gauges={this.props.gauges}>
         <div className="play">
           <div className="alert alert-danger">
             <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.

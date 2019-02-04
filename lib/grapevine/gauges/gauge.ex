@@ -13,6 +13,7 @@ defmodule Grapevine.Gauges.Gauge do
 
   @colors ["purple", "red", "green", "blue", "yellow"]
 
+  @derive {Jason.Encoder, only: [:name, :message, :value, :max, :color]}
   schema "gauges" do
     field(:name, :string)
     field(:package, :string)

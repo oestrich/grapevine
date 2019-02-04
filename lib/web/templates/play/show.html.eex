@@ -1,1 +1,1 @@
-<%= ReactView.react_component("Components.Play.Client", game: @game.short_name) %>
+<%= ReactView.react_component("Components.Play.Client", game: @game.short_name, gauges: @game.gauges) %>

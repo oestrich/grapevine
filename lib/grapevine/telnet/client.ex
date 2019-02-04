@@ -169,6 +169,12 @@ defmodule Grapevine.Telnet.Client do
     socket_send(<<255, 250, 201>> <> "Core.Hello #{hello}" <> <<255, 240>>, [])
     state = Features.enable_gmcp(state)
 
+    supported_packages = Features.supported_packages(state)
+    encoded_packages = Jason.encode!(supported_packages)
+    socket_send(<<255, 250, 201>> <> "Core.Supports.Set #{encoded_packages}" <> <<255, 240>>, [])
+    state = Features.packages(state, supported_packages)
+    state = Features.cache_supported_messages(state)
+
     {:noreply, %{state | processed: [option | state.processed]}}
   end
 

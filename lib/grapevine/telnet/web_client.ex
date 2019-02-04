@@ -5,6 +5,7 @@ defmodule Grapevine.Telnet.WebClient do
 
   require Logger
 
+  alias Grapevine.Games
   alias Grapevine.Telnet.Client
   alias Grapevine.Telnet.ClientSupervisor
   alias Grapevine.Telnet.Features
@@ -46,7 +47,10 @@ defmodule Grapevine.Telnet.WebClient do
 
     Metrics.Server.client_online()
 
+    {:ok, game} = Games.get(opts[:game_id])
+
     state
+    |> Map.put(:game, game)
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))
     |> Map.put(:channel_pid, channel_pid)
