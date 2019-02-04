@@ -78,6 +78,7 @@ defmodule Grapevine.Telnet.WebClient do
       true ->
         Logger.info("Received GMCP message #{message}")
         maybe_forward(state, :gmcp, {message, data})
+        state = Features.cache_message(state, message, data)
         {:noreply, state}
 
       false ->
@@ -118,6 +119,8 @@ defmodule Grapevine.Telnet.WebClient do
     connected(state)
     maybe_forward(state, :echo, state.channel_buffer)
 
+    rebroadcast_gmcp(state)
+
     {:noreply, state}
   end
 
@@ -143,6 +146,12 @@ defmodule Grapevine.Telnet.WebClient do
       false ->
         {:noreply, state}
     end
+  end
+
+  defp rebroadcast_gmcp(state = %{features: %{gmcp: true}}) do
+    Enum.each(state.features.message_cache, fn {message, data} ->
+      maybe_forward(state, :gmcp, {message, data})
+    end)
   end
 
   defp maybe_forward(state = %{channel_pid: channel_pid}, :echo, data) when channel_pid != nil do

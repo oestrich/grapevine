@@ -3,7 +3,7 @@ defmodule Grapevine.Telnet.Features do
   Struct and functions for tracking Telnet option statuses
   """
 
-  defstruct [gmcp: false, modules: []]
+  defstruct [gmcp: false, modules: [], message_cache: %{}]
 
   @doc """
   Enable GMCP on the telnet state
@@ -30,5 +30,14 @@ defmodule Grapevine.Telnet.Features do
     [_message | module] = Enum.reverse(String.split(message, "."))
     module = Enum.join(Enum.reverse(module), ".")
     module in features.modules || module == "Core"
+  end
+
+  @doc """
+  Cache the message for repeating to a reloaded browser
+  """
+  def cache_message(state, message, data) do
+    cache = Map.put(state.features.message_cache, message, data)
+    features = Map.put(state.features, :message_cache, cache)
+    Map.put(state, :features, features)
   end
 end
