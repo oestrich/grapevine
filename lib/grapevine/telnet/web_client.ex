@@ -158,6 +158,8 @@ defmodule Grapevine.Telnet.WebClient do
     end)
   end
 
+  defp rebroadcast_gmcp(_state), do: :ok
+
   defp maybe_forward(state = %{channel_pid: channel_pid}, :echo, data) when channel_pid != nil do
     send(state.channel_pid, {:echo, String.replace(data, "\r", "")})
   end
