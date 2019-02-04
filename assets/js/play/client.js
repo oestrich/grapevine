@@ -203,6 +203,10 @@ class Gauges extends React.Component {
   render() {
     let gauges = this.context.gauges;
 
+    if (gauges.length == 0) {
+      return null;
+    }
+
     return (
       <div className="gauges">
         {_.map(gauges, (gauge, i) => {
