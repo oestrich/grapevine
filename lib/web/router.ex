@@ -85,14 +85,20 @@ defmodule Web.Router do
     resources("/games", GameController, only: [:index, :show, :new, :create, :edit, :update]) do
       resources("/achievements", AchievementController, only: [:index, :new, :create])
 
+      resources("/client", ClientController, only: [:show], singleton: true)
+
       resources("/connections", ConnectionController, only: [:create])
 
       resources("/events", EventController, only: [:index, :new, :create])
+
+      resources("/gauges", GaugeController, only: [:new, :create])
 
       resources("/redirect-uris", RedirectURIController, only: [:create])
     end
 
     post("/games/:id/regenerate", GameController, :regenerate)
+
+    resources("/gauges", GaugeController, only: [:edit, :update, :delete])
 
     resources("/redirect-uris", RedirectURIController, only: [:delete])
 

@@ -185,8 +185,9 @@ class Gauges extends React.Component {
   render() {
     return (
       <div className="gauges">
-        <Gauge name="hp" message="Char.Vitals" value="hp" max="maxhp" backgroundColor="hsla(3, 84%, 50%, 1)" color="white" />
-        <Gauge name="sp" message="Char.Vitals" value="sp" max="maxsp" backgroundColor="hsla(220, 78%, 50%, 1)" color="white" />
+        <Gauge name="HP" message="Character.Vitals" value="health_points" max="max_health_points" color="red" />
+        <Gauge name="SP" message="Character.Vitals" value="skill_points" max="max_skill_points" color="blue" />
+        <Gauge name="EP" message="Character.Vitals" value="endurance_points" max="max_endurance_points" color="green" />
       </div>
     );
   }
@@ -202,9 +203,11 @@ class Gauge extends React.Component {
 
       let width = current / max * 100;
 
+      let className = `gauge ${this.props.color}`;
+
       return (
-        <div className="gauge" style={{color: this.props.color}}>
-          <div className="gauge-bar" style={{backgroundColor: this.props.backgroundColor, width: `${width}%`}} />
+        <div className={className}>
+          <div className="gauge-bar" style={{width: `${width}%`}} />
           <span>{current}/{max} {this.props.name}</span>
         </div>
       );

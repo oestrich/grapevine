@@ -1,0 +1,50 @@
+<%= form_for(@changeset, @url, fn f -> %>
+  <%= FormView.text_field(f, :name) do %>
+    <div class="help-block">
+      The display name for the gauge.
+      Example: <code>HP</code>
+    </div>
+  <% end %>
+
+  <%= FormView.text_field(f, :package) do %>
+    <div class="help-block">
+      The GMCP package that needs to be enabled.
+      This takes the format of <code>Package[.SubPackage] VersionNumber</code>.
+      Example: <code>Char 1</code>.
+    </div>
+  <% end %>
+
+  <%= FormView.text_field(f, :message) do %>
+    <div class="help-block">
+      This is the GMCP that the gauge will use. This must match against the package above.
+      Example: <code>Char.Vitals</code>
+    </div>
+  <% end %>
+
+  <%= FormView.text_field(f, :value) do %>
+    <div class="help-block">
+      The path to field in the message that corresponds to the current value.
+      Example: <code>hp</code>
+    </div>
+  <% end %>
+
+  <%= FormView.text_field(f, :max) do %>
+    <div class="help-block">
+      The path to field in the message that corresponds to the current value.
+      Example: <code>maxhp</code>
+    </div>
+  <% end %>
+
+  <div class="form-group row">
+    <%= label(f, :color, class: "col-md-3") %>
+    <div class="col-md-9">
+      <%= select(f, :color, Gauges.colors(), class: "form-control") %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-9 offset-md-3">
+      <%= submit(@submit, class: "btn btn-primary") %>
+    </div>
+  </div>
+<% end) %>

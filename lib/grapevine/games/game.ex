@@ -13,6 +13,7 @@ defmodule Grapevine.Games.Game do
   alias Grapevine.Games
   alias Grapevine.Games.Connection
   alias Grapevine.Games.RedirectURI
+  alias Grapevine.Gauges.Gauge
 
   @type t :: %__MODULE__{}
 
@@ -43,6 +44,7 @@ defmodule Grapevine.Games.Game do
     has_many(:achievements, Achievement)
     has_many(:connections, Connection)
     has_many(:events, Event)
+    has_many(:gauges, Gauge)
     has_many(:redirect_uris, RedirectURI)
 
     timestamps()

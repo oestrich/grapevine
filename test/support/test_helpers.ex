@@ -5,6 +5,7 @@ defmodule Grapevine.TestHelpers do
   alias Grapevine.Authorizations
   alias Grapevine.Channels
   alias Grapevine.Games
+  alias Grapevine.Gauges
 
   def create_channel(attributes \\ %{}) do
     attributes =
@@ -109,5 +110,19 @@ defmodule Grapevine.TestHelpers do
     {:ok, authorization} = Authorizations.authorize(authorization)
 
     authorization
+  end
+
+  def create_gauge(game, attributes) do
+    attributes = Map.merge(%{
+      name: "HP",
+      package: "Char 1",
+      message: "Char.Vitals",
+      value: "hp",
+      max: "maxhp",
+      color: "red"
+    }, attributes)
+
+    {:ok, gauge} = Gauges.create(game, attributes)
+    gauge
   end
 end
