@@ -129,7 +129,7 @@ defmodule Grapevine.Telnet.MSSPClient do
       state
       |> Map.put(:mssp_module, __MODULE__)
       |> Map.put(:connection, connection)
-      |> Map.put(:game, connection.game)
+      |> Map.put(:game, %{connection.game | gauges: []})
       |> Map.put(:host, connection.host)
       |> Map.put(:port, connection.port)
     end
