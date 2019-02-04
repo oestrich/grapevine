@@ -5,6 +5,7 @@ defmodule Grapevine.Telnet.WebClient do
 
   require Logger
 
+  alias Grapevine.Games
   alias Grapevine.Telnet.Client
   alias Grapevine.Telnet.ClientSupervisor
   alias Grapevine.Telnet.Features
@@ -46,7 +47,10 @@ defmodule Grapevine.Telnet.WebClient do
 
     Metrics.Server.client_online()
 
+    {:ok, game} = Games.get(opts[:game_id])
+
     state
+    |> Map.put(:game, game)
     |> Map.put(:host, Keyword.get(opts, :host))
     |> Map.put(:port, Keyword.get(opts, :port))
     |> Map.put(:channel_pid, channel_pid)
@@ -78,6 +82,7 @@ defmodule Grapevine.Telnet.WebClient do
       true ->
         Logger.info("Received GMCP message #{message}")
         maybe_forward(state, :gmcp, {message, data})
+        state = Features.cache_message(state, message, data)
         {:noreply, state}
 
       false ->
@@ -118,6 +123,8 @@ defmodule Grapevine.Telnet.WebClient do
     connected(state)
     maybe_forward(state, :echo, state.channel_buffer)
 
+    rebroadcast_gmcp(state)
+
     {:noreply, state}
   end
 
@@ -144,6 +151,14 @@ defmodule Grapevine.Telnet.WebClient do
         {:noreply, state}
     end
   end
+
+  defp rebroadcast_gmcp(state = %{features: %{gmcp: true}}) do
+    Enum.each(state.features.message_cache, fn {message, data} ->
+      maybe_forward(state, :gmcp, {message, data})
+    end)
+  end
+
+  defp rebroadcast_gmcp(_state), do: :ok
 
   defp maybe_forward(state = %{channel_pid: channel_pid}, :echo, data) when channel_pid != nil do
     send(state.channel_pid, {:echo, String.replace(data, "\r", "")})

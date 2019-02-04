@@ -1,0 +1,45 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Client Configuration</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name"><%= @game.name %>'s Client</h3>
+  </nav>
+
+  <p class="lead">Customize the web client for your game.</p>
+
+  <nav class="header">
+    <h4 class="name">Gauges</h4>
+
+    <div class="actions">
+      <%= link("Add", to: manage_game_gauge_path(@conn, :new, @game.id), class: "btn btn-flat") %>
+    </div>
+  </nav>
+
+  <div class="row">
+    <%= Enum.map(@gauges, fn gauge -> %>
+      <div class="col-md-4">
+        <div class="gauges">
+          <div class="gauge <%= gauge.color %>">
+            <div class="gauge-bar" style="width: 80%" ></div>
+            <span>8/10 <%= gauge.name %></span>
+          </div>
+        </div>
+
+        <%= link("Edit", to: manage_gauge_path(@conn, :edit, gauge.id), class: "btn btn-flat") %>
+        <%= link("Delete", to: manage_gauge_path(@conn, :delete, gauge.id), class: "btn btn-flat", method: :delete, data: [confirm: "Are you sure?"]) %>
+
+        <div>Package: <code><%= gauge.package %></code></div>
+        <div>Message: <code><%= gauge.message %></code></div>
+        <div>Value: <code><%= gauge.value %></code></div>
+        <div>Max Value: <code><%= gauge.max %></code></div>
+      </div>
+    <% end) %>
+  </div>
+</section>

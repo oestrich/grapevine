@@ -17,6 +17,7 @@
     <div class="actions">
       <%= link("Edit", to: manage_game_path(@conn, :edit, @game.id), class: "btn btn-flat") %>
       <%= link("Achievements", to: manage_game_achievement_path(@conn, :index, @game.id), class: "btn btn-flat") %>
+      <%= link("Client", to: manage_game_client_path(@conn, :show, @game.id), class: "btn btn-flat") %>
       <%= link("Events", to: manage_game_event_path(@conn, :index, @game.id), class: "btn btn-flat") %>
     </div>
   </nav>

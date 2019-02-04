@@ -24,7 +24,8 @@ class SocketProvider extends React.Component {
     super(props);
 
     this.state = {
-      text: ""
+      text: "",
+      gmcp: {},
     }
 
     this.socket = new ClientSocket(this, this.props.game, userToken);
@@ -35,9 +36,17 @@ class SocketProvider extends React.Component {
     this.setState({text: this.state.text + message});
   }
 
+  receiveGMCP(message, data) {
+    console.log("Received GMCP", message, data);
+    this.setState({
+      gmcp: {...this.state.gmcp, [message]: data},
+    })
+  }
+
   getChildContext() {
     return {
       socket: this.socket,
+      gmcp: this.state.gmcp,
       text: this.state.text,
     };
   }
@@ -51,7 +60,26 @@ class SocketProvider extends React.Component {
 
 SocketProvider.childContextTypes = {
   text: PropTypes.string,
+  gmcp: PropTypes.object,
   socket: PropTypes.object,
+}
+
+class GaugeProvider extends React.Component {
+  getChildContext() {
+    return {
+      gauges: this.props.gauges,
+    };
+  }
+
+  render() {
+    return (
+      <div>{this.props.children}</div>
+    );
+  }
+}
+
+GaugeProvider.childContextTypes = {
+  gauges: PropTypes.array,
 }
 
 class Prompt extends React.Component {
@@ -171,20 +199,77 @@ Terminal.contextTypes = {
   text: PropTypes.string,
 }
 
+class Gauges extends React.Component {
+  render() {
+    let gauges = this.context.gauges;
+
+    if (gauges.length == 0) {
+      return null;
+    }
+
+    return (
+      <div className="gauges">
+        {_.map(gauges, (gauge, i) => {
+          return (
+            <Gauge gauge={gauge} key={i} />
+          );
+        })}
+      </div>
+    );
+  }
+}
+
+Gauges.contextTypes = {
+  gauges: PropTypes.array,
+}
+
+class Gauge extends React.Component {
+  render() {
+    let {name, message, value, max, color} = this.props.gauge;
+
+    let data = this.context.gmcp[message];
+
+    if (data) {
+      let currentValue = data[value];
+      let maxValue = data[max];
+
+      let width = currentValue / maxValue * 100;
+
+      let className = `gauge ${color}`;
+
+      return (
+        <div className={className}>
+          <div className="gauge-bar" style={{width: `${width}%`}} />
+          <span>{currentValue}/{maxValue} {name}</span>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+}
+
+Gauge.contextTypes = {
+  gmcp: PropTypes.object,
+}
+
 class Client extends React.Component {
   render() {
     return (
       <SocketProvider game={this.props.game}>
-        <div className="play">
-          <div className="alert alert-danger">
-            <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
-          </div>
+        <GaugeProvider gauges={this.props.gauges}>
+          <div className="play">
+            <div className="alert alert-danger">
+              <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
+            </div>
 
-          <div className="window">
-            <Terminal />
-            <Prompt />
+            <div className="window">
+              <Terminal />
+              <Gauges />
+              <Prompt />
+            </div>
           </div>
-        </div>
+        </GaugeProvider>
       </SocketProvider>
     );
   }
