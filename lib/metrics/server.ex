@@ -6,7 +6,11 @@ defmodule Metrics.Server do
   use GenServer
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+    GenServer.start_link(__MODULE__, [], name: {:global, pid()})
+  end
+
+  defp pid() do
+    {:grapevine, :metrics}
   end
 
   @doc """
@@ -14,7 +18,7 @@ defmodule Metrics.Server do
   """
   @spec online_sockets() :: integer()
   def online_sockets() do
-    GenServer.call(__MODULE__, {:sockets, :online})
+    GenServer.call({:global, pid()}, {:sockets, :online})
   end
 
   @doc """
@@ -22,21 +26,21 @@ defmodule Metrics.Server do
   """
   @spec online_clients() :: integer()
   def online_clients() do
-    GenServer.call(__MODULE__, {:clients, :online})
+    GenServer.call({:global, pid()}, {:clients, :online})
   end
 
   @doc """
   Let the server know a socket came online
   """
   def socket_online() do
-    GenServer.cast(__MODULE__, {:socket, :online, self()})
+    GenServer.cast({:global, pid()}, {:socket, :online, self()})
   end
 
   @doc """
   Let the server know a web client came onlin
   """
   def client_online() do
-    GenServer.cast(__MODULE__, {:client, :online, self()})
+    GenServer.cast({:global, pid()}, {:client, :online, self()})
   end
 
   def init(_) do
