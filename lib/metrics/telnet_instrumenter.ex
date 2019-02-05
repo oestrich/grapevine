@@ -19,8 +19,6 @@ defmodule Metrics.TelnetInstrumenter do
       [:charset, :accepted],
       [:charset, :rejected],
       [:line_mode, :sent],
-      [:gmcp, :sent],
-      [:gmcp, :received],
       [:mssp, :sent],
       [:term_type, :sent],
       [:term_type, :details],
@@ -32,19 +30,37 @@ defmodule Metrics.TelnetInstrumenter do
       [:mssp, :text, :success]
     ]
 
+    game_events = [
+      [:gmcp, :sent],
+      [:gmcp, :received],
+    ]
+
     events =
       Enum.map(events, fn event ->
         name = Enum.join(event, "_")
 
         Counter.declare(
           name: String.to_atom("grapevine_telnet_#{name}_count"),
-          help: "Total count of tracking for telnet MSSP event #{name}"
+          help: "Total count of tracking for telnet event #{name}"
         )
 
         [:grapevine, :telnet | event]
       end)
 
-    :telemetry.attach_many("grapevine-telnet", events, &handle_event/4, nil)
+    game_events =
+      Enum.map(game_events, fn event ->
+        name = Enum.join(event, "_")
+
+        Counter.declare(
+          name: String.to_atom("grapevine_telnet_#{name}_count"),
+          help: "Total count of tracking for telnet event #{name}",
+          labels: [:game_id]
+        )
+
+        [:grapevine, :telnet | event]
+      end)
+
+    :telemetry.attach_many("grapevine-telnet", events ++ game_events, &handle_event/4, nil)
   end
 
   def handle_event([:grapevine, :telnet, :start], _count, %{host: host, port: port}, _config) do
@@ -95,14 +111,14 @@ defmodule Metrics.TelnetInstrumenter do
     Counter.inc(name: :grapevine_telnet_charset_rejected_count)
   end
 
-  def handle_event([:grapevine, :telnet, :gmcp, :sent], _count, _metadata, _config) do
+  def handle_event([:grapevine, :telnet, :gmcp, :sent], _count, metadata, _config) do
     Logger.debug("Responding to GMCP", type: :telnet)
-    Counter.inc(name: :grapevine_telnet_gmcp_sent_count)
+    Counter.inc(name: :grapevine_telnet_gmcp_sent_count, labels: [metadata[:game_id]])
   end
 
-  def handle_event([:grapevine, :telnet, :gmcp, :received], _count, _metadata, _config) do
+  def handle_event([:grapevine, :telnet, :gmcp, :received], _count, metadata, _config) do
     Logger.debug("Received GMCP Message", type: :telnet)
-    Counter.inc(name: :grapevine_telnet_gmcp_received_count)
+    Counter.inc(name: :grapevine_telnet_gmcp_received_count, labels: [metadata[:game_id]])
   end
 
   def handle_event([:grapevine, :telnet, :mssp, :sent], _count, _metadata, _config) do

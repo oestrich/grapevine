@@ -118,7 +118,10 @@ defmodule Grapevine.Telnet.Client do
 
     case Keyword.has_key?(opts, :telemetry) do
       true ->
-        :telemetry.execute([:grapevine, :telnet] ++ opts[:telemetry], 1, Keyword.get(opts, :metadata, %{}))
+        metadata = Keyword.get(opts, :metadata, %{})
+        metadata = maybe_add_game_to_metadata(state, metadata)
+
+        :telemetry.execute([:grapevine, :telnet] ++ opts[:telemetry], 1, metadata)
 
       false ->
         :ok
@@ -155,6 +158,14 @@ defmodule Grapevine.Telnet.Client do
 
   def handle_info(message, state) do
     state.module.handle_info(message, state)
+  end
+
+  defp maybe_add_game_to_metadata(%{game: game}, metadata) when game != nil do
+    Map.put(metadata, :game_id, game.id)
+  end
+
+  defp maybe_add_game_to_metadata(_state, metadata) do
+    Map.put(metadata, :game_id, 0)
   end
 
   defp process_option(state, option = {:will, :mssp}) do
@@ -253,7 +264,9 @@ defmodule Grapevine.Telnet.Client do
   end
 
   defp process_option(state, option = {:gmcp, _, _}) do
-    :telemetry.execute([:grapevine, :telnet, :gmcp, :received], 1)
+    metadata = maybe_add_game_to_metadata(state, %{})
+    :telemetry.execute([:grapevine, :telnet, :gmcp, :received], 1, metadata)
+
     state.module.process_option(state, option)
   end
 
