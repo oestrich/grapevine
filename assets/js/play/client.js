@@ -37,7 +37,6 @@ class SocketProvider extends React.Component {
   appendText(message) {
     let text = this.state.text + message;
     let lines = text.split(/\n/);
-    console.log(lines.length);
     lines = lines.slice(Math.max(lines.length - this.maxLines, 1))
     text = lines.join("\n");
 
@@ -157,6 +156,10 @@ class AnsiText extends React.Component {
 
     if (parsed.fg) {
       style.color = `rgb(${parsed.fg})`;
+    }
+
+    if (parsed.decoration == "bold") {
+      style.fontWeight = "bolder";
     }
 
     return style;
