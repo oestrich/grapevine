@@ -18,49 +18,42 @@ defmodule Metrics.TelnetInstrumenter do
       [:charset, :sent],
       [:charset, :accepted],
       [:charset, :rejected],
+      {[:gmcp, :sent], [:game_id]},
+      {[:gmcp, :received], [:game_id]},
       [:line_mode, :sent],
-      [:mssp, :sent],
-      [:term_type, :sent],
-      [:term_type, :details],
-
-      # mssp specific
       [:mssp, :failed],
       [:mssp, :option, :success],
+      [:mssp, :sent],
       [:mssp, :text, :sent],
-      [:mssp, :text, :success]
+      [:mssp, :text, :success],
+      [:term_type, :sent],
+      [:term_type, :details],
     ]
 
-    game_events = [
-      [:gmcp, :sent],
-      [:gmcp, :received],
-    ]
+    Enum.each(events, &setup_event/1)
+  end
 
-    events =
-      Enum.map(events, fn event ->
-        name = Enum.join(event, "_")
+  defp setup_event({event, labels}) do
+    name = Enum.join(event, "_")
 
-        Counter.declare(
-          name: String.to_atom("grapevine_telnet_#{name}_count"),
-          help: "Total count of tracking for telnet event #{name}"
-        )
+    Counter.declare(
+      name: String.to_atom("grapevine_telnet_#{name}_count"),
+      help: "Total count of tracking for telnet event #{name}",
+      labels: labels
+    )
 
-        [:grapevine, :telnet | event]
-      end)
+    :telemetry.attach(name, [:grapevine, :telnet | event], &handle_event/4, nil)
+  end
 
-    game_events =
-      Enum.map(game_events, fn event ->
-        name = Enum.join(event, "_")
+  defp setup_event(event) do
+    name = Enum.join(event, "_")
 
-        Counter.declare(
-          name: String.to_atom("grapevine_telnet_#{name}_count"),
-          help: "Total count of tracking for telnet event #{name}",
-          labels: [:game_id]
-        )
+    Counter.declare(
+      name: String.to_atom("grapevine_telnet_#{name}_count"),
+      help: "Total count of tracking for telnet event #{name}"
+    )
 
-        [:grapevine, :telnet | event]
-      end)
-
-    :telemetry.attach_many("grapevine-telnet", events ++ game_events, &handle_event/4, nil)
+    :telemetry.attach(name, [:grapevine, :telnet | event], &handle_event/4, nil)
   end
 
   def handle_event([:grapevine, :telnet, :start], _count, %{host: host, port: port}, _config) do
