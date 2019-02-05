@@ -13,7 +13,7 @@ defmodule Grapevine.Telnet.ClientSupervisor do
 
   def start_client(callback_module, opts) do
     spec = {Client, [module: callback_module] ++ opts}
-    DynamicSupervisor.start_child(__MODULE__, spec)
+    DynamicSupervisor.start_child({:global, __MODULE__}, spec)
   end
 
   def init(_) do
