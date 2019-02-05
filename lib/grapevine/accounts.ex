@@ -35,9 +35,16 @@ defmodule Grapevine.Accounts do
   """
   @spec register(user_params()) :: {:ok, User.t()}
   def register(params) do
-    %User{}
-    |> User.changeset(params)
-    |> Repo.insert()
+    changeset = %User{} |> User.changeset(params)
+
+    case Repo.insert(changeset) do
+      {:ok, user} ->
+        :telemetry.execute([:grapevine, :accounts, :create], 1)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

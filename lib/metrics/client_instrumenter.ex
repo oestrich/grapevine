@@ -12,7 +12,7 @@ defmodule Metrics.ClientInstrumenter do
   @doc false
   def setup() do
     Gauge.declare(
-      name: :grapevine_client_count,
+      name: :grapevine_client_total,
       help: "Number of clients grapevine has open"
     )
 
@@ -33,6 +33,6 @@ defmodule Metrics.ClientInstrumenter do
   end
 
   def handle_event([:grapevine, :clients, :online], count, _metadata, _config) do
-    Gauge.set([name: :grapevine_client_count], count)
+    Gauge.set([name: :grapevine_client_total], count)
   end
 end

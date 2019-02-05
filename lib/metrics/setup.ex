@@ -5,6 +5,7 @@ defmodule Metrics.Setup do
 
   @doc false
   def setup() do
+    Metrics.AccountInstrumenter.setup()
     Metrics.Events.ChannelsInstrumenter.setup()
     Metrics.Events.GamesInstrumenter.setup()
     Metrics.Events.PlayersInstrumenter.setup()
