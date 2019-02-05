@@ -30,10 +30,18 @@ class SocketProvider extends React.Component {
 
     this.socket = new ClientSocket(this, this.props.game, userToken);
     this.socket.join();
+
+    this.maxLines = 1000;
   }
 
   appendText(message) {
-    this.setState({text: this.state.text + message});
+    let text = this.state.text + message;
+    let lines = text.split(/\n/);
+    console.log(lines.length);
+    lines = lines.slice(Math.max(lines.length - this.maxLines, 1))
+    text = lines.join("\n");
+
+    this.setState({text});
   }
 
   receiveGMCP(message, data) {
@@ -199,10 +207,20 @@ Terminal.contextTypes = {
 }
 
 class Gauges extends React.Component {
+  gaugesEmpty() {
+    let gauges = this.context.gauges;
+    return gauges.length == 0;
+  }
+
+  dataEmpty() {
+    let gmcp = this.context.gmcp;
+    return Object.entries(gmcp).length === 0 && gmcp.constructor === Object;
+  }
+
   render() {
     let gauges = this.context.gauges;
 
-    if (gauges.length == 0) {
+    if (this.gaugesEmpty() || this.dataEmpty()) {
       return null;
     }
 
@@ -219,6 +237,7 @@ class Gauges extends React.Component {
 }
 
 Gauges.contextTypes = {
+  gmcp: PropTypes.object,
   gauges: PropTypes.array,
 }
 
