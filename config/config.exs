@@ -12,6 +12,7 @@ config :grapevine,
 
 # Configures the endpoint
 config :grapevine, Web.Endpoint,
+  instrumenters: [Timber.Phoenix],
   url: [host: "localhost"],
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
