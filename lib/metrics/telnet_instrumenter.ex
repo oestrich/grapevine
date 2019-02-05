@@ -87,7 +87,7 @@ defmodule Metrics.TelnetInstrumenter do
 
   def handle_event([:grapevine, :telnet, :charset, :accepted], _count, _metadata, _config) do
     Logger.debug("Accepting charset", type: :telnet)
-    Counter.inc(name: :grapevine_telnet_charset_accept_count)
+    Counter.inc(name: :grapevine_telnet_charset_accepted_count)
   end
 
   def handle_event([:grapevine, :telnet, :charset, :rejected], _count, _metadata, _config) do
