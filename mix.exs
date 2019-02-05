@@ -65,6 +65,7 @@ defmodule Grapevine.Mixfile do
       {:telemetry, "~> 0.3"},
       {:telemetry_poller, "~> 0.2"},
       {:timber, "~> 3.0"},
+      {:timber_phoenix, "~> 1.0"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"}
     ]
