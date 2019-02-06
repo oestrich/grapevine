@@ -99,6 +99,10 @@ defmodule Grapevine.Telnet.WebClient do
   def process_option(state, _option), do: {:noreply, state}
 
   @impl true
+  def receive(state, "") do
+    {:noreply, state}
+  end
+
   def receive(state, data) do
     maybe_forward(state, :echo, data)
 
