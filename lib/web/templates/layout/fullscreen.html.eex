@@ -2,7 +2,7 @@
 <html lang="en">
   <%= render("_head.html", assigns) %>
 
-  <body id="body" data-user-token="<%= @conn |> user_token() %>">
+  <body id="body" data-user-token="<%= user_token(@conn) %>" data-session-token="<%= session_token(@conn) %>">
     <%= render("_header.html", assigns) %>
 
     <%= render @view_module, @view_template, assigns %>

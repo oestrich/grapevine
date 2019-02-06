@@ -34,6 +34,12 @@
         If enabled and a telnet or secure telnet connection exists, players will be able to use the Grapevine Web client to connect to your game.
       </div>
     <% end %>
+
+    <%= FormView.checkbox_field(f, :allow_anonymous_client, label: "Allow anonymous use of the web client?") do %>
+      <div class="help-block">
+        If enabled anyone can load the web client for your game.
+      </div>
+    <% end %>
   <% end %>
 
   <div class="row">

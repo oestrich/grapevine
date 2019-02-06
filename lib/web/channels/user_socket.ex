@@ -7,16 +7,39 @@ defmodule Web.UserSocket do
   channel("mssp:*", Web.MSSPChannel)
   channel("play:client", Web.PlayChannel)
 
-  def connect(%{"token" => token}, socket) do
+  def connect(params, socket) do
+    socket =
+      socket
+      |> load_user_token(params)
+      |> load_session_token(params)
+
+    {:ok, socket}
+  end
+
+  def load_user_token(socket, %{"token" => token}) do
     case Phoenix.Token.verify(socket, "user socket", token, max_age: 86_400) do
       {:ok, user_id} ->
         {:ok, user} = Accounts.get(user_id)
-        {:ok, assign(socket, :user, user)}
+        assign(socket, :user, user)
 
       {:error, _reason} ->
-        {:ok, socket}
+        socket
     end
   end
+
+  def load_user_token(socket, _), do: socket
+
+  def load_session_token(socket, %{"session" => token}) do
+    case Phoenix.Token.verify(socket, "session token", token, max_age: 86_400) do
+      {:ok, token} ->
+        assign(socket, :session_token, token)
+
+      {:error, _reason} ->
+        socket
+    end
+  end
+
+  def load_session_token(socket, _), do: socket
 
   def id(_socket), do: nil
 end
