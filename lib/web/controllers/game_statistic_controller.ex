@@ -5,13 +5,10 @@ defmodule Web.GameStatisticController do
   alias Grapevine.Statistics
 
   def players(conn, %{"game_id" => short_name}) do
-    grapevine_url = Application.get_env(:grapevine, :grapevine)[:cors_host]
-
     case Games.get_by_short(short_name) do
       {:ok, game} ->
         conn
         |> assign(:statistics, Statistics.last_few_days(game))
-        |> put_resp_header("access-control-allow-origin", grapevine_url)
         |> render("players.json")
 
       {:error, :not_found} ->

@@ -32,5 +32,3 @@ config :sentry,
   root_source_code_path: File.cwd!(),
   tags: %{env: "production"},
   included_environments: [:prod]
-
-config :grapevine, :grapevine, cors_host: "https://grapevine.haus"

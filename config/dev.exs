@@ -63,8 +63,6 @@ config :grapevine, Grapevine.Repo,
 
 config :phoenix, :plug_init_mode, :runtime
 
-config :grapevine, :grapevine, cors_host: "http://localhost:4002"
-
 config :grapevine, Grapevine.Mailer, adapter: Bamboo.LocalAdapter
 
 if File.exists?("config/dev.local.exs") do
