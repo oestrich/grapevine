@@ -24,23 +24,48 @@ class SocketProvider extends React.Component {
     super(props);
 
     this.state = {
-      text: "",
+      lineId: 0,
+      lines: [],
+      buffer: "",
       gmcp: {},
     }
 
     this.socket = new ClientSocket(this, this.props.game, userToken);
     this.socket.join();
+  }
 
-    this.maxLines = 1000;
+  processText() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+
+    let increment = 1;
+    let parsedText = Anser.ansiToJson(this.state.buffer);
+
+    parsedText = _.map(parsedText, text => {
+      text = {...text, id: this.state.lineId + increment};
+      increment++;
+      return text;
+    });
+
+    let lines = [...this.state.lines, ...parsedText];
+    this.setState({
+      buffer: "",
+      lines,
+      lineId: this.state.lineId + increment
+    });
   }
 
   appendText(message) {
-    let text = this.state.text + message;
-    let lines = text.split(/\n/);
-    lines = lines.slice(Math.max(lines.length - this.maxLines, 1))
-    text = lines.join("\n");
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
 
-    this.setState({text});
+    this.setState({buffer: this.state.buffer + message});
+
+    this.timer = setTimeout(() => {
+      this.processText();
+    }, 200);
   }
 
   receiveGMCP(message, data) {
@@ -53,7 +78,7 @@ class SocketProvider extends React.Component {
     return {
       socket: this.socket,
       gmcp: this.state.gmcp,
-      text: this.state.text,
+      lines: this.state.lines,
     };
   }
 
@@ -65,7 +90,7 @@ class SocketProvider extends React.Component {
 }
 
 SocketProvider.childContextTypes = {
-  text: PropTypes.string,
+  lines: PropTypes.array,
   gmcp: PropTypes.object,
   socket: PropTypes.object,
 }
@@ -166,16 +191,10 @@ class AnsiText extends React.Component {
   }
 
   render() {
-    let parsedText = Anser.ansiToJson(this.props.children);
+    let text = this.props.text;
 
     return (
-      <Fragment>
-        {_.map(parsedText, (data, i) => {
-          return (
-            <span key={i} style={this.textStyle(data)}>{data.content}</span>
-          );
-        })}
-      </Fragment>
+      <span style={this.textStyle(text)}>{text.content}</span>
     );
   }
 }
@@ -194,11 +213,15 @@ class Terminal extends React.Component {
   }
 
   render() {
-    let text = this.context.text;
+    let lines = this.context.lines;
 
     return (
       <div className="terminal">
-        <AnsiText>{text}</AnsiText>
+        {_.map(lines, text => {
+          return (
+            <AnsiText key={text.id} text={text} />
+          );
+        })}
         <div ref={el => { this.el = el; }} />
       </div>
     );
@@ -206,7 +229,7 @@ class Terminal extends React.Component {
 }
 
 Terminal.contextTypes = {
-  text: PropTypes.string,
+  lines: PropTypes.array,
 }
 
 class Gauges extends React.Component {

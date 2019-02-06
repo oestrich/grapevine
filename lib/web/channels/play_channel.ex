@@ -56,6 +56,11 @@ defmodule Web.PlayChannel do
     {:noreply, socket}
   end
 
+  def handle_info({:ga}, socket) do
+    push(socket, "ga", %{})
+    {:noreply, socket}
+  end
+
   def handle_info({:gmcp, module, data}, socket) do
     push(socket, "gmcp", %{module: module, data: data})
     {:noreply, socket}

@@ -270,6 +270,10 @@ defmodule Grapevine.Telnet.Client do
     state.module.process_option(state, option)
   end
 
+  defp process_option(state, {:ga}) do
+    state.module.process_option(state, {:ga})
+  end
+
   defp process_option(state, option) do
     state = %{state | processed: [option | state.processed]}
     state.module.process_option(state, option)

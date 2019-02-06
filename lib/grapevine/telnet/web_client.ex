@@ -91,6 +91,11 @@ defmodule Grapevine.Telnet.WebClient do
     end
   end
 
+  def process_option(state, {:ga}) do
+    maybe_forward(state, :ga)
+    {:noreply, state}
+  end
+
   def process_option(state, _option), do: {:noreply, state}
 
   @impl true
@@ -170,4 +175,10 @@ defmodule Grapevine.Telnet.WebClient do
   end
 
   defp maybe_forward(_state, _type, _data), do: :ok
+
+  defp maybe_forward(state = %{channel_pid: channel_pid}, :ga) when channel_pid != nil do
+    send(state.channel_pid, {:ga})
+  end
+
+  defp maybe_forward(_state, _type), do: :ok
 end

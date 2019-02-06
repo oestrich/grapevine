@@ -26,6 +26,10 @@ class ClientSocket {
       this.client.receiveGMCP(data.module, data.data);
     });
 
+    this.channel.on("ga", () => {
+      this.client.processText();
+    });
+
     this.channel.join()
       .receive("ok", () => {
         this.client.appendText("\u001b[33mConnecting...\n\u001b[0m");
