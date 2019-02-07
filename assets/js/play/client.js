@@ -207,6 +207,7 @@ class Prompt extends React.Component {
 
   onTextChange(e) {
     this.setState({
+      index: -1,
       currentText: e.target.value,
       displayText: e.target.value,
     });
