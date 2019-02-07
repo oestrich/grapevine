@@ -18,10 +18,10 @@ defmodule Grapevine.Telnet.WebClient do
     send(pid, {:recv, message})
   end
 
-  def connect(user, opts) do
-    case :global.whereis_name(pid(user, opts)) do
+  def connect(session_token, opts) do
+    case :global.whereis_name(pid(session_token, opts)) do
       :undefined ->
-        ClientSupervisor.start_client(__MODULE__, opts ++ [name: {:global, pid(user, opts)}])
+        ClientSupervisor.start_client(__MODULE__, opts ++ [name: {:global, pid(session_token, opts)}])
 
       pid ->
         set_channel(pid, opts[:channel_pid])
@@ -29,8 +29,8 @@ defmodule Grapevine.Telnet.WebClient do
     end
   end
 
-  defp pid(user, opts) do
-    {:webclient, {user.id, Keyword.fetch!(opts, :game_id)}}
+  defp pid(session_token, opts) do
+    {:webclient, {session_token, Keyword.fetch!(opts, :game_id)}}
   end
 
   defp set_channel(pid, channel_pid) do

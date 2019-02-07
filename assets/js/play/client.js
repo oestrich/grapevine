@@ -10,6 +10,7 @@ import Keys from './keys';
 
 let body = document.getElementById("body");
 let userToken = body.getAttribute("data-user-token");
+let sessionToken = body.getAttribute("data-session-token");
 
 const keys = new Keys();
 
@@ -30,7 +31,7 @@ class SocketProvider extends React.Component {
       gmcp: {},
     }
 
-    this.socket = new ClientSocket(this, this.props.game, userToken);
+    this.socket = new ClientSocket(this, this.props.game, userToken, sessionToken);
     this.socket.join();
   }
 

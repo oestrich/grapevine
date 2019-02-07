@@ -23,6 +23,10 @@ defmodule Web.Router do
     plug Web.Plugs.EnsureUser
   end
 
+  pipeline :session_token do
+    plug Web.Plugs.SessionToken
+  end
+
   scope "/", Web do
     pipe_through(:browser)
 
@@ -63,6 +67,10 @@ defmodule Web.Router do
     pipe_through([:browser, :logged_in])
 
     resources("/chat", ChatController, only: [:index])
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :session_token])
 
     get("/games/:game_id/play", PlayController, :show)
   end

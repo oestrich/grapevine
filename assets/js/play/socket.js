@@ -3,14 +3,15 @@ import Sizzle from "sizzle"
 import _ from "underscore"
 
 class ClientSocket {
-  constructor(client, game, userToken) {
+  constructor(client, game, userToken, sessionToken) {
     this.client = client;
     this.game = game;
     this.userToken = userToken;
+    this.sessionToken = sessionToken;
   }
 
   join() {
-    this.socket = new Socket("/websocket", {params: {token: this.userToken}});
+    this.socket = new Socket("/websocket", {params: {token: this.userToken, session: this.sessionToken}});
     this.socket.connect();
     this.connect();
   }

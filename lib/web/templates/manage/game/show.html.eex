@@ -52,11 +52,21 @@
 
       <div>
         <%= if @game.enable_web_client do %>
-          Players <b>can</b> use the web client.
+          Players <b>can</b> use the <%= link("web client.", to: play_path(@conn, :show, @game.short_name)) %>
         <% else %>
           Players <b>cannot</b> use the web client.
         <% end %>
       </div>
+
+      <%= if @game.enable_web_client do %>
+        <div>
+          <%= if @game.allow_anonymous_client do %>
+            <b>Any</b> player can use the web client.
+          <% else %>
+            Players <b>must be</b> registered to use the web client.
+          <% end %>
+        </div>
+      <% end %>
 
       <hr />
 
