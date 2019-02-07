@@ -10,6 +10,10 @@ defmodule Web.PlayController do
          {:ok, game} <- check_user_allowed(conn, game) do
       conn
       |> assign(:game, game)
+      |> assign(:title, "Play #{game.name}")
+      |> assign(:open_graph_title, game.name)
+      |> assign(:open_graph_description, "Play #{game.name} on Grapevine")
+      |> assign(:open_graph_url, play_url(conn, :show, game.short_name))
       |> put_layout("fullscreen.html")
       |> render("show.html")
     else
