@@ -1,3 +1,117 @@
+/**
+ * Redux
+ */
+import { Provider, connect } from 'react-redux';
+import { combineReducers, createStore } from 'redux';
+
+// Actions
+export const SOCKET_ECHO = "SOCKET_ECHO";
+export const SOCKET_GA = "SOCKET_GA";
+export const SOCKET_GMCP = "SOCKET_GMCP";
+export const SOCKET_OPTION = "SOCKET_OPTION";
+
+export const socketEcho = (text) => ({
+  type: SOCKET_ECHO,
+  payload: {text}
+});
+
+export const socketGA = () => ({
+  type: SOCKET_GA,
+});
+
+export const socketReceiveGMCP = (message, data) => ({
+  type: SOCKET_GMCP,
+  payload: {message, data}
+});
+
+export const socketRecieveOption = ({key, value}) => ({
+  type: SOCKET_OPTION,
+  payload: {key, value},
+});
+
+// Selectors
+
+export const getSocketState = (state) => {
+  return state.socket;
+}
+
+export const getSocketLines = (state) => {
+  return getSocketState(state).lines;
+};
+
+export const getSocketGMCP = (state) => {
+  return getSocketState(state).gmcp;
+};
+
+// Reducers
+const initialState = {
+  buffer: "",
+  lines: [],
+  lineId: 0,
+  gmcp: {},
+}
+
+let socketReducer = function(state = initialState, action) {
+  switch (action.type) {
+    case SOCKET_ECHO: {
+      const {text} = action.payload;
+      return {...state, buffer: state.buffer + text};
+    }
+    case SOCKET_GA: {
+      if (state.buffer === "") {
+        return state;
+      }
+
+      let increment = 0;
+      let parsedText = Anser.ansiToJson(state.buffer);
+
+      parsedText = _.map(parsedText, text => {
+        text = {
+          id: state.lineId + increment,
+          content: text.content,
+          bg: text.bg,
+          fg: text.fg,
+          decoration: text.decoration
+        };
+
+        increment++;
+
+        return text;
+      });
+
+      let lines = [...state.lines, ...parsedText];
+
+      return {...state, buffer: "", lines: lines, lineId: state.lineId + increment};
+    }
+    case SOCKET_GMCP: {
+      const {message, data} = action.payload;
+      return {...state, gmcp: {...state.gmcp, [message]: data}};
+    }
+    case SOCKET_OPTION: {
+      let option = action.payload;
+
+      switch (option.key) {
+        case "prompt_type": {
+          return {...state, options: {...state.options, promptType: option.value}};
+        }
+        default: {
+          return state;
+        }
+      }
+    }
+    default: {
+      return state;
+    }
+  }
+}
+
+let rootReducer = combineReducers({socket: socketReducer});
+
+let store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+/**
+ * React
+ */
 import Anser from "anser";
 import _ from "underscore"
 import PropTypes from 'prop-types';
@@ -24,16 +138,6 @@ class SocketProvider extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      lineId: 0,
-      lines: [],
-      buffer: "",
-      gmcp: {},
-      options: {
-        promptType: "text"
-      }
-    }
-
     this.socket = new ClientSocket(this, this.props.game, userToken, sessionToken);
     this.socket.join();
   }
@@ -43,29 +147,15 @@ class SocketProvider extends React.Component {
       clearTimeout(this.timer);
     }
 
-    let increment = 1;
-    let parsedText = Anser.ansiToJson(this.state.buffer);
-
-    parsedText = _.map(parsedText, text => {
-      text = {...text, id: this.state.lineId + increment};
-      increment++;
-      return text;
-    });
-
-    let lines = [...this.state.lines, ...parsedText];
-    this.setState({
-      buffer: "",
-      lines,
-      lineId: this.state.lineId + increment
-    });
+    this.props.socketGA();
   }
 
   appendText(message) {
+    this.props.socketEcho(message);
+
     if (this.timer) {
       clearTimeout(this.timer);
     }
-
-    this.setState({buffer: this.state.buffer + message});
 
     this.timer = setTimeout(() => {
       this.processText();
@@ -73,45 +163,31 @@ class SocketProvider extends React.Component {
   }
 
   receiveGMCP(message, data) {
-    this.setState({
-      gmcp: {...this.state.gmcp, [message]: data},
-    })
+    this.props.socketReceiveGMCP(message, data);
   }
 
   setOption(option) {
-    switch (option.key) {
-      case "prompt_type": {
-        this.setState({
-          options: {...this.state.options, promptType: option.value}
-        });
-
-        break;
-      }
-    }
+    this.props.socketRecieveOption(option);
   }
 
   getChildContext() {
     return {
       socket: this.socket,
-      gmcp: this.state.gmcp,
-      lines: this.state.lines,
-      options: this.state.options,
     };
   }
 
   render() {
     return (
-      <div>{this.props.children}</div>
+      <Fragment>{this.props.children}</Fragment>
     );
   }
 }
 
 SocketProvider.childContextTypes = {
-  lines: PropTypes.array,
-  gmcp: PropTypes.object,
   socket: PropTypes.object,
-  options: PropTypes.object,
 }
+
+SocketProvider = connect(null, {socketEcho, socketGA, socketReceiveGMCP, socketRecieveOption})(SocketProvider);
 
 class GaugeProvider extends React.Component {
   getChildContext() {
@@ -232,7 +308,6 @@ class Prompt extends React.Component {
 
   componentDidUpdate() {
     if (this.shouldSelect) {
-      console.log("trying to select text");
       this.shouldSelect = false;
       this.prompt.select();
     }
@@ -303,7 +378,7 @@ class Terminal extends React.Component {
   }
 
   render() {
-    let lines = this.context.lines;
+    let lines = this.props.lines;
 
     return (
       <div className="terminal">
@@ -318,9 +393,12 @@ class Terminal extends React.Component {
   }
 }
 
-Terminal.contextTypes = {
-  lines: PropTypes.array,
-}
+let mapStateToProps = (state) => {
+  const lines = getSocketLines(state);
+  return {lines};
+};
+
+Terminal = connect(mapStateToProps)(Terminal);
 
 class Gauges extends React.Component {
   gaugesEmpty() {
@@ -329,7 +407,7 @@ class Gauges extends React.Component {
   }
 
   dataEmpty() {
-    let gmcp = this.context.gmcp;
+    let gmcp = this.props.gmcp;
     return Object.entries(gmcp).length === 0 && gmcp.constructor === Object;
   }
 
@@ -353,15 +431,21 @@ class Gauges extends React.Component {
 }
 
 Gauges.contextTypes = {
-  gmcp: PropTypes.object,
   gauges: PropTypes.array,
 }
+
+mapStateToProps = (state) => {
+  const gmcp = getSocketGMCP(state);
+  return {gmcp};
+};
+
+Gauges = connect(mapStateToProps)(Gauges);
 
 class Gauge extends React.Component {
   render() {
     let {name, message, value, max, color} = this.props.gauge;
 
-    let data = this.context.gmcp[message];
+    let data = this.props.gmcp[message];
 
     if (data) {
       let currentValue = data[value];
@@ -383,28 +467,33 @@ class Gauge extends React.Component {
   }
 }
 
-Gauge.contextTypes = {
-  gmcp: PropTypes.object,
-}
+mapStateToProps = (state) => {
+  const gmcp = getSocketGMCP(state);
+  return {gmcp};
+};
+
+Gauge = connect(mapStateToProps)(Gauge);
 
 class Client extends React.Component {
   render() {
     return (
-      <SocketProvider game={this.props.game}>
-        <GaugeProvider gauges={this.props.gauges}>
-          <div className="play">
-            <div className="alert alert-danger">
-              <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
-            </div>
+      <Provider store={store}>
+        <SocketProvider game={this.props.game}>
+          <GaugeProvider gauges={this.props.gauges}>
+            <div className="play">
+              <div className="alert alert-danger">
+                <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
+              </div>
 
-            <div className="window">
-              <Terminal />
-              <Gauges />
-              <Prompt />
+              <div className="window">
+                <Terminal />
+                <Gauges />
+                <Prompt />
+              </div>
             </div>
-          </div>
-        </GaugeProvider>
-      </SocketProvider>
+          </GaugeProvider>
+        </SocketProvider>
+      </Provider>
     );
   }
 }
