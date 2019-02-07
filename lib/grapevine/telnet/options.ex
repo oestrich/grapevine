@@ -16,6 +16,7 @@ defmodule Grapevine.Telnet.Options do
   @dont 254
   @iac 255
 
+  @echo 1
   @term_type 24
   @line_mode 34
   @charset 42
@@ -168,20 +169,26 @@ defmodule Grapevine.Telnet.Options do
       iex> Options.transform(<<255, 251, 201>>)
       {:will, :gmcp}
 
+      iex> Options.transform(<<255, 251, 1>>)
+      {:will, :echo}
+
+      iex> Options.transform(<<255, 252, 1>>)
+      {:wont, :echo}
+
   Returns a generic DO/WILL if the specific term is not known. For
   responding with the opposite command to reject.
 
-      iex> Options.transform(<<255, 251, 1>>)
-      {:will, 1}
+      iex> Options.transform(<<255, 251, 2>>)
+      {:will, 2}
 
-      iex> Options.transform(<<255, 252, 1>>)
-      {:wont, 1}
+      iex> Options.transform(<<255, 252, 2>>)
+      {:wont, 2}
 
-      iex> Options.transform(<<255, 253, 1>>)
-      {:do, 1}
+      iex> Options.transform(<<255, 253, 2>>)
+      {:do, 2}
 
-      iex> Options.transform(<<255, 254, 1>>)
-      {:dont, 1}
+      iex> Options.transform(<<255, 254, 2>>)
+      {:dont, 2}
 
   Everything else is parsed as `:unknown`
 
@@ -200,6 +207,8 @@ defmodule Grapevine.Telnet.Options do
 
   def transform(<<@iac, @dont, byte>>), do: {:dont, byte}
 
+  def transform(<<@iac, @will, @echo>>), do: {:will, :echo}
+
   def transform(<<@iac, @will, @mssp>>), do: {:will, :mssp}
 
   def transform(<<@iac, @will, @gmcp>>), do: {:will, :gmcp}
@@ -207,6 +216,8 @@ defmodule Grapevine.Telnet.Options do
   def transform(<<@iac, @will, @charset>>), do: {:will, :charset}
 
   def transform(<<@iac, @will, byte>>), do: {:will, byte}
+
+  def transform(<<@iac, @wont, @echo>>), do: {:wont, :echo}
 
   def transform(<<@iac, @wont, @mssp>>), do: {:wont, :mssp}
 

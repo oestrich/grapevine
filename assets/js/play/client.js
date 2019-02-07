@@ -29,6 +29,9 @@ class SocketProvider extends React.Component {
       lines: [],
       buffer: "",
       gmcp: {},
+      options: {
+        promptType: "text"
+      }
     }
 
     this.socket = new ClientSocket(this, this.props.game, userToken, sessionToken);
@@ -75,11 +78,24 @@ class SocketProvider extends React.Component {
     })
   }
 
+  setOption(option) {
+    switch (option.key) {
+      case "prompt_type": {
+        this.setState({
+          options: {...this.state.options, promptType: option.value}
+        });
+
+        break;
+      }
+    }
+  }
+
   getChildContext() {
     return {
       socket: this.socket,
       gmcp: this.state.gmcp,
       lines: this.state.lines,
+      options: this.state.options,
     };
   }
 
@@ -94,6 +110,7 @@ SocketProvider.childContextTypes = {
   lines: PropTypes.array,
   gmcp: PropTypes.object,
   socket: PropTypes.object,
+  options: PropTypes.object,
 }
 
 class GaugeProvider extends React.Component {

@@ -31,6 +31,10 @@ class ClientSocket {
       this.client.processText();
     });
 
+    this.channel.on("option", (data) => {
+      this.client.setOption(data);
+    });
+
     this.channel.join()
       .receive("ok", () => {
         this.client.appendText("\u001b[33mConnecting...\n\u001b[0m");
