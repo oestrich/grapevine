@@ -119,12 +119,17 @@ class Prompt extends React.Component {
     super(props);
 
     this.state = {
-      text: "",
+      history: [],
+      index: -1,
+      currentText: "",
+      displayText: "",
     };
 
     this.buttonSendMessage = this.buttonSendMessage.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
-    this.promptSendMessage = this.promptSendMessage.bind(this);
+
+    this.shouldSelect = false;
   }
 
   buttonSendMessage(e) {
@@ -132,36 +137,102 @@ class Prompt extends React.Component {
     this.sendMessage();
   }
 
-  promptSendMessage(e) {
-    if (e.keyCode == 13) {
-      this.sendMessage();
+  onKeyDown(e) {
+    switch (e.keyCode) {
+      case 13: {
+        this.sendMessage();
+        e.target.select();
+
+        break;
+      }
+      case 38: { // up
+        e.preventDefault();
+        this.shouldSelect = true;
+        let index = this.state.index + 1;
+
+        if (this.state.history[index] != undefined) {
+          this.setState({
+            index: index,
+            displayText: this.state.history[index]
+          });
+        }
+
+        break;
+      }
+      case 40: { // down
+        e.preventDefault();
+        this.shouldSelect = true;
+        let index = this.state.index - 1;
+
+        if (index == -1) {
+          this.setState({
+            index: 0,
+            displayText: this.state.currentText
+          });
+        } else if (this.state.history[index] != undefined) {
+          this.setState({
+            index: index,
+            displayText: this.state.history[index]
+          });
+        }
+
+        break;
+      }
     }
   }
 
   sendMessage() {
     const {socket} = this.context;
-    socket.send(`${this.state.text}\n`);
-    this.setState({text: ""});
+    socket.send(`${this.state.displayText}\n`);
+    this.addMessageHistory();
+  }
+
+  addMessageHistory() {
+    let history = this.state.history;
+
+    if (_.first(this.state.history) == this.state.displayText) {
+      this.setState({
+        index: -1
+      });
+    } else {
+      history = [this.state.displayText, ...history];
+      history = _.first(history, 10);
+
+      this.setState({
+        history,
+        index: 0,
+      });
+    }
   }
 
   onTextChange(e) {
     this.setState({
-      text: e.target.value,
+      currentText: e.target.value,
+      displayText: e.target.value,
     });
   }
 
+  componentDidUpdate() {
+    if (this.shouldSelect) {
+      console.log("trying to select text");
+      this.shouldSelect = false;
+      this.prompt.select();
+    }
+  }
+
   render() {
-    let text = this.state.text;
+    let displayText = this.state.displayText;
 
     return (
       <div className="prompt">
         <input id="prompt"
-          value={text}
+          value={displayText}
           onChange={this.onTextChange}
           type="text"
           className="form-control"
           autoFocus={true}
-          onKeyDown={this.promptSendMessage} />
+          onKeyDown={this.onKeyDown}
+          ref={el => { this.prompt = el; }} />
         <button id="send" className="btn btn-primary" onClick={this.buttonSendMessage}>Send</button>
       </div>
     );
