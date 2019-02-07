@@ -15,4 +15,19 @@ defmodule Web.Game do
     |> Enum.shuffle()
     |> List.first()
   end
+
+  @doc """
+  Check if the client is allowed to load
+
+  If anonymous users are not allowed, a user must be present
+  """
+  def client_allowed?(game, assigns) do
+    case game.allow_anonymous_client do
+      true ->
+        true
+
+      false ->
+        Map.has_key?(assigns, :user) && !is_nil(assigns.user)
+    end
+  end
 end

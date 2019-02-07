@@ -7,6 +7,7 @@ defmodule Web.PlayChannel do
 
   alias Grapevine.Games
   alias Grapevine.Telnet.WebClient
+  alias Web.Game
 
   def join("play:client", message, socket) do
     case Map.has_key?(socket.assigns, :session_token) do
@@ -33,18 +34,12 @@ defmodule Web.PlayChannel do
   end
 
   defp check_user_allowed(socket, game) do
-    case game.allow_anonymous_client do
+    case Game.client_allowed?(game, socket.assigns) do
       true ->
         {:ok, game}
 
       false ->
-        case Map.has_key?(socket.assigns, :user) && socket.assigns.user != nil do
-          true ->
-            {:ok, game}
-
-          false ->
-            :error
-        end
+        :error
     end
   end
 
