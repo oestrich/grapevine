@@ -80,13 +80,13 @@ defmodule Grapevine.Telnet.WebClient do
   def process_option(state = %{features: %{gmcp: true}}, {:gmcp, message, data}) do
     case Features.message_enabled?(state, message) do
       true ->
-        Logger.info("Received GMCP message #{message}")
+        Logger.debug("Received GMCP message #{message}", type: :telnet)
         maybe_forward(state, :gmcp, {message, data})
         state = Features.cache_message(state, message, data)
         {:noreply, state}
 
       false ->
-        Logger.info("Received unknown GMCP message #{message}", type: :telnet)
+        Logger.debug("Received unknown GMCP message #{message}", type: :telnet)
         {:noreply, state}
     end
   end
