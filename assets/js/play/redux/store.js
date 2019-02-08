@@ -1,10 +1,11 @@
 import _ from "underscore";
 import Anser from "anser";
-import { combineReducers, createStore } from 'redux';
+import {combineReducers, createStore} from 'redux';
 
 // Actions
 
 export const PROMPT_SET_CURRENT_TEXT = "PROMPT_SET_CURRENT_TEXT";
+export const PROMPT_CLEAR = "PROMPT_CLEAR";
 export const PROMPT_HISTORY_ADD = "PROMPT_HISTORY_ADD";
 export const PROMPT_HISTORY_SCROLL_BACKWARD = "PROMPT_HISTORY_SCROLL_BACKWARD";
 export const PROMPT_HISTORY_SCROLL_FORWARD = "PROMPT_HISTORY_SCROLL_FORWARD";
@@ -17,6 +18,10 @@ export const SOCKET_OPTION = "SOCKET_OPTION";
 export const promptSetCurrentText = (text) => ({
   type: PROMPT_SET_CURRENT_TEXT,
   payload: {text},
+});
+
+export const promptClear = () => ({
+  type: PROMPT_CLEAR,
 });
 
 export const promptHistoryAdd = () => ({
@@ -62,7 +67,11 @@ export const getPromptDisplayText = (state) => {
 
 export const getSocketState = (state) => {
   return state.socket;
-}
+};
+
+export const getSocketPromptType = (state) => {
+  return getSocketState(state).options.promptType;
+};
 
 export const getSocketLines = (state) => {
   return getSocketState(state).lines;
@@ -78,6 +87,9 @@ const socketInitialState = {
   lines: [],
   lineId: 0,
   gmcp: {},
+  options: {
+    promptType: "text",
+  },
 }
 
 let socketReducer = function(state = socketInitialState, action) {
@@ -143,6 +155,9 @@ const promptInitialState = {
 
 let promptReducer = function(state = promptInitialState, action) {
   switch (action.type) {
+    case PROMPT_CLEAR: {
+      return {...state, index: -1, currentText: "", displayText: ""};
+    }
     case PROMPT_SET_CURRENT_TEXT: {
       const {text} = action.payload;
       return {...state, index: -1, currentText: text, displayText: text};
@@ -184,4 +199,7 @@ let promptReducer = function(state = promptInitialState, action) {
 
 let rootReducer = combineReducers({prompt: promptReducer, socket: socketReducer});
 
-export const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+export const store = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);

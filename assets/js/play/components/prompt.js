@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {
+  getSocketPromptType,
   getPromptDisplayText,
+  promptClear,
   promptSetCurrentText,
   promptHistoryAdd,
   promptHistoryScrollBackward,
@@ -28,6 +30,14 @@ class Prompt extends React.Component {
   }
 
   onKeyDown(e) {
+    if (this.props.promptType === "text") {
+      this.onKeyDownText(e);
+    } else if (this.props.promptType === "password") {
+      this.onKeyDownPassword(e);
+    }
+  }
+
+  onKeyDownText(e) {
     switch (e.keyCode) {
       case 13: {
         this.sendMessage();
@@ -48,11 +58,27 @@ class Prompt extends React.Component {
     }
   }
 
+  onKeyDownPassword(e) {
+    switch (e.keyCode) {
+      case 13: {
+        this.sendPassword();
+        break;
+      }
+    }
+  }
+
   sendMessage() {
     const {socket} = this.context;
     socket.send(`${this.props.displayText}\n`);
     this.props.promptHistoryAdd();
     this.prompt.select();
+  }
+
+  sendPassword() {
+    const {socket} = this.context;
+    console.log(this.props.displayText);
+    socket.send(`${this.props.displayText}\n`);
+    this.props.promptClear();
   }
 
   onTextChange(e) {
@@ -67,14 +93,12 @@ class Prompt extends React.Component {
   }
 
   render() {
-    let displayText = this.props.displayText;
-
     return (
       <div className="prompt">
         <input id="prompt"
-          value={displayText}
+          value={this.props.displayText}
           onChange={this.onTextChange}
-          type="text"
+          type={this.props.promptType}
           className="form-control"
           autoFocus={true}
           onKeyDown={this.onKeyDown}
@@ -90,13 +114,15 @@ Prompt.contextTypes = {
 };
 
 let mapStateToProps = (state) => {
+  let promptType = getSocketPromptType(state);
   let displayText = getPromptDisplayText(state);
-  return {displayText};
+  return {displayText, promptType};
 };
 
 export default Prompt = connect(mapStateToProps, {
-  promptSetCurrentText,
+  promptClear,
   promptHistoryAdd,
   promptHistoryScrollBackward,
-  promptHistoryScrollForward
+  promptHistoryScrollForward,
+  promptSetCurrentText,
 })(Prompt);
