@@ -5,8 +5,8 @@ addons:
   postgresql: "10"
   apt:
     packages:
-    - postgresql-10
-    - postgresql-client-10
+      - postgresql-10
+      - postgresql-client-10
 env:
   global:
   - PGPORT=5433
@@ -31,7 +31,9 @@ install:
   - mix deps.get
   - mix compile
   - mix do ecto.create, ecto.migrate
+  - nvm install 10.13.0 && nvm use 10.13.0
 script:
   - mix credo
   - mix test
+  - cd assets && yarn install && yarn test && cd ..
   - ./release.sh
