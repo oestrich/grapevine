@@ -3,16 +3,17 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
+import {
+  getPromptDisplayText,
+  promptSetCurrentText,
+  promptHistoryAdd,
+  promptHistoryScrollBackward,
+  promptHistoryScrollForward
+} from "../redux/store";
+
 class Prompt extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      history: [],
-      index: -1,
-      currentText: "",
-      displayText: "",
-    };
 
     this.buttonSendMessage = this.buttonSendMessage.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -30,41 +31,18 @@ class Prompt extends React.Component {
     switch (e.keyCode) {
       case 13: {
         this.sendMessage();
-        e.target.select();
-
         break;
       }
       case 38: { // up
         e.preventDefault();
+        this.props.promptHistoryScrollBackward();
         this.shouldSelect = true;
-        let index = this.state.index + 1;
-
-        if (this.state.history[index] != undefined) {
-          this.setState({
-            index: index,
-            displayText: this.state.history[index]
-          });
-        }
-
         break;
       }
       case 40: { // down
         e.preventDefault();
+        this.props.promptHistoryScrollForward();
         this.shouldSelect = true;
-        let index = this.state.index - 1;
-
-        if (index == -1) {
-          this.setState({
-            index: 0,
-            displayText: this.state.currentText
-          });
-        } else if (this.state.history[index] != undefined) {
-          this.setState({
-            index: index,
-            displayText: this.state.history[index]
-          });
-        }
-
         break;
       }
     }
@@ -72,34 +50,13 @@ class Prompt extends React.Component {
 
   sendMessage() {
     const {socket} = this.context;
-    socket.send(`${this.state.displayText}\n`);
-    this.addMessageHistory();
-  }
-
-  addMessageHistory() {
-    let history = this.state.history;
-
-    if (_.first(this.state.history) == this.state.displayText) {
-      this.setState({
-        index: -1
-      });
-    } else {
-      history = [this.state.displayText, ...history];
-      history = _.first(history, 10);
-
-      this.setState({
-        history,
-        index: 0,
-      });
-    }
+    socket.send(`${this.props.displayText}\n`);
+    this.props.promptHistoryAdd();
+    this.prompt.select();
   }
 
   onTextChange(e) {
-    this.setState({
-      index: -1,
-      currentText: e.target.value,
-      displayText: e.target.value,
-    });
+    this.props.promptSetCurrentText(e.target.value);
   }
 
   componentDidUpdate() {
@@ -110,7 +67,7 @@ class Prompt extends React.Component {
   }
 
   render() {
-    let displayText = this.state.displayText;
+    let displayText = this.props.displayText;
 
     return (
       <div className="prompt">
@@ -132,4 +89,14 @@ Prompt.contextTypes = {
   socket: PropTypes.object,
 };
 
-export default Prompt;
+let mapStateToProps = (state) => {
+  let displayText = getPromptDisplayText(state);
+  return {displayText};
+};
+
+export default Prompt = connect(mapStateToProps, {
+  promptSetCurrentText,
+  promptHistoryAdd,
+  promptHistoryScrollBackward,
+  promptHistoryScrollForward
+})(Prompt);
