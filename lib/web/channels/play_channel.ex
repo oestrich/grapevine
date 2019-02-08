@@ -39,7 +39,7 @@ defmodule Web.PlayChannel do
         {:ok, game}
 
       false ->
-        :error
+        {:error, "game is not open"}
     end
   end
 

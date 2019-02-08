@@ -20,10 +20,11 @@ defmodule Web.Plugs.SessionToken do
   end
 
   defp generate_token(conn) do
-    token = Phoenix.Token.sign(conn, "session token", UUID.uuid4())
+    token = UUID.uuid4()
+    signed_token = Phoenix.Token.sign(conn, "session token", token)
 
     conn
-    |> assign(:session_token, token)
     |> put_session(:session_token, token)
+    |> assign(:session_token, signed_token)
   end
 end
