@@ -25,7 +25,7 @@ defmodule Web.PlayController do
   end
 
   defp check_user_allowed(conn, game) do
-    case Game.client_allowed?(game, conn.assigns) do
+    case Game.client_allowed?(game, conn.assigns, :current_user) do
       true ->
         {:ok, game}
 

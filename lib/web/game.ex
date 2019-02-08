@@ -21,13 +21,13 @@ defmodule Web.Game do
 
   If anonymous users are not allowed, a user must be present
   """
-  def client_allowed?(game, assigns) do
+  def client_allowed?(game, assigns, user_key) do
     case game.allow_anonymous_client do
       true ->
         true
 
       false ->
-        Map.has_key?(assigns, :user) && !is_nil(assigns.user)
+        Map.has_key?(assigns, user_key) && !is_nil(Map.get(assigns, user_key))
     end
   end
 end

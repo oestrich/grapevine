@@ -34,7 +34,7 @@ defmodule Web.PlayChannel do
   end
 
   defp check_user_allowed(socket, game) do
-    case Game.client_allowed?(game, socket.assigns) do
+    case Game.client_allowed?(game, socket.assigns, :user) do
       true ->
         {:ok, game}
 

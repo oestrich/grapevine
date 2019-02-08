@@ -7,21 +7,21 @@ defmodule Web.GameTest do
     test "anonymous allowed" do
       game = %{allow_anonymous_client: true}
 
-      assert Game.client_allowed?(game, %{})
-      assert Game.client_allowed?(game, %{user: %{}})
+      assert Game.client_allowed?(game, %{}, :user)
+      assert Game.client_allowed?(game, %{user: %{}}, :user)
     end
 
     test "anonymous not allowed, user is assigned" do
       game = %{allow_anonymous_client: false}
       user = %{id: 1}
 
-      assert Game.client_allowed?(game, %{user: user})
+      assert Game.client_allowed?(game, %{user: user}, :user)
     end
 
     test "anonymous not allowed, no user" do
       game = %{allow_anonymous_client: false}
 
-      refute Game.client_allowed?(game, %{})
+      refute Game.client_allowed?(game, %{}, :user)
     end
   end
 end
