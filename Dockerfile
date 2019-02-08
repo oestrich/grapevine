@@ -25,10 +25,10 @@ COPY assets/package*.json /app/
 COPY --from=builder /app/deps/phoenix /deps/phoenix
 COPY --from=builder /app/deps/phoenix_html /deps/phoenix_html
 
-RUN npm install
+RUN npm install -g yarn && yarn install
 
 COPY assets /app
-RUN node node_modules/brunch/bin/brunch build
+RUN npm run deploy
 
 FROM builder as releaser
 COPY --from=frontend /priv/static /app/priv/static
