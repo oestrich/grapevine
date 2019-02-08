@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Fragment} from "react";
 import {connect} from 'react-redux';
 
-import {socketEcho, socketGA, socketReceiveGMCP, socketRecieveOption} from "../redux/store";
+import {socketEcho, socketGA, socketReceiveGMCP, socketRecieveOption} from "../redux/actions";
 import {ClientSocket} from "../socket";
 
 class SocketProvider extends React.Component {

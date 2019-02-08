@@ -4,13 +4,16 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {
-  getSocketPromptType,
-  getPromptDisplayText,
   promptClear,
   promptSetCurrentText,
   promptHistoryAdd,
   promptHistoryScrollBackward,
   promptHistoryScrollForward
+} from "../redux/actions";
+
+import {
+  getSocketPromptType,
+  getPromptDisplayText,
 } from "../redux/store";
 
 class Prompt extends React.Component {
