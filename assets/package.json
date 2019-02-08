@@ -4,6 +4,7 @@
   "scripts": {
     "build": "webpack --mode development",
     "deploy": "webpack --mode production",
+    "test": "jest",
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
@@ -25,9 +26,12 @@
     "@babel/core": "^7.0.0-0",
     "@babel/preset-env": "^7.3.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.5",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^2.1.0",
+    "jest": "^24.1.0",
+    "jest-cli": "^24.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "redux-devtools": "^3.5.0",
