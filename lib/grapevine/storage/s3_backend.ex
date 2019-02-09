@@ -33,7 +33,7 @@ defmodule Grapevine.Storage.S3Backend do
   @impl true
   def upload(file, key) do
     meta = [
-      {:cache_control, "public, max-age=3600"},
+      {:cache_control, "public, max-age=86400"},
       {:acl, :public_read}
     ]
 
