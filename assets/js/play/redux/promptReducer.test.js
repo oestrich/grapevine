@@ -1,6 +1,6 @@
 import {
   promptReducer
-} from "./store";
+} from "./promptReducer";
 
 import {
   promptClear,
