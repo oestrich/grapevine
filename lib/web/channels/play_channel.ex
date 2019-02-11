@@ -6,14 +6,15 @@ defmodule Web.PlayChannel do
   use Phoenix.Channel
 
   alias Grapevine.Games
-  alias Grapevine.Telnet.WebClient
+  alias Telnet.WebClient
   alias Web.Game
 
   def join("play:client", message, socket) do
     case Map.has_key?(socket.assigns, :session_token) do
       true ->
         with {:ok, socket} <- assign_game(socket, message) do
-          start_client(socket)
+          send(self(), :start_client)
+          {:ok, socket}
         end
 
       false ->
@@ -47,7 +48,7 @@ defmodule Web.PlayChannel do
     {:ok, connection} = Games.get_web_client_connection(socket.assigns.game)
 
     {:ok, pid} = WebClient.connect(socket.assigns.session_token,
-      game_id: socket.assigns.game.id,
+      game: socket.assigns.game,
       host: connection.host,
       port: connection.port,
       channel_pid: socket.channel_pid
@@ -60,6 +61,11 @@ defmodule Web.PlayChannel do
 
   def handle_in("send", %{"message" => message}, socket) do
     WebClient.recv(socket.assigns.client_pid, message)
+    {:noreply, socket}
+  end
+
+  def handle_info(:start_client, socket) do
+    {:ok, socket} = start_client(socket)
     {:noreply, socket}
   end
 

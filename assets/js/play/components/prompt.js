@@ -79,7 +79,6 @@ class Prompt extends React.Component {
 
   sendPassword() {
     const {socket} = this.context;
-    console.log(this.props.displayText);
     socket.send(`${this.props.displayText}\n`);
     this.props.promptClear();
   }

@@ -3,19 +3,21 @@ defmodule Grapevine.Application do
 
   use Application
 
+  @env Mix.env()
+
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
     import Supervisor.Spec
 
     children = [
+      cluster_supervisor(),
       supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
       {Grapevine.Presence, []},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
-      {Grapevine.Telnet.ClientSupervisor, [name: {:global, Grapevine.Telnet.ClientSupervisor}]},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]}
     ]
 
@@ -27,6 +29,9 @@ defmodule Grapevine.Application do
       {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     end
 
+    start_telnet_application()
+
+    children = Enum.reject(children, &is_nil/1)
     opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -34,6 +39,14 @@ defmodule Grapevine.Application do
   def config_change(changed, _new, removed) do
     Web.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp cluster_supervisor() do
+    topologies = Application.get_env(:grapevine, :topologies)
+
+    if topologies && Code.ensure_compiled?(Cluster.Supervisor) do
+      {Cluster.Supervisor, [topologies, [name: Telnet.ClusterSupervisor]]}
+    end
   end
 
   defp telemetry_opts() do
@@ -45,5 +58,12 @@ defmodule Grapevine.Application do
       ],
       period: 10_000
     ]
+  end
+
+  # Start the telnet application in development mode
+  defp start_telnet_application() do
+    if @env == :dev do
+      :application.start(:telnet)
+    end
   end
 end

@@ -55,4 +55,23 @@ docker-compose run --rm grapevine migrate
 docker-compose up grapevine
 ```
 
+### Telnet Web Client
+
+For deployment the telnet application needs to be on its own erlang node. You can connect with something similar to:
+
+```elixir
+config :grapevine,
+  topologies: [
+    local: [
+      strategy: Cluster.Strategy.Epmd,
+      config: [
+        hosts: [
+          :grapevine@localhost,
+          :telnet@localhost,
+        ]
+      ]
+    ]
+  ]
+```
+
 [websocket-docs]: https://grapevine.haus/docs
