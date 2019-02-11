@@ -11,6 +11,7 @@ defmodule Grapevine.Application do
     import Supervisor.Spec
 
     children = [
+      cluster_supervisor(),
       supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
       {Grapevine.Presence, []},
@@ -30,6 +31,7 @@ defmodule Grapevine.Application do
 
     start_telnet_application()
 
+    children = Enum.reject(children, &is_nil/1)
     opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -37,6 +39,14 @@ defmodule Grapevine.Application do
   def config_change(changed, _new, removed) do
     Web.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp cluster_supervisor() do
+    topologies = Application.get_env(:grapevine, :topologies)
+
+    if topologies && Code.ensure_compiled?(Cluster.Supervisor) do
+      {Cluster.Supervisor, [topologies, [name: Telnet.ClusterSupervisor]]}
+    end
   end
 
   defp telemetry_opts() do

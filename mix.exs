@@ -50,6 +50,7 @@ defmodule Grapevine.Mixfile do
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.9"},
       {:jason, "~> 1.1"},
+      {:libcluster, "~> 3.0"},
       {:phoenix, "~> 1.4", override: true},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.10"},
