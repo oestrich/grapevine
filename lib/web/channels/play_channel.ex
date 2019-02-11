@@ -13,7 +13,8 @@ defmodule Web.PlayChannel do
     case Map.has_key?(socket.assigns, :session_token) do
       true ->
         with {:ok, socket} <- assign_game(socket, message) do
-          start_client(socket)
+          send(self(), :start_client)
+          {:ok, socket}
         end
 
       false ->
@@ -60,6 +61,11 @@ defmodule Web.PlayChannel do
 
   def handle_in("send", %{"message" => message}, socket) do
     WebClient.recv(socket.assigns.client_pid, message)
+    {:noreply, socket}
+  end
+
+  def handle_info(:start_client, socket) do
+    {:ok, socket} = start_client(socket)
     {:noreply, socket}
   end
 

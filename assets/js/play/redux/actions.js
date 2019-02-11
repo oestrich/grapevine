@@ -4,6 +4,8 @@ export const PROMPT_HISTORY_ADD = "PROMPT_HISTORY_ADD";
 export const PROMPT_HISTORY_SCROLL_BACKWARD = "PROMPT_HISTORY_SCROLL_BACKWARD";
 export const PROMPT_HISTORY_SCROLL_FORWARD = "PROMPT_HISTORY_SCROLL_FORWARD";
 
+export const SOCKET_CONNECTED = "SOCKET_CONNECTED";
+export const SOCKET_DISCONNECTED = "SOCKET_DISCONNECTED";
 export const SOCKET_ECHO = "SOCKET_ECHO";
 export const SOCKET_GA = "SOCKET_GA";
 export const SOCKET_GMCP = "SOCKET_GMCP";
@@ -28,6 +30,14 @@ export const promptHistoryScrollBackward = (message) => ({
 
 export const promptHistoryScrollForward = (message) => ({
   type: PROMPT_HISTORY_SCROLL_FORWARD,
+});
+
+export const socketConnected = () => ({
+  type: SOCKET_CONNECTED,
+});
+
+export const socketDisconnected = () => ({
+  type: SOCKET_DISCONNECTED,
 });
 
 export const socketEcho = (text) => ({

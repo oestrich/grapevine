@@ -2,7 +2,14 @@ import PropTypes from 'prop-types';
 import React, {Fragment} from "react";
 import {connect} from 'react-redux';
 
-import {socketEcho, socketGA, socketReceiveGMCP, socketRecieveOption} from "../redux/actions";
+import {
+  socketConnected,
+  socketDisconnected,
+  socketEcho,
+  socketGA,
+  socketReceiveGMCP,
+  socketRecieveOption
+} from "../redux/actions";
 import {ClientSocket} from "../socket";
 
 class SocketProvider extends React.Component {
@@ -11,6 +18,14 @@ class SocketProvider extends React.Component {
 
     this.socket = new ClientSocket(this, this.props.game, this.props.userToken, this.props.sessionToken);
     this.socket.join();
+  }
+
+  connected() {
+    this.props.socketConnected();
+  }
+
+  disconnected() {
+    this.props.socketDisconnected();
   }
 
   processText() {
@@ -58,4 +73,11 @@ SocketProvider.childContextTypes = {
   socket: PropTypes.object,
 }
 
-export default SocketProvider = connect(null, {socketEcho, socketGA, socketReceiveGMCP, socketRecieveOption})(SocketProvider);
+export default SocketProvider = connect(null, {
+  socketConnected,
+  socketDisconnected,
+  socketEcho,
+  socketGA,
+  socketReceiveGMCP,
+  socketRecieveOption
+})(SocketProvider);

@@ -35,9 +35,13 @@ class ClientSocket {
       this.client.setOption(data);
     });
 
+    this.channel.onError(() => {
+      this.client.disconnected();
+    });
+
     this.channel.join()
       .receive("ok", () => {
-        this.client.appendText("\u001b[33mConnecting...\n\u001b[0m");
+        this.client.connected();
       });
   }
 
