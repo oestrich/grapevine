@@ -6,7 +6,7 @@ defmodule Web.PlayChannel do
   use Phoenix.Channel
 
   alias Grapevine.Games
-  alias Grapevine.Telnet.WebClient
+  alias Telnet.WebClient
   alias Web.Game
 
   def join("play:client", message, socket) do

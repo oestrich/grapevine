@@ -5,12 +5,11 @@ defmodule Grapevine.Telnet.MSSPClient do
 
   require Logger
 
-  alias Grapevine.Telnet
-  alias Grapevine.Telnet.Client
-  alias Grapevine.Telnet.MSSP
   alias Grapevine.Telnet.MSSPClient.Check
   alias Grapevine.Telnet.MSSPClient.Record
-  alias Grapevine.Telnet.Options
+  alias Telnet.Client
+  alias Telnet.MSSP
+  alias Telnet.Options
 
   @behaviour Client
 
@@ -82,7 +81,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     maybe_forward("mssp/terminated", %{}, state)
     state.mssp_module.record_fail(state)
 
-    Telnet.record_no_mssp(state.host, state.port)
+    Grapevine.Telnet.record_no_mssp(state.host, state.port)
     :telemetry.execute([:grapevine, :telnet, :mssp, :failed], 1, state)
 
     {:stop, :normal, state}

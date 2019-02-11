@@ -3,6 +3,8 @@ defmodule Grapevine.Application do
 
   use Application
 
+  @env Mix.env()
+
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
@@ -15,7 +17,6 @@ defmodule Grapevine.Application do
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
       {Telemetry.Poller, telemetry_opts()},
-      {Grapevine.Telnet.ClientSupervisor, [name: {:global, Grapevine.Telnet.ClientSupervisor}]},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]}
     ]
 
@@ -26,6 +27,8 @@ defmodule Grapevine.Application do
     if report_errors do
       {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     end
+
+    start_telnet_application()
 
     opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
     Supervisor.start_link(children, opts)
@@ -45,5 +48,12 @@ defmodule Grapevine.Application do
       ],
       period: 10_000
     ]
+  end
+
+  # Start the telnet application in development mode
+  defp start_telnet_application() do
+    if @env == :dev do
+      :application.start(:telnet)
+    end
   end
 end
