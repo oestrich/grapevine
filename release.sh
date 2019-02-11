@@ -2,7 +2,11 @@
 set -e
 
 SHA=`git rev-parse HEAD`
-COOKIE=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+
+if [ -z ${COOKIE+x} ]; then
+  COOKIE=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+fi
+
 DOCKER_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 mkdir -p tmp/
