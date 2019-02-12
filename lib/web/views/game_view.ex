@@ -33,6 +33,16 @@ defmodule Web.GameView do
     game.cover_key != nil
   end
 
+  def show_play_button?(game) do
+    game.enable_web_client && telnet_connection?(game)
+  end
+
+  defp telnet_connection?(game) do
+    Enum.any?(game.connections, fn connection ->
+      connection.type == "telnet"
+    end)
+  end
+
   def render("online.json", %{games: games}) do
     %{
       collection: render_many(games, __MODULE__, "presence.json")
