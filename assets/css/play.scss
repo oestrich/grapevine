@@ -29,9 +29,10 @@
     right: 16px;
     width: 300px;
 
-    &.alert-danger {
-      background-color: rgba($red-3, 0.6);
-      border-color: rgba($red-2, 0.6);
+    &.alert-warning {
+      background-color: rgba($yellow-4, 0.6);
+      border-color: rgba($yellow-1, 0.6);
+      color: $grey-04;
     }
   }
 
