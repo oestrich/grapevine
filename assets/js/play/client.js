@@ -27,8 +27,8 @@ class Client extends React.Component {
       <Provider store={store}>
         <SocketProvider game={this.props.game} userToken={userToken} sessionToken={sessionToken}>
           <div className="play">
-            <div className="alert alert-danger">
-              <b>NOTE:</b> This web client is in <b>beta</b> and might close your connection at any time.
+            <div className="alert alert-warning">
+              <b>NOTE:</b> This web client is in <b>beta</b>.
             </div>
 
             <div className="window">

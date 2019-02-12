@@ -1,5 +1,137 @@
 @import "colors";
 
+main {
+  padding-top: 1em;
+}
+
+h3 a,
+h4 a {
+  color: black;
+  text-decoration: underline;
+}
+
+h3 a i,
+h4 a i {
+  display: none !important;
+}
+
+h3 a:hover,
+h4 a:hover {
+  color: black;
+}
+
+h3:hover a i,
+h4:hover a i {
+  display: inline !important;
+}
+
+footer {
+  padding-top: 2em;
+}
+
+pre {
+  background-color: #e9ecef;
+  padding: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar {
+  background-color: #000000;
+}
+.navbar .navbar-brand {
+  color: #ffffff;
+}
+.navbar .navbar-brand:hover,
+.navbar .navbar-brand:focus {
+  color: #000000;
+}
+.navbar .navbar-text {
+  color: #ffffff;
+}
+.navbar .navbar-text a {
+  color: #000000;
+}
+.navbar .navbar-text a:hover,
+.navbar .navbar-text a:focus {
+  color: #ffffff;
+}
+.navbar .navbar-nav .nav-link {
+  color: #ffffff;
+  border-radius: .25rem;
+  margin: 0 0.25em;
+}
+.navbar .navbar-nav .nav-link:not(.disabled):hover,
+.navbar .navbar-nav .nav-link:not(.disabled):focus {
+  color: #ffffff;
+}
+.navbar .navbar-nav .nav-item.active .nav-link,
+.navbar .navbar-nav .nav-item.active .nav-link:hover,
+.navbar .navbar-nav .nav-item.active .nav-link:focus,
+.navbar .navbar-nav .nav-item.show .nav-link,
+.navbar .navbar-nav .nav-item.show .nav-link:hover,
+.navbar .navbar-nav .nav-item.show .nav-link:focus {
+  color: #000000;
+  background-color: #00ff00;
+}
+.navbar .navbar-toggle {
+  border-color: #00ff00;
+}
+.navbar .navbar-toggle:hover,
+.navbar .navbar-toggle:focus {
+  background-color: #00ff00;
+}
+.navbar .navbar-toggle .navbar-toggler-icon {
+  color: #ffffff;
+}
+.navbar .navbar-collapse,
+.navbar .navbar-form {
+  border-color: #ffffff;
+}
+.navbar .navbar-link {
+  color: #ffffff;
+}
+.navbar .navbar-link:hover {
+  color: #000000;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/**
+ * Bootstrap overrides
+ */
+
+/* Charts */
+.chart {
+  background-color: #000000;
+  padding: 20px;
+  height: 300px;
+}
+
+h3 .actions {
+  display: inline-block;
+}
+
+h3 a {
+  text-decoration: none !important;
+}
+
+.colors {
+  .color {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+  }
+}
+
 body {
   color: $grey-04;
 }
