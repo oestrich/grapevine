@@ -3,14 +3,11 @@ Description=Runner for Grapevine
 After=network.target
 
 [Service]
-Type=forking
 User=deploy
 Group=deploy
 WorkingDirectory=/home/deploy/grapevine
 Environment=LANG=en_US.UTF-8
-ExecStart=/home/deploy/grapevine/bin/grapevine start
-ExecStop=/home/deploy/grapevine/bin/grapevine stop
-PIDFile=/home/deploy/grapevine.pid
+ExecStart=/home/deploy/grapevine/bin/grapevine foreground
 SyslogIdentifier=grapevine
 RemainAfterExit=no
 Restart=on-failure
