@@ -1,0 +1,9 @@
+<section>
+  <nav>
+    <h3 class="name">Not Found</h3>
+  </nav>
+
+  <p>This page cannot be found.</p>
+
+  <p><%= link("Back to the home page.", to: page_path(@conn, :index)) %></p>
+</section>

@@ -4,6 +4,8 @@ defmodule Web.PlayController do
   alias Grapevine.Games
   alias Web.Game
 
+  action_fallback(Web.FallbackController)
+
   def show(conn, %{"game_id" => short_name}) do
     with {:ok, game} <- Games.get_by_short(short_name, display: true),
          {:ok, game} <- Games.check_web_client(game),
@@ -17,6 +19,9 @@ defmodule Web.PlayController do
       |> put_layout("fullscreen.html")
       |> render("show.html")
     else
+      {:error, :not_found} ->
+        {:error, :not_found}
+
       {:error, _} ->
         conn
         |> put_flash(:error, "The web client is disabled for this game.")

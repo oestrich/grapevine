@@ -5,6 +5,8 @@ defmodule Web.GameController do
   alias Grapevine.Games
   alias Grapevine.Presence
 
+  action_fallback(Web.FallbackController)
+
   def index(conn, params) do
     filter = Map.get(params, "games", %{"online" => "yes"})
     games = Games.public(filter: filter)
