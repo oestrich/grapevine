@@ -19,9 +19,7 @@
     </h3>
 
     <div class="actions">
-      <%= if show_play_button?(@game) do %>
-        <%= link("Play", to: play_path(@conn, :show, @game.short_name), class: "btn btn-primary") %>
-      <% end %>
+      <%= play_button(@conn, @game) %>
       <%= if Map.get(assigns, :current_user) && @game.user_id == @current_user.id do %>
         <%= link("Edit", to: manage_game_path(@conn, :show, @game.id), class: "btn btn-flat") %>
       <% end %>

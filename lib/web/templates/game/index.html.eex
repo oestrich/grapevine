@@ -59,9 +59,7 @@
               <div class="tagline">
                 <%= game.tagline %>
                 <span class="float-right">
-                  <%= if show_play_button?(game) do %>
-                    <%= link("Play", to: play_path(@conn, :show, game.short_name), class: "btn btn-primary") %>
-                  <% end %>
+                  <%= play_button(@conn, game) %>
                 </span>
               </div>
             </div>

@@ -33,13 +33,40 @@ defmodule Web.GameView do
     game.cover_key != nil
   end
 
+  def play_button(conn, game) do
+    case show_play_button?(game) do
+      true ->
+        web_connection =
+          Enum.find(game.connections, fn connection ->
+            connection.type == "web"
+          end)
+
+        case !is_nil(web_connection) do
+          true ->
+            link("Play", to: web_connection.url, target: "_blank", class: "btn btn-primary")
+
+          false ->
+            link("Play", to: play_path(conn, :show, game.short_name), class: "btn btn-primary")
+        end
+
+      false ->
+        ""
+    end
+  end
+
   def show_play_button?(game) do
-    game.enable_web_client && telnet_connection?(game)
+    game.enable_web_client && (telnet_connection?(game) || web_connection?(game))
   end
 
   defp telnet_connection?(game) do
     Enum.any?(game.connections, fn connection ->
       connection.type == "telnet"
+    end)
+  end
+
+  defp web_connection?(game) do
+    Enum.any?(game.connections, fn connection ->
+      connection.type == "web"
     end)
   end
 
