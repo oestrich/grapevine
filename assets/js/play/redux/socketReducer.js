@@ -1,10 +1,10 @@
 import _ from "underscore";
 import Anser from "anser";
-import {combineReducers, createStore} from 'redux';
+import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 
-const socketInitialState = {
+const INITIAL_STATE = {
   buffer: "",
   lines: [],
   lineId: 0,
@@ -37,50 +37,59 @@ let parseText = (state, text) => {
   return {...state, lines: lines, lineId: state.lineId + increment};
 };
 
-export const socketReducer = function(state = socketInitialState, action) {
-  switch (action.type) {
-    case Types.SOCKET_CONNECTED: {
-      const text = "\u001b[33mConnecting...\n\u001b[0m";
-      state = parseText(state, text);
-      return {...state, connected: true};
-    }
-    case Types.SOCKET_DISCONNECTED: {
-      if (!state.connected) {
-        return state;
-      }
+export const socketConnected = (state, action) => {
+  const text = "\u001b[33mConnecting...\n\u001b[0m";
+  state = parseText(state, text);
+  return {...state, connected: true};
+};
 
-      const text = "\u001b[31mDisconnected\n\u001b[0m";
-      state = parseText(state, text);
-      return {...state, connected: false};
-    }
-    case Types.SOCKET_ECHO: {
-      const {text} = action;
-      return {...state, buffer: state.buffer + text};
-    }
-    case Types.SOCKET_GA: {
-      if (state.buffer === "") {
-        return state;
-      }
+export const socketDisconnected = (state, action) => {
+  if (!state.connected) {
+    return state;
+  }
 
-      state = parseText(state, state.buffer);
-      return {...state, buffer: ""};
-    }
-    case Types.SOCKET_RECIEVE_GMCP: {
-      const {message, data} = action;
-      return {...state, gmcp: {...state.gmcp, [message]: data}};
-    }
-    case Types.SOCKET_RECIEVE_OPTION: {
-      switch (action.key) {
-        case "prompt_type": {
-          return {...state, options: {...state.options, promptType: action.value}};
-        }
-        default: {
-          return state;
-        }
-      }
+  const text = "\u001b[31mDisconnected\n\u001b[0m";
+  state = parseText(state, text);
+  return {...state, connected: false};
+};
+
+export const socketEcho = (state, action) => {
+  const {text} = action;
+  return {...state, buffer: state.buffer + text};
+};
+
+export const socketGA = (state, action) => {
+  if (state.buffer === "") {
+    return state;
+  }
+
+  state = parseText(state, state.buffer);
+  return {...state, buffer: ""};
+};
+
+export const socketReceiveGMCP = (state, action) => {
+  const {message, data} = action;
+  return {...state, gmcp: {...state.gmcp, [message]: data}};
+};
+
+export const socketReceiveOption = (state, action) => {
+  switch (action.key) {
+    case "prompt_type": {
+      return {...state, options: {...state.options, promptType: action.value}};
     }
     default: {
       return state;
     }
   }
+};
+
+export const HANDLERS = {
+  [Types.SOCKET_CONNECTED]: socketConnected,
+  [Types.SOCKET_DISCONNECTED]: socketDisconnected,
+  [Types.SOCKET_ECHO]: socketEcho,
+  [Types.SOCKET_GA]: socketGA,
+  [Types.SOCKET_RECEIVE_GMCP]: socketReceiveGMCP,
+  [Types.SOCKET_RECEIVE_OPTION]: socketReceiveOption,
 }
+
+export const socketReducer = createReducer(INITIAL_STATE, HANDLERS);

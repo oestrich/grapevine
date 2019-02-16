@@ -49,7 +49,7 @@ class SocketProvider extends React.Component {
   }
 
   setOption(option) {
-    this.props.socketRecieveOption(option);
+    this.props.socketReceiveOption(option);
   }
 
   getChildContext() {
@@ -75,5 +75,5 @@ export default SocketProvider = connect(null, {
   socketEcho: Creators.socketEcho,
   socketGA: Creators.socketGA,
   socketReceiveGMCP: Creators.socketReceiveGMCP,
-  socketRecieveOption: Creators.socketRecieveOption
+  socketReceiveOption: Creators.socketReceiveOption
 })(SocketProvider);

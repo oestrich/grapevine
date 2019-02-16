@@ -11,5 +11,5 @@ export const {Types, Creators} = createActions({
   socketEcho: ["text"],
   socketGA: null,
   socketReceiveGMCP: ["message", "data"],
-  socketRecieveOption: ({key, value}) => ({type: "SOCKET_RECIEVE_OPTION", key, value})
+  socketReceiveOption: ({key, value}) => ({type: "SOCKET_RECEIVE_OPTION", key, value})
 });

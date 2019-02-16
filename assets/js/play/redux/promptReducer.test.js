@@ -1,7 +1,4 @@
-import {
-  promptReducer
-} from "./promptReducer";
-
+import {promptReducer} from "./promptReducer";
 import {Creators} from "./actions";
 
 describe("prompt reducer", () => {
