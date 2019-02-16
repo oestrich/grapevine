@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {
-  promptClear,
-  promptSetCurrentText,
-  promptHistoryAdd,
-  promptHistoryScrollBackward,
-  promptHistoryScrollForward
+  Creators
 } from "../redux/actions";
 
 import {
@@ -122,9 +118,9 @@ let mapStateToProps = (state) => {
 };
 
 export default Prompt = connect(mapStateToProps, {
-  promptClear,
-  promptHistoryAdd,
-  promptHistoryScrollBackward,
-  promptHistoryScrollForward,
-  promptSetCurrentText,
+  promptClear: Creators.promptClear,
+  promptHistoryAdd: Creators.promptHistoryAdd,
+  promptHistoryScrollBackward: Creators.promptHistoryScrollBackward,
+  promptHistoryScrollForward: Creators.promptHistoryScrollForward,
+  promptSetCurrentText: Creators.promptSetCurrentText,
 })(Prompt);

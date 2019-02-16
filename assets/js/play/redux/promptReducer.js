@@ -1,60 +1,62 @@
 import _ from "underscore";
+import { createReducer } from "reduxsauce";
 
-import {
-  PROMPT_CLEAR,
-  PROMPT_HISTORY_ADD,
-  PROMPT_HISTORY_SCROLL_BACKWARD,
-  PROMPT_HISTORY_SCROLL_FORWARD,
-  PROMPT_SET_CURRENT_TEXT,
-} from "./actions";
+import {Types} from "./actions";
 
-const promptInitialState = {
+const INITITAL_STATE = {
   index: -1,
   history: [],
   currentText: "",
   displayText: "",
 }
 
-export const promptReducer = (state = promptInitialState, action) => {
-  switch (action.type) {
-    case PROMPT_CLEAR: {
-      return {...state, index: -1, currentText: "", displayText: ""};
-    }
-    case PROMPT_SET_CURRENT_TEXT: {
-      const {text} = action.payload;
-      return {...state, index: -1, currentText: text, displayText: text};
-    }
-    case PROMPT_HISTORY_ADD: {
-      if (_.first(state.history) == state.displayText) {
-        return {...state, index: -1};
-      } else {
-        let history = [state.displayText, ...state.history];
-        history = _.first(history, 10);
-        return {...state, history: history};
-      }
-    }
-    case PROMPT_HISTORY_SCROLL_BACKWARD: {
-      let index = state.index + 1;
+export const promptClear = (state, action) => {
+  return {...state, index: -1, currentText: "", displayText: ""};
+};
 
-      if (state.history[index] != undefined) {
-        return {...state, index: index, displayText: state.history[index]};
-      }
+export const promptSetCurrentText = (state, action) => {
+  const {text} = action;
+  return {...state, index: -1, currentText: text, displayText: text};
+}
 
-      return state;
-    }
-    case PROMPT_HISTORY_SCROLL_FORWARD: {
-      let index = state.index - 1;
-
-      if (index == -1) {
-        return {...state, index: 0, displayText: state.currentText};
-      } else if (state.history[index] != undefined) {
-        return {...state, index: index, displayText: state.history[index]};
-      }
-
-      return state;
-    }
-    default: {
-      return state;
-    }
+export const promptHistoryAdd = (state, action) => {
+  if (_.first(state.history) == state.displayText) {
+    return {...state, index: -1};
+  } else {
+    let history = [state.displayText, ...state.history];
+    history = _.first(history, 10);
+    return {...state, history: history};
   }
 }
+
+export const promptHistoryScrollBackward = (state, action) => {
+  let index = state.index + 1;
+
+  if (state.history[index] != undefined) {
+    return {...state, index: index, displayText: state.history[index]};
+  }
+
+  return state;
+}
+
+export const promptHistoryScrollForward = (state, action) => {
+  let index = state.index - 1;
+
+  if (index == -1) {
+    return {...state, index: 0, displayText: state.currentText};
+  } else if (state.history[index] != undefined) {
+    return {...state, index: index, displayText: state.history[index]};
+  }
+
+  return state;
+}
+
+export const HANDLERS = {
+  [Types.PROMPT_CLEAR]: promptClear,
+  [Types.PROMPT_SET_CURRENT_TEXT]: promptSetCurrentText,
+  [Types.PROMPT_HISTORY_ADD]: promptHistoryAdd,
+  [Types.PROMPT_HISTORY_SCROLL_BACKWARD]: promptHistoryScrollBackward,
+  [Types.PROMPT_HISTORY_SCROLL_FORWARD]: promptHistoryScrollForward,
+}
+
+export const promptReducer = createReducer(INITITAL_STATE, HANDLERS);

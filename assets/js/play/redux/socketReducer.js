@@ -2,14 +2,7 @@ import _ from "underscore";
 import Anser from "anser";
 import {combineReducers, createStore} from 'redux';
 
-import {
-  SOCKET_CONNECTED,
-  SOCKET_DISCONNECTED,
-  SOCKET_ECHO,
-  SOCKET_GA,
-  SOCKET_GMCP,
-  SOCKET_OPTION,
-} from "./actions";
+import {Types} from "./actions";
 
 const socketInitialState = {
   buffer: "",
@@ -46,12 +39,12 @@ let parseText = (state, text) => {
 
 export const socketReducer = function(state = socketInitialState, action) {
   switch (action.type) {
-    case SOCKET_CONNECTED: {
+    case Types.SOCKET_CONNECTED: {
       const text = "\u001b[33mConnecting...\n\u001b[0m";
       state = parseText(state, text);
       return {...state, connected: true};
     }
-    case SOCKET_DISCONNECTED: {
+    case Types.SOCKET_DISCONNECTED: {
       if (!state.connected) {
         return state;
       }
@@ -60,11 +53,11 @@ export const socketReducer = function(state = socketInitialState, action) {
       state = parseText(state, text);
       return {...state, connected: false};
     }
-    case SOCKET_ECHO: {
-      const {text} = action.payload;
+    case Types.SOCKET_ECHO: {
+      const {text} = action;
       return {...state, buffer: state.buffer + text};
     }
-    case SOCKET_GA: {
+    case Types.SOCKET_GA: {
       if (state.buffer === "") {
         return state;
       }
@@ -72,16 +65,14 @@ export const socketReducer = function(state = socketInitialState, action) {
       state = parseText(state, state.buffer);
       return {...state, buffer: ""};
     }
-    case SOCKET_GMCP: {
-      const {message, data} = action.payload;
+    case Types.SOCKET_RECIEVE_GMCP: {
+      const {message, data} = action;
       return {...state, gmcp: {...state.gmcp, [message]: data}};
     }
-    case SOCKET_OPTION: {
-      let option = action.payload;
-
-      switch (option.key) {
+    case Types.SOCKET_RECIEVE_OPTION: {
+      switch (action.key) {
         case "prompt_type": {
-          return {...state, options: {...state.options, promptType: option.value}};
+          return {...state, options: {...state.options, promptType: action.value}};
         }
         default: {
           return state;

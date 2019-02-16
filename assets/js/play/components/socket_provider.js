@@ -3,13 +3,9 @@ import React, {Fragment} from "react";
 import {connect} from 'react-redux';
 
 import {
-  socketConnected,
-  socketDisconnected,
-  socketEcho,
-  socketGA,
-  socketReceiveGMCP,
-  socketRecieveOption
+  Creators
 } from "../redux/actions";
+
 import {ClientSocket} from "../socket";
 
 class SocketProvider extends React.Component {
@@ -74,10 +70,10 @@ SocketProvider.childContextTypes = {
 }
 
 export default SocketProvider = connect(null, {
-  socketConnected,
-  socketDisconnected,
-  socketEcho,
-  socketGA,
-  socketReceiveGMCP,
-  socketRecieveOption
+  socketConnected: Creators.socketConnected,
+  socketDisconnected: Creators.socketDisconnected,
+  socketEcho: Creators.socketEcho,
+  socketGA: Creators.socketGA,
+  socketReceiveGMCP: Creators.socketReceiveGMCP,
+  socketRecieveOption: Creators.socketRecieveOption
 })(SocketProvider);
