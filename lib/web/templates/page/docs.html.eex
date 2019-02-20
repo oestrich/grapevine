@@ -16,7 +16,12 @@
 
       <ul>
         <li><%= link("Game Configuration", to: "#config") %></li>
-        <li><%= link("Channels", to: "#channels-basic") %></li>
+        <li>
+          <%= link("Channels", to: "#channels-basic") %>
+          <ul>
+            <li><%= link("Language", to: "#channels-language") %></li>
+          </ul>
+        </li>
         <li><%= link("Server Support", to: "#server-support") %></li>
         <li><%= link("Connecting", to: "#connecting") %></li>
         <li><%= link("Expectations of a Connecting Game", to: "#citizen") %></li>
@@ -102,7 +107,7 @@
   <% end %>
 </h3>
 
-<p>You also subscribe to the channels you want your game to pay attention to. Right now Grapevine has the following channels:<p>
+<p>You also subscribe to the channels you want your game to pay attention to. Right now Grapevine has the following public channels:<p>
 
 <ul>
   <%= Enum.map(Channels.all(), fn channel -> %>
@@ -115,6 +120,19 @@
 <p>A valid channel name must be between 3 and 15 characters (inclusive), letters (<code>a-zA-Z</code>), <code>_</code>, and <code>-</code> only.</p>
 
 <p>You will only recieve messages for channels you are subscribed to.</p>
+
+<h4 id="channels-language">
+  <%= link(to: "#channels-language") do %>
+    Language
+    <i class="fas fa-link"></i>
+  <% end %>
+</h4>
+
+<p>Many games connect to Grapevine's chat, and all of them have varying levels of allowed chat.</p>
+
+<p>Grapevine channels may contain adult language, so consider making your implementation of cross-chat opt-in.</p>
+
+<p>While adult language is allowed, offensive language is not. Please read our <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %> for more information.</p>
 
 <h3 id="server-support">
   <%= link(to: "#server-support") do %>
