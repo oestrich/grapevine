@@ -25,3 +25,5 @@ config :grapevine, Grapevine.Mailer, adapter: Bamboo.TestAdapter
 config :grapevine, :modules, client: Test.FakeClient
 
 config :grapevine, :storage, backend: :test
+
+config :grapevine, :web, url: [host: "www.example.com"]

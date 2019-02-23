@@ -23,6 +23,8 @@ defmodule Web do
       import Plug.Conn
       import Web.Router.Helpers
       import Web.Gettext
+
+      alias Web.Router.Helpers, as: Routes
     end
   end
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render("_head.html", assigns) %>
+
+  <body id="body" data-user-token="<%= user_token(@conn) %>" data-session-token="<%= session_token(@conn) %>">
+    <header>
+      <nav class="navbar navbar-expand-md">
+        <div class="container">
+          <%= link(to: grapevine_url(), class: "navbar-brand", target: "_blank") do %>
+            <%= img_tag("/images/grapevine.png", height: 30) %>
+          <% end %>
+
+          <div class="collapse navbar-collapse" id="navbarLinks">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <%= link(to: @game.homepage_url, class: "nav-link", target: "_blank") do %>
+                  <%= @game.name %> &raquo;
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <%= render @view_module, @view_template, assigns %>
+
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
+    <%= render("_analytics.html", assigns) %>
+  </body>
+</html>
