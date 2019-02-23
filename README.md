@@ -74,6 +74,7 @@ config :grapevine,
 
 ## Setting up a new Play CNAME
 
+- Game sets the CNAME to `grapevine.haus`
 - Game must have a homepage url
 - Game must have the web client enabled
 - Update game's record for their CNAME
