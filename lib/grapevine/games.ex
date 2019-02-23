@@ -96,6 +96,15 @@ defmodule Grapevine.Games do
   end
 
   @doc """
+  Load all games with a cname
+  """
+  def with_cname() do
+    Game
+    |> where([g], not is_nil(g.cname))
+    |> Repo.all()
+  end
+
+  @doc """
   Fetch a game
   """
   @spec get(id()) :: Game.t()
@@ -132,7 +141,7 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
+        {:ok, Repo.preload(game, [:connections, :gauges, :redirect_uris])}
     end
   end
 
@@ -147,6 +156,15 @@ defmodule Grapevine.Games do
       game ->
         {:ok, Repo.preload(game, [:connections, :gauges, :redirect_uris])}
     end
+  end
+
+  @doc """
+  Get a game by it's CNAME
+
+  This value must be set from the database
+  """
+  def get_by_host(host) do
+    get_by(cname: host, display: true)
   end
 
   @doc """

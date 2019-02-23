@@ -72,4 +72,13 @@ config :grapevine,
   ]
 ```
 
+## Setting up a new Play CNAME
+
+- Game must have a homepage url
+- Game must have the web client enabled
+- Update game's record for their CNAME
+- Update nginx config for new domain
+- Run certbot for the new domain
+- Refresh CNAMEs in ETS `Grapevine.CNAMEs.reload()`
+
 [websocket-docs]: https://grapevine.haus/docs

@@ -40,6 +40,8 @@ defmodule Grapevine.Games.Game do
     field(:cover_key, Ecto.UUID)
     field(:cover_extension, :string)
 
+    field(:cname, :string)
+
     belongs_to(:user, User)
 
     has_many(:achievements, Achievement)
