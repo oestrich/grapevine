@@ -33,7 +33,7 @@ defmodule Grapevine.CNAMEs do
 
   def init(_) do
     create_table()
-    {:ok, %{}}
+    {:ok, %{}, {:continue, :setup_ets}}
   end
 
   def handle_continue(:setup_ets, state) do
