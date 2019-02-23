@@ -3,7 +3,7 @@ defmodule Web.Endpoint do
   use Plug.ErrorHandler
   use Sentry.Plug
 
-  socket("/websocket", Web.UserSocket, websocket: true)
+  socket("/websocket", Web.UserSocket, websocket: true, check_origin: false)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
