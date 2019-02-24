@@ -55,7 +55,6 @@ defmodule Grapevine.Application do
       measurements: [
         {Metrics.GameInstrumenter, :dispatch_game_count, []},
         {Metrics.SocketInstrumenter, :dispatch_socket_count, []},
-        {Metrics.ClientInstrumenter, :dispatch_client_count, []}
       ],
       period: 10_000
     ]
