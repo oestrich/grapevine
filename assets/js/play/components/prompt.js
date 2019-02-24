@@ -100,6 +100,9 @@ class Prompt extends React.Component {
           className="form-control"
           autoFocus={true}
           onKeyDown={this.onKeyDown}
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellcheck="false"
           ref={el => { this.prompt = el; }} />
         <button id="send" className="btn btn-primary" onClick={this.buttonSendMessage}>Send</button>
       </div>
