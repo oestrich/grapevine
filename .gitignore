@@ -32,6 +32,7 @@ npm-debug.log
 /scp.sh
 *.sql
 /deploy/hosts_*
+/deploy/group_vars/*
 /.vagrant
 /tmp/
 
