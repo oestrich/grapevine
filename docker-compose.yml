@@ -6,7 +6,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - 4001:4001
+      - 4100:4100
 
   postgres:
     image: postgres:10.4-alpine

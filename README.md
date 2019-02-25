@@ -34,7 +34,7 @@ mix ecto.reset
 mix phx.server
 ```
 
-This will start a web server on port 4001. You can now load [http://localhost:4001/](http://localhost:4001/) to view the application.
+This will start a web server on port 4100. You can now load [http://localhost:4100/](http://localhost:4100/) to view the application.
 
 ### Running Tests
 

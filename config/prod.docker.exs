@@ -9,7 +9,7 @@ config :grapevine, Grapevine.Repo,
   pool_size: 10
 
 config :grapevine, Web.Endpoint,
-  http: [port: 4001],
+  http: [port: 4100],
   url: [host: {:system, "HOST"}, port: 443, scheme: "https"],
   server: true,
   cache_static_manifest: "priv/static/cache_manifest.json"
