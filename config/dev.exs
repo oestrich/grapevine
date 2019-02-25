@@ -66,7 +66,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :grapevine, Grapevine.Mailer, adapter: Bamboo.LocalAdapter
 
-config :grapevine, :web, host: "localhost"
+config :grapevine, :web, host: "localhost", url: [host: "localhost", scheme: "http", port: 4100]
 
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
