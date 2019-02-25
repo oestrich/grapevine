@@ -128,6 +128,7 @@ defmodule Grapevine.Telnet.MSSPClient do
       state
       |> Map.put(:mssp_module, __MODULE__)
       |> Map.put(:connection, connection)
+      |> Map.put(:type, connection.type)
       |> Map.put(:game, %{connection.game | gauges: []})
       |> Map.put(:host, connection.host)
       |> Map.put(:port, connection.port)
@@ -171,6 +172,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     def init(opts, state) do
       state
       |> Map.put(:mssp_module, __MODULE__)
+      |> Map.put(:type, "telnet")
       |> Map.put(:host, Keyword.get(opts, :host))
       |> Map.put(:port, Keyword.get(opts, :port))
       |> Map.put(:channel, Keyword.get(opts, :channel))

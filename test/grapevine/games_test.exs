@@ -299,4 +299,40 @@ defmodule Grapevine.GamesTest do
       assert game.mssp_last_seen_at
     end
   end
+
+  describe "get a connection for the web client to use" do
+    test "secure telnet" do
+      game = create_game(create_user())
+      secure_connection = create_connection(game, %{type: "secure telnet", host: "localhost", port: 5443})
+
+      {:ok, connection} = Games.get_web_client_connection(game)
+
+      assert connection.id == secure_connection.id
+    end
+
+    test "telnet" do
+      game = create_game(create_user())
+      telnet_connection = create_connection(game, %{type: "telnet", host: "localhost", port: 5555})
+
+      {:ok, connection} = Games.get_web_client_connection(game)
+
+      assert connection.id == telnet_connection.id
+    end
+
+    test "secure telnet is preferred" do
+      game = create_game(create_user())
+      secure_connection = create_connection(game, %{type: "secure telnet", host: "localhost", port: 5443})
+      _telnet_connection = create_connection(game, %{type: "telnet", host: "localhost", port: 5555})
+
+      {:ok, connection} = Games.get_web_client_connection(game)
+
+      assert connection.id == secure_connection.id
+    end
+
+    test "no connections" do
+      game = create_game(create_user())
+
+      {:error, :not_found} = Games.get_web_client_connection(game)
+    end
+  end
 end

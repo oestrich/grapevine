@@ -59,6 +59,22 @@ defmodule Grapevine.TestHelpers do
     )
   end
 
+  def create_connection(game, attributes \\ %{}) do
+    attributes =
+      Map.merge(
+        %{
+          type: "telnet",
+          host: "localhost",
+          port: "5555"
+        },
+        attributes
+      )
+
+    {:ok, connection} = Games.create_connection(game, attributes)
+
+    connection
+  end
+
   def create_application(attributes \\ %{}) do
     attributes =
       Map.merge(

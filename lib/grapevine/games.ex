@@ -224,6 +224,31 @@ defmodule Grapevine.Games do
   def get_web_client_connection(game) do
     game = Repo.preload(game, [:connections])
 
+    case get_secure_telnet_connection(game) do
+      {:ok, connection} ->
+        {:ok, connection}
+
+      {:error, :not_found} ->
+        get_telnet_connection(game)
+    end
+  end
+
+  defp get_secure_telnet_connection(game) do
+    secure_telnet =
+      Enum.find(game.connections, fn connection ->
+        connection.type == "secure telnet"
+      end)
+
+    case secure_telnet do
+      nil ->
+        {:error, :not_found}
+
+      connection ->
+        {:ok, connection}
+    end
+  end
+
+  defp get_telnet_connection(game) do
     telnet =
       Enum.find(game.connections, fn connection ->
         connection.type == "telnet"
