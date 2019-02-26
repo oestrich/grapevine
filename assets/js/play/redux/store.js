@@ -17,6 +17,14 @@ export const getSocketState = (state) => {
   return state.socket;
 };
 
+export const getSocketConnectionState = (state) => {
+  return getSocketState(state).connected;
+}
+
+export const getSocketConnection = (state) => {
+  return getSocketState(state).connection;
+}
+
 export const getSocketPromptType = (state) => {
   return getSocketState(state).options.promptType;
 };

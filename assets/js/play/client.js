@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import Keys from './keys';
 import {store} from "./redux/store";
 
+import ConnectionStatus from "./components/connection_status";
 import Gauges from "./components/gauges";
 import Prompt from "./components/prompt";
 import SocketProvider from "./components/socket_provider";
@@ -30,6 +31,8 @@ class Client extends React.Component {
             <div className="alert alert-warning">
               <b>NOTE:</b> This web client is in <b>beta</b>.
             </div>
+
+            <ConnectionStatus />
 
             <div className="window">
               <Terminal />

@@ -44,6 +44,10 @@ class SocketProvider extends React.Component {
     }, 200);
   }
 
+  receiveConnection(data) {
+    this.props.socketReceiveConnection(data);
+  }
+
   receiveGMCP(message, data) {
     this.props.socketReceiveGMCP(message, data);
   }
@@ -74,6 +78,7 @@ export default SocketProvider = connect(null, {
   socketDisconnected: Creators.socketDisconnected,
   socketEcho: Creators.socketEcho,
   socketGA: Creators.socketGA,
+  socketReceiveConnection: Creators.socketReceiveConnection,
   socketReceiveGMCP: Creators.socketReceiveGMCP,
   socketReceiveOption: Creators.socketReceiveOption
 })(SocketProvider);

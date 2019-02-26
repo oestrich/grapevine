@@ -5,6 +5,7 @@ import {createReducer} from "reduxsauce";
 import {Types} from "./actions";
 
 const INITIAL_STATE = {
+  connected: false,
   buffer: "",
   lines: [],
   lineId: 0,
@@ -48,8 +49,6 @@ export const socketDisconnected = (state, action) => {
     return state;
   }
 
-  const text = "\u001b[31mDisconnected\n\u001b[0m";
-  state = parseText(state, text);
   return {...state, connected: false};
 };
 
@@ -65,6 +64,10 @@ export const socketGA = (state, action) => {
 
   state = parseText(state, state.buffer);
   return {...state, buffer: ""};
+};
+
+export const socketReceiveConnection = (state, action) => {
+  return {...state, connection: action.payload};
 };
 
 export const socketReceiveGMCP = (state, action) => {
@@ -88,6 +91,7 @@ export const HANDLERS = {
   [Types.SOCKET_DISCONNECTED]: socketDisconnected,
   [Types.SOCKET_ECHO]: socketEcho,
   [Types.SOCKET_GA]: socketGA,
+  [Types.SOCKET_RECEIVE_CONNECTION]: socketReceiveConnection,
   [Types.SOCKET_RECEIVE_GMCP]: socketReceiveGMCP,
   [Types.SOCKET_RECEIVE_OPTION]: socketReceiveOption,
 }

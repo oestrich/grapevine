@@ -16,7 +16,7 @@ describe("socket reducer", () => {
 
     state = socketReducer(state, Creators.socketDisconnected());
 
-    expect(state.lines.length).toEqual(3);
+    expect(state.lines.length).toEqual(0);
     expect(state.connected).toEqual(false);
   });
 
@@ -51,5 +51,13 @@ describe("socket reducer", () => {
     state = socketReducer(state, Creators.socketReceiveOption({key: "prompt_type", value: "password"}));
 
     expect(state.options).toEqual({"promptType": "password"});
+  });
+
+  test("socket receive connection information", () => {
+    let state = {connection: {}};
+
+    state = socketReducer(state, Creators.socketReceiveConnection({type: "telnet", host: "localhost", port: 5555}));
+
+    expect(state.connection).toEqual({type: "telnet", host: "localhost", port: 5555});
   });
 });

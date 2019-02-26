@@ -10,6 +10,7 @@ export const {Types, Creators} = createActions({
   socketDisconnected: null,
   socketEcho: ["text"],
   socketGA: null,
+  socketReceiveConnection: ({type, host, port}) => ({type: "SOCKET_RECEIVE_CONNECTION", payload: {type, host, port}}),
   socketReceiveGMCP: ["message", "data"],
   socketReceiveOption: ({key, value}) => ({type: "SOCKET_RECEIVE_OPTION", key, value})
 });

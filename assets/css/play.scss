@@ -23,11 +23,25 @@
     white-space: pre-wrap;
   }
 
+  .connection {
+    position: absolute;
+    top: 12px;
+    right: 300px;
+
+    .green {
+      color: $green;
+    }
+
+    .red {
+      color: $red;
+    }
+  }
+
   .alert {
     position: absolute;
     top: 12px;
     right: 16px;
-    width: 300px;
+    width: 280px;
 
     &.alert-warning {
       background-color: rgba($yellow-4, 0.6);

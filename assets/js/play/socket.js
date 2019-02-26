@@ -23,6 +23,10 @@ class ClientSocket {
       this.client.appendText(data.message);
     });
 
+    this.channel.on("connection", (data) => {
+      this.client.receiveConnection(data);
+    });
+
     this.channel.on("gmcp", (data) => {
       this.client.receiveGMCP(data.module, data.data);
     });
@@ -33,6 +37,10 @@ class ClientSocket {
 
     this.channel.on("option", (data) => {
       this.client.setOption(data);
+    });
+
+    this.channel.onClose(() => {
+      this.client.disconnected();
     });
 
     this.channel.onError(() => {

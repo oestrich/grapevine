@@ -55,7 +55,11 @@ defmodule Web.PlayChannel do
       channel_pid: socket.channel_pid
     )
 
+    Process.flag(:trap_exit, true)
+    Process.link(pid)
+
     socket = assign(socket, :client_pid, pid)
+    push(socket, "connection", Map.take(connection, [:type, :host, :port]))
 
     {:ok, socket}
   end
@@ -88,5 +92,15 @@ defmodule Web.PlayChannel do
   def handle_info({:option, key, value}, socket) do
     push(socket, "option", %{key: key, value: value})
     {:noreply, socket}
+  end
+
+  def handle_info({:EXIT, pid, _reason}, socket) do
+    case socket.assigns.client_pid == pid do
+      true ->
+        {:stop, :normal, socket}
+
+      false ->
+        {:noreply, socket}
+    end
   end
 end
