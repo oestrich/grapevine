@@ -26,7 +26,8 @@ defmodule Web.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
-  plug(Plug.Logger)
+  plug(Plug.RequestId)
+  plug(Logster.Plugs.Logger)
 
   plug(Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
