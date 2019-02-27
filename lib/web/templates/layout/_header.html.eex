@@ -22,6 +22,11 @@
             <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
           </li>
           <%= if Map.get(assigns, :current_user) do %>
+            <%= if Accounts.is_admin?(@current_user) do %>
+              <li class="nav-item">
+                <%= link("Admin", to: admin_dashboard_path(@conn, :index), class: "nav-link") %>
+              </li>
+            <% end %>
             <li class="nav-item">
               <%= link("Settings", to: manage_setting_path(@conn, :show), class: "nav-link") %>
             </li>

@@ -1,6 +1,8 @@
 defmodule Web.LayoutView do
   use Web, :view
 
+  alias Grapevine.Accounts
+
   @config Application.get_env(:grapevine, :web)[:url]
 
   def user_token(%{assigns: %{user_token: token}}), do: token
