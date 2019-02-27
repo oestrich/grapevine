@@ -22,8 +22,14 @@ config :bcrypt_elixir, :log_rounds, 4
 
 config :grapevine, Grapevine.Mailer, adapter: Bamboo.TestAdapter
 
-config :grapevine, :modules, client: Test.FakeClient
+config :grapevine, :modules,
+  telnet: Test.Telnet,
+  client: Test.FakeClient
 
 config :grapevine, :storage, backend: :test
 
 config :grapevine, :web, url: [host: "www.example.com"]
+
+if File.exists?("config/test.extra.exs") do
+  import_config("testv.extra.exs")
+end

@@ -4,14 +4,17 @@ defmodule Grapevine.Telnet do
   """
 
   alias Grapevine.Telnet.MSSPResponse
-  alias Grapevine.Telnet.Worker
   alias Grapevine.Repo
+
+  @telnet Application.get_env(:grapevine, :modules)[:telnet]
+
+  @callback check_connection(Connection.t()) :: :ok
 
   @doc """
   Trigger a check for connection MSSP stats
   """
   def check_connection(connection) do
-    Worker.check_connection(connection)
+    @telnet.check_connection(connection)
   end
 
   @doc """

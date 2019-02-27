@@ -30,7 +30,9 @@ config :grapevine, :socket, tls: false
 
 config :grapevine, :errors, report: false
 
-config :grapevine, :modules, client: Grapevine.Client.Server
+config :grapevine, :modules,
+  telnet: Grapevine.Telnet.Worker,
+  client: Grapevine.Client.Server
 
 # Configures Elixir's Logger
 config :logger, :console,
