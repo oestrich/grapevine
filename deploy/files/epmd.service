@@ -1,18 +1,17 @@
 [Unit]
-Description=Runner for Grapevine
+Description=Erlang Port Mapper Daemon
 After=network.target
 
 [Service]
 User=deploy
 Group=deploy
-WorkingDirectory=/home/deploy/grapevine
+WorkingDirectory=/home/deploy/
 Environment=LANG=en_US.UTF-8
-ExecStart=/home/deploy/grapevine/bin/grapevine foreground
-SyslogIdentifier=grapevine
+ExecStart=/home/deploy/epmd
+SyslogIdentifier=epmd
 RemainAfterExit=no
 Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-WantedBy=epmd.service
