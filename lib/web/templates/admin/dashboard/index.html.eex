@@ -1,0 +1,20 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Dashboard</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Admin</h3>
+  </nav>
+
+  <div class="row">
+    <%= render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-4">
+    </div>
+  </div>
+</section>

@@ -31,6 +31,13 @@ defmodule Grapevine.Accounts do
   def edit(user), do: user |> User.changeset(%{})
 
   @doc """
+  Check for admin status on a user
+  """
+  def is_admin?(%{role: "admin"}), do: true
+
+  def is_admin?(_), do: false
+
+  @doc """
   Register a new user
   """
   @spec register(user_params()) :: {:ok, User.t()}
