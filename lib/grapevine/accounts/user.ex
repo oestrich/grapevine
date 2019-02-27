@@ -21,6 +21,7 @@ defmodule Grapevine.Accounts.User do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
     field(:password_hash, :string)
+    field(:role, :string, read_after_writes: true)
 
     field(:password_reset_token, Ecto.UUID)
     field(:password_reset_expires_at, :utc_datetime_usec)

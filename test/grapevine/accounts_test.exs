@@ -75,6 +75,18 @@ defmodule Grapevine.AccountsTest do
     end
   end
 
+  describe "checking admin status" do
+    test "a user" do
+      user = %User{role: "user"}
+      refute Accounts.is_admin?(user)
+    end
+
+    test "an user" do
+      user = %User{role: "admin"}
+      assert Accounts.is_admin?(user)
+    end
+  end
+
   describe "verifying a password" do
     setup do
       %{user: create_user(%{username: "user", password: "password"})}

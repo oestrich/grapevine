@@ -1,0 +1,7 @@
+<div class="col-md-2">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <%= link("Dashboard", to: admin_dashboard_path(@conn, :index), class: "nav-link") %>
+    </li>
+  </ul>
+</div>

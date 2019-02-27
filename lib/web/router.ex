@@ -24,6 +24,10 @@ defmodule Web.Router do
     plug Web.Plugs.EnsureUser
   end
 
+  pipeline :admin do
+    plug Web.Plugs.EnsureAdmin
+  end
+
   pipeline :session_token do
     plug Web.Plugs.SessionToken
   end
@@ -131,6 +135,12 @@ defmodule Web.Router do
     resources("/redirect-uris", RedirectURIController, only: [:delete])
 
     resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
+  end
+
+  scope "/admin", Web.Admin, as: :admin do
+    pipe_through([:browser, :logged_in, :admin])
+
+    get("/", DashboardController, :index)
   end
 
   scope "/", Web do

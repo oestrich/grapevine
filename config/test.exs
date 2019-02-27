@@ -31,5 +31,5 @@ config :grapevine, :storage, backend: :test
 config :grapevine, :web, url: [host: "www.example.com"]
 
 if File.exists?("config/test.extra.exs") do
-  import_config("testv.extra.exs")
+  import_config("test.extra.exs")
 end
