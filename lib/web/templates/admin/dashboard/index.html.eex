@@ -14,7 +14,25 @@
   <div class="row">
     <%= render("_sidebar.html", conn: @conn) %>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
+      <h4>Open Web Clients</h4>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Open Since</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@clients, fn client -> %>
+            <tr>
+              <td><%= client.game.name %></td>
+              <td><%= TimeView.time(client.opened_at) %></td>
+            </tr>
+          <% end) %>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
