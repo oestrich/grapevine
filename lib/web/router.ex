@@ -117,7 +117,7 @@ defmodule Web.Router do
     resources("/games", GameController, only: [:index, :show, :new, :create, :edit, :update]) do
       resources("/achievements", AchievementController, only: [:index, :new, :create])
 
-      resources("/client", ClientController, only: [:show], singleton: true)
+      resources("/client", ClientController, only: [:show, :update], singleton: true)
 
       resources("/connections", ConnectionController, only: [:create])
 

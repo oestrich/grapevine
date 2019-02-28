@@ -11,6 +11,7 @@ defmodule Grapevine.Games.Game do
   alias Grapevine.Achievements.Achievement
   alias Grapevine.Events.Event
   alias Grapevine.Games
+  alias Grapevine.Games.ClientSettings
   alias Grapevine.Games.Connection
   alias Grapevine.Games.RedirectURI
   alias Grapevine.Gauges.Gauge
@@ -43,6 +44,8 @@ defmodule Grapevine.Games.Game do
     field(:cname, :string)
 
     belongs_to(:user, User)
+
+    has_one(:client_settings, ClientSettings)
 
     has_many(:achievements, Achievement)
     has_many(:connections, Connection)

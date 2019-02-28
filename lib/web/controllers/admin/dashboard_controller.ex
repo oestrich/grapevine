@@ -1,11 +1,11 @@
 defmodule Web.Admin.DashboardController do
   use Web, :controller
 
-  alias Telnet.Metrics.Server, as: TelnetServer
+  alias Telnet.Presence, as: TelnetPresence
 
   def index(conn, _params) do
     conn
-    |> assign(:clients, TelnetServer.online_clients())
+    |> assign(:clients, TelnetPresence.online_clients())
     |> render("index.html")
   end
 end
