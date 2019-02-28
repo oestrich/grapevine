@@ -28,6 +28,13 @@
           If your game sends the player's name in a GMCP message, Grapevine can capture it to display for you on the stats page for your game. You will be able to see which players have a web client open.
         </div>
 
+        <%= FormView.text_field(f, :character_package) do %>
+          <div class="help-block">
+            The name of the GMCP package that unlocks the character message that contains the name.
+            Example: <code>Character 0</code>
+          </div>
+        <% end %>
+
         <%= FormView.text_field(f, :character_message) do %>
           <div class="help-block">
             The name of the GMCP message that sends the character's name.

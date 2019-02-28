@@ -341,11 +341,13 @@ defmodule Grapevine.GamesTest do
       game = create_game(create_user())
 
       {:ok, client_settings} = Games.update_client_settings(game, %{
+        character_package: "Char 0",
         character_message: "Char.Status",
         character_name_path: "name"
       })
 
       assert client_settings.game_id == game.id
+      assert client_settings.character_package == "Char 0"
       assert client_settings.character_message == "Char.Status"
       assert client_settings.character_name_path == "name"
     end
@@ -354,6 +356,7 @@ defmodule Grapevine.GamesTest do
       game = create_game(create_user())
 
       {:ok, _client_settings} = Games.update_client_settings(game, %{
+        character_package: "Char 0",
         character_message: "Char.Status",
         character_name_path: "name"
       })
