@@ -49,6 +49,7 @@ defmodule Web.PlayChannel do
 
     {:ok, pid} = WebClient.connect(socket.assigns.session_token,
       game: socket.assigns.game,
+      client_settings: socket.assigns.game.client_settings,
       type: connection.type,
       host: connection.host,
       port: connection.port,

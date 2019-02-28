@@ -155,9 +155,22 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
+        {:ok, preload(game)}
     end
   end
+
+  defp preload(game) do
+    game
+    |> Repo.preload([:client_settings, :connections, :gauges, :redirect_uris])
+    |> preload_client_settings()
+  end
+
+  defp preload_client_settings(game = %{client_settings: nil}) do
+    client_settings = Ecto.build_assoc(game, :client_settings)
+    %{game | client_settings: client_settings}
+  end
+
+  defp preload_client_settings(game), do: game
 
   @doc """
   Get a game by it's CNAME
