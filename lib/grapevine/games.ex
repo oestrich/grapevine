@@ -115,7 +115,7 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections, :gauges, :redirect_uris])}
+        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
     end
   end
 
@@ -129,7 +129,7 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections, :redirect_uris])}
+        {:ok, Repo.preload(game, [:client_settings, :connections, :redirect_uris])}
     end
   end
 
@@ -142,7 +142,7 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections, :gauges, :redirect_uris])}
+        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
     end
   end
 
@@ -155,7 +155,7 @@ defmodule Grapevine.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:connections, :gauges, :redirect_uris])}
+        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
     end
   end
 
