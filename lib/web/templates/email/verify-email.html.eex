@@ -1,0 +1,5 @@
+<h3>Welcome to Grapevine</h3>
+
+<p>
+<%= link("Click here to verify your email address.", to: registration_verify_url(Endpoint, :show, token: @user.email_verification_token)) %>
+</p>

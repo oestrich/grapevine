@@ -6,6 +6,16 @@ defmodule Grapevine.Emails do
   use Bamboo.Phoenix, view: Web.EmailView
 
   @doc """
+  Send a email verification email
+  """
+  def verify_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Grapevine - Please verify your email address")
+    |> render("verify-email.html", user: user)
+  end
+
+  @doc """
   Send a password reset email
   """
   def password_reset(user) do

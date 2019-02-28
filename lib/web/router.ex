@@ -78,6 +78,8 @@ defmodule Web.Router do
 
     resources("/register", RegistrationController, only: [:new, :create])
 
+    get("/register/verify", RegistrationVerifyController, :show)
+
     get("/register/reset", RegistrationResetController, :new)
     post("/register/reset", RegistrationResetController, :create)
 

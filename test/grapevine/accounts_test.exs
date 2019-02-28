@@ -6,6 +6,8 @@ defmodule Grapevine.AccountsTest do
   alias Grapevine.Accounts.User
   alias Grapevine.Emails
 
+  doctest Grapevine.Accounts
+
   describe "registering a new account" do
     test "successful" do
       {:ok, user} =
@@ -18,6 +20,18 @@ defmodule Grapevine.AccountsTest do
 
       assert user.email == "admin@example.com"
       assert user.password_hash
+    end
+
+    test "sends an email to verify the email" do
+      {:ok, user} =
+        Accounts.register(%{
+          username: "adminuser",
+          email: "admin@example.com",
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert_delivered_email(Emails.verify_email(user))
     end
   end
 
@@ -105,16 +119,42 @@ defmodule Grapevine.AccountsTest do
     end
   end
 
-  describe "resetting password" do
-    setup [:with_user]
+  describe "validating an email address" do
+    test "user found" do
+      user = create_user()
 
+      {:ok, user} = Accounts.verify_email(user.email_verification_token)
+
+      assert user.email_verified_at
+    end
+
+    test "reset the token with a valid token" do
+      user = create_user()
+
+      {:ok, user} = Accounts.verify_email(user.email_verification_token)
+
+      refute user.email_verification_token
+    end
+
+    test "token does not exist" do
+      {:error, :invalid} = Accounts.verify_email(UUID.uuid4())
+    end
+
+    test "token is not a uuid" do
+      {:error, :invalid} = Accounts.verify_email("invalid")
+    end
+  end
+
+  describe "resetting password" do
     test "email does not exist" do
       :ok = Accounts.start_password_reset("not-found@example.com")
 
       assert_no_emails_delivered()
     end
 
-    test "user found", %{user: user} do
+    test "user found" do
+      user = create_user(%{username: "user", email: "user@example.com"})
+
       :ok = Accounts.start_password_reset(user.email)
 
       user = Repo.get(User, user.id)
@@ -123,7 +163,9 @@ defmodule Grapevine.AccountsTest do
       assert_delivered_email(Emails.password_reset(user))
     end
 
-    test "reset the token with a valid token", %{user: user} do
+    test "reset the token with a valid token" do
+      user = create_user(%{username: "user", email: "user@example.com"})
+
       :ok = Accounts.start_password_reset(user.email)
       user = Repo.get(User, user.id)
 
@@ -144,7 +186,9 @@ defmodule Grapevine.AccountsTest do
       assert :error = Accounts.reset_password("a token", params)
     end
 
-    test "token is expired", %{user: user} do
+    test "token is expired" do
+      user = create_user(%{username: "user", email: "user@example.com"})
+
       :ok = Accounts.start_password_reset(user.email)
       user = Repo.get(User, user.id)
 
