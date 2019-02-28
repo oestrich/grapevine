@@ -15,6 +15,39 @@
   <p class="lead">Customize the web client for your game.</p>
 
   <nav class="header">
+    <h4 name="name">Settings</h4>
+  </nav>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <%= form_for(@changeset, manage_game_client_path(@conn, :update, @game.id), [method: :put], fn f -> %>
+        <h5>Character Name</h5>
+        <hr />
+
+        <div class="help-block mb-3">
+          If your game sends the player's name in a GMCP message, Grapevine can capture it to display for you on the stats page for your game. You will be able to see which players have a web client open.
+        </div>
+
+        <%= FormView.text_field(f, :character_message) do %>
+          <div class="help-block">
+            The name of the GMCP message that sends the character's name.
+            Example: <code>Character.Status</code>
+          </div>
+        <% end %>
+
+        <%= FormView.text_field(f, :character_name_path) do %>
+          <div class="help-block">
+            The path to the character's name in the character message.
+            Example: <code>name</code>
+          </div>
+        <% end %>
+
+        <%= submit("Update", class: "btn btn-primary float-right") %>
+      <% end) %>
+    </div>
+  </div>
+
+  <nav class="header">
     <h4 class="name">Gauges</h4>
 
     <div class="actions">
@@ -23,6 +56,12 @@
   </nav>
 
   <div class="row">
+    <%= if Enum.empty?(@gauges) do %>
+      <div class="col-md-12">
+        <p>No guages. Add some.</p>
+      </div>
+    <% end %>
+
     <%= Enum.map(@gauges, fn gauge -> %>
       <div class="col-md-4">
         <div class="gauges">

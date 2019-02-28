@@ -335,4 +335,34 @@ defmodule Grapevine.GamesTest do
       {:error, :not_found} = Games.get_web_client_connection(game)
     end
   end
+
+  describe "update settings" do
+    test "when none exist" do
+      game = create_game(create_user())
+
+      {:ok, client_settings} = Games.update_client_settings(game, %{
+        character_message: "Char.Status",
+        character_name_path: "name"
+      })
+
+      assert client_settings.game_id == game.id
+      assert client_settings.character_message == "Char.Status"
+      assert client_settings.character_name_path == "name"
+    end
+
+    test "updating existing" do
+      game = create_game(create_user())
+
+      {:ok, _client_settings} = Games.update_client_settings(game, %{
+        character_message: "Char.Status",
+        character_name_path: "name"
+      })
+
+      {:ok, client_settings} = Games.update_client_settings(game, %{
+        character_name_path: "full_name"
+      })
+
+      assert client_settings.character_name_path == "full_name"
+    end
+  end
 end

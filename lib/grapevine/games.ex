@@ -5,6 +5,7 @@ defmodule Grapevine.Games do
 
   alias Grapevine.Accounts.User
   alias Grapevine.Filter
+  alias Grapevine.Games.ClientSettings
   alias Grapevine.Games.Connection
   alias Grapevine.Games.Game
   alias Grapevine.Games.Images
@@ -549,6 +550,51 @@ defmodule Grapevine.Games do
       {:error, changeset} ->
         {:error, changeset}
     end
+  end
+
+  @doc """
+  Edit the client settings
+  """
+  def edit_client_settings(game) do
+    game = Repo.preload(game, [:client_settings])
+
+    case is_nil(game.client_settings) do
+      true ->
+        game
+        |> Ecto.build_assoc(:client_settings)
+        |> ClientSettings.changeset(%{})
+
+      false ->
+        ClientSettings.changeset(game.client_settings, %{})
+    end
+  end
+
+  @doc """
+  Update web client settings for the game
+  """
+  def update_client_settings(game, params) do
+    game = Repo.preload(game, [:client_settings])
+
+    case is_nil(game.client_settings) do
+      true ->
+        create_settings(game, params)
+
+      false ->
+        update_settings(game, params)
+    end
+  end
+
+  defp create_settings(game, params) do
+    game
+    |> Ecto.build_assoc(:client_settings)
+    |> ClientSettings.changeset(params)
+    |> Repo.insert()
+  end
+
+  defp update_settings(game, params) do
+    game.client_settings
+    |> ClientSettings.changeset(params)
+    |> Repo.update()
   end
 
   @doc """
