@@ -9,7 +9,7 @@ defmodule Grapevine.Accounts.UserTest do
     end
 
     test "trims username and email", %{user: user} do
-      changeset = User.changeset(user, %{
+      changeset = User.create_changeset(user, %{
         username: "user ",
         email: "user@example.com ",
       })
@@ -19,7 +19,7 @@ defmodule Grapevine.Accounts.UserTest do
     end
 
     test "blocked list of names", %{user: user} do
-      changeset = User.changeset(user, %{
+      changeset = User.create_changeset(user, %{
         username: "admin",
       })
 
@@ -27,7 +27,7 @@ defmodule Grapevine.Accounts.UserTest do
     end
 
     test "matches the blocked name even different case", %{user: user} do
-      changeset = User.changeset(user, %{
+      changeset = User.create_changeset(user, %{
         username: "AdMiN",
       })
 

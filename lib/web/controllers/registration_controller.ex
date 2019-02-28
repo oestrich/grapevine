@@ -16,7 +16,7 @@ defmodule Web.RegistrationController do
     case Accounts.register(params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "You have registered! Welcome!")
+        |> put_flash(:info, "You have registered! Please check your email to verify your account.")
         |> put_session(:user_token, user.token)
         |> SessionController.after_sign_in_redirect()
 

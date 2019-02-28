@@ -23,6 +23,9 @@ defmodule Grapevine.Accounts.User do
     field(:password_hash, :string)
     field(:role, :string, read_after_writes: true)
 
+    field(:email_verification_token, Ecto.UUID)
+    field(:email_verified_at, :utc_datetime)
+
     field(:password_reset_token, Ecto.UUID)
     field(:password_reset_expires_at, :utc_datetime_usec)
 
@@ -36,7 +39,7 @@ defmodule Grapevine.Accounts.User do
     timestamps()
   end
 
-  def changeset(struct, params) do
+  def create_changeset(struct, params) do
     struct
     |> cast(params, [:username, :email, :password, :password_confirmation])
     |> trim(:username)
@@ -44,7 +47,8 @@ defmodule Grapevine.Accounts.User do
     |> validate_required([:username, :email])
     |> username_validation()
     |> validate_format(:email, ~r/.+@.+\..+/)
-    |> Grapevine.Schema.ensure(:token, UUID.uuid4())
+    |> put_change(:token, UUID.uuid4())
+    |> put_change(:email_verification_token, UUID.uuid4())
     |> hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)
@@ -86,6 +90,13 @@ defmodule Grapevine.Accounts.User do
     |> change()
     |> put_change(:password_reset_token, UUID.uuid4())
     |> put_change(:password_reset_expires_at, Timex.now() |> Timex.shift(hours: 1))
+  end
+
+  def email_verified_changeset(struct, now) do
+    struct
+    |> change()
+    |> put_change(:email_verification_token, nil)
+    |> put_change(:email_verified_at, DateTime.truncate(now, :second))
   end
 
   def regen_key_changeset(struct) do

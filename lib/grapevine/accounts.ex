@@ -22,13 +22,13 @@ defmodule Grapevine.Accounts do
   Start a new user
   """
   @spec new() :: Ecto.Changeset.t()
-  def new(), do: %User{} |> User.changeset(%{})
+  def new(), do: %User{} |> User.create_changeset(%{})
 
   @doc """
   Start editing a user
   """
   @spec edit(User.t()) :: Ecto.Changeset.t()
-  def edit(user), do: user |> User.changeset(%{})
+  def edit(user), do: user |> User.update_without_username_changeset(%{})
 
   @doc """
   Check for admin status on a user
@@ -42,11 +42,16 @@ defmodule Grapevine.Accounts do
   """
   @spec register(user_params()) :: {:ok, User.t()}
   def register(params) do
-    changeset = %User{} |> User.changeset(params)
+    changeset = %User{} |> User.create_changeset(params)
 
     case Repo.insert(changeset) do
       {:ok, user} ->
         :telemetry.execute([:grapevine, :accounts, :create], 1)
+
+        user
+        |> Emails.verify_email()
+        |> Mailer.deliver_later()
+
         {:ok, user}
 
       {:error, changeset} ->
@@ -172,6 +177,42 @@ defmodule Grapevine.Accounts do
         {:error, :invalid}
     end
   end
+
+  @doc """
+  Verify an email is valid from the token
+  """
+  def verify_email(token) do
+    case Ecto.UUID.cast(token) do
+      {:ok, token} ->
+        case Repo.get_by(User, email_verification_token: token) do
+          nil ->
+            {:error, :invalid}
+
+          user ->
+            user
+            |> User.email_verified_changeset(Timex.now())
+            |> Repo.update()
+        end
+
+      :error ->
+        {:error, :invalid}
+    end
+  end
+
+  @doc """
+  Check if the user's email has been verified
+
+      iex> user = %User{email_verified_at: Timex.now()}
+      iex> Accounts.email_verified?(user)
+      true
+
+      iex> user = %User{}
+      iex> Accounts.email_verified?(user)
+      false
+  """
+  def email_verified?(%{email_verified_at: verified_at}) when verified_at != nil, do: true
+
+  def email_verified?(_), do: false
 
   @doc """
   Start password reset
