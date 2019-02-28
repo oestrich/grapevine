@@ -28,6 +28,10 @@ defmodule Web.Router do
     plug Web.Plugs.EnsureAdmin
   end
 
+  pipeline :verified do
+    plug Web.Plugs.EnsureUserVerified
+  end
+
   pipeline :session_token do
     plug Web.Plugs.SessionToken
   end
@@ -152,7 +156,7 @@ defmodule Web.Router do
   end
 
   scope "/oauth", Web.Oauth do
-    pipe_through([:browser, :logged_in])
+    pipe_through([:browser, :logged_in, :verified])
 
     get("/authorize", AuthorizationController, :new)
 
