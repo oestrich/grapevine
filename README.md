@@ -6,6 +6,7 @@ Grapevine is a MUD chat network.
 
 - [MUD Coders Slack](https://slack.mudcoders.com/)
 - [Docs](https://grapevine.haus/docs)
+- [Trello](https://trello.com/b/bWZ00VpS/grapevine)
 - [Patreon](https://www.patreon.com/exventure)
 - [Discord](https://discord.gg/GPEa6dB)
 
