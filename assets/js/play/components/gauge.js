@@ -13,6 +13,10 @@ class Gauge extends React.Component {
       let currentValue = data[value];
       let maxValue = data[max];
 
+      if (currentValue == undefined || maxValue == undefined) {
+        return null;
+      }
+
       let width = currentValue / maxValue * 100;
 
       let className = `gauge ${color}`;
