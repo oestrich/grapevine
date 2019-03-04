@@ -21,9 +21,9 @@ View the websocket details on [Grapevine][websocket-docs].
 This is only required to run Grapevine itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
 
 - PostgreSQL 10
-- Elixir 1.7.2
-- Erlang 21.0.5
-- node.js 8.6
+- Elixir 1.8.0
+- Erlang 21.2.6
+- node.js 10.13.0
 
 ### Setup
 
