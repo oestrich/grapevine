@@ -9,6 +9,7 @@ defmodule Web.Manage.GameView do
   alias Web.Manage.SettingView
   alias Web.Manage.RedirectURIView
   alias Web.ReactView
+  alias Web.TimeView
 
   def render("status.json", %{game: game}) do
     json = %{game: game.short_name, display_name: game.name}

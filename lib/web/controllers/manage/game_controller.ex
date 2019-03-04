@@ -2,6 +2,7 @@ defmodule Web.Manage.GameController do
   use Web, :controller
 
   alias Grapevine.Games
+  alias Telnet.Presence, as: TelnetPresence
 
   plug(Web.Plugs.VerifyUser)
 
@@ -20,6 +21,7 @@ defmodule Web.Manage.GameController do
       {:ok, game} ->
         conn
         |> assign(:game, game)
+        |> assign(:clients, TelnetPresence.online_clients_for(game))
         |> render("show.html")
 
       {:error, :not_found} ->

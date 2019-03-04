@@ -66,7 +66,7 @@ defmodule Grapevine.Mixfile do
       {:sweet_xml, "~> 0.6"},
       {:telemetry, "~> 0.3"},
       {:telemetry_poller, "~> 0.2"},
-      {:telnet, git: "https://github.com/oestrich/grapevine-telnet.git", runtime: false},
+      {:telnet, path: "../grapevine-telnet/", runtime: false},
       {:timber, "~> 3.0"},
       {:timex, "~> 3.1"},
       {:uuid, "~> 1.1"}
