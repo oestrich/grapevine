@@ -28,8 +28,8 @@
         <tbody>
           <%= Enum.map(@clients, fn client -> %>
             <tr>
-              <td><%= client.game.name %></td>
-              <td><%= client.player_name %></td>
+              <td><%= link(client.game.name, to: Routes.game_path(@conn, :show, client.game.short_name)) %></td>
+              <td><%= client.player_name || "Anonymous Player" %></td>
               <td><%= TimeView.time(client.opened_at) %></td>
             </tr>
           <% end) %>
