@@ -49,7 +49,7 @@ defmodule Grapevine.Accounts.User do
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> put_change(:token, UUID.uuid4())
     |> put_change(:email_verification_token, UUID.uuid4())
-    |> hash_password()
+    |> Stein.Accounts.hash_password()
     |> validate_required([:password_hash])
     |> validate_confirmation(:password)
     |> unique_constraint(:username)
@@ -81,7 +81,7 @@ defmodule Grapevine.Accounts.User do
     |> validate_confirmation(:password)
     |> put_change(:password_reset_token, nil)
     |> put_change(:password_reset_expires_at, nil)
-    |> hash_password
+    |> Stein.Accounts.hash_password()
     |> validate_required([:password_hash])
   end
 
@@ -119,16 +119,6 @@ defmodule Grapevine.Accounts.User do
 
       value ->
         put_change(changeset, field, String.trim(value))
-    end
-  end
-
-  defp hash_password(changeset) do
-    case changeset do
-      %{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(password))
-
-      _ ->
-        changeset
     end
   end
 

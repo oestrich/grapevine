@@ -35,9 +35,7 @@ defmodule Grapevine.Mixfile do
     [
       {:bamboo, "~> 1.1"},
       {:bamboo_smtp, "~> 1.5"},
-      {:bcrypt_elixir, "~> 1.0"},
       {:briefly, "~> 0.3"},
-      {:comeonin, "~> 4.0"},
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:distillery, "~> 2.0", runtime: false},
@@ -63,6 +61,7 @@ defmodule Grapevine.Mixfile do
       {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
       {:prometheus_plugs, "~> 1.1.1"},
       {:sentry, "~> 7.0"},
+      {:stein, git: "https://github.com/smartlogic/stein.git"},
       {:sweet_xml, "~> 0.6"},
       {:telemetry, "~> 0.3"},
       {:telemetry_poller, "~> 0.2"},

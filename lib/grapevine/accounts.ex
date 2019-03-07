@@ -158,61 +158,22 @@ defmodule Grapevine.Accounts do
   """
   @spec validate_login(String.t(), String.t()) :: {:ok, User.t()} | {:error, :invalid}
   def validate_login(email, password) do
-    case Repo.get_by(User, email: email) do
-      nil ->
-        Comeonin.Bcrypt.dummy_checkpw()
-        {:error, :invalid}
-
-      user ->
-        check_password(user, password)
-    end
-  end
-
-  defp check_password(user, password) do
-    case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
-      true ->
-        {:ok, user}
-
-      false ->
-        {:error, :invalid}
-    end
+    Stein.Accounts.validate_login(Repo, User, email, password)
   end
 
   @doc """
   Verify an email is valid from the token
   """
   def verify_email(token) do
-    case Ecto.UUID.cast(token) do
-      {:ok, token} ->
-        case Repo.get_by(User, email_verification_token: token) do
-          nil ->
-            {:error, :invalid}
-
-          user ->
-            user
-            |> User.email_verified_changeset(Timex.now())
-            |> Repo.update()
-        end
-
-      :error ->
-        {:error, :invalid}
-    end
+    Stein.Accounts.verify_email(Repo, User, token)
   end
 
   @doc """
-  Check if the user's email has been verified
-
-      iex> user = %User{email_verified_at: Timex.now()}
-      iex> Accounts.email_verified?(user)
-      true
-
-      iex> user = %User{}
-      iex> Accounts.email_verified?(user)
-      false
+  Check if a user has verified their email
   """
-  def email_verified?(%{email_verified_at: verified_at}) when verified_at != nil, do: true
-
-  def email_verified?(_), do: false
+  def email_verified?(user) do
+    Stein.Accounts.email_verified?(user)
+  end
 
   @doc """
   Start password reset
