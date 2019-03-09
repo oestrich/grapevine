@@ -47,11 +47,7 @@ defmodule Grapevine.Accounts do
     case Repo.insert(changeset) do
       {:ok, user} ->
         :telemetry.execute([:grapevine, :accounts, :create], 1)
-
-        user
-        |> Emails.verify_email()
-        |> Mailer.deliver_later()
-
+        deliver_verify_email(user)
         {:ok, user}
 
       {:error, changeset} ->
@@ -59,8 +55,18 @@ defmodule Grapevine.Accounts do
     end
   end
 
+  defp deliver_verify_email(user) do
+    :telemetry.execute([:grapevine, :accounts, :email, :send_verify], 1)
+
+    user
+    |> Emails.verify_email()
+    |> Mailer.deliver_later()
+  end
+
   @doc """
   Update a user
+
+  May send a new email verification if the email changes
   """
   def update(user, params) do
     case is_nil(user.username) do
@@ -68,13 +74,28 @@ defmodule Grapevine.Accounts do
         user
         |> User.update_with_username_changeset(params)
         |> Repo.update()
+        |> maybe_send_new_verification(user)
 
       false ->
         user
         |> User.update_without_username_changeset(params)
         |> Repo.update()
+        |> maybe_send_new_verification(user)
     end
   end
+
+  defp maybe_send_new_verification({:ok, user}, original_user) do
+    case user.email == original_user.email do
+      true ->
+        {:ok, user}
+
+      false ->
+        deliver_verify_email(user)
+        {:ok, user}
+    end
+  end
+
+  defp maybe_send_new_verification(result, _original_user), do: result
 
   @doc """
   Change a user's password

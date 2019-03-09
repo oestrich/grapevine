@@ -48,6 +48,29 @@ defmodule Grapevine.AccountsTest do
       assert user.email == "user@example.com"
     end
 
+    test "does not send an email if the email did not update" do
+      user = create_user()
+      {:ok, user} = Accounts.verify_email(user.email_verification_token)
+
+      {:ok, user} = Accounts.update(user, %{
+        email: user.email
+      })
+
+      refute_delivered_email(Emails.verify_email(user))
+    end
+
+    test "sends an email to verify the email when changing the email" do
+      user = create_user()
+      {:ok, user} = Accounts.verify_email(user.email_verification_token)
+
+      {:ok, user} = Accounts.update(user, %{
+        email: "new@example.com"
+      })
+
+      refute user.email_verified_at
+      assert_delivered_email(Emails.verify_email(user))
+    end
+
     test "editing username" do
       user = create_user()
       user = %{user | username: nil}
