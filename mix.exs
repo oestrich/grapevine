@@ -68,7 +68,6 @@ defmodule Grapevine.Mixfile do
       {:telnet, git: "https://github.com/oestrich/grapevine-telnet.git", runtime: false},
       {:timber, "~> 3.0"},
       {:timex, "~> 3.1"},
-      {:uuid, "~> 1.1"}
     ]
   end
 
