@@ -23,20 +23,24 @@ defmodule Grapevine.TestHelpers do
   end
 
   def create_user(attributes \\ %{}) do
-    attributes =
-      Map.merge(
-        %{
-          username: "adminuser",
-          email: "admin@example.com",
-          password: "password",
-          password_confirmation: "password"
-        },
-        attributes
-      )
+    {:ok, user} = Accounts.register(user_attributes(attributes))
+    user
+  end
 
-    {:ok, game} = Accounts.register(attributes)
+  def user_struct(attributes \\ %{}) do
+    struct(Accounts.User, user_attributes(attributes))
+  end
 
-    game
+  def user_attributes(attributes) do
+    Map.merge(
+      %{
+        username: "adminuser",
+        email: "admin@example.com",
+        password: "password",
+        password_confirmation: "password"
+      },
+      attributes
+    )
   end
 
   def create_game(user, attributes \\ %{}) do

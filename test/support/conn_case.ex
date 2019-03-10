@@ -19,7 +19,9 @@ defmodule Web.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
+
       alias Web.Router.Helpers, as: Routes
+      alias Grapevine.TestHelpers
 
       # The default endpoint for testing
       @endpoint Web.Endpoint
