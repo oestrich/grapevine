@@ -50,7 +50,7 @@ config :ecto_sql, :json_library, Jason
 config :phoenix, :json_library, Jason
 config :postgrex, :json_library, Jason
 
-config :grapevine, :storage, backend: :file
+config :stein, :storage, backend: :file
 
 config :porcelain, driver: Porcelain.Driver.Basic
 

@@ -26,7 +26,7 @@ config :grapevine, :modules,
   telnet: Test.Telnet,
   client: Test.FakeClient
 
-config :grapevine, :storage, backend: :test
+config :stein, :storage, backend: :test
 
 config :grapevine, :web, url: [host: "www.example.com"]
 

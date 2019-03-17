@@ -5,8 +5,8 @@ defmodule Grapevine.Games.Images do
 
   alias Grapevine.Games.Game
   alias Grapevine.Images
-  alias Grapevine.Storage
   alias Grapevine.Repo
+  alias Stein.Storage
 
   def cover_path(game, size) do
     cover_path(game.id, size, game.cover_key, game.cover_extension)
@@ -48,7 +48,7 @@ defmodule Grapevine.Games.Images do
 
     path = cover_path(game.id, "original", key, extension)
 
-    case Storage.upload(file, path, extensions: [".jpg", ".png"]) do
+    case Storage.upload(file, path, extensions: [".jpg", ".png"], public: true) do
       :ok ->
         game
         |> Game.cover_changeset(key, extension)
