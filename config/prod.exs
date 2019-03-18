@@ -64,4 +64,4 @@ config :phoenix, :serve_endpoints, true
 #     config :grapevine, Web.Endpoint, server: true
 #
 
-config :grapevine, :storage, backend: :s3
+config :stein, :storage, backend: :s3

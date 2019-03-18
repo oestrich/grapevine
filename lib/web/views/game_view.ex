@@ -4,8 +4,8 @@ defmodule Web.GameView do
   alias Grapevine.Channels
   alias Grapevine.Games.Images
   alias Grapevine.Presence
-  alias Grapevine.Storage
   alias Grapevine.UserAgents
+  alias Stein.Storage
 
   def cover_img_with_default(conn, game) do
     case has_cover?(game) do

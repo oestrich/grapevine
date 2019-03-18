@@ -5,7 +5,7 @@ defmodule Grapevine.Images do
 
   @type opts() :: Keyword.t()
 
-  alias Grapevine.Storage.FileUpload
+  alias Stein.Storage.FileUpload
 
   @doc """
   Convert an image file using image magick
