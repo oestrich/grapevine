@@ -1,3 +1,7 @@
+import LiveSocket from "phoenix_live_view"
+let liveSocket = new LiveSocket("/live");
+liveSocket.connect();
+
 import "../css/app.scss";
 
 import "phoenix_html";

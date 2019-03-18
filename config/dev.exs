@@ -44,6 +44,7 @@ config :grapevine, Web.Endpoint,
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/web/views/.*(ex)$},
+      ~r{lib/web/live/.*(ex)$},
       ~r{lib/web/templates/.*(eex)$}
     ]
   ]
