@@ -1,13 +1,10 @@
-import LiveSocket from "phoenix_live_view"
-let liveSocket = new LiveSocket("/live");
-liveSocket.connect();
-
 import "../css/app.scss";
 
 import "phoenix_html";
 import Sizzle from "sizzle";
 
 import "./charts"
+import "./live"
 import {Channels} from "./chat"
 import {Client} from "./play/client"
 
