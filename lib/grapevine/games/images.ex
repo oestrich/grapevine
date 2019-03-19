@@ -17,7 +17,7 @@ defmodule Grapevine.Games.Images do
   end
 
   defp cover_path(game_id, size, key, extension) do
-    Path.join(["games", to_string(game_id), "cover", "#{size}-#{key}#{extension}"])
+    "/" <> Path.join(["games", to_string(game_id), "cover", "#{size}-#{key}#{extension}"])
   end
 
   def maybe_upload_images(game, params) do
