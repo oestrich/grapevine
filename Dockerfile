@@ -24,6 +24,7 @@ WORKDIR /app
 COPY assets/package*.json /app/
 COPY --from=builder /app/deps/phoenix /deps/phoenix
 COPY --from=builder /app/deps/phoenix_html /deps/phoenix_html
+COPY --from=builder /app/deps/phoenix_live_view /deps/phoenix_live_view
 
 RUN npm install -g yarn && yarn install
 

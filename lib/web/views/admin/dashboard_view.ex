@@ -1,5 +1,5 @@
 defmodule Web.Admin.DashboardView do
   use Web, :view
 
-  alias Web.TimeView
+  alias Web.Admin.OpenWebClientView
 end
