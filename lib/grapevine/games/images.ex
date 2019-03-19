@@ -79,7 +79,7 @@ defmodule Grapevine.Games.Images do
 
     case Images.convert(file, [extname: ".png", thumbnail: "600x400"]) do
       {:ok, temp_path} ->
-        Storage.upload(%{path: temp_path}, path, extensions: [".png"])
+        Storage.upload(%{path: temp_path}, path, extensions: [".png"], public: true)
         {:ok, game}
 
       {:error, :convert} ->
