@@ -6,6 +6,10 @@
   border-radius: 4px;
 
   padding: 16px;
+
+  @media only screen and (max-device-width: 736px) {
+    margin-bottom: 24px;
+  }
 }
 
 .cover {
@@ -71,6 +75,24 @@
 
     .information {
       flex: 9;
+    }
+
+    @media only screen and (max-device-width: 736px) {
+      .user-agent {
+        display: none;
+      }
+
+      .tagline {
+        height: auto;
+      }
+
+      .status {
+        padding-right: 8px;
+      }
+
+      .tagline span {
+        display: block;
+      }
     }
   }
 }

@@ -57,7 +57,7 @@
               </h4>
 
               <div class="tagline">
-                <%= game.tagline %>
+                <span><%= game.tagline %></span>
                 <span class="float-right">
                   <%= play_button(@conn, game) %>
                 </span>
