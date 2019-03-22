@@ -42,6 +42,12 @@
     </div>
   </div>
 
+  <%= FormView.checkbox_field(f, :is_docked, label: "Docked gauge") do %>
+    <div class="help-block">
+      If checked, the gauge will show above the prompt. If unchecked, the gauge will float on the top right of the client.
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="col-md-9 offset-md-3">
       <%= submit(@submit, class: "btn btn-primary") %>

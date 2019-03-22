@@ -13,7 +13,7 @@ defmodule Grapevine.Gauges.Gauge do
 
   @colors ["purple", "red", "green", "blue", "yellow"]
 
-  @derive {Jason.Encoder, only: [:name, :message, :value, :max, :color]}
+  @derive {Jason.Encoder, only: [:name, :message, :value, :max, :color, :is_docked]}
   schema "gauges" do
     field(:name, :string)
     field(:package, :string)
@@ -21,6 +21,7 @@ defmodule Grapevine.Gauges.Gauge do
     field(:value, :string)
     field(:max, :string)
     field(:color, :string)
+    field(:is_docked, :boolean, default: true)
 
     belongs_to(:game, Game)
 
@@ -31,8 +32,8 @@ defmodule Grapevine.Gauges.Gauge do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name, :package, :message, :value, :max, :color])
-    |> validate_required([:name, :package, :message, :value, :max, :color])
+    |> cast(params, [:name, :package, :message, :value, :max, :color, :is_docked])
+    |> validate_required([:name, :package, :message, :value, :max, :color, :is_docked])
     |> validate_inclusion(:color, @colors)
     |> validate_format(:package, ~r/[A-Za-z_][A-Za-z0-9_-]*(?:\.[A-Za-z_][A-Za-z0-9_-]*)* \d+/)
     |> validate_message()

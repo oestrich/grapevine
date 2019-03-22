@@ -7,6 +7,19 @@
   top: 58px;
   bottom: 0px;
 
+  .top-dock {
+    position: absolute;
+    top: 12px;
+    width: 256px;
+    right: 12px;
+
+    .gauges {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
+  }
+
   .window {
     display: flex;
     height: 100%;

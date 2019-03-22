@@ -13,7 +13,7 @@ class Gauge extends React.Component {
       let currentValue = data[value];
       let maxValue = data[max];
 
-      if (currentValue == undefined || maxValue == undefined) {
+      if (currentValue == undefined || maxValue == undefined || maxValue == 0) {
         return null;
       }
 

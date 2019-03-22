@@ -1,5 +1,6 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+import _ from 'underscore';
 
 import Keys from './keys';
 import {store} from "./redux/store";
@@ -8,6 +9,7 @@ import Gauges from "./components/gauges";
 import Prompt from "./components/prompt";
 import SocketProvider from "./components/socket_provider";
 import Terminal from "./components/terminal";
+import TopDock from "./components/top_dock";
 
 let body = document.getElementById("body");
 let userToken = body.getAttribute("data-user-token");
@@ -23,13 +25,24 @@ document.addEventListener('keydown', e => {
 
 class Client extends React.Component {
   render() {
+    let dockedGauges = _.filter(this.props.gauges, gauge => {
+      return gauge.is_docked;
+    });
+
+    let undockedGauges = _.reject(this.props.gauges, gauge => {
+      return gauge.is_docked;
+    });
+
     return (
       <Provider store={store}>
         <SocketProvider game={this.props.game} userToken={userToken} sessionToken={sessionToken}>
           <div className="play">
             <div className="window">
               <Terminal />
-              <Gauges gauges={this.props.gauges} />
+              <TopDock>
+                <Gauges gauges={undockedGauges} />
+              </TopDock>
+              <Gauges gauges={dockedGauges} />
               <Prompt />
             </div>
           </div>
