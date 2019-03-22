@@ -24,9 +24,7 @@
   }
 
   .connection {
-    position: absolute;
-    top: 12px;
-    right: 300px;
+    margin-right: 16px;
 
     .green {
       color: $green;
@@ -54,6 +52,16 @@
     display: flex;
     flex-shrink: 0;
     margin: 16px;
+
+    .connection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        flex: 1;
+      }
+    }
 
     #prompt {
       flex: 1;

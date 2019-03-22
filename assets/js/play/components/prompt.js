@@ -3,6 +3,8 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
+import ConnectionStatus from "./connection_status";
+
 import {
   Creators
 } from "../redux/actions";
@@ -93,6 +95,8 @@ class Prompt extends React.Component {
   render() {
     return (
       <div className="prompt">
+        <ConnectionStatus />
+
         <input id="prompt"
           value={this.props.displayText}
           onChange={this.onTextChange}
