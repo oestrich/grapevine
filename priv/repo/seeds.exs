@@ -39,10 +39,25 @@ application
   password_confirmation: "password",
 })
 
+user
+|> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
+|> Repo.update!()
+
 {:ok, game} = Games.register(user, %{name: "Development Game", short_name: "DevGame"})
 game
 |> Ecto.Changeset.change(%{
+  enable_web_client: true,
   client_id: "62a8988e-f505-4e9a-ad21-e04e89f1b32b",
   client_secret: "3ab47e7e-010f-488a-b7d6-a474440efda5"
 })
 |> Repo.update!()
+
+{:ok, connection} = Games.create_connection(game, %{
+  type: "telnet",
+  host: "localhost",
+  port: 5555
+})
+
+connection
+|> Ecto.Changeset.change(%{supports_mssp: true})
+|> Repo.update()
