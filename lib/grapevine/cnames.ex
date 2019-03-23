@@ -23,7 +23,7 @@ defmodule Grapevine.CNAMEs do
   """
   def host_known?(host) do
     case :ets.lookup(@ets_key, host) do
-      [{^host, _}] ->
+      [{^host, _, _}] ->
         true
 
       _ ->
@@ -37,11 +37,19 @@ defmodule Grapevine.CNAMEs do
   end
 
   def handle_continue(:setup_ets, state) do
-    Enum.each(Games.with_cname(), fn game ->
-      :ets.insert(@ets_key, {game.cname, game.id})
-    end)
+    Enum.each(Games.with_cname(), &load_game/1)
 
     {:noreply, state}
+  end
+
+  defp load_game(game) do
+    if game.site_cname do
+      :ets.insert(@ets_key, {game.client_cname, game.id, :site})
+    end
+
+    if game.client_cname do
+      :ets.insert(@ets_key, {game.client_cname, game.id, :client})
+    end
   end
 
   def handle_call({:reload}, _from, state) do
