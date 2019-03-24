@@ -4,6 +4,7 @@ defmodule Web.SplitRouter do
   """
 
   import Plug.Conn
+  import Phoenix.Controller
 
   alias Grapevine.CNAMEs
   alias Grapevine.Games
@@ -32,6 +33,16 @@ defmodule Web.SplitRouter do
             conn = assign(conn, :current_game, game)
 
             Web.HostedRouter.call(conn, %{})
+
+          {:error, :not_found} ->
+            conn
+            |> fetch_session()
+            |> fetch_flash()
+            |> put_format("html")
+            |> put_status(:not_found)
+            |> put_layout({Web.LayoutView, "app.html"})
+            |> put_view(Web.ErrorView)
+            |> render(:"404")
         end
     end
   end
