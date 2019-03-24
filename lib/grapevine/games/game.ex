@@ -41,7 +41,8 @@ defmodule Grapevine.Games.Game do
     field(:cover_key, Ecto.UUID)
     field(:cover_extension, :string)
 
-    field(:cname, :string)
+    field(:site_cname, :string)
+    field(:client_cname, :string)
 
     belongs_to(:user, User)
 

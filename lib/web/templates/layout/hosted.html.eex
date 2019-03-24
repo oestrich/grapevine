@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render("_head.html", assigns) %>
+
+  <body id="body" class="hosted" data-user-token="<%= user_token(@conn) %>" data-session-token="<%= session_token(@conn) %>">
+    <header>
+      <nav class="navbar navbar-dark navbar-expand-md">
+        <div class="container">
+          <%= link(to: page_path(@conn, :index), class: "navbar-brand") do %>
+            <%= @game.name %>
+          <% end %>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarLinks">
+            <ul class="navbar-nav ml-auto">
+            </ul>
+
+            <%= link("Play", to: HostedRoutes.play_path(@conn, :show), class: "btn btn-primary") %>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="container">
+        <%= if flash = get_flash(@conn, :info) do %>
+          <div class="alert alert-primary" role="alert">
+            <%= flash %>
+          </div>
+        <% end %>
+        <%= if flash = get_flash(@conn, :error) do %>
+          <div class="alert alert-danger" role="alert">
+            <%= flash %>
+          </div>
+        <% end %>
+
+        <%= render @view_module, @view_template, assigns %>
+      </div>
+    </main>
+
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
+    <%= render("_analytics.html", assigns) %>
+  </body>
+</html>
