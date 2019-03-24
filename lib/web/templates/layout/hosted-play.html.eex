@@ -16,29 +16,12 @@
           <div class="collapse navbar-collapse" id="navbarLinks">
             <ul class="navbar-nav ml-auto">
             </ul>
-
-            <%= link("Play", to: HostedRoutes.play_path(@conn, :show), class: "btn btn-primary") %>
           </div>
         </div>
       </nav>
     </header>
 
-    <main>
-      <div class="container">
-        <%= if flash = get_flash(@conn, :info) do %>
-          <div class="alert alert-primary" role="alert">
-            <%= flash %>
-          </div>
-        <% end %>
-        <%= if flash = get_flash(@conn, :error) do %>
-          <div class="alert alert-danger" role="alert">
-            <%= flash %>
-          </div>
-        <% end %>
-
-        <%= render @view_module, @view_template, assigns %>
-      </div>
-    </main>
+    <%= render @view_module, @view_template, assigns %>
 
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 

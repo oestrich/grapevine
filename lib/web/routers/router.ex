@@ -37,30 +37,10 @@ defmodule Web.Router do
     plug Web.Plugs.SessionToken
   end
 
-  pipeline :cname do
-    plug(:accepts, ["html", "json"])
-    plug(:fetch_session)
-    plug(:fetch_flash)
-    plug(Phoenix.LiveView.Flash)
-    plug(:protect_from_forgery)
-    plug(:put_secure_browser_headers)
-    plug(Web.Plugs.FetchUser)
-  end
-
-  scope "/", Web do
-    pipe_through([:cname])
-
-    get("/", PageController, :index)
-  end
-
-  scope "/", Web do
-    pipe_through([:cname, :session_token])
-
-    get("/client", PlayController, :client)
-  end
-
   scope "/", Web do
     pipe_through([:browser])
+
+    get("/", PageController, :index)
 
     get("/conduct", PageController, :conduct)
 

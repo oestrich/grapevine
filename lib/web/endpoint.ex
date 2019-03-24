@@ -50,7 +50,7 @@ defmodule Web.Endpoint do
     signing_salt: "8eezNeWe"
   )
 
-  plug(Web.Router)
+  plug(Web.SplitRouter)
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.

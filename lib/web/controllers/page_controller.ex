@@ -1,44 +1,16 @@
 defmodule Web.PageController do
   use Web, :controller
 
-  alias Grapevine.CNAMEs
   alias Grapevine.Games
-  alias Web.Hosted
 
   action_fallback(Web.FallbackController)
 
-  @config Application.get_env(:grapevine, :web)[:url]
-
   def index(conn, _params) do
-    case conn.host == @config[:host] do
-      true ->
-        games = Games.public(filter: %{"online" => "yes", "cover" => "yes"})
+    games = Games.public(filter: %{"online" => "yes", "cover" => "yes"})
 
-        conn
-        |> assign(:games, games)
-        |> render("index.html")
-
-      false ->
-        case CNAMEs.type_of_host(conn.host) do
-          {:ok, :client, _game_id} ->
-            redirect(conn, to: Routes.play_path(conn, :client))
-
-          {:ok, :site, game_id} ->
-            {:ok, game} = Games.get(game_id)
-
-            conn
-            |> put_layout("hosted.html")
-            |> put_view(Hosted.GameView)
-            |> assign(:game, game)
-            |> assign(:title, game.name)
-            |> assign(:open_graph_title, game.name)
-            |> assign(:open_graph_description, "#{game.name} on Grapevine")
-            |> render("show.html")
-
-          {:error, :not_found} ->
-            {:error, :not_found}
-        end
-    end
+    conn
+    |> assign(:games, games)
+    |> render("index.html")
   end
 
   def conduct(conn, _params) do

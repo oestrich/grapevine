@@ -2,6 +2,7 @@ defmodule Web.LayoutView do
   use Web, :view
 
   alias Grapevine.Accounts
+  alias Web.HostedRouter.Helpers, as: HostedRoutes
 
   @config Application.get_env(:grapevine, :web)[:url]
 
