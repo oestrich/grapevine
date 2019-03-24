@@ -3,7 +3,6 @@ defmodule Web.PageController do
 
   alias Grapevine.CNAMEs
   alias Grapevine.Games
-  alias Web.LayoutView
   alias Web.Hosted
 
   action_fallback(Web.FallbackController)
@@ -28,9 +27,12 @@ defmodule Web.PageController do
             {:ok, game} = Games.get(game_id)
 
             conn
-            |> put_layout({LayoutView, "hosted.html"})
+            |> put_layout("hosted.html")
             |> put_view(Hosted.GameView)
             |> assign(:game, game)
+            |> assign(:title, game.name)
+            |> assign(:open_graph_title, game.name)
+            |> assign(:open_graph_description, "#{game.name} on Grapevine")
             |> render("show.html")
 
           {:error, :not_found} ->
