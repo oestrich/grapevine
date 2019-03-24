@@ -72,7 +72,7 @@ class Prompt extends React.Component {
     const {socket} = this.context;
     socket.send(`${this.props.displayText}\n`);
     this.props.promptHistoryAdd();
-    this.prompt.select();
+    this.prompt.setSelectionRange(0, this.prompt.value.length);
   }
 
   sendPassword() {
@@ -88,7 +88,7 @@ class Prompt extends React.Component {
   componentDidUpdate() {
     if (this.shouldSelect) {
       this.shouldSelect = false;
-      this.prompt.select();
+      this.prompt.setSelectionRange(0, this.prompt.value.length);
     }
   }
 
