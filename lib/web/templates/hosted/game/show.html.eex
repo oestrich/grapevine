@@ -1,0 +1,7 @@
+<div class="jumbotron text-center hosted">
+  <div class="container">
+    <%= GameView.cover_img_with_default(@conn, @game) %>
+    <p class="lead text-muted"><%= text_to_html(@game.description) %></p>
+    <%= link("Play", to: play_path(@conn, :client), class: "btn btn-primary") %>
+  </div>
+</div>

@@ -3,6 +3,8 @@ defmodule Web.PageController do
 
   alias Grapevine.CNAMEs
   alias Grapevine.Games
+  alias Web.LayoutView
+  alias Web.Hosted
 
   action_fallback(Web.FallbackController)
 
@@ -18,11 +20,20 @@ defmodule Web.PageController do
         |> render("index.html")
 
       false ->
-        case CNAMEs.host_known?(conn.host) do
-          true ->
+        case CNAMEs.type_of_host(conn.host) do
+          {:ok, :client, _game_id} ->
             redirect(conn, to: Routes.play_path(conn, :client))
 
-          false ->
+          {:ok, :site, game_id} ->
+            {:ok, game} = Games.get(game_id)
+
+            conn
+            |> put_layout({LayoutView, "hosted.html"})
+            |> put_view(Hosted.GameView)
+            |> assign(:game, game)
+            |> render("show.html")
+
+          {:error, :not_found} ->
             {:error, :not_found}
         end
     end

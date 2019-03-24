@@ -19,15 +19,15 @@ defmodule Grapevine.CNAMEs do
   end
 
   @doc """
-  Check if the hostname is known
+  Look up what type of CNAME the hostname is
   """
-  def host_known?(host) do
+  def type_of_host(host) do
     case :ets.lookup(@ets_key, host) do
-      [{^host, _, _}] ->
-        true
+      [{^host, type, game_id}] ->
+        {:ok, type, game_id}
 
       _ ->
-        false
+        {:error, :not_found}
     end
   end
 
@@ -44,11 +44,11 @@ defmodule Grapevine.CNAMEs do
 
   defp load_game(game) do
     if game.site_cname do
-      :ets.insert(@ets_key, {game.client_cname, game.id, :site})
+      :ets.insert(@ets_key, {game.site_cname, :site, game.id})
     end
 
     if game.client_cname do
-      :ets.insert(@ets_key, {game.client_cname, game.id, :client})
+      :ets.insert(@ets_key, {game.client_cname, :client, game.id})
     end
   end
 

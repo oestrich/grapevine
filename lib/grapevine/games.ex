@@ -101,7 +101,7 @@ defmodule Grapevine.Games do
   """
   def with_cname() do
     Game
-    |> where([g], not is_nil(g.client_cname))
+    |> where([g], not is_nil(g.client_cname) or not is_nil(g.site_cname))
     |> Repo.all()
   end
 
@@ -178,7 +178,13 @@ defmodule Grapevine.Games do
   This value must be set from the database
   """
   def get_by_host(host) do
-    get_by(client_cname: host, display: true)
+    case get_by(client_cname: host, display: true) do
+      {:ok, game} ->
+        {:ok, game}
+
+      {:error, :not_found} ->
+        get_by(site_cname: host, display: true)
+    end
   end
 
   @doc """
