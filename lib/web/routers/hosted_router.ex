@@ -1,4 +1,8 @@
 defmodule Web.HostedRouter do
+  @moduledoc """
+  Router for hosted sites
+  """
+
   use Web, :router
 
   pipeline :browser do

@@ -1,6 +1,6 @@
 defmodule Web.SplitRouter do
   @moduledoc """
-  Validate the host matches the configured grapevine host
+  Select the proper router based on the host header
   """
 
   import Plug.Conn

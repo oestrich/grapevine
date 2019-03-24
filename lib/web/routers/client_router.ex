@@ -1,4 +1,8 @@
 defmodule Web.ClientRouter do
+  @moduledoc """
+  Router for client sites
+  """
+
   use Web, :router
 
   pipeline :browser do
