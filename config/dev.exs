@@ -69,6 +69,10 @@ config :grapevine, Grapevine.Mailer, adapter: Bamboo.LocalAdapter
 
 config :grapevine, :web, host: "localhost", url: [host: "localhost", scheme: "http", port: 4100]
 
+config :stein, :storage,
+  backend: :file,
+  file_backend_folder: "uploads/"
+
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
 end

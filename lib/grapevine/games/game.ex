@@ -41,6 +41,9 @@ defmodule Grapevine.Games.Game do
     field(:cover_key, Ecto.UUID)
     field(:cover_extension, :string)
 
+    field(:hero_key, Ecto.UUID)
+    field(:hero_extension, :string)
+
     field(:site_cname, :string)
     field(:client_cname, :string)
 
@@ -109,6 +112,13 @@ defmodule Grapevine.Games.Game do
     |> change()
     |> put_change(:cover_key, key)
     |> put_change(:cover_extension, extension)
+  end
+
+  def hero_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:hero_key, key)
+    |> put_change(:hero_extension, extension)
   end
 
   def seen_changeset(struct, seen_at) do

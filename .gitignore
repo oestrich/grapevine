@@ -36,5 +36,6 @@ npm-debug.log
 /.vagrant
 /tmp/
 
+/uploads/
 /priv/files/*
 !/priv/files/.gitkeep
