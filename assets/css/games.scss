@@ -35,6 +35,50 @@
   }
 }
 
+.game .hero {
+  margin-top: -16px;
+  position: absolute;
+  height: 500px;
+  width: 100%;
+  overflow-y: hidden;
+  z-index: 1;
+
+  img {
+    width: 100%;
+  }
+
+  .shadow {
+    box-shadow: inset 0px -300px 200px 0 $grey-4 !important;
+    background-color: rgba($grey-4, 0.35);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+
+section.game {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.game .container {
+  position: relative;
+  z-index: 2;
+}
+
+.game hr {
+  border-top: 1px solid rgba($grey-04, 0.7);
+}
+
+.game .solid-background,
+.game nav {
+  background-color: rgba($grey-4, 0.9);
+  padding: 16px;
+  border-radius: 4px;
+}
+
 .games.list {
   list-style: none;
   padding-left: 0;
@@ -99,6 +143,7 @@
 }
 
 .game {
+  position: relative;
   border-radius: .25rem;
 
   .online {

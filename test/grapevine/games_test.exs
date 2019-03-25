@@ -27,6 +27,18 @@ defmodule Grapevine.GamesTest do
       {:ok, game} = Games.update(game, %{cover: %{path: "test/fixtures/cover.png"}})
 
       assert game.cover_key
+      assert game.cover_extension
+    end
+  end
+
+  describe "uploading a new hero image" do
+    test "saves the key" do
+      game = create_game(create_user())
+
+      {:ok, game} = Games.update(game, %{hero: %{path: "test/fixtures/cover.png"}})
+
+      assert game.hero_key
+      assert game.hero_extension
     end
   end
 

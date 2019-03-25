@@ -17,9 +17,25 @@ defmodule Web.GameView do
     end
   end
 
+  def cover_preview_img(game), do: cover_img(game)
+
   def cover_img(game) do
     content_tag(:div, class: "cover") do
       [img_tag(Storage.url(Images.cover_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+    end
+  end
+
+  def hero_preview_img(game) do
+    content_tag(:div, class: "cover") do
+      [img_tag(Storage.url(Images.hero_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+    end
+  end
+
+  def hero_img(%{hero_key: nil}), do: []
+
+  def hero_img(game) do
+    content_tag(:div, class: "hero") do
+      [img_tag(Storage.url(Images.hero_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
     end
   end
 
@@ -31,6 +47,10 @@ defmodule Web.GameView do
 
   def has_cover?(game) do
     game.cover_key != nil
+  end
+
+  def has_hero?(game) do
+    game.hero_key != nil
   end
 
   def play_button(conn, game) do

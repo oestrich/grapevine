@@ -18,7 +18,7 @@ defmodule Web.Endpoint do
   )
 
   if Mix.env == :dev do
-    plug(Plug.Static, at: "/uploads", from: "priv/files")
+    plug(Plug.Static, at: "/uploads", from: "uploads/files")
   end
 
   # Code reloading can be explicitly enabled under the
