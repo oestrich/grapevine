@@ -17,7 +17,9 @@
             <ul class="navbar-nav ml-auto">
             </ul>
 
-            <%= link("Play", to: HostedRoutes.play_path(@conn, :show), class: "btn btn-primary") %>
+            <%= link(to: HostedRoutes.play_path(@conn, :show), class: "btn btn-primary") do %>
+              Play Now &raquo;
+            <% end %>
           </div>
         </div>
       </nav>
@@ -39,6 +41,12 @@
         <%= render @view_module, @view_template, assigns %>
       </div>
     </main>
+
+    <footer>
+      <div class="container">
+        <span class="float-right">Hosted by <%= link("Grapevine", to: "https://grapevine.haus/") %>.</span>
+      </div>
+    </footer>
 
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 

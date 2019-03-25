@@ -1,7 +1,20 @@
-<div class="jumbotron text-center hosted">
-  <div class="container">
-    <%= GameView.cover_img_with_default(@conn, @game) %>
-    <p class="lead text-muted"><%= text_to_html(@game.description) %></p>
-    <%= link("Play", to: Routes.play_path(@conn, :show), class: "btn btn-primary") %>
+<section>
+  <div class="position-relative text-center">
+    <div class="col-md-6 mx-auto my-2">
+      <h1 class="display-4 font-weight-normal"><%= @game.name %></h1>
+      <p class="lead font-weight-normal"><%= @game.tagline %></p>
+    </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <%= GameView.cover_img_with_default(@conn, @game) %>
+      <%= link(to: Routes.play_path(@conn, :show), class: "mt-3 btn btn-primary") do %>
+        Play Now &raquo;
+      <% end %>
+    </div>
+    <div class="col-md-6 text-md-left">
+      <%= text_to_html(@game.description) %>
+    </div>
+  </div>
+</section>
