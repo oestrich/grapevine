@@ -7,6 +7,9 @@
 </nav>
 
 <section class="game">
+  <%= GameView.hero_img(@game) %>
+
+  <div class="container">
   <nav class="header">
     <h3 class="name">
       <%= @game.name %>
@@ -28,60 +31,62 @@
     </div>
 
     <div class="col-md-8">
-      <p><%= @game.description %></p>
+      <div class="solid-background">
+        <p><%= @game.description %></p>
 
-      <%= if @game.user_agent do %>
-        The server is running <code><%= @game.user_agent %></code>.
-      <% end %>
-
-      <div>
-        <%= if @game.display do %>
-          <%= @game.name %> <b>will</b> display in connected list.
-        <% else %>
-          <%= @game.name %> <b>will not</b> display in connected list.
+        <%= if @game.user_agent do %>
+          The server is running <code><%= @game.user_agent %></code>.
         <% end %>
-      </div>
 
-      <div>
-        <%= if @game.allow_character_registration do %>
-          Characters <b>can</b> be registered.
-        <% else %>
-          Characters <b>cannot</b> be registered.
-        <% end %>
-      </div>
-
-      <div>
-        <%= if @game.enable_web_client do %>
-          Players <b>can</b> use the <%= link("web client.", to: play_path(@conn, :show, @game.short_name)) %>
-        <% else %>
-          Players <b>cannot</b> use the web client.
-        <% end %>
-      </div>
-
-      <%= if @game.enable_web_client do %>
         <div>
-          <%= if @game.allow_anonymous_client do %>
-            <b>Any</b> player can use the web client.
+          <%= if @game.display do %>
+            <%= @game.name %> <b>will</b> display in connected list.
           <% else %>
-            Players <b>must be</b> registered to use the web client.
+            <%= @game.name %> <b>will not</b> display in connected list.
           <% end %>
         </div>
-      <% end %>
 
-      <hr />
+        <div>
+          <%= if @game.allow_character_registration do %>
+            Characters <b>can</b> be registered.
+          <% else %>
+            Characters <b>cannot</b> be registered.
+          <% end %>
+        </div>
 
-      <div class="form-group">
-        <label>Client ID</label>
-        <input class="form-control" type="text" value="<%= @game.client_id %>" readonly="readonly" />
+        <div>
+          <%= if @game.enable_web_client do %>
+            Players <b>can</b> use the <%= link("web client.", to: play_path(@conn, :show, @game.short_name)) %>
+          <% else %>
+            Players <b>cannot</b> use the web client.
+          <% end %>
+        </div>
+
+        <%= if @game.enable_web_client do %>
+          <div>
+            <%= if @game.allow_anonymous_client do %>
+              <b>Any</b> player can use the web client.
+            <% else %>
+              Players <b>must be</b> registered to use the web client.
+            <% end %>
+          </div>
+        <% end %>
+
+        <hr />
+
+        <div class="form-group">
+          <label>Client ID</label>
+          <input class="form-control" type="text" value="<%= @game.client_id %>" readonly="readonly" />
+        </div>
+
+        <div class="form-group">
+          <label>Client Secret</label>
+          <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
+          <%= link("Toggle Secret", to: "#", class: "show-secret") %>
+        </div>
+
+        <%= link("Reset Client ID and Client Secret", to: manage_game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
       </div>
-
-      <div class="form-group">
-        <label>Client Secret</label>
-        <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
-        <%= link("Toggle Secret", to: "#", class: "show-secret") %>
-      </div>
-
-      <%= link("Reset Client ID and Client Secret", to: manage_game_path(@conn, :regenerate, @game.id), method: :post, class: "btn btn-flat", data: [confirm: "Are you sure?"]) %>
     </div>
   </div>
 
@@ -154,7 +159,8 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+</section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(event) {

@@ -25,7 +25,7 @@
   <% end %>
 
   <%= FormView.file_field(f, :hero, label: "Hero Image") do %>
-    <div class="help-block">Used on the game display page. Your image will be resized to fit the ratio of 3:2. This might mean parts of your image are cut off. Uploading some multiple of 300x200 is recommended. 2MB upload limit.</div>
+    <div class="help-block">Used on the game display page, as a background for your listing. Parts of the image will be obscured. Your image will be resized to fit the ratio of 3:2. This might mean parts of your image are cut off. Uploading some multiple of 300x200 is recommended. 2MB upload limit.</div>
 
     <%= if @mode == :edit && GameView.has_hero?(@game) do %>
       <p>Current image:</p>

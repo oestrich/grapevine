@@ -31,6 +31,14 @@ defmodule Web.GameView do
     end
   end
 
+  def hero_img(%{hero_key: nil}), do: []
+
+  def hero_img(game) do
+    content_tag(:div, class: "hero") do
+      [img_tag(Storage.url(Images.hero_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+    end
+  end
+
   def default_cover_img(conn) do
     content_tag(:div, class: "cover") do
       [img_tag(static_path(conn, "/images/default-cover.png")), content_tag(:div, "", class: "shadow")]
