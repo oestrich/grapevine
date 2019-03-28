@@ -7,7 +7,7 @@ describe("socket reducer", () => {
 
     state = socketReducer(state, Creators.socketConnected());
 
-    expect(state.lines.length).toEqual(3);
+    expect(state.lines.length).toEqual(1);
     expect(state.connected).toEqual(true);
   });
 

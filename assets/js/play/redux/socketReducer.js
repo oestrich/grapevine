@@ -66,7 +66,27 @@ let parseText = (state, text) => {
     return segment;
   });
 
-  let lines = [...state.lines, ...parsedSegments];
+  let currentLine = [];
+  let mergedLines = [];
+
+  for (let i = 0; i < parsedSegments.length; i++) {
+    let segment = parsedSegments[i];
+
+    if (_.last(segment.content) === "\n") {
+      currentLine.push(segment);
+      mergedLines.push(currentLine);
+      currentLine = [];
+    } else {
+      currentLine.push(segment);
+    }
+  }
+
+  mergedLines.push(currentLine);
+  mergedLines = _.reject(mergedLines, lines => {
+    return lines.length == 0;
+  });
+
+  let lines = [...state.lines, ...mergedLines];
   lines = _.last(lines, MAX_LINES);
 
   return {...state, lines: lines, lineId: state.lineId + increment};
