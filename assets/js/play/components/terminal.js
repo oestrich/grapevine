@@ -50,10 +50,12 @@ class Terminal extends React.Component {
 
     return (
       <div className="terminal">
-        {_.map(lines, text => {
-          return (
-            <AnsiText key={text.id} text={text} />
-          );
+        {_.map(lines, line => {
+          return _.map(line, segment => {
+            return (
+              <AnsiText key={segment.id} text={segment} />
+            );
+          });
         })}
         <div ref={el => { this.el = el; }} />
       </div>

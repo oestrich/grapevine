@@ -4,6 +4,8 @@ import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 
+const MAX_LINES = 5000;
+
 const INITIAL_STATE = {
   connected: false,
   buffer: "",
@@ -17,23 +19,75 @@ const INITIAL_STATE = {
 
 let parseText = (state, text) => {
   let increment = 0;
-  let parsedText = Anser.ansiToJson(text);
+  let parsedSegments = Anser.ansiToJson(text);
 
-  parsedText = _.map(parsedText, text => {
-    text = {
-      id: state.lineId + increment,
-      content: text.content,
-      bg: text.bg,
-      fg: text.fg,
-      decoration: text.decoration
-    };
-
-    increment++;
-
-    return text;
+  parsedSegments = _.reject(parsedSegments, segment => {
+    return segment.content === "";
   });
 
-  let lines = [...state.lines, ...parsedText];
+  parsedSegments = _.map(parsedSegments, segment => {
+    return _.pick(segment, ["content", "bg", "fg", "decoration"]);
+  });
+
+  // Explode each segment into separate lines
+  parsedSegments = _.map(parsedSegments, segment => {
+    let lines = segment.content.split("\n");
+
+    // There were no new lines
+    if (lines.length == 1) {
+      return [segment];
+    }
+
+    // Remove the empty item if there was a trailing newline already
+    if (_.last(lines) === "") {
+      lines.pop();
+    }
+
+    lines = _.map(lines, line => {
+      return {...segment, content: line + "\n"};
+    });
+
+    // If the segment didn't end with a new line, remove the one that
+    // is currently there
+    if (_.last(segment.content) != "\n") {
+      let line = lines.pop();
+      line.content = line.content.slice(0, line.content.length - 1);
+      lines = [...lines, line];
+    }
+
+    return lines;
+  });
+
+  parsedSegments = _.flatten(parsedSegments);
+
+  parsedSegments = _.map(parsedSegments, segment => {
+    segment.id = state.lineId + increment;
+    increment++;
+    return segment;
+  });
+
+  let currentLine = [];
+  let mergedLines = [];
+
+  for (let i = 0; i < parsedSegments.length; i++) {
+    let segment = parsedSegments[i];
+
+    if (_.last(segment.content) === "\n") {
+      currentLine.push(segment);
+      mergedLines.push(currentLine);
+      currentLine = [];
+    } else {
+      currentLine.push(segment);
+    }
+  }
+
+  mergedLines.push(currentLine);
+  mergedLines = _.reject(mergedLines, lines => {
+    return lines.length == 0;
+  });
+
+  let lines = [...state.lines, ...mergedLines];
+  lines = _.last(lines, MAX_LINES);
 
   return {...state, lines: lines, lineId: state.lineId + increment};
 };
