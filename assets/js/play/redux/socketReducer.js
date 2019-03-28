@@ -4,6 +4,8 @@ import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 
+const MAX_LINES = 5000;
+
 const INITIAL_STATE = {
   connected: false,
   buffer: "",
@@ -19,21 +21,22 @@ let parseText = (state, text) => {
   let increment = 0;
   let parsedText = Anser.ansiToJson(text);
 
+  parsedText = _.reject(parsedText, text => {
+    return text.content === "";
+  });
+
   parsedText = _.map(parsedText, text => {
-    text = {
-      id: state.lineId + increment,
-      content: text.content,
-      bg: text.bg,
-      fg: text.fg,
-      decoration: text.decoration
-    };
+    return _.pick(text, ["content", "bg", "fg", "decoration"]);
+  });
 
+  parsedText = _.map(parsedText, line => {
+    line.id = state.lineId + increment;
     increment++;
-
-    return text;
+    return line;
   });
 
   let lines = [...state.lines, ...parsedText];
+  lines = _.last(lines, MAX_LINES);
 
   return {...state, lines: lines, lineId: state.lineId + increment};
 };
