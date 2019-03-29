@@ -4,7 +4,7 @@ import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 
-const MAX_LINES = 5000;
+const MAX_LINES = 1000;
 
 const INITIAL_STATE = {
   connected: false,
