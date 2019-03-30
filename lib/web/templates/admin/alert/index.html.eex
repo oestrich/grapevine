@@ -1,0 +1,29 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Alerts</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Alerts</h3>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <ul>
+        <%= Enum.map(@alerts, fn alert -> %>
+          <li>
+            <h5><%= alert.title %></h5>
+            <%= TimeView.time(alert.inserted_at) %>
+            <p><%= alert.body %></p>
+          </li>
+        <% end) %>
+      </ul>
+    </div>
+  </div>
+</section>

@@ -3,5 +3,8 @@
     <li class="nav-item">
       <%= link("Dashboard", to: admin_dashboard_path(@conn, :index), class: "nav-link") %>
     </li>
+    <li class="nav-item">
+      <%= link("Alerts", to: admin_alert_path(@conn, :index), class: "nav-link") %>
+    </li>
   </ul>
 </div>

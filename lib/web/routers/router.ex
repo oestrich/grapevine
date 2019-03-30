@@ -129,6 +129,8 @@ defmodule Web.Router do
     pipe_through([:browser, :logged_in, :admin])
 
     get("/", DashboardController, :index)
+
+    resources("/alerts", AlertController, only: [:index])
   end
 
   scope "/", Web do
