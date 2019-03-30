@@ -65,7 +65,9 @@ config :grapevine, Grapevine.Repo,
 
 config :phoenix, :plug_init_mode, :runtime
 
-config :grapevine, Grapevine.Mailer, adapter: Bamboo.LocalAdapter
+config :grapevine, Grapevine.Mailer,
+  adapter: Bamboo.LocalAdapter,
+  alert_to: ["admin@example.com"]
 
 config :grapevine, :web, host: "localhost", url: [host: "localhost", scheme: "http", port: 4100]
 

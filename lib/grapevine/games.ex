@@ -4,6 +4,7 @@ defmodule Grapevine.Games do
   """
 
   alias Grapevine.Accounts.User
+  alias Grapevine.Alerts
   alias Grapevine.Filter
   alias Grapevine.Games.ClientSettings
   alias Grapevine.Games.Connection
@@ -512,9 +513,7 @@ defmodule Grapevine.Games do
   Mark a connection as not having mssp
   """
   def connection_has_no_mssp(connection) do
-    connection
-    |> Connection.mssp_changeset(false)
-    |> Repo.update()
+    Alerts.create("MSSP failed", "Could not detect MSSP for game #{connection.game_id}")
   end
 
   @doc """

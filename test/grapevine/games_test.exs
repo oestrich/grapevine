@@ -246,9 +246,9 @@ defmodule Grapevine.GamesTest do
         Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
 
       {:ok, connection} = Games.connection_has_mssp(connection)
-      {:ok, connection} = Games.connection_has_no_mssp(connection)
+      {:ok, alert} = Games.connection_has_no_mssp(connection)
 
-      refute connection.supports_mssp
+      assert alert.title == "MSSP failed"
     end
   end
 

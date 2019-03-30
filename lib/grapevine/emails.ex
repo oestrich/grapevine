@@ -25,8 +25,19 @@ defmodule Grapevine.Emails do
     |> render("password-reset.html", user: user)
   end
 
+  def new_alert(alert) do
+    base_email()
+    |> to(alert_to())
+    |> subject("Grapevine - New alert - #{alert.title}")
+    |> text_body(alert.body)
+  end
+
   def base_email() do
     new_email()
     |> from("no-reply@grapevine.haus")
+  end
+
+  defp alert_to() do
+    Application.get_env(:grapevine, Grapevine.Mailer)[:alert_to]
   end
 end
