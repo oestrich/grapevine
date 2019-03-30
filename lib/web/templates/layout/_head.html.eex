@@ -24,7 +24,7 @@
   <%= if Map.has_key?(assigns, :title) do %>
     <title><%= @title %></title>
   <% else %>
-    <title>Grapevine - MUD Chat Network</title>
+    <title>Grapevine</title>
   <% end %>
 
   <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
