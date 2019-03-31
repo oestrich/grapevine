@@ -70,15 +70,17 @@ class Prompt extends React.Component {
 
   sendMessage() {
     const {socket} = this.context;
-    socket.send(`${this.props.displayText}\n`);
+    this.props.socketEcho(`\u001b[37m${this.props.displayText}\n\u001b[0m`);
     this.props.promptHistoryAdd();
     this.prompt.setSelectionRange(0, this.prompt.value.length);
+    socket.send(`${this.props.displayText}\n`);
   }
 
   sendPassword() {
     const {socket} = this.context;
-    socket.send(`${this.props.displayText}\n`);
+    this.props.socketEcho("\n");
     this.props.promptClear();
+    socket.send(`${this.props.displayText}\n`);
   }
 
   onTextChange(e) {
@@ -130,4 +132,5 @@ export default Prompt = connect(mapStateToProps, {
   promptHistoryScrollBackward: Creators.promptHistoryScrollBackward,
   promptHistoryScrollForward: Creators.promptHistoryScrollForward,
   promptSetCurrentText: Creators.promptSetCurrentText,
+  socketEcho: Creators.socketEcho,
 })(Prompt);
