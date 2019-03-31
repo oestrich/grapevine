@@ -18,6 +18,7 @@
     </h3>
 
     <div class="actions">
+      <%= link("Profile", to: game_path(@conn, :show, @game.short_name), class: "btn btn-flat") %>
       <%= link("Edit", to: manage_game_path(@conn, :edit, @game.id), class: "btn btn-flat") %>
       <%= link("Achievements", to: manage_game_achievement_path(@conn, :index, @game.id), class: "btn btn-flat") %>
       <%= link("Client", to: manage_game_client_path(@conn, :show, @game.id), class: "btn btn-flat") %>
