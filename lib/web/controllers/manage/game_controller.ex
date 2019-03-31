@@ -41,10 +41,10 @@ defmodule Web.Manage.GameController do
     %{current_user: user} = conn.assigns
 
     case Games.register(user, params) do
-      {:ok, _game} ->
+      {:ok, game} ->
         conn
         |> put_flash(:info, "Game created!")
-        |> redirect(to: manage_game_path(conn, :index))
+        |> redirect(to: manage_game_path(conn, :show, game.id))
 
       {:error, changeset} ->
         conn
