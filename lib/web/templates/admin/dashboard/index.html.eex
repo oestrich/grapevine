@@ -8,12 +8,14 @@
 
 <section>
   <nav class="header">
-    <h3 class="name">Admin</h3>
+    <h3 class="name">Dashboard</h3>
   </nav>
 
   <div class="row">
     <%= render("_sidebar.html", conn: @conn) %>
 
-    <%= live_render(@conn, OpenWebClientView, class: "col-md-10", session: [clients: @clients]) %>
+    <div class="col-md-10">
+      <%= live_render(@conn, OpenWebClientView, session: [clients: @clients]) %>
+    </div>
   </div>
 </section>
