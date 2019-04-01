@@ -59,6 +59,7 @@ defmodule Grapevine.Games do
   def featured() do
     Game
     |> where([g], g.display == true)
+    |> where([g], not is_nil(g.featured_order))
     |> order_by([g], asc: g.featured_order)
     |> Repo.all()
   end

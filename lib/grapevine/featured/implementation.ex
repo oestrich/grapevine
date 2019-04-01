@@ -78,7 +78,9 @@ defmodule Grapevine.Featured.Implementation do
 
     Grapevine.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
+    |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps], ps.recorded_at >= ^last_few_days)
+    |> where([ps, g], g.display == true and not is_nil(g.cover_key))
     |> group_by([ps], [ps.game_id])
     |> order_by([ps], desc: avg(ps.player_count))
     |> limit(^limit)
@@ -97,6 +99,7 @@ defmodule Grapevine.Featured.Implementation do
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
+    |> where([g], g.display == true and not is_nil(g.cover_key))
     |> where([g], g.last_seen_at > ^active_cutoff or g.mssp_last_seen_at > ^mssp_cutoff)
     |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
@@ -109,6 +112,7 @@ defmodule Grapevine.Featured.Implementation do
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
+    |> where([g], g.display == true and not is_nil(g.cover_key))
     |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
     |> Enum.shuffle()
