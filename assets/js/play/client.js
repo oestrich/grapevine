@@ -7,6 +7,7 @@ import {store} from "./redux/store";
 
 import Gauges from "./components/gauges";
 import Prompt from "./components/prompt";
+import {Settings, SettingsToggle} from "./components/settings";
 import SocketProvider from "./components/socket_provider";
 import Terminal from "./components/terminal";
 import TopDock from "./components/top_dock";
@@ -39,6 +40,8 @@ class Client extends React.Component {
           <div className="play">
             <div className="window">
               <Terminal />
+              <Settings />
+              <SettingsToggle />
               <TopDock>
                 <Gauges gauges={undockedGauges} />
               </TopDock>

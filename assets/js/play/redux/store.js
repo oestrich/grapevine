@@ -1,6 +1,7 @@
 import {combineReducers, createStore} from 'redux';
 
 import {promptReducer} from "./promptReducer";
+import {settingsReducer} from "./settingsReducer";
 import {socketReducer} from "./socketReducer";
 
 // Selectors
@@ -11,6 +12,22 @@ export const getPromptState = (state) => {
 
 export const getPromptDisplayText = (state) => {
   return getPromptState(state).displayText;
+};
+
+export const getSettingsState = (state) => {
+  return state.settings;
+};
+
+export const getSettingsFont = (state) => {
+  return getSettingsState(state).font;
+};
+
+export const getSettingsFontSize = (state) => {
+  return getSettingsState(state).fontSize;
+};
+
+export const getSettingsOpen = (state) => {
+  return getSettingsState(state).open;
 };
 
 export const getSocketState = (state) => {
@@ -39,7 +56,11 @@ export const getSocketGMCP = (state) => {
 
 // Reducers
 
-let rootReducer = combineReducers({prompt: promptReducer, socket: socketReducer});
+let rootReducer = combineReducers({
+  prompt: promptReducer,
+  settings: settingsReducer,
+  socket: socketReducer
+});
 
 export const store = createStore(
   rootReducer,
