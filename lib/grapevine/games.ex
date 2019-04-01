@@ -56,6 +56,14 @@ defmodule Grapevine.Games do
     |> Repo.all()
   end
 
+  def featured() do
+    Game
+    |> where([g], g.display == true)
+    |> where([g], not is_nil(g.featured_order))
+    |> order_by([g], asc: g.featured_order)
+    |> Repo.all()
+  end
+
   def filter_on_attribute({"name", value}, query) do
     where(query, [g], ilike(g.name, ^"%#{value}%"))
   end

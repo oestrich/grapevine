@@ -6,10 +6,8 @@ defmodule Web.PageController do
   action_fallback(Web.FallbackController)
 
   def index(conn, _params) do
-    games = Games.public(filter: %{"online" => "yes", "cover" => "yes"})
-
     conn
-    |> assign(:games, games)
+    |> assign(:games, Games.featured())
     |> render("index.html")
   end
 

@@ -6,6 +6,7 @@ defmodule Grapevine.TestHelpers do
   alias Grapevine.Channels
   alias Grapevine.Games
   alias Grapevine.Gauges
+  alias Grapevine.Repo
 
   def create_channel(attributes \\ %{}) do
     attributes =
@@ -45,6 +46,13 @@ defmodule Grapevine.TestHelpers do
 
   def create_game(user, attributes \\ %{}) do
     {:ok, game} = Games.register(user, game_attributes(attributes))
+
+    {:ok, game} =
+      game
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:cover_key, UUID.uuid4())
+      |> Ecto.Changeset.put_change(:cover_extension, ".png")
+      |> Repo.update()
 
     game
   end
