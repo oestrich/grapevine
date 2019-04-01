@@ -56,13 +56,13 @@ defmodule Grapevine.Featured.Implementation do
   end
 
   def featured_games() do
-    top_games = top_games_player_count([])
-    selected_ids = Enum.map(top_games, & &1.id)
-
-    random_games_using = random_games_using_grapevine(already_picked: selected_ids)
-    selected_ids = selected_ids ++ Enum.map(random_games_using, & &1.id)
+    random_games_using = random_games_using_grapevine([])
+    selected_ids = Enum.map(random_games_using, & &1.id)
 
     random_games = random_games(already_picked: selected_ids)
+    selected_ids = selected_ids ++ Enum.map(random_games, & &1.id)
+
+    top_games = top_games_player_count(already_picked: selected_ids)
 
     Enum.shuffle(top_games ++ random_games_using ++ random_games)
   end
@@ -75,12 +75,14 @@ defmodule Grapevine.Featured.Implementation do
       |> DateTime.truncate(:second)
 
     limit = Keyword.get(opts, :select, 10)
+    already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
     |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps], ps.recorded_at >= ^last_few_days)
     |> where([ps, g], g.display == true and not is_nil(g.cover_key))
+    |> where([ps], ps.game_id not in ^already_picked_games)
     |> group_by([ps], [ps.game_id])
     |> order_by([ps], desc: avg(ps.player_count))
     |> limit(^limit)
