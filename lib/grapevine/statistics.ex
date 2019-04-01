@@ -7,6 +7,7 @@ defmodule Grapevine.Statistics do
 
   alias Grapevine.Repo
   alias Grapevine.Statistics.PlayerStatistic
+  alias Grapevine.Statistics.Session
 
   @doc """
   Record a game's player count at a specific time on the socket
@@ -28,6 +29,31 @@ defmodule Grapevine.Statistics do
     %PlayerStatistic{}
     |> PlayerStatistic.mssp_changeset(game, player_count, time)
     |> Repo.insert()
+  end
+
+  @doc """
+  Record the start of a session
+  """
+  def record_web_client_started(game, sid, time \\ Timex.now()) do
+    game
+    |> Ecto.build_assoc(:sessions)
+    |> Session.started_changeset(sid, time)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Record the start of a session
+  """
+  def record_web_client_closed(sid, time \\ Timex.now()) do
+    case Repo.get_by(Session, sid: sid) do
+      nil ->
+        {:error, :not_found}
+
+      session ->
+        session
+        |> Session.closed_changeset(time)
+        |> Repo.update()
+    end
   end
 
   @doc """

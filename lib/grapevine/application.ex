@@ -20,7 +20,8 @@ defmodule Grapevine.Application do
       {Telemetry.Poller, telemetry_opts()},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
-      {Grapevine.Featured, [name: Grapevine.Featured]}
+      {Grapevine.Featured, [name: Grapevine.Featured]},
+      {Grapevine.Statistics.Server, []}
     ]
 
     Metrics.Setup.setup()

@@ -47,4 +47,27 @@ defmodule Grapevine.StatisticsTest do
       assert Enum.all?(stats, &(&1 > 0))
     end
   end
+
+  describe "recording web client session data" do
+    test "starting a new client" do
+      game = create_game(create_user())
+
+      {:ok, session} = Statistics.record_web_client_started(game, UUID.uuid4())
+
+      assert session.game_id == game.id
+      assert session.started_at
+    end
+
+    test "closing a client" do
+      game = create_game(create_user())
+
+      sid = UUID.uuid4()
+
+      {:ok, _session} = Statistics.record_web_client_started(game, sid)
+
+      {:ok, session} = Statistics.record_web_client_closed(sid)
+
+      assert session.closed_at
+    end
+  end
 end
