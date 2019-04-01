@@ -36,6 +36,10 @@ defmodule Grapevine.Featured.ImplementationTest do
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
+      {:ok, _stats} = Statistics.record_mssp_players(game1, 2, Timex.now())
+      Games.seen_on_socket(game2)
+      Games.seen_on_mssp(game3)
+
       Implementation.select_featured()
 
       Enum.each([game1, game2, game3], fn game ->
@@ -52,6 +56,7 @@ defmodule Grapevine.Featured.ImplementationTest do
 
       {:ok, _stats} = Statistics.record_mssp_players(game1, 2, Timex.now())
       Games.seen_on_mssp(game2)
+      Games.seen_on_mssp(game3)
 
       games = Implementation.featured_games()
 
@@ -82,13 +87,13 @@ defmodule Grapevine.Featured.ImplementationTest do
       assert game_ids == [game1.id, game2.id]
     end
 
-    test "random games using the web client or chat network" do
+    test "random games connected to the chat network" do
       user = create_user()
       game1 = create_game(user, %{name: "Game 1", short_name: "Game1"})
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       _game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
-      Games.seen_on_mssp(game1)
+      Games.seen_on_socket(game1)
       Games.seen_on_socket(game2)
 
       games = Implementation.random_games_using_grapevine(select: 2)
@@ -107,7 +112,7 @@ defmodule Grapevine.Featured.ImplementationTest do
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       _game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
-      Games.seen_on_mssp(game1)
+      Games.seen_on_socket(game1)
       Games.seen_on_socket(game2)
 
       games = Implementation.random_games_using_grapevine(select: 2, already_picked: [game1.id])
@@ -125,6 +130,10 @@ defmodule Grapevine.Featured.ImplementationTest do
       game1 = create_game(user, %{name: "Game 1", short_name: "Game1"})
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
+
+      Games.seen_on_mssp(game1)
+      Games.seen_on_mssp(game2)
+      Games.seen_on_mssp(game3)
 
       games = Implementation.random_games(select: 2, already_picked: [game1.id])
 

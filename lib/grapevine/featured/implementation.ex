@@ -74,7 +74,7 @@ defmodule Grapevine.Featured.Implementation do
       |> Timex.set(minute: 0, second: 0)
       |> DateTime.truncate(:second)
 
-    limit = Keyword.get(opts, :select, 12)
+    limit = Keyword.get(opts, :select, 10)
 
     Grapevine.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
@@ -93,14 +93,13 @@ defmodule Grapevine.Featured.Implementation do
 
   def random_games_using_grapevine(opts) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
-    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
-    limit = Keyword.get(opts, :select, 4)
+    limit = Keyword.get(opts, :select, 5)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
     |> where([g], g.display == true and not is_nil(g.cover_key))
-    |> where([g], g.last_seen_at > ^active_cutoff or g.mssp_last_seen_at > ^mssp_cutoff)
+    |> where([g], g.last_seen_at > ^active_cutoff)
     |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
     |> Enum.shuffle()
@@ -108,11 +107,14 @@ defmodule Grapevine.Featured.Implementation do
   end
 
   def random_games(opts) do
-    limit = Keyword.get(opts, :select, 4)
+    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+
+    limit = Keyword.get(opts, :select, 5)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
     |> where([g], g.display == true and not is_nil(g.cover_key))
+    |> where([g], g.mssp_last_seen_at > ^mssp_cutoff)
     |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
     |> Enum.shuffle()
