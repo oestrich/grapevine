@@ -2,7 +2,11 @@ import _ from "underscore";
 import React from "react";
 import {connect} from 'react-redux';
 
-import {getSocketLines} from "../redux/store";
+import {
+  getSettingsFont,
+  getSettingsFontSize,
+  getSocketLines
+} from "../redux/store";
 
 class AnsiText extends React.Component {
   textStyle(parsed) {
@@ -48,8 +52,12 @@ class Terminal extends React.Component {
   render() {
     let lines = this.props.lines;
 
+    let fontFamily = this.props.font;
+    let fontSize = this.props.fontSize;
+    const style = {fontFamily, fontSize};
+
     return (
-      <div className="terminal">
+      <div className="terminal" style={style}>
         {_.map(lines, line => {
           return _.map(line, segment => {
             return (
@@ -65,7 +73,9 @@ class Terminal extends React.Component {
 
 let mapStateToProps = (state) => {
   const lines = getSocketLines(state);
-  return {lines};
+  const font = getSettingsFont(state);
+  const fontSize = getSettingsFontSize(state);
+  return {font, fontSize, lines};
 };
 
 export default Terminal = connect(mapStateToProps)(Terminal);

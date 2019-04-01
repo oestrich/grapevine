@@ -7,6 +7,27 @@
   top: 58px;
   bottom: 0px;
 
+  .settings {
+    display: block;
+    position: absolute;
+    top: 64px;
+    width: 512px;
+    background-color: $grey-4;
+    border-radius: 4px;
+    left: calc(50% - 256px);
+    padding: 16px;
+  }
+
+  .settings-toggle {
+    display: block;
+    position: absolute;
+    top: 12px;
+    width: 16px;
+    right: 12px;
+    color: $grey-4;
+    cursor: pointer;
+  }
+
   .top-dock {
     position: absolute;
     top: 12px;
