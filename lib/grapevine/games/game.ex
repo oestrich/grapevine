@@ -27,6 +27,7 @@ defmodule Grapevine.Games.Game do
     field(:allow_character_registration, :boolean, default: true)
     field(:enable_web_client, :boolean, default: false)
     field(:allow_anonymous_client, :boolean, default: false)
+    field(:featured_order, :integer)
 
     field(:last_seen_at, :utc_datetime)
     field(:mssp_last_seen_at, :utc_datetime)
