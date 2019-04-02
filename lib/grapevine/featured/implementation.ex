@@ -94,7 +94,7 @@ defmodule Grapevine.Featured.Implementation do
   end
 
   def random_games_using_grapevine(opts) do
-    active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
+    active_cutoff = Timex.now() |> Timex.shift(minutes: -3)
 
     limit = Keyword.get(opts, :select, 5)
     already_picked_games = Keyword.get(opts, :already_picked, [])
