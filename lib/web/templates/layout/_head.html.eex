@@ -21,6 +21,9 @@
 
   <meta property="og:site_name" content="Grapevine" />
 
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="grapevinehaus" />
+
   <%= if Map.has_key?(assigns, :title) do %>
     <title><%= @title %></title>
   <% else %>
