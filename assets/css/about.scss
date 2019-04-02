@@ -1,0 +1,33 @@
+.about {
+  padding-left: 128px;
+  padding-right: 128px;
+
+  img {
+    max-width: 100%;
+  }
+
+  figure {
+    position: relative;
+    max-width: 100%;
+    margin-left: 64px;
+    margin-right: 64px;
+  }
+
+  .featured {
+    max-width: 100%;
+  }
+
+  .shadow {
+    box-shadow: inset 0 0 2px 1px $grey !important;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  dl {
+    width: 512px;
+    margin-left: 64px;
+  }
+}

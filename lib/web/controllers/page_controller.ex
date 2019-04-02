@@ -11,6 +11,10 @@ defmodule Web.PageController do
     |> render("index.html")
   end
 
+  def about(conn, _params) do
+    render(conn, "about.html")
+  end
+
   def conduct(conn, _params) do
     render(conn, "conduct.html")
   end

@@ -42,6 +42,8 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
+    get("/about", PageController, :about)
+
     get("/conduct", PageController, :conduct)
 
     get("/docs", PageController, :docs)
