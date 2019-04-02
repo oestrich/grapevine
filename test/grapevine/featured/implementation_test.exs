@@ -36,6 +36,7 @@ defmodule Grapevine.Featured.ImplementationTest do
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
+      Games.seen_on_mssp(game1)
       {:ok, _stats} = Statistics.record_mssp_players(game1, 2, Timex.now())
       Games.seen_on_socket(game2)
       Games.seen_on_mssp(game3)
@@ -54,9 +55,10 @@ defmodule Grapevine.Featured.ImplementationTest do
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
+      Games.seen_on_mssp(game1)
       {:ok, _stats} = Statistics.record_mssp_players(game1, 2, Timex.now())
       Games.seen_on_mssp(game2)
-      Games.seen_on_mssp(game3)
+      Games.seen_on_socket(game3)
 
       games = Implementation.featured_games()
 
@@ -74,7 +76,9 @@ defmodule Grapevine.Featured.ImplementationTest do
       game2 = create_game(user, %{name: "Game 2", short_name: "Game2"})
       _game3 = create_game(user, %{name: "Game 3", short_name: "Game3"})
 
+      Games.seen_on_mssp(game1)
       {:ok, _stats} = Statistics.record_mssp_players(game1, 2, Timex.now())
+      Games.seen_on_mssp(game2)
       {:ok, _stats} = Statistics.record_mssp_players(game2, 3, Timex.now())
 
       games = Implementation.top_games_player_count(select: 2)
