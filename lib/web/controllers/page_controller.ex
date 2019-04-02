@@ -15,7 +15,7 @@ defmodule Web.PageController do
     conn
     |> assign(:title, "About Grapevine")
     |> assign(:open_graph_title, "About Grapevine")
-    |> assign(:open_graph_description, "Learn more about what Grapevine and MUDs are.")
+    |> assign(:open_graph_description, "Learn more about MUDs and Grapevine.")
     |> assign(:open_graph_url, page_url(conn, :about))
     |> render("about.html")
   end

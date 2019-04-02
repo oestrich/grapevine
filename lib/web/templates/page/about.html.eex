@@ -41,11 +41,15 @@
 
   <dl>
     <dt><code>who</code></dt>
-    <dd>If available, it should show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
+    <dd>THis command will generally show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
     <dt><code>help</code></dt>
     <dd>This command will generally show all of the help available, you can then add a topic after <code>help</code> to get more information about that topic.</dd>
+    <dt><code>score</code></dt>
+    <dd>This command will generally show your character sheet, which includes your character's basic information and stats.</dd>
+    <dt><code>inventory</code></dt>
+    <dd>This command will generally show what your character is holding, including any equipment they have.</dd>
     <dt><code>newbie hello i'm new and need help</code></dt>
-    <dd>This will send a helpful message to the newbie channel if the game has one. This is generally available to all new players and has a helpful person listening on it.</dd>
+    <dd>If the game you're on has a newbie channel, this will send a helpful message asking for help. This is generally available to all new players and has a helpful person listening on the other end.</dd>
   </dl>
 
   <h1>Games to Try Out</h1>
