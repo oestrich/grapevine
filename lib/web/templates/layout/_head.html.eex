@@ -19,6 +19,8 @@
     <meta property="og:url" content="<%= @open_graph_url %>" />
   <% end %>
 
+  <meta property="og:image" content="<%= static_url(@conn, "/images/grapevine-blackout-icon.png") %>" />
+
   <meta property="og:site_name" content="Grapevine" />
 
   <meta name="twitter:card" content="summary" />
