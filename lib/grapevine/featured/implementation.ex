@@ -59,10 +59,11 @@ defmodule Grapevine.Featured.Implementation do
     random_games_using = random_games_using_grapevine([])
     selected_ids = Enum.map(random_games_using, & &1.id)
 
-    random_games = random_games(already_picked: selected_ids)
-    selected_ids = selected_ids ++ Enum.map(random_games, & &1.id)
-
     top_games = top_games_player_count(already_picked: selected_ids)
+    selected_ids = selected_ids ++ Enum.map(top_games, & &1.id)
+
+    to_select = 20 - length(selected_ids)
+    random_games = random_games(select: to_select, already_picked: selected_ids)
 
     Enum.shuffle(top_games ++ random_games_using ++ random_games)
   end
