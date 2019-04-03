@@ -16,6 +16,9 @@
             </li>
           <% end %>
           <li class="nav-item">
+            <%= link("Events", to: event_path(@conn, :index), class: "nav-link") %>
+          </li>
+          <li class="nav-item">
             <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
           </li>
           <%= if Map.get(assigns, :current_user) do %>

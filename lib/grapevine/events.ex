@@ -36,6 +36,20 @@ defmodule Grapevine.Events do
   end
 
   @doc """
+  Get recent events for all games
+  """
+  def next_month() do
+    last_week = Timex.now() |> Timex.shift(weeks: -1)
+    one_month_out = Timex.now() |> Timex.shift(months: 1)
+
+    Event
+    |> where([e], e.start_date >= ^last_week and e.end_date <= ^one_month_out)
+    |> order_by([e], asc: e.start_date, asc: e.end_date)
+    |> preload([:game])
+    |> Repo.all()
+  end
+
+  @doc """
   Get recent events for a game
   """
   def recent(game) do

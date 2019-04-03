@@ -1,0 +1,32 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Events</li>
+  </ol>
+</nav>
+
+<section>
+  <nav>
+    <h3 class="name">Upcoming Events</h3>
+  </nav>
+
+  <div class="row">
+    <%= if Enum.empty?(@events) do %>
+      <div class="col-md-12">
+        <p>No events start in the next month. Check back later, or <%= link("add your own.", to: manage_game_path(@conn, :index)) %></p>
+      </div>
+    <% end %>
+
+    <%= Enum.map(@events, fn event -> %>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= event.game.name %> - <%= event.title %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
+            <p class="card-text"><%= event.description %></p>
+          </div>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+</section>

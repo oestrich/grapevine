@@ -3,9 +3,13 @@
 
   <%= FormView.textarea_field(f, :description, rows: 5) %>
 
-  <%= FormView.text_field(f, :start_date) %>
+  <%= FormView.text_field(f, :start_date) do %>
+    <span class="help-block">Format: <code>YYYY-MM-DD</code></span>
+  <% end %>
 
-  <%= FormView.text_field(f, :end_date) %>
+  <%= FormView.text_field(f, :end_date) do %>
+    <span class="help-block">Format: <code>YYYY-MM-DD</code></span>
+  <% end %>
 
   <div class="row">
     <div class="col-md-9 offset-md-3">
