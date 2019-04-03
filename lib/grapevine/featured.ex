@@ -3,9 +3,9 @@ defmodule Grapevine.Featured do
   Updates the home page with featured games nightly
 
   Selection includes:
-  - Games sorted by average player count, top 10 taken
-  - Games that are connected to the chat network, random 5
-  - Any game not included above, a random 5
+  - Games sorted by average player count, top 6 taken
+  - Games that are connected to the chat network, random 3
+  - Any game not included above, a random 3
 
   Soon to include:
   - Games that use the web client

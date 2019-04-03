@@ -62,8 +62,7 @@ defmodule Grapevine.Featured.Implementation do
     top_games = top_games_player_count(already_picked: selected_ids)
     selected_ids = selected_ids ++ Enum.map(top_games, & &1.id)
 
-    to_select = 20 - length(selected_ids)
-    random_games = random_games(select: to_select, already_picked: selected_ids)
+    random_games = random_games(already_picked: selected_ids)
 
     Enum.shuffle(top_games ++ random_games_using ++ random_games)
   end
@@ -78,7 +77,7 @@ defmodule Grapevine.Featured.Implementation do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -3)
     mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
-    limit = Keyword.get(opts, :select, 10)
+    limit = Keyword.get(opts, :select, 6)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Statistics.PlayerStatistic
@@ -101,7 +100,7 @@ defmodule Grapevine.Featured.Implementation do
   def random_games_using_grapevine(opts) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -3)
 
-    limit = Keyword.get(opts, :select, 5)
+    limit = Keyword.get(opts, :select, 3)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
@@ -116,7 +115,7 @@ defmodule Grapevine.Featured.Implementation do
   def random_games(opts) do
     mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
-    limit = Keyword.get(opts, :select, 5)
+    limit = Keyword.get(opts, :select, 3)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
     Grapevine.Games.Game
