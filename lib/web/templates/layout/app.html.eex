@@ -24,6 +24,8 @@
 
     <footer>
       <div class="container">
+        <%= link("Docs", to: page_path(@conn, :docs)) %>
+        |
         <%= link("Media", to: page_path(@conn, :media)) %>
         |
         <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
