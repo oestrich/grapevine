@@ -74,7 +74,9 @@
 
       <h3>Genesis MUD</h3>
 
-      <p>Genesis is one of the original MUDs and has continued since it started in 1989.</p>
+      <p>Genesis is one of the original MUDs and has continued since it started in 1989. The main goal of Genesis is to be a challenging game. It is fantasy themed and pulls from Tolkien, Dragon Lance, and others.</p>
+
+      <p>One of the draws to Genesis is the interaction between guilds. Create alliances or start wars with other guilds.</p>
 
       <p>Some helpful links include <%= link("their homepage", to: "https://genesismud.org/") %>, <%= link("the beginner's guide", to: "https://www.genesismud.org/guide.php") %>, and <%= link("their history", to: "https://www.genesismud.org/history.php") %>.</p>
 
