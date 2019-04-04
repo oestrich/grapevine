@@ -5,82 +5,90 @@
   </ol>
 </nav>
 
-<section class="about">
-  <div class="position-relative">
-    <div class="col-md-6 mx-auto my-2">
-      <%= img_tag(static_path(@conn, "/images/grapevine.png"), class: "mb-3") %>
-    </div>
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section class="about">
+      <div class="position-relative">
+        <div class="col-md-6 mx-auto my-2">
+          <%= img_tag(static_path(@conn, "/images/grapevine.png"), class: "mb-3") %>
+        </div>
+      </div>
+
+      <h2>What are MUDs?</h2>
+
+      <p>A MUD or Multi-User Dungeon is a text-based online virtual world. Think Zork, but with other players. The modern graphical MMORPG also spawned from MUDs.</p>
+
+      <p>MUDs are purely text based, so you are required to bring your own graphics via your imagination. These games range from pure hack'n'slash to pure role play with everything in between.</p>
+
+      <p>You'll be playing with other players from all around the world. Games typically have 10s up to 100s of players on at any given time.</p>
+
+      <h2>What is Grapevine?</h2>
+
+      <p>Grapevine is a site that showcases MUDs and helps you find your new favorite game. Grapevine polls games to ensure that they are online when you view their profile.</p>
+
+      <p>Certain games are also part of the Grapevine chat network. If you're playing on one of these games, you can chat with others across every other game connected. This means you should always have someone to talk to.</p>
+
+      <h2>How do you play?</h2>
+
+      <p>The easiest way to play these games are through the web client. Find a game you're interested in and click the play button.</p>
+
+      <p>Once you start playing, you'll be entering in commands to control your character inside the game.</p>
+
+      <figure>
+        <%= link(to: static_path(@conn, "/images/web-client.png"), target: "_blank") do %>
+          <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured") %>
+          <span class="shadow"></span>
+        <% end %>
+      </figure>
+
+      <h2>Help While Playing</h2>
+
+      <p>If you get lost, most games should have someone hanging out ready to help you figure things out. Some commands that generally will work if you need help:</p>
+
+      <dl>
+        <dt><code>who</code></dt>
+        <dd>This command will generally show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
+        <dt><code>help</code></dt>
+        <dd>This command will generally show all of the help available, you can then add a topic after <code>help</code> to get more information about that topic.</dd>
+        <dt><code>score</code></dt>
+        <dd>This command will generally show your character sheet, which includes your character's basic information and stats.</dd>
+        <dt><code>inventory</code></dt>
+        <dd>This command will generally show what your character is holding, including any equipment they have.</dd>
+        <dt><code>newbie hello i'm new and need help</code></dt>
+        <dd>If the game you're on has a newbie channel, this will send a helpful message asking for help. This is generally available to all new players and has a helpful person listening on the other end.</dd>
+      </dl>
+
+      <h2>Games to Try Out</h2>
+
+      <p>Some games to get you started out. These are the most popular games currently on Grapevine.</p>
+
+      <h3>Miriani</h3>
+
+      <p>Miriani is a sci-fi game, where you are a starship pilot.</p>
+
+      <p>Humanity's foray into the stars has yielded powerful and blood-thirsty enemies, wondrous new technologies, and even given rise to three new empires. What will you find when you venture out into the unknown?</p>
+
+      <p>Some helpful links include <%= link("their homepage", to: "") %>, <%= link("their help", to: "https://miriani.toastsoft.net/help") %>, and <%= link("their world", to: "https://toastsoft.net/history.html") %>.</p>
+
+      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/Miriani") %></p>
+
+      <h3>Genesis MUD</h3>
+
+      <p>Genesis is one of the original MUDs and has continued since it started in 1989.</p>
+
+      <p>Some helpful links include <%= link("their homepage", to: "https://genesismud.org/") %>, <%= link("the beginner's guide", to: "https://www.genesismud.org/guide.php") %>, and <%= link("their history", to: "https://www.genesismud.org/history.php") %>.</p>
+
+      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
+
+      <h3>Sindome</h3>
+
+      <p>Sindome is a cyberpunk environment that rewards roleplaying over stat grinding, boasting a healthy player base and a helpful admin staff.</p>
+
+      <p>Set 85 years into a dark, gritty future. 60 million people reside within the geodesic dome of Withmore City. 4 distinct levels separate the corporate elite from the 'mixers'. You arrive in Red Sector where most of the population resides, where it's every baka for themselves, trying to carve out a niche in the underworld, or reach above the fray for the comforts of the corporate life.</p>
+
+      <p>Some helpful links include <%= link("their homepage", to: "https://www.sindome.org/") %>, <%= link("their help", to: "https://www.sindome.org/help/") %>, and <%= link("their lore", to: "https://www.sindome.org/timeline/") %>.</p>
+
+      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
+    </section>
   </div>
-
-  <h2>What are MUDs?</h2>
-
-  <p>A MUD or Multi-User Dungeon is a text-based online virtual world. Think Zork, but with other players. The modern graphical MMORPG also spawned from MUDs.</p>
-
-  <p>MUDs are purely text based, so you are required to bring your own graphics via your imagination.</p>
-
-  <h2>What is Grapevine?</h2>
-
-  <p>Grapevine is a site that showcases MUDs and helps you find your new favorite game.</p>
-
-  <h2>How do you play?</h2>
-
-  <p>The easiest way to play these games are through the web client. Find a game you're interested in and click the play button.</p>
-
-  <p>Once you start playing, you'll be entering in commands to control your character inside the game.</p>
-
-  <figure>
-    <%= link(to: static_path(@conn, "/images/web-client.png"), target: "_blank") do %>
-      <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured") %>
-      <span class="shadow"></span>
-    <% end %>
-  </figure>
-
-  <h2>Help While Playing</h2>
-
-  <p>If you get lost, most games should have someone hanging out ready to help you figure things out. Some commands that generally will work if you need help:</p>
-
-  <dl>
-    <dt><code>who</code></dt>
-    <dd>This command will generally show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
-    <dt><code>help</code></dt>
-    <dd>This command will generally show all of the help available, you can then add a topic after <code>help</code> to get more information about that topic.</dd>
-    <dt><code>score</code></dt>
-    <dd>This command will generally show your character sheet, which includes your character's basic information and stats.</dd>
-    <dt><code>inventory</code></dt>
-    <dd>This command will generally show what your character is holding, including any equipment they have.</dd>
-    <dt><code>newbie hello i'm new and need help</code></dt>
-    <dd>If the game you're on has a newbie channel, this will send a helpful message asking for help. This is generally available to all new players and has a helpful person listening on the other end.</dd>
-  </dl>
-
-  <h2>Games to Try Out</h2>
-
-  <p>Some games to get you started out. These are the most popular games currently on Grapevine.</p>
-
-  <h3>Miriani</h3>
-
-  <p>Miriani is a sci-fi game, where you are a starship pilot.</p>
-
-  <p>Humanity's foray into the stars has yielded powerful and blood-thirsty enemies, wondrous new technologies, and even given rise to three new empires. What will you find when you venture out into the unknown?</p>
-
-  <p>Some helpful links include <%= link("their homepage", to: "") %>, <%= link("their help", to: "https://miriani.toastsoft.net/help") %>, and <%= link("their world", to: "https://toastsoft.net/history.html") %>.</p>
-
-  <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/Miriani") %></p>
-
-  <h3>Genesis MUD</h3>
-
-  <p>Genesis is one of the original MUDs and has continued since it started in 1989.</p>
-
-  <p>Some helpful links include <%= link("their homepage", to: "https://genesismud.org/") %>, <%= link("the beginner's guide", to: "https://www.genesismud.org/guide.php") %>, and <%= link("their history", to: "https://www.genesismud.org/history.php") %>.</p>
-
-  <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
-
-  <h3>Sindome</h3>
-
-  <p>Sindome is a cyberpunk environment that rewards roleplaying over stat grinding, boasting a healthy player base and a helpful admin staff.</p>
-
-  <p>Set 85 years into a dark, gritty future. 60 million people reside within the geodesic dome of Withmore City. 4 distinct levels separate the corporate elite from the 'mixers'. You arrive in Red Sector where most of the population resides, where it's every baka for themselves, trying to carve out a niche in the underworld, or reach above the fray for the comforts of the corporate life.</p>
-
-  <p>Some helpful links include <%= link("their homepage", to: "https://www.sindome.org/") %>, <%= link("their help", to: "https://www.sindome.org/help/") %>, and <%= link("their lore", to: "https://www.sindome.org/timeline/") %>.</p>
-
-  <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
-</section>
+</div>
