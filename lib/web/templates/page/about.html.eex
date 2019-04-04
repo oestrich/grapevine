@@ -68,7 +68,7 @@
 
       <p>Humanity's foray into the stars has yielded powerful and blood-thirsty enemies, wondrous new technologies, and even given rise to three new empires. What will you find when you venture out into the unknown?</p>
 
-      <p>Some helpful links include <%= link("their homepage", to: "") %>, <%= link("their help", to: "https://miriani.toastsoft.net/help") %>, and <%= link("their world", to: "https://toastsoft.net/history.html") %>.</p>
+      <p>Some helpful links include <%= link("their homepage", to: "https://www.toastsoft.net/") %>, <%= link("their help", to: "https://miriani.toastsoft.net/help") %>, and <%= link("their world", to: "https://toastsoft.net/history.html") %>.</p>
 
       <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/Miriani") %></p>
 
