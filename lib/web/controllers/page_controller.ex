@@ -32,6 +32,13 @@ defmodule Web.PageController do
     render(conn, "media.html")
   end
 
+  def sitemap(conn, _params) do
+    conn
+    |> assign(:games, Games.all_public())
+    |> put_resp_header("content-type", "text/xml")
+    |> render("sitemap.xml")
+  end
+
   def colors(conn, _params) do
     render(conn, "colors.html")
   end

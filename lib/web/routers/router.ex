@@ -50,6 +50,8 @@ defmodule Web.Router do
 
     get("/media", PageController, :media)
 
+    get("/sitemap.xml", PageController, :sitemap)
+
     if Mix.env() == :dev do
       get("/colors", PageController, :colors)
     end

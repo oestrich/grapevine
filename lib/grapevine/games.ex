@@ -45,6 +45,12 @@ defmodule Grapevine.Games do
     |> Repo.all()
   end
 
+  def all_public() do
+    Game
+    |> where([g], g.display == true)
+    |> Repo.all()
+  end
+
   def public(opts) do
     opts = Enum.into(opts, %{})
 

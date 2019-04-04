@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+  <url><loc><%= Routes.page_url(@conn, :index) %></loc></url>
+  <url><loc><%= Routes.page_url(@conn, :about) %></loc></url>
+  <url><loc><%= Routes.page_url(@conn, :media) %></loc></url>
+  <url><loc><%= Routes.page_url(@conn, :docs) %></loc></url>
+  <url><loc><%= Routes.page_url(@conn, :conduct) %></loc></url>
+<%= Enum.map(@games, fn game -> %>
+  <url>
+    <loc><%= Routes.game_url(@conn, :show, game.short_name) %></loc>
+    <lastmod><%= Timex.format!(game.updated_at, "{YYYY}-{0M}-{0D}") %></lastmod>
+  </url>
+<% end) %>
+</urlset>
