@@ -12,17 +12,17 @@
     </div>
   </div>
 
-  <h1>What are MUDs?</h1>
+  <h2>What are MUDs?</h2>
 
   <p>A MUD or Multi-User Dungeon is a text-based online virtual world. Think Zork, but with other players. The modern graphical MMORPG also spawned from MUDs.</p>
 
   <p>MUDs are purely text based, so you are required to bring your own graphics via your imagination.</p>
 
-  <h1>What is Grapevine?</h1>
+  <h2>What is Grapevine?</h2>
 
   <p>Grapevine is a site that showcases MUDs and helps you find your new favorite game.</p>
 
-  <h1>How do you play?</h1>
+  <h2>How do you play?</h2>
 
   <p>The easiest way to play these games are through the web client. Find a game you're interested in and click the play button.</p>
 
@@ -35,13 +35,13 @@
     <% end %>
   </figure>
 
-  <h1>Help While Playing</h1>
+  <h2>Help While Playing</h2>
 
   <p>If you get lost, most games should have someone hanging out ready to help you figure things out. Some commands that generally will work if you need help:</p>
 
   <dl>
     <dt><code>who</code></dt>
-    <dd>THis command will generally show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
+    <dd>This command will generally show all of the players that are online. Look for players at the top of the list, they are generally admins and should be able to help you.</dd>
     <dt><code>help</code></dt>
     <dd>This command will generally show all of the help available, you can then add a topic after <code>help</code> to get more information about that topic.</dd>
     <dt><code>score</code></dt>
@@ -52,11 +52,11 @@
     <dd>If the game you're on has a newbie channel, this will send a helpful message asking for help. This is generally available to all new players and has a helpful person listening on the other end.</dd>
   </dl>
 
-  <h1>Games to Try Out</h1>
+  <h2>Games to Try Out</h2>
 
   <p>Some games to get you started out. These are the most popular games currently on Grapevine.</p>
 
-  <h2>Miriani</h2>
+  <h3>Miriani</h3>
 
   <p>Miriani is a sci-fi game, where you are a starship pilot.</p>
 
@@ -66,7 +66,7 @@
 
   <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/Miriani") %></p>
 
-  <h2>Genesis MUD</h2>
+  <h3>Genesis MUD</h3>
 
   <p>Genesis is one of the original MUDs and has continued since it started in 1989.</p>
 
@@ -74,7 +74,7 @@
 
   <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
 
-  <h2>Sindome</h2>
+  <h3>Sindome</h3>
 
   <p>Sindome is a cyberpunk environment that rewards roleplaying over stat grinding, boasting a healthy player base and a helpful admin staff.</p>
 
