@@ -24,11 +24,13 @@
 
     <footer>
       <div class="container">
+        <%= link("About", to: page_path(@conn, :about)) %>
+        |
+        <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
+        |
         <%= link("Docs", to: page_path(@conn, :docs)) %>
         |
         <%= link("Media", to: page_path(@conn, :media)) %>
-        |
-        <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
         |
         <%= link("MSSP Check", to: mssp_path(@conn, :index)) %>
         <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>
