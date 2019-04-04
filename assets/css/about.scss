@@ -26,5 +26,10 @@
   dl {
     width: 512px;
     margin-left: 64px;
+
+    @media only screen and (max-device-width: 736px) {
+      width: 100%;
+      margin-left: 0;
+    }
   }
 }
