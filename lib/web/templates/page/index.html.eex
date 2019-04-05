@@ -10,8 +10,20 @@
       </p>
     </div>
   </div>
+</section>
 
+<section class="mt-3">
   <div class="homepage">
+    <nav>
+      <h2 class="name">
+        Featured Games
+      </h2>
+
+      <div class="actions">
+        <%= link("View all", to: Routes.game_path(@conn, :index), class: "btn btn-flat") %>
+      </div>
+    </nav>
+
     <ul class="games">
       <%= Enum.map(@games, fn game -> %>
         <%= if game.display do %>
