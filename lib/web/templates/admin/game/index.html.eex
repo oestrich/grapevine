@@ -21,6 +21,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Short Name</th>
+            <th>Display?</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -30,6 +31,7 @@
               <td><%= game.id %></td>
               <td><%= game.name %></td>
               <td><%= game.short_name %></td>
+              <td><%= game.display %></td>
               <td>
                 <%= link("Profile", to: Routes.game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
                 <%= link("View", to: Routes.admin_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
