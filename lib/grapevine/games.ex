@@ -41,6 +41,7 @@ defmodule Grapevine.Games do
   """
   def all() do
     Game
+    |> order_by([g], g.name)
     |> preload([:connections, :redirect_uris])
     |> Repo.all()
   end

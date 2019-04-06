@@ -1,0 +1,43 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Games</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Alerts</h3>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Short Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@games, fn game -> %>
+            <tr>
+              <td><%= game.id %></td>
+              <td><%= game.name %></td>
+              <td><%= game.short_name %></td>
+              <td>
+                <%= link("Profile", to: Routes.game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
+                <%= link("View", to: Routes.admin_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
+              </td>
+            </tr>
+          <% end) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

@@ -6,5 +6,8 @@
     <li class="nav-item">
       <%= link("Alerts", to: admin_alert_path(@conn, :index), class: "nav-link") %>
     </li>
+    <li class="nav-item">
+      <%= link("Games", to: admin_game_path(@conn, :index), class: "nav-link") %>
+    </li>
   </ul>
 </div>

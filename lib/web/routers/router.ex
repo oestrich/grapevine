@@ -141,6 +141,8 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
 
     resources("/alerts", AlertController, only: [:index])
+
+    resources("/games", GameController, only: [:index, :show])
   end
 
   scope "/", Web do

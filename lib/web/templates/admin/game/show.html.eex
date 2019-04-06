@@ -1,0 +1,156 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Games", to: Routes.admin_game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active"><%= @game.name %></li>
+  </ol>
+</nav>
+
+<section class="game">
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+    <div class="col-md-10">
+      <%= GameView.hero_img(@game) %>
+
+      <div class="container">
+        <nav class="header">
+          <h3 class="name">
+            <%= @game.name %>
+
+            <span class="short-name"><%= @game.short_name %></span>
+          </h3>
+        </nav>
+
+        <div class="row">
+          <div class="col-md-4">
+            <%= GameView.cover_img_with_default(@conn, @game) %>
+          </div>
+
+          <div class="col-md-8">
+            <div class="solid-background">
+              <%= if @game.description do %>
+                <p><%= @game.description %></p>
+              <% end %>
+
+              <%= if @game.user_agent do %>
+                The server is running <code><%= @game.user_agent %></code>.
+              <% end %>
+
+              <div>
+                <%= if @game.display do %>
+                  <%= @game.name %> <b>will</b> display in connected list.
+                <% else %>
+                  <%= @game.name %> <b>will not</b> display in connected list.
+                <% end %>
+              </div>
+
+              <div>
+                <%= if @game.allow_character_registration do %>
+                  Characters <b>can</b> be registered.
+                <% else %>
+                  Characters <b>cannot</b> be registered.
+                <% end %>
+              </div>
+
+              <div>
+                <%= if @game.enable_web_client do %>
+                  Players <b>can</b> use the <%= link("web client.", to: play_path(@conn, :show, @game.short_name)) %>
+                <% else %>
+                  Players <b>cannot</b> use the web client.
+                <% end %>
+              </div>
+
+              <%= if @game.enable_web_client do %>
+                <div>
+                  <%= if @game.allow_anonymous_client do %>
+                    <b>Any</b> player can use the web client.
+                  <% else %>
+                    Players <b>must be</b> registered to use the web client.
+                  <% end %>
+                </div>
+              <% end %>
+
+              <hr />
+
+              <div class="form-group">
+                <label>Client ID</label>
+                <input class="form-control" type="text" value="<%= @game.client_id %>" readonly="readonly" />
+              </div>
+
+              <div class="form-group">
+                <label>Client Secret</label>
+                <input id="client-secret" class="form-control" type="password" value="<%= @game.client_secret %>" readonly="readonly" />
+                <%= link("Toggle Secret", to: "#", class: "show-secret") %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3 mb-3">
+          <div class="col-md-6">
+            <div class="redirect-uris">
+              <h5>Redirect URIs</h5>
+
+              <p>Manage your Grapevine Auth redirect URIs. Only URIs that are added here will be approved for connection. These <b>must</b> be secure <code>https</code> URIs, or point at <code>localhost</code>.</p>
+
+              <%= if Enum.empty?(@game.redirect_uris) do %>
+                <b>No approved URIs</b>
+              <% end %>
+
+              <div class="row">
+                <%= Enum.map(@game.redirect_uris, fn redirect_uri -> %>
+                  <div class="redirect-uri">
+                    <code><%= redirect_uri.uri %></code>
+                  </div>
+                <% end) %>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="mt-3">Connections</h5>
+
+            <%= if Enum.empty?(@game.connections) do %>
+              <b>None</b>
+            <% end %>
+
+            <div class="connections">
+              <%= Enum.map(@game.connections, fn connection -> %>
+                <div class="connection">
+                  <%= String.capitalize(connection.type) %> - <code><%= ConnectionView.connection_info(connection) %></code>
+                </div>
+              <% end) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <h5>Player Stats</h5>
+            <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
+              <canvas></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  var toggle = document.querySelector(".show-secret");
+
+  toggle.addEventListener("click", function(e) {
+    e.preventDefault();
+    var clientSecret = document.querySelector("#client-secret")
+
+    if (clientSecret.type === "password") {
+      clientSecret.type = "text";
+    } else {
+      clientSecret.type = "password";
+    }
+  });
+});
+</script>
