@@ -7,9 +7,14 @@
   </ol>
 </nav>
 
-<section class="game">
-  <div class="row">
+<section>
+  <nav class="header">
+    <h3 class="name">Games</h3>
+  </nav>
+
+  <div class="row game">
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
     <div class="col-md-10">
       <%= GameView.hero_img(@game) %>
 
