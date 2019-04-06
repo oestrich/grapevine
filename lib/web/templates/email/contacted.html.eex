@@ -1,0 +1,12 @@
+<h3>New submission from Grapevine contact page</h3>
+
+<dl>
+  <dt><b>Name:</b></dt>
+  <dd><%= @name %></p>
+
+  <dt><b>Email:</b></dt>
+  <dd><%= @email %></p>
+
+  <dt><b>Body:</b></dt>
+  <dd><%= text_to_html(@body) %></dd>
+</dl>

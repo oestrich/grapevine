@@ -46,6 +46,10 @@ defmodule Web.Router do
 
     get("/conduct", PageController, :conduct)
 
+    get("/contact", ContactController, :new)
+
+    post("/contact", ContactController, :create)
+
     get("/docs", PageController, :docs)
 
     get("/media", PageController, :media)

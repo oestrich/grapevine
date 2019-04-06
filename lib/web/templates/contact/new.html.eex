@@ -1,0 +1,32 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Contact</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section>
+      <nav>
+        <h2>Contact Grapevine</h2>
+      </nav>
+
+      <p class="lead">Please fill out the form below and we'll get back to you as soon as possible.</p>
+
+      <%= form_for(@conn, Routes.contact_path(@conn, :create), [as: :contact], fn f -> %>
+        <%= FormView.text_field(f, :name) %>
+
+        <%= FormView.text_field(f, :email) %>
+
+        <%= FormView.textarea_field(f, :body, rows: 10) %>
+
+        <div class="row">
+          <div class="col-md-9 offset-md-3">
+            <%= submit("Send", class: "btn btn-primary") %>
+          </div>
+        </div>
+      <% end) %>
+    </section>
+  </div>
+</div>

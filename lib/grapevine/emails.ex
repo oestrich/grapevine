@@ -25,6 +25,16 @@ defmodule Grapevine.Emails do
     |> render("password-reset.html", user: user)
   end
 
+  def contacted(name, email, body) do
+    base_email()
+    |> to(alert_to())
+    |> subject("Graepvine - New contact submission")
+    |> assign(:name, name)
+    |> assign(:email, email)
+    |> assign(:body, body)
+    |> render("contacted.html")
+  end
+
   def new_alert(alert) do
     base_email()
     |> to(alert_to())
