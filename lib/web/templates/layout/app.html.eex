@@ -28,9 +28,9 @@
         |
         <%= link("Code of Conduct", to: page_path(@conn, :conduct)) %>
         |
-        <%= link("Docs", to: page_path(@conn, :docs)) %>
+        <%= link("Contact", to: Routes.contact_path(@conn, :new)) %>
         |
-        <%= link("Media", to: page_path(@conn, :media)) %>
+        <%= link("Docs", to: page_path(@conn, :docs)) %>
         |
         <%= link("MSSP Check", to: mssp_path(@conn, :index)) %>
         <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>

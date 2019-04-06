@@ -62,6 +62,8 @@
 
       <p>Some games to get you started out. These are the most popular games currently on Grapevine.</p>
 
+      <p><%= link("View all online games.", to: Routes.game_path(@conn, :index)) %></p>
+
       <h3>Miriani</h3>
 
       <p>Miriani is a sci-fi game, where you are a starship pilot.</p>
