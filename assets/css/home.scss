@@ -1,5 +1,13 @@
 @import "colors";
 
+.homepage {
+  @media only screen and (max-device-width: 736px) {
+    h2.name {
+      font-size: 24px;
+    }
+  }
+}
+
 .homepage .games {
   display: flex;
   flex-wrap: wrap;
