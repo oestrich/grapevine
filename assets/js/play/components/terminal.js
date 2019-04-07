@@ -54,7 +54,11 @@ class Terminal extends React.Component {
 
     let fontFamily = this.props.font;
     let fontSize = this.props.fontSize;
-    const style = {fontFamily, fontSize};
+
+    const style = {
+      fontFamily: `${fontFamily}, monospace`,
+      fontSize
+    };
 
     return (
       <div className="terminal" style={style}>
