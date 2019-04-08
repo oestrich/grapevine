@@ -63,8 +63,13 @@ defmodule Grapevine.PlayerPresence do
 
     def load_table(state) do
       Enum.each(Games.all_public(), fn game ->
-        most_recent_count = Statistics.most_recent_count(game)
-        :ets.insert(table_name(state), {game.id, most_recent_count})
+        case Statistics.most_recent_count(game) do
+          nil ->
+            :ok
+
+          most_recent_count ->
+            :ets.insert(table_name(state), {game.id, most_recent_count})
+        end
       end)
     end
 
