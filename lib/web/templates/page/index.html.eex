@@ -3,12 +3,12 @@
     <div class="col-md-6 mx-auto my-2">
       <h1 class="display-4 font-weight-normal">Grapevine</h1>
       <p class="lead font-weight-normal">The MUD Community Site</p>
+      <%= live_render(@conn, CurrentPlayerCountView) %>
       <p class="lead font-weight-normal">
         <%= link(to: Routes.page_path(@conn, :about)) do %>
           Learn More &raquo;
         <% end %>
       </p>
-      <%= live_render(@conn, CurrentPlayerCountView) %>
     </div>
   </div>
 </section>

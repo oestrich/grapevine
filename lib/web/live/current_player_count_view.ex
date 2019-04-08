@@ -6,9 +6,9 @@ defmodule Web.CurrentPlayerCountView do
 
   def render(assigns) do
     ~L[
-      <div class="lead">
+      <p>
         Join the other <%= @count %> players on the network.
-      </div>
+      </p>
     ]
   end
 
