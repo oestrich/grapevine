@@ -14,6 +14,7 @@ defmodule Grapevine.Application do
       cluster_supervisor(),
       supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
+      {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Presence, []},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
@@ -21,7 +22,6 @@ defmodule Grapevine.Application do
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
       {Grapevine.Featured, [name: Grapevine.Featured]},
-      {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Statistics.Server, []}
     ]
 
