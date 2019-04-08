@@ -7,6 +7,7 @@ defmodule Grapevine.Presence.Server do
 
   alias Grapevine.Applications.Application
   alias Grapevine.Games.Game
+  alias Grapevine.PlayerPresence
   alias Grapevine.Presence.Client
   alias Grapevine.Presence.Notices
   alias Grapevine.Presence.State
@@ -40,6 +41,8 @@ defmodule Grapevine.Presence.Server do
       {ets_key(game),
        %State{supports: supports, channels: channels, players: players, timestamp: Timex.now()}}
     )
+
+    PlayerPresence.update_count(game.id, length(players || []))
 
     {:ok, state}
   end

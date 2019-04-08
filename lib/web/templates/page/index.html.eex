@@ -8,6 +8,7 @@
           Learn More &raquo;
         <% end %>
       </p>
+      <%= live_render(@conn, CurrentPlayerCountView) %>
     </div>
   </div>
 </section>

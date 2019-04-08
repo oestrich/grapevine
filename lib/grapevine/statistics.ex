@@ -5,6 +5,7 @@ defmodule Grapevine.Statistics do
 
   import Ecto.Query
 
+  alias Grapevine.PlayerPresence
   alias Grapevine.Repo
   alias Grapevine.Statistics.PlayerStatistic
   alias Grapevine.Statistics.Session
@@ -18,6 +19,7 @@ defmodule Grapevine.Statistics do
     %PlayerStatistic{}
     |> PlayerStatistic.socket_changeset(game, players, time)
     |> Repo.insert()
+    |> broadcast_count()
   end
 
   @doc """
@@ -29,7 +31,15 @@ defmodule Grapevine.Statistics do
     %PlayerStatistic{}
     |> PlayerStatistic.mssp_changeset(game, player_count, time)
     |> Repo.insert()
+    |> broadcast_count()
   end
+
+  def broadcast_count({:ok, player_statistics}) do
+    PlayerPresence.update_count(player_statistics.game_id, player_statistics.player_count)
+    {:ok, player_statistics}
+  end
+
+  def broadcast_count(result), do: result
 
   @doc """
   Record the start of a session
@@ -105,5 +115,26 @@ defmodule Grapevine.Statistics do
         |> Enum.map(& &1.player_count)
         |> Enum.max()
     end
+  end
+
+  @doc """
+  Get the most recent count of a game
+
+  Restricting to the last hour
+  """
+  def most_recent_count(game) do
+    last_hour =
+      Timex.now()
+      |> Timex.shift(minutes: -61)
+      |> Timex.set(second: 0)
+      |> DateTime.truncate(:second)
+
+    PlayerStatistic
+    |> select([ps], ps.player_count)
+    |> where([ps], ps.game_id == ^game.id)
+    |> where([ps], ps.recorded_at >= ^last_hour)
+    |> order_by([ps], desc: ps.recorded_at)
+    |> limit(1)
+    |> Repo.one()
   end
 end

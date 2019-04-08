@@ -4,6 +4,7 @@ defmodule Web.PageView do
   import Web.SocketHelper
 
   alias Grapevine.Channels
+  alias Web.CurrentPlayerCountView
   alias Web.DocView
   alias Web.GameView
 
