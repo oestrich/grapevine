@@ -8,7 +8,8 @@ defmodule Web.SSO.DiscourseController do
 
     case SSO.validate(params, signature) do
       {:ok, nonce} ->
-        redirect(conn, external: SSO.sign_url(user.id, user.email, nonce))
+        url = SSO.sign_url(user.id, user.email, nonce, username: user.username)
+        redirect(conn, external: url)
 
       _ ->
         conn
