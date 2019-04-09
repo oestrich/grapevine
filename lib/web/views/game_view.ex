@@ -171,7 +171,7 @@ defmodule Web.GameView do
       _ ->
         mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
-        case Timex.before?(mssp_cutoff, game.mssp_last_seen_at) do
+        case Timex.before?(mssp_cutoff, game.telnet_last_seen_at) do
           true ->
             content_tag(:i, "", class: "fa fa-adjust online", alt: "Seen on MSSP", title: "Seen on MSSP")
 

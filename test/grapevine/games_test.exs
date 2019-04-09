@@ -241,6 +241,16 @@ defmodule Grapevine.GamesTest do
       assert connection.supports_mssp
     end
 
+    test "marks the game as showing the player graph", %{game: game} do
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      {:ok, connection} = Games.connection_has_mssp(connection)
+
+      {:ok, game} = Games.get(connection.game_id)
+      assert game.display_player_graph
+    end
+
     test "without mssp", %{game: game} do
       {:ok, connection} =
         Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
@@ -249,6 +259,13 @@ defmodule Grapevine.GamesTest do
       {:ok, alert} = Games.connection_has_no_mssp(connection)
 
       assert alert.title == "MSSP failed"
+    end
+
+    test "known without mssp", %{game: game} do
+      {:ok, connection} =
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+
+      :ok = Games.connection_has_no_mssp(connection)
     end
   end
 
@@ -299,16 +316,13 @@ defmodule Grapevine.GamesTest do
     end
   end
 
-  describe "touching a game's mssp status" do
-    setup do
-      user = create_user()
-      %{user: user, game: create_game(user)}
-    end
+  describe "seeing a game on telnet" do
+    test "successfully" do
+      game = create_game(create_user())
 
-    test "successfully", %{game: game} do
-      {:ok, game} = Games.seen_on_mssp(game)
+      {:ok, game} = Games.seen_on_telnet(game)
 
-      assert game.mssp_last_seen_at
+      assert game.telnet_last_seen_at
     end
   end
 

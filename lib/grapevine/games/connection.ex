@@ -20,7 +20,8 @@ defmodule Grapevine.Games.Connection do
     field(:host, :string)
     field(:port, :integer)
 
-    field(:supports_mssp, :boolean)
+    field(:poll_enabled, :boolean, default: false)
+    field(:supports_mssp, :boolean, default: false)
 
     belongs_to(:game, Game)
 
@@ -48,6 +49,12 @@ defmodule Grapevine.Games.Connection do
     |> put_change(:supports_mssp, supports_mssp)
   end
 
+  def poll_changeset(struct, poll_enabled) do
+    struct
+    |> change()
+    |> put_change(:poll_enabled, poll_enabled)
+  end
+
   defp validate_by_type(changeset) do
     case get_field(changeset, :type) do
       "web" ->
@@ -59,11 +66,13 @@ defmodule Grapevine.Games.Connection do
         changeset
         |> validate_required([:host, :port])
         |> validate_inclusion(:port, 0..65_535)
+        |> validate_exclusion(:port, [80, 443])
 
       "secure telnet" ->
         changeset
         |> validate_required([:host, :port])
         |> validate_inclusion(:port, 0..65_535)
+        |> validate_exclusion(:port, [80, 443])
     end
   end
 end

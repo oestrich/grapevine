@@ -85,19 +85,19 @@ defmodule Grapevine.Games do
 
   def filter_on_attribute({"online", "yes"}, query) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
-    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+    telnet_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
-    where(query, [g], g.last_seen_at > ^active_cutoff or g.mssp_last_seen_at > ^mssp_cutoff)
+    where(query, [g], g.last_seen_at > ^active_cutoff or g.telnet_last_seen_at > ^telnet_cutoff)
   end
 
   def filter_on_attribute(_, query), do: query
 
   defp sort_online(query) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
-    mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
+    telnet_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
     query
-    |> order_by([g], fragment("coalesce(?, ?) > ? or coalesce(?, ?) > ? desc nulls last", g.last_seen_at, ^active_cutoff, ^active_cutoff, g.mssp_last_seen_at, ^mssp_cutoff, ^mssp_cutoff))
+    |> order_by([g], fragment("coalesce(?, ?) > ? or coalesce(?, ?) > ? desc nulls last", g.last_seen_at, ^active_cutoff, ^active_cutoff, g.telnet_last_seen_at, ^telnet_cutoff, ^telnet_cutoff))
     |> order_by([g], g.name)
   end
 
@@ -411,16 +411,10 @@ defmodule Grapevine.Games do
   @doc """
   Update the timestamp for a game's last seen status
   """
-  def seen_on_mssp(game, seen_at \\ Timex.now()) do
-    changeset = Game.seen_on_mssp_changeset(game, seen_at)
-
-    case changeset |> Repo.update() do
-      {:ok, game} ->
-        {:ok, game}
-
-      {:error, changeset} ->
-        {:error, changeset}
-    end
+  def seen_on_telnet(game, seen_at \\ Timex.now()) do
+    game
+    |> Game.seen_on_telnet_changeset(seen_at)
+    |> Repo.update()
   end
 
   @doc """
@@ -429,7 +423,7 @@ defmodule Grapevine.Games do
   def telnet_connections() do
     Connection
     |> where([c], c.type == "telnet")
-    |> where([c], c.supports_mssp)
+    |> where([c], c.poll_enabled)
     |> preload([:game])
     |> Repo.all()
   end
@@ -516,18 +510,56 @@ defmodule Grapevine.Games do
   end
 
   @doc """
+  Mark a connection as ready to poll
+  """
+  def connection_succeeded(connection) do
+    connection
+    |> Connection.poll_changeset(true)
+    |> Repo.update()
+  end
+
+  @doc """
+  Mark a connection as ready to poll
+  """
+  def connection_failed(connection) do
+    Alerts.create("Connection failed", "Could not connection to game #{connection.game_id}, connection: #{connection.id}")
+  end
+
+  @doc """
   Mark a connection as having mssp
   """
   def connection_has_mssp(connection) do
-    connection
-    |> Connection.mssp_changeset(true)
-    |> Repo.update()
+    connection = Repo.preload(connection, :game)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:connection, Connection.mssp_changeset(connection, true))
+      |> Ecto.Multi.update(:game, Game.graph_changeset(connection.game, true))
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{connection: connection}} ->
+        {:ok, connection}
+
+      {:error, _, changeset, _} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Mark a connection as not having mssp
   """
   def connection_has_no_mssp(connection) do
+    case connection.supports_mssp do
+      true ->
+        create_failed_mssp_alert(connection)
+
+      false ->
+        :ok
+    end
+  end
+
+  defp create_failed_mssp_alert(connection) do
     Alerts.create("MSSP failed", "Could not detect MSSP for game #{connection.game_id}")
   end
 
