@@ -6,9 +6,6 @@ defmodule Grapevine.PlayerPresence do
   use GenServer
 
   alias __MODULE__.Implementation
-  alias Grapevine.Games
-  alias Grapevine.Statistics
-  alias Web.Endpoint
 
   @doc false
   def start_link(opts) do
@@ -45,21 +42,35 @@ defmodule Grapevine.PlayerPresence do
   defmodule Implementation do
     @moduledoc false
 
+    alias Grapevine.Games
     alias Grapevine.PlayerPresence
+    alias Grapevine.Statistics
+    alias Web.Endpoint
 
     def current_total_count() do
       keys()
-      |> Enum.map(fn key ->
-        case :ets.lookup(PlayerPresence, key) do
-          [{^key, count}] ->
-            count
-
-          _ ->
-            0
-        end
-      end)
+      |> Enum.map(&lookup_key/1)
+      |> Enum.filter(&fresh_keys/1)
+      |> Enum.map(&count/1)
       |> Enum.sum()
     end
+
+    defp lookup_key(key) do
+      case :ets.lookup(PlayerPresence, key) do
+        [{^key, count, recorded_at}] ->
+          {count, recorded_at}
+
+        _ ->
+          0
+      end
+    end
+
+    defp fresh_keys({_count, recorded_at}) do
+      one_hour_ago = Timex.shift(Timex.now(), hours: -1)
+      Timex.after?(recorded_at, one_hour_ago)
+    end
+
+    defp count({count, _recorded_at}), do: count
 
     def load_table(state) do
       Enum.each(Games.all_public(), fn game ->
@@ -67,14 +78,14 @@ defmodule Grapevine.PlayerPresence do
           nil ->
             :ok
 
-          most_recent_count ->
-            :ets.insert(table_name(state), {game.id, most_recent_count})
+          {most_recent_count, recorded_at} ->
+            :ets.insert(table_name(state), {game.id, most_recent_count, recorded_at})
         end
       end)
     end
 
     def update_count(state, game_id, count) do
-      :ets.insert(table_name(state), {game_id, count})
+      :ets.insert(table_name(state), {game_id, count, Timex.now()})
       Endpoint.broadcast("player:presence", "count/update", %{count: current_total_count()})
       state
     end

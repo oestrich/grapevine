@@ -7,7 +7,7 @@ defmodule Web.CurrentPlayerCountView do
   def render(assigns) do
     ~L[
       <p>
-        Join the other <%= @count %> players on the network.
+        Join <%= @count %> other players.
       </p>
     ]
   end

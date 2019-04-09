@@ -130,7 +130,7 @@ defmodule Grapevine.Statistics do
       |> DateTime.truncate(:second)
 
     PlayerStatistic
-    |> select([ps], ps.player_count)
+    |> select([ps], {ps.player_count, ps.recorded_at})
     |> where([ps], ps.game_id == ^game.id)
     |> where([ps], ps.recorded_at >= ^last_hour)
     |> order_by([ps], desc: ps.recorded_at)
