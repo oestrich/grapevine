@@ -66,11 +66,13 @@ defmodule Grapevine.Games.Connection do
         changeset
         |> validate_required([:host, :port])
         |> validate_inclusion(:port, 0..65_535)
+        |> validate_exclusion(:port, [80, 443])
 
       "secure telnet" ->
         changeset
         |> validate_required([:host, :port])
         |> validate_inclusion(:port, 0..65_535)
+        |> validate_exclusion(:port, [80, 443])
     end
   end
 end
