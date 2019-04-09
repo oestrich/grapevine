@@ -76,7 +76,20 @@ defmodule Web.PlayChannel do
   end
 
   def handle_info({:echo, data}, socket) do
-    push(socket, "echo", %{message: data})
+    data =
+      data
+      |> String.chunk(:valid)
+      |> Enum.map(&replace_invalid/1)
+      |> Enum.join()
+
+    case Jason.encode(data) do
+      {:ok, _msg} ->
+        push(socket, "echo", %{message: data})
+
+      {:error, _error} ->
+        push(socket, "echo", %{message: "\n\n\e[31mERROR - Hiccup from the game\n\n\e[0m"})
+    end
+
     {:noreply, socket}
   end
 
@@ -102,6 +115,16 @@ defmodule Web.PlayChannel do
 
       false ->
         {:noreply, socket}
+    end
+  end
+
+  defp replace_invalid(codepoint) do
+    case String.valid?(codepoint) do
+      true ->
+        codepoint
+
+      false ->
+        <<0xEF, 0xBF, 0xBD>>
     end
   end
 end
