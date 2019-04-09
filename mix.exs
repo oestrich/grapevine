@@ -38,6 +38,7 @@ defmodule Grapevine.Mixfile do
       {:briefly, "~> 0.3"},
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:discourse, "~> 0.0.1"},
       {:distillery, "~> 2.0", runtime: false},
       {:earmark, "~> 1.2"},
       {:ecto, "~> 3.0"},
