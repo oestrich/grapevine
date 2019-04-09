@@ -31,7 +31,8 @@ defmodule Grapevine.Games.Game do
     field(:featured_order, :integer)
 
     field(:last_seen_at, :utc_datetime)
-    field(:mssp_last_seen_at, :utc_datetime)
+    field(:telnet_last_seen_at, :utc_datetime)
+    field(:display_player_graph, :boolean, default: false)
 
     field(:tagline, :string)
     field(:description, :string)
@@ -130,10 +131,16 @@ defmodule Grapevine.Games.Game do
     |> put_change(:last_seen_at, DateTime.truncate(seen_at, :second))
   end
 
-  def seen_on_mssp_changeset(struct, seen_at) do
+  def seen_on_telnet_changeset(struct, seen_at) do
     struct
     |> change()
-    |> put_change(:mssp_last_seen_at, DateTime.truncate(seen_at, :second))
+    |> put_change(:telnet_last_seen_at, DateTime.truncate(seen_at, :second))
+  end
+
+  def graph_changeset(struct, display_player_graph) do
+    struct
+    |> change()
+    |> put_change(:display_player_graph, display_player_graph)
   end
 
   defp maybe_strip_carriage_returns_from_description(changeset) do

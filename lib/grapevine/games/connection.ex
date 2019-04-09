@@ -20,7 +20,8 @@ defmodule Grapevine.Games.Connection do
     field(:host, :string)
     field(:port, :integer)
 
-    field(:supports_mssp, :boolean)
+    field(:poll_enabled, :boolean, default: false)
+    field(:supports_mssp, :boolean, default: false)
 
     belongs_to(:game, Game)
 
@@ -46,6 +47,12 @@ defmodule Grapevine.Games.Connection do
     struct
     |> change()
     |> put_change(:supports_mssp, supports_mssp)
+  end
+
+  def poll_changeset(struct, poll_enabled) do
+    struct
+    |> change()
+    |> put_change(:poll_enabled, poll_enabled)
   end
 
   defp validate_by_type(changeset) do

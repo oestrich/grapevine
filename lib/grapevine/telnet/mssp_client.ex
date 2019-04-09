@@ -35,10 +35,14 @@ defmodule Grapevine.Telnet.MSSPClient do
   end
 
   @impl true
-  def connected(_state), do: :ok
+  def connected(state) do
+    state.mssp_module.connected(state)
+  end
 
   @impl true
-  def connection_failed(_state, _error), do: :ok
+  def connection_failed(state, _error) do
+    state.mssp_module.connection_failed(state)
+  end
 
   @impl true
   def disconnected(_state), do: :ok
@@ -134,8 +138,16 @@ defmodule Grapevine.Telnet.MSSPClient do
       |> Map.put(:port, connection.port)
     end
 
+    def connected(state) do
+      Games.seen_on_telnet(state.game)
+      Games.connection_succeeded(state.connection)
+    end
+
+    def connection_failed(state) do
+      Games.connection_failed(state.connection)
+    end
+
     def record_option(state, data) do
-      Games.seen_on_mssp(state.game)
       Games.connection_has_mssp(state.connection)
       maybe_set_user_agent(state, data)
 
@@ -177,6 +189,10 @@ defmodule Grapevine.Telnet.MSSPClient do
       |> Map.put(:port, Keyword.get(opts, :port))
       |> Map.put(:channel, Keyword.get(opts, :channel))
     end
+
+    def connected(_state), do: :ok
+
+    def connection_failed(_state), do: :ok
 
     def record_option(state, data) do
       Telnet.record_mssp_response(state.host, state.port, data)

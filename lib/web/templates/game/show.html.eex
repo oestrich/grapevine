@@ -85,13 +85,15 @@
       <% end %>
     </div>
 
-    <div class="mt-3">
-      <h3>Player Stats</h3>
+    <%= if @game.display_player_graph do %>
+      <div class="mt-3">
+        <h3>Player Stats</h3>
 
-      <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
-        <canvas></canvas>
+        <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
+          <canvas></canvas>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <%= unless Enum.empty?(@events) do %>
       <h3>In Game Events</h3>

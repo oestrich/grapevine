@@ -85,7 +85,7 @@ defmodule Grapevine.Featured.Implementation do
     |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps, g], ps.recorded_at >= ^last_few_days)
     |> where([ps, g], g.display == true and not is_nil(g.cover_key))
-    |> where([ps, g], g.last_seen_at > ^active_cutoff or g.mssp_last_seen_at > ^mssp_cutoff)
+    |> where([ps, g], g.last_seen_at > ^active_cutoff or g.telnet_last_seen_at > ^mssp_cutoff)
     |> where([ps, g], ps.game_id not in ^already_picked_games)
     |> group_by([ps, g], [ps.game_id])
     |> order_by([ps, g], desc: max(ps.player_count))
@@ -120,7 +120,7 @@ defmodule Grapevine.Featured.Implementation do
 
     Grapevine.Games.Game
     |> where([g], g.display == true and not is_nil(g.cover_key))
-    |> where([g], g.mssp_last_seen_at > ^mssp_cutoff)
+    |> where([g], g.telnet_last_seen_at > ^mssp_cutoff)
     |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
     |> Enum.shuffle()
