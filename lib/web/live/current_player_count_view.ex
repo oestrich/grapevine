@@ -6,9 +6,7 @@ defmodule Web.CurrentPlayerCountView do
 
   def render(assigns) do
     ~L[
-      <p>
-        Join <%= @count %> other players.
-      </p>
+      <p>Join <%= @count %> total players across all games on Grapevine.</p>
     ]
   end
 
