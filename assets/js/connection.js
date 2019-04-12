@@ -6,7 +6,7 @@ export default class Connection extends React.Component {
 
     this.state = {
       formClass: "hidden",
-      type: "web",
+      type: "telnet",
       url: "",
       host: "",
       port: "",
@@ -40,6 +40,20 @@ export default class Connection extends React.Component {
 
   onPortChange(e) {
     this.setState({port: e.target.value});
+  }
+
+  renderHelp() {
+    switch (this.state.type) {
+      case "web":
+        return (
+          <div className="help-block">
+            This should be a link to a web client. If provided it will become the Play link for your game.
+          </div>
+        );
+
+      default:
+        return null;
+    }
   }
 
   renderUrl() {
@@ -106,10 +120,11 @@ export default class Connection extends React.Component {
                 <div className="form-group">
                   <label>Type</label>
                   <select value={type} onChange={this.onTypeChange} name="connection[type]" className="form-control">
-                    <option>web</option>
                     <option>telnet</option>
                     <option>secure telnet</option>
+                    <option>web</option>
                   </select>
+                  {this.renderHelp()}
                 </div>
 
                 {this.renderUrl()}
