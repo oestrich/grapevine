@@ -33,7 +33,9 @@
 
     <div class="col-md-8">
       <div class="solid-background">
-        <p><%= @game.description %></p>
+        <%= if @game.description do %>
+          <%= text_to_html(@game.description) %>
+        <% end %>
 
         <%= if @game.user_agent do %>
           The server is running <code><%= @game.user_agent %></code>.

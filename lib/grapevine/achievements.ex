@@ -38,6 +38,19 @@ defmodule Grapevine.Achievements do
   end
 
   @doc """
+  Check if a game has achievements
+  """
+  def has_achievements?(game) do
+    count =
+      Achievement
+      |> select([a], count(a.id))
+      |> where([a], a.game_id == ^game.id)
+      |> Repo.one()
+
+    count > 0
+  end
+
+  @doc """
   Get an achievement for a user
 
   Scoped to the user
