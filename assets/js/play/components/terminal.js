@@ -37,6 +37,12 @@ class AnsiText extends React.Component {
 }
 
 class Terminal extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.triggerScroll = true;
+  }
+
   componentDidMount() {
     this.scrollToBottom();
   }
@@ -45,11 +51,13 @@ class Terminal extends React.Component {
     this.scrollToBottom();
   }
 
-  scrollToBottom() {
+  componentWillUpdate() {
     let visibleBottom = this.terminal.scrollTop + this.terminal.clientHeight;
-    let triggerScroll = !(visibleBottom + 250 < this.terminal.scrollHeight);
+    this.triggerScroll = !(visibleBottom + 250 < this.terminal.scrollHeight);
+  }
 
-    if (triggerScroll) {
+  scrollToBottom() {
+    if (this.triggerScroll) {
       this.el.scrollIntoView();
     }
   }
