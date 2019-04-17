@@ -46,7 +46,12 @@ class Terminal extends React.Component {
   }
 
   scrollToBottom() {
-    this.el.scrollIntoView();
+    let visibleBottom = this.terminal.scrollTop + this.terminal.clientHeight;
+    let triggerScroll = !(visibleBottom + 250 < this.terminal.scrollHeight);
+
+    if (triggerScroll) {
+      this.el.scrollIntoView();
+    }
   }
 
   render() {
@@ -61,7 +66,7 @@ class Terminal extends React.Component {
     };
 
     return (
-      <div className="terminal" style={style}>
+      <div ref={el => { this.terminal = el; }} className="terminal" style={style}>
         {_.map(lines, line => {
           return _.map(line, segment => {
             return (
