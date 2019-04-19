@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   lines: [],
   lineId: 0,
   gmcp: {},
+  oauth: null,
   options: {
     promptType: "text",
   },
@@ -120,6 +121,10 @@ export const socketGA = (state, action) => {
   return {...state, buffer: ""};
 };
 
+export const socketOAuthClose = (state, action) => {
+  return {...state, oauth: null};
+};
+
 export const socketReceiveConnection = (state, action) => {
   return {...state, connection: action.payload};
 };
@@ -127,6 +132,16 @@ export const socketReceiveConnection = (state, action) => {
 export const socketReceiveGMCP = (state, action) => {
   const {message, data} = action;
   return {...state, gmcp: {...state.gmcp, [message]: data}};
+};
+
+export const socketReceiveOAuth = (state, action) => {
+  const {message} = action;
+
+  if (message.event == "start") {
+    return {...state, oauth: {status: "authorizing", scopes: message.scopes}};
+  }
+
+  return state;
 };
 
 export const socketReceiveOption = (state, action) => {
@@ -145,8 +160,10 @@ export const HANDLERS = {
   [Types.SOCKET_DISCONNECTED]: socketDisconnected,
   [Types.SOCKET_ECHO]: socketEcho,
   [Types.SOCKET_GA]: socketGA,
+  [Types.SOCKET_O_AUTH_CLOSE]: socketOAuthClose,
   [Types.SOCKET_RECEIVE_CONNECTION]: socketReceiveConnection,
   [Types.SOCKET_RECEIVE_GMCP]: socketReceiveGMCP,
+  [Types.SOCKET_RECEIVE_O_AUTH]: socketReceiveOAuth,
   [Types.SOCKET_RECEIVE_OPTION]: socketReceiveOption,
 }
 

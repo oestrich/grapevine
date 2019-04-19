@@ -7,6 +7,11 @@ defmodule Grapevine.Authorizations.AuthorizationTest do
   describe "redirect_uri validations" do
     setup [:with_game]
 
+    test "redirect_uri can be urn:ietf:wg:oauth:2.0:oob", %{game: game} do
+      changeset = %Authorization{} |> Authorization.create_changeset(game, %{redirect_uri: "urn:ietf:wg:oauth:2.0:oob"})
+      refute changeset.errors[:redirect_uri]
+    end
+
     test "redirect_uri must be https", %{game: game} do
       changeset = %Authorization{} |> Authorization.create_changeset(game, %{redirect_uri: "https://example.com/"})
       refute changeset.errors[:redirect_uri]

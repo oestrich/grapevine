@@ -52,6 +52,10 @@ class SocketProvider extends React.Component {
     this.props.socketReceiveGMCP(message, data);
   }
 
+  receiveOAuth(data) {
+    this.props.socketReceiveOAuth(data);
+  }
+
   setOption(option) {
     this.props.socketReceiveOption(option);
   }
@@ -80,5 +84,6 @@ export default SocketProvider = connect(null, {
   socketGA: Creators.socketGA,
   socketReceiveConnection: Creators.socketReceiveConnection,
   socketReceiveGMCP: Creators.socketReceiveGMCP,
+  socketReceiveOAuth: Creators.socketReceiveOAuth,
   socketReceiveOption: Creators.socketReceiveOption
 })(SocketProvider);
