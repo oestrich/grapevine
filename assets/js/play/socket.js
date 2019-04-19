@@ -31,6 +31,10 @@ class ClientSocket {
       this.client.receiveGMCP(data.module, data.data);
     });
 
+    this.channel.on("oauth", (data) => {
+      this.client.receiveOAuth(data);
+    });
+
     this.channel.on("ga", () => {
       this.client.processText();
     });
@@ -55,6 +59,10 @@ class ClientSocket {
 
   send(message) {
     this.channel.push("send", {message: message});
+  }
+
+  event(type, payload) {
+    this.channel.push(type, payload);
   }
 }
 

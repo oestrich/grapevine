@@ -5,6 +5,7 @@ defmodule Web.PlayChannel do
 
   use Phoenix.Channel
 
+  alias Grapevine.Authorizations
   alias Grapevine.Games
   alias Telnet.WebClient
   alias Web.Game
@@ -70,6 +71,16 @@ defmodule Web.PlayChannel do
     {:noreply, socket}
   end
 
+  def handle_in("oauth", %{"state" => "accept"}, socket) do
+    {:ok, authorization} = Authorizations.authorize(socket.assigns.authorization)
+    send_oauth_grant(socket, authorization)
+  end
+
+  def handle_in("oauth", %{"state" => "reject"}, socket) do
+    Authorizations.deny(socket.assigns.authorization)
+    {:noreply, socket}
+  end
+
   def handle_info(:start_client, socket) do
     {:ok, socket} = start_client(socket)
     {:noreply, socket}
@@ -103,6 +114,26 @@ defmodule Web.PlayChannel do
     {:noreply, socket}
   end
 
+  def handle_info({:oauth, "AuthorizationRequest", params}, socket) do
+    with {:ok, user} <- Map.fetch(socket.assigns, :user),
+         {:ok, game} <- Map.fetch(socket.assigns, :game),
+         {:ok, user} <- Authorizations.check_for_username(user),
+         {:ok, authorization} <- Authorizations.start_auth(user, game, params) do
+      case authorization.active do
+        true ->
+          send_oauth_grant(socket, authorization)
+
+        false ->
+          push(socket, "oauth", %{event: "start", scopes: authorization.scopes})
+          socket = assign(socket, :authorization, authorization)
+          {:noreply, socket}
+      end
+    else
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   def handle_info({:option, key, value}, socket) do
     push(socket, "option", %{key: key, value: value})
     {:noreply, socket}
@@ -126,5 +157,17 @@ defmodule Web.PlayChannel do
       false ->
         <<0xEF, 0xBF, 0xBD>>
     end
+  end
+
+  defp send_oauth_grant(socket, authorization) do
+    WebClient.event(socket.assigns.client_pid, "oauth", %{
+      type: "AuthorizationGrant",
+      state: authorization.state,
+      code: authorization.code
+    })
+
+    socket = assign(socket, :authorization, authorization)
+
+    {:noreply, socket}
   end
 end

@@ -80,6 +80,9 @@ defmodule Grapevine.Authorizations.Authorization do
       nil ->
         changeset
 
+      "urn:ietf:wg:oauth:2.0:oob" ->
+        changeset
+
       redirect_uri ->
         uri = URI.parse(redirect_uri)
 
@@ -154,6 +157,9 @@ defmodule Grapevine.Authorizations.Authorization do
   defp validate_redirect_uri_known(changeset, game) do
     case get_field(changeset, :redirect_uri) do
       nil ->
+        changeset
+
+      "urn:ietf:wg:oauth:2.0:oob" ->
         changeset
 
       redirect_uri ->

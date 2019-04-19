@@ -54,6 +54,10 @@ export const getSocketGMCP = (state) => {
   return getSocketState(state).gmcp;
 };
 
+export const getSocketOAuth = (state) => {
+  return getSocketState(state).oauth;
+};
+
 // Reducers
 
 let rootReducer = combineReducers({
