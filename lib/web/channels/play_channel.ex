@@ -60,7 +60,11 @@ defmodule Web.PlayChannel do
     Process.flag(:trap_exit, true)
     Process.link(pid)
 
-    socket = assign(socket, :client_pid, pid)
+    socket =
+      socket
+      |> assign(:client_pid, pid)
+      |> assign(:connection, connection)
+
     push(socket, "connection", Map.take(connection, [:type, :host, :port]))
 
     {:ok, socket}
@@ -72,12 +76,22 @@ defmodule Web.PlayChannel do
   end
 
   def handle_in("oauth", %{"state" => "accept"}, socket) do
-    {:ok, authorization} = Authorizations.authorize(socket.assigns.authorization)
-    send_oauth_grant(socket, authorization)
+    with true <- secure_telnet?(socket),
+         {:ok, authorization} <- Map.fetch(socket.assigns, :authorization) do
+      {:ok, authorization} = Authorizations.authorize(authorization)
+      send_oauth_grant(socket, authorization)
+    else
+      _ ->
+        {:noreply, socket}
+    end
   end
 
   def handle_in("oauth", %{"state" => "reject"}, socket) do
-    Authorizations.deny(socket.assigns.authorization)
+    with true <- secure_telnet?(socket),
+         {:ok, authorization} <- Map.fetch(socket.assigns, :authorization) do
+      Authorizations.deny(authorization)
+    end
+
     {:noreply, socket}
   end
 
@@ -115,7 +129,8 @@ defmodule Web.PlayChannel do
   end
 
   def handle_info({:oauth, "AuthorizationRequest", params}, socket) do
-    with {:ok, user} <- Map.fetch(socket.assigns, :user),
+    with true <- secure_telnet?(socket),
+         {:ok, user} <- Map.fetch(socket.assigns, :user),
          {:ok, game} <- Map.fetch(socket.assigns, :game),
          {:ok, user} <- Authorizations.check_for_username(user),
          {:ok, authorization} <- Authorizations.start_auth(user, game, params) do
@@ -156,6 +171,16 @@ defmodule Web.PlayChannel do
 
       false ->
         <<0xEF, 0xBF, 0xBD>>
+    end
+  end
+
+  defp secure_telnet?(socket) do
+    with {:ok, connection} <- Map.fetch(socket.assigns, :connection),
+         "secure telnet" <- connection.type do
+      true
+    else
+      _ ->
+        false
     end
   end
 
