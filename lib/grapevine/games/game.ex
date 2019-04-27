@@ -129,6 +129,7 @@ defmodule Grapevine.Games.Game do
     struct
     |> change()
     |> put_change(:last_seen_at, DateTime.truncate(seen_at, :second))
+    |> put_change(:display_player_graph, true)
   end
 
   def seen_on_telnet_changeset(struct, seen_at) do

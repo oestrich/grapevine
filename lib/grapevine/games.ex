@@ -397,15 +397,9 @@ defmodule Grapevine.Games do
   Update the timestamp for a game's last seen status
   """
   def seen_on_socket(game, seen_at \\ Timex.now()) do
-    changeset = Game.seen_changeset(game, seen_at)
-
-    case changeset |> Repo.update() do
-      {:ok, game} ->
-        {:ok, game}
-
-      {:error, changeset} ->
-        {:error, changeset}
-    end
+    game
+    |> Game.seen_changeset(seen_at)
+    |> Repo.update()
   end
 
   @doc """
