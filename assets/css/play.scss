@@ -126,12 +126,15 @@
     background-color: $grey-1;
     border-radius: 4px;
     margin: 4px;
+    flex: 1;
     flex-grow: 1;
     font-size: 24px;
 
     span {
       position: relative;
       padding-left: 12px;
+      display: inline-block;
+      width: 100%;
       z-index: 3;
     }
   }
