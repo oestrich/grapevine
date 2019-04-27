@@ -64,7 +64,7 @@ defmodule Web.GameView do
 
         case !is_nil(web_connection) do
           true ->
-            link("Play", to: web_connection.url, target: "_blank", class: "btn btn-primary")
+            web_play_link(web_connection)
 
           false ->
             link("Play", to: play_path(conn, :show, game.short_name), class: "btn btn-primary")
@@ -75,8 +75,17 @@ defmodule Web.GameView do
     end
   end
 
+  defp web_play_link(web_connection) do
+    link(to: web_connection.url, target: "_blank", class: "btn btn-primary") do
+      [
+        "Play ",
+        content_tag(:i, "", class: "fas fa-external-link-alt")
+      ]
+    end
+  end
+
   def show_play_button?(game) do
-    game.enable_web_client && (telnet_connection?(game) || web_connection?(game))
+   web_connection?(game) || (game.enable_web_client && telnet_connection?(game))
   end
 
   defp telnet_connection?(game) do
