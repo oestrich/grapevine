@@ -67,19 +67,28 @@ defmodule Web.GameView do
             web_play_link(web_connection)
 
           false ->
-            link("Play", to: play_path(conn, :show, game.short_name), class: "btn btn-primary")
+            client_play_link(conn, game)
         end
 
       false ->
-        ""
+        []
     end
   end
 
   defp web_play_link(web_connection) do
-    link(to: web_connection.url, target: "_blank", class: "btn btn-primary") do
+    link(to: web_connection.url, target: "_blank", class: "btn btn-primary play-launch") do
       [
         "Play ",
         content_tag(:i, "", class: "fas fa-external-link-alt")
+      ]
+    end
+  end
+
+  defp client_play_link(conn, game) do
+    link(to: play_path(conn, :show, game.short_name), class: "btn btn-primary play-launch") do
+      [
+        "Play ",
+        content_tag(:i, "", class: "fas fa-angle-double-right")
       ]
     end
   end

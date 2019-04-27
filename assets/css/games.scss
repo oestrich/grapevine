@@ -146,6 +146,10 @@ section.game {
   position: relative;
   border-radius: .25rem;
 
+  .play-launch {
+    width: 75px;
+  }
+
   .online {
     color: $green;
   }
