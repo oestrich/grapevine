@@ -55,7 +55,7 @@ defmodule Web.GameView do
   end
 
   def play_button(conn, game) do
-    case show_play_button?(game) do
+    case show_play_button?(conn, game) do
       true ->
         web_connection =
           Enum.find(game.connections, fn connection ->
@@ -93,8 +93,18 @@ defmodule Web.GameView do
     end
   end
 
-  def show_play_button?(game) do
-   web_connection?(game) || (game.enable_web_client && telnet_connection?(game))
+  def show_play_button?(conn, game) do
+   web_connection?(game) || (client_enabled?(conn, game) && telnet_connection?(game))
+  end
+
+  defp client_enabled?(conn, game) do
+    case Map.has_key?(conn.assigns, :current_user) do
+      true ->
+        game.enable_web_client
+
+      false ->
+        game.enable_web_client && game.allow_anonymous_client
+    end
   end
 
   defp telnet_connection?(game) do
