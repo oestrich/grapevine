@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="cover">
+    <%= link(to: Routes.game_path(@conn, :show, @game.short_name)) do %>
+      <%= cover_img_with_default(@conn, @game) %>
+    <% end %>
+  </div>
+  <div class="information">
+    <h4 class="title">
+      <%= link(@game.name, to: Routes.game_path(@conn, :show, @game.short_name)) %>
+    </h4>
+
+    <p class="tagline"><%= @game.tagline %></p>
+  </div>
+</div>

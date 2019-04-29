@@ -1,0 +1,30 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Registration</li>
+  </ol>
+</nav>
+
+<section class="col-md-8 offset-md-2">
+  <nav>
+    <h3 class="name">Thank you for registering</h3>
+  </nav>
+
+  <p>Thanks for registering on Grapevine!</p>
+
+  <p>You should be receiving an email shortly with a verification link.</p>
+
+  <p>If you are a game admin, <%= link("register your game here.", to: Routes.manage_game_path(@conn, :new)) %></p>
+
+  <p>If you are a player, <%= link("find a new game to play here", to: Routes.game_path(@conn, :index)) %>, or try one of these below!</p>
+</section>
+
+<div class="featured">
+  <ul class="games">
+    <%= Enum.map(@games, fn game -> %>
+      <li class="game">
+        <%= GameView.render("_featured.html", game: game, conn: @conn) %>
+      </li>
+    <% end) %>
+  </ul>
+</div>

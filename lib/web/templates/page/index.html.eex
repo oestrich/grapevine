@@ -27,24 +27,9 @@
 
     <ul class="games">
       <%= Enum.map(@games, fn game -> %>
-        <%= if game.display do %>
-          <li class="game">
-            <div class="container">
-              <div class="cover">
-                <%= link(to: game_path(@conn, :show, game.short_name)) do %>
-                  <%= GameView.cover_img_with_default(@conn, game) %>
-                <% end %>
-              </div>
-              <div class="information">
-                <h4 class="title">
-                  <%= link(game.name, to: game_path(@conn, :show, game.short_name)) %>
-                </h4>
-
-                <p class="tagline"><%= game.tagline %></p>
-              </div>
-            </div>
-          </li>
-        <% end %>
+        <li class="game">
+          <%= GameView.render("_featured.html", game: game, conn: @conn) %>
+        </li>
       <% end) %>
     </ul>
   </div>

@@ -89,6 +89,8 @@ defmodule Web.Router do
     pipe_through([:browser, :logged_in])
 
     resources("/chat", ChatController, only: [:index])
+
+    get("/register/finalize", RegistrationController, :finalize)
   end
 
   scope "/", Web do
