@@ -1,4 +1,5 @@
 <div class="connection">
   <%= String.capitalize(@connection.type) %> - <code><%= connection_info(@connection) %></code>
+  <%= link("Edit", to: manage_connection_path(@conn, :edit, @connection.id), class: "btn btn-sm btn-flat") %>
   <%= link("Delete", to: manage_connection_path(@conn, :delete, @connection.id), method: "delete", class: "btn btn-sm btn-flat") %>
 </div>

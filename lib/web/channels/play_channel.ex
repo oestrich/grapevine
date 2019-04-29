@@ -54,6 +54,7 @@ defmodule Web.PlayChannel do
       type: connection.type,
       host: connection.host,
       port: connection.port,
+      certificate: connection.certificate,
       channel_pid: socket.channel_pid
     )
 

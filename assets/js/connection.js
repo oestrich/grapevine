@@ -10,6 +10,7 @@ export default class Connection extends React.Component {
       url: "",
       host: "",
       port: "",
+      certificate: "",
     }
 
     this.showForm = this.showForm.bind(this);
@@ -40,6 +41,10 @@ export default class Connection extends React.Component {
 
   onPortChange(e) {
     this.setState({port: e.target.value});
+  }
+
+  onCertChange(e) {
+    this.setState({certificate: e.target.value});
   }
 
   renderHelp() {
@@ -101,6 +106,24 @@ export default class Connection extends React.Component {
     );
   }
 
+  renderCert() {
+    if (this.state.type != "secure telnet") {
+      return null;
+    }
+
+    let cert = this.state.cert;
+
+    return (
+      <div className="form-group">
+        <label>Pinned Certificate</label>
+        <textarea name="connection[certificate]" onChange={this.onCertChange} className="form-control">{cert}</textarea>
+        <div className="help-block">
+          For self-signed certificates only. This should be a PEM encoded.
+        </div>
+      </div>
+    );
+  }
+
   render() {
     let action = this.props.action;
     let formClass = this.state.formClass;
@@ -130,6 +153,7 @@ export default class Connection extends React.Component {
                 {this.renderUrl()}
                 {this.renderHost()}
                 {this.renderPort()}
+                {this.renderCert()}
 
                 <div className="form-group">
                   <input type="submit" value="Add" className="btn btn-primary" />

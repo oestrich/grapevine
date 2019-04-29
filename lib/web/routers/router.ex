@@ -108,7 +108,7 @@ defmodule Web.Router do
       post("/deny", CharacterController, :deny, as: :action)
     end
 
-    resources("/connections", ConnectionController, only: [:delete])
+    resources("/connections", ConnectionController, only: [:edit, :update, :delete])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 

@@ -1,0 +1,7 @@
+<%= FormView.text_field(@f, :host) %>
+
+<%= FormView.text_field(@f, :port) %>
+
+<%= FormView.textarea_field(@f, :certificate) do %>
+  <span class="help-block">For self-signed certificates only. This should be a PEM encoded.</span>
+<% end %>
