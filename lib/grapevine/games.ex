@@ -432,6 +432,13 @@ defmodule Grapevine.Games do
   end
 
   @doc """
+  Edit a connection
+  """
+  def edit_connection(connection) do
+    Ecto.Changeset.change(connection)
+  end
+
+  @doc """
   Get a connection by an id
   """
   @spec get_connection(id()) :: {:ok, Connection.t()} | {:error, :not_found}
@@ -479,10 +486,11 @@ defmodule Grapevine.Games do
   Update a game connection
   """
   def update_connection(connection, params) do
-    changeset = connection |> Connection.update_changeset(params)
+    changeset = Connection.update_changeset(connection, params)
 
-    case changeset |> Repo.update() do
+    case Repo.update(changeset) do
       {:ok, connection} ->
+        maybe_check_mssp(connection)
         {:ok, connection}
 
       {:error, changeset} ->

@@ -16,8 +16,44 @@ defmodule Web.Manage.ConnectionController do
     else
       {:error, _changeset} ->
         conn
-        |> put_flash(:error, "Coult not create the connection!")
+        |> put_flash(:error, "Could not create the connection!")
         |> redirect(to: manage_game_path(conn, :show, game_id))
+    end
+  end
+
+  def edit(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, connection} <- Games.get_connection(id),
+         true <- Games.user_owns_connection?(user, connection),
+         {:ok, game} <- Games.get(connection.game_id) do
+      conn
+      |> assign(:game, game)
+      |> assign(:connection, connection)
+      |> assign(:changeset, Games.edit_connection(connection))
+      |> render("edit.html")
+    else
+      _ ->
+        conn
+        |> put_flash(:error, "Could not edit the connection!")
+        |> redirect(to: manage_game_path(conn, :index))
+    end
+  end
+
+  def update(conn, %{"id" => id, "connection" => params}) do
+    %{current_user: user} = conn.assigns
+    {:ok, connection} = Games.get_connection(id)
+
+    with true <- Games.user_owns_connection?(user, connection),
+         {:ok, connection} <- Games.update_connection(connection, params) do
+      conn
+      |> put_flash(:info, "Updated the connection!")
+      |> redirect(to: manage_game_path(conn, :show, connection.game_id))
+    else
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "Could not update the connection!")
+        |> redirect(to: manage_game_path(conn, :show, connection.game_id))
     end
   end
 

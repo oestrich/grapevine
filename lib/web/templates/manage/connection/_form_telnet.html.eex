@@ -1,0 +1,3 @@
+<%= FormView.text_field(@f, :host) %>
+
+<%= FormView.text_field(@f, :port) %>

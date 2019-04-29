@@ -1,6 +1,8 @@
 defmodule Web.Manage.ConnectionView do
   use Web, :view
 
+  alias Web.FormView
+
   def render("show.json", %{connection: connection}) do
     json = render("connection.json", %{connection: connection})
     Map.put(json, :id, connection.key)
