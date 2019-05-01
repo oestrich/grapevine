@@ -151,7 +151,7 @@ defmodule Grapevine.Telnet.MSSPClient do
       Games.connection_has_mssp(state.connection)
       maybe_set_user_agent(state, data)
 
-      players = String.to_integer(data["PLAYERS"])
+      players = String.to_integer(Map.get(data, "PLAYERS", "0"))
       Statistics.record_mssp_players(state.game, players, Timex.now())
     end
 
