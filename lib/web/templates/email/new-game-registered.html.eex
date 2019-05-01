@@ -1,0 +1,3 @@
+<p>A new game was registered: <%= @game.name %></p>
+
+<%= link("View on Grapevine.", to: Routes.game_path(Endpoint, :show, @game.short_name)) %>

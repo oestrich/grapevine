@@ -42,6 +42,14 @@ defmodule Grapevine.Emails do
     |> text_body(alert.body)
   end
 
+  def new_game_registered(game) do
+    base_email()
+    |> to(alert_to())
+    |> subject("Grapevine - New game registered - #{game.name}")
+    |> assign(:game, game)
+    |> render("new-game-registered.html")
+  end
+
   def base_email() do
     new_email()
     |> from("no-reply@grapevine.haus")

@@ -11,6 +11,7 @@ defmodule Grapevine.Games do
   alias Grapevine.Games.Game
   alias Grapevine.Games.Images
   alias Grapevine.Games.RedirectURI
+  alias Grapevine.Notifications
   alias Grapevine.Repo
   alias Grapevine.Telnet
   alias Grapevine.UserAgents
@@ -215,7 +216,7 @@ defmodule Grapevine.Games do
 
     case changeset |> Repo.insert() do
       {:ok, game} ->
-        :telemetry.execute([:grapevine, :games, :create], 1, %{id: game.id})
+        Notifications.new_game(game)
 
         {:ok, game}
 
