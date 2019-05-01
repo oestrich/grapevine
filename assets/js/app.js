@@ -4,7 +4,7 @@ import "phoenix_html";
 import Sizzle from "sizzle";
 
 import "./charts"
-import "./live"
+//import "./live"
 import {Channels} from "./chat"
 import {Client} from "./play/client"
 

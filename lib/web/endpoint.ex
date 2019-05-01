@@ -4,7 +4,7 @@ defmodule Web.Endpoint do
   use Sentry.Plug
 
   socket("/websocket", Web.UserSocket, websocket: [check_origin: false])
-  socket("/live", Phoenix.LiveView.Socket)
+  #socket("/live", Phoenix.LiveView.Socket)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
