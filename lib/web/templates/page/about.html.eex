@@ -64,25 +64,23 @@
 
       <p><%= link("View all online games.", to: Routes.game_path(@conn, :index)) %></p>
 
-      <h3>Miriani</h3>
+      <h3>Alter Aeon</h3>
 
-      <p>Miriani is a sci-fi game, where you are a starship pilot.</p>
+      <p>Alter Aeon is a fantasy world of adventure and untold possibilities. Ours is an enormous, fantastic world to explore! We have thousands of quest to complete and tens of thousands of enemies to defeat!</p>
 
-      <p>Humanity's foray into the stars has yielded powerful and blood-thirsty enemies, wondrous new technologies, and even given rise to three new empires. What will you find when you venture out into the unknown?</p>
+      <p>You can play as a mighty paladin, a ruthless villain, or anywhere in between. Become the hero you choose to be at Alter Aeon, where every day is an adventure!</p>
 
-      <p>Some helpful links include <%= link("their homepage", to: "https://www.toastsoft.net/") %>, <%= link("their help", to: "https://miriani.toastsoft.net/help") %>, and <%= link("their world", to: "https://toastsoft.net/history.html") %>.</p>
+      <p>Some helpful links include <%= link("their homepage", to: "https://www.alteraeon.com/") %>, <%= link("their help", to: "https://www.alteraeon.com/help/index.html") %>, and <%= link("their game information", to: "https://alteraeon.com:8081/") %>.</p>
 
-      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/Miriani") %></p>
+      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/alteraeon") %></p>
 
-      <h3>Genesis MUD</h3>
+      <h3>Realms of Despair</h3>
 
-      <p>Genesis is one of the original MUDs and has continued since it started in 1989. The main goal of Genesis is to be a challenging game. It is fantasy themed and pulls from Tolkien, Dragon Lance, and others.</p>
+      <p>Realms of Despair is the ever-growing home of the SMAUG codebase. Completely free, RoD offers over 150 original, unique areas and offers rp, pk, a multitude of guilds, orders, clans, sects, and nation based organizations. RoD has something for everyone.</p>
 
-      <p>One of the draws to Genesis is the interaction between guilds. Create alliances or start wars with other guilds.</p>
+      <p>Some helpful links include <%= link("their homepage", to: "http://www.realmsofdespair.com/") %>, <%= link("the newbie guide", to: "http://www.realmsofdespair.com/newbie-guide") %>, and <%= link("their history", to: "http://www.realmsofdespair.com/history") %>.</p>
 
-      <p>Some helpful links include <%= link("their homepage", to: "https://genesismud.org/") %>, <%= link("the beginner's guide", to: "https://www.genesismud.org/guide.php") %>, and <%= link("their history", to: "https://www.genesismud.org/history.php") %>.</p>
-
-      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/genesis") %></p>
+      <p><%= link("View on Grapevine", to: "https://grapevine.haus/games/RoD") %></p>
 
       <h3>Sindome</h3>
 
