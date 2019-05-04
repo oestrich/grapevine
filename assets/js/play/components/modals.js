@@ -28,16 +28,58 @@ class Modal extends React.Component {
     super(props);
 
     this.close = this.close.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+
+    this.state = {
+      dragging: false,
+    };
   }
 
   close() {
     console.log("close the modal");
   }
 
+  onMouseDown(e) {
+    e.preventDefault();
+    this.setState({
+      currentX: e.clientX,
+      currentY: e.clientY,
+      dragging: true,
+    });
+  }
+
+  onMouseUp(e) {
+    e.preventDefault();
+    this.setState({dragging: false});
+  }
+
+  onMouseMove(e) {
+    e.preventDefault();
+
+    if (this.state.dragging) {
+      let newY = this.state.currentY - e.clientY;
+      let newX = this.state.currentX - e.clientX;
+      this.section.style.top = `${this.section.offsetTop - newY}px`;
+      this.section.style.left = `${this.section.offsetLeft - newX}px`;
+      this.setState({
+        currentX: e.clientX,
+        currentY: e.clientY,
+      });
+    }
+  }
+
   render() {
+    let headerClass = "header";
+
+    if (this.state.dragging) {
+      headerClass += " dragging";
+    }
+
     return (
-      <section className="game-modal">
-        <nav className="header">
+      <section className="game-modal" ref={(el) => { this.section = el; }} onMouseMove={this.onMouseMove}>
+        <nav className={headerClass} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
           <h3 className="name">{this.props.title}</h3>
 
           <div className="actions">

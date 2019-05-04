@@ -33,6 +33,11 @@
 
     .header {
       padding: 12px;
+      cursor: grab;
+
+      &.dragging {
+        cursor: grabbing;
+      }
     }
 
     .actions i {
