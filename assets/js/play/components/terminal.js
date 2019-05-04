@@ -8,7 +8,7 @@ import {
   getSocketLines
 } from "../redux/store";
 
-class AnsiText extends React.Component {
+export class AnsiText extends React.Component {
   textStyle(parsed) {
     let style = {};
 

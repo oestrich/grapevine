@@ -1,0 +1,77 @@
+import _ from "underscore";
+import React, {Fragment} from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+
+import {AnsiText} from "./terminal";
+
+import {
+  getModals,
+} from "../redux/store";
+
+class ModalBody extends React.Component {
+  render() {
+    return (
+      <div className="body">
+        <pre>
+          {_.map(this.props.segments, (segment, i) => {
+            return (<AnsiText key={i} text={segment} />);
+          })}
+        </pre>
+      </div>
+    );
+  }
+}
+
+class Modal extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.close = this.close.bind(this);
+  }
+
+  close() {
+    console.log("close the modal");
+  }
+
+  render() {
+    return (
+      <section className="game-modal">
+        <nav className="header">
+          <h3 className="name">{this.props.title}</h3>
+
+          <div className="actions">
+            <i className="close fa fa-times" onClick={this.close}></i>
+          </div>
+        </nav>
+
+        <ModalBody segments={this.props.segments} />
+      </section>
+    );
+  }
+}
+
+class Modals extends React.Component {
+  render() {
+    console.log(this.props.modals);
+
+    return (
+      <div className="modals">
+        {_.map(this.props.modals, (modal) => {
+          return (
+            <Modal key={modal.key} title={modal.title} segments={modal.segments} />
+          );
+        })}
+      </div>
+    );
+  }
+}
+
+let mapStateToProps = (state) => {
+  let modals = getModals(state);
+  return {modals};
+};
+
+Modals = connect(mapStateToProps, {})(Modals);
+
+export default Modals;

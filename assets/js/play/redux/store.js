@@ -1,10 +1,15 @@
 import {combineReducers, createStore} from 'redux';
 
+import {modalReducer} from "./modalReducer";
 import {promptReducer} from "./promptReducer";
 import {settingsReducer} from "./settingsReducer";
 import {socketReducer} from "./socketReducer";
 
 // Selectors
+
+export const getModals = (state) => {
+  return state.modal.modals;
+};
 
 export const getPromptState = (state) => {
   return state.prompt;
@@ -61,6 +66,7 @@ export const getSocketOAuth = (state) => {
 // Reducers
 
 let rootReducer = combineReducers({
+  modal: modalReducer,
   prompt: promptReducer,
   settings: settingsReducer,
   socket: socketReducer
