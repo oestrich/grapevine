@@ -18,7 +18,12 @@ class Modal {
 
 export const modalOpen = (state, action) => {
   let modal = new Modal(action.data);
-  return {...state, modals: [...state.modals, modal]};
+  let modals = [...state.modals, modal];
+  modals = _.uniq(modals, false, (modal) => {
+    return modal.key;
+  });
+
+  return {...state, modals: modals};
 }
 
 export const modalReceiveGMCP = (state, action) => {
