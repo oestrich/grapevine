@@ -16,6 +16,14 @@ class Modal {
   }
 }
 
+export const modalClose = (state, action) => {
+  let modals = _.reject(state.modals, (modal) => {
+    return modal.key == action.key;
+  });
+
+  return {...state, modals: modals};
+}
+
 export const modalOpen = (state, action) => {
   let modals = _.reject(state.modals, (modal) => {
     return modal.key == action.data.key;
@@ -36,6 +44,7 @@ export const modalReceiveGMCP = (state, action) => {
 };
 
 export const HANDLERS = {
+  [Types.MODALS_CLOSE]: modalClose,
   [Types.SOCKET_RECEIVE_GMCP]: modalReceiveGMCP,
 }
 

@@ -6,6 +6,10 @@ import {connect} from 'react-redux';
 import {AnsiText} from "./terminal";
 
 import {
+  Creators
+} from "../redux/actions";
+
+import {
   getModals,
 } from "../redux/store";
 
@@ -38,7 +42,8 @@ class Modal extends React.Component {
   }
 
   close() {
-    console.log("close the modal");
+    let modal = this.props.modal;
+    this.props.modalsClose(modal.key);
   }
 
   onMouseDown(e) {
@@ -77,31 +82,35 @@ class Modal extends React.Component {
       headerClass += " dragging";
     }
 
+    let modal = this.props.modal;
+
     return (
       <section className="game-modal" ref={(el) => { this.section = el; }} onMouseMove={this.onMouseMove}>
         <nav className={headerClass} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
-          <h3 className="name">{this.props.title}</h3>
+          <h3 className="name">{modal.title}</h3>
 
           <div className="actions">
             <i className="close fa fa-times" onClick={this.close}></i>
           </div>
         </nav>
 
-        <ModalBody segments={this.props.segments} />
+        <ModalBody segments={modal.segments} />
       </section>
     );
   }
 }
 
+Modal = connect((state) => { return {}; }, {
+  modalsClose: Creators.modalsClose,
+})(Modal);
+
 class Modals extends React.Component {
   render() {
-    console.log(this.props.modals);
-
     return (
       <div className="modals">
         {_.map(this.props.modals, (modal) => {
           return (
-            <Modal key={modal.key} title={modal.title} segments={modal.segments} />
+            <Modal key={modal.key} modal={modal} />
           );
         })}
       </div>
