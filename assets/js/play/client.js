@@ -6,6 +6,7 @@ import Keys from './keys';
 import {store} from "./redux/store";
 
 import Gauges from "./components/gauges";
+import Modals from "./components/modals";
 import {OAuthAuthorization} from "./components/oauth";
 import Prompt from "./components/prompt";
 import {Settings, SettingsToggle} from "./components/settings";
@@ -42,6 +43,7 @@ class Client extends React.Component {
             <div className="window">
               <Terminal />
               <Settings />
+              <Modals />
               <OAuthAuthorization game={this.props.game} />
               <SettingsToggle />
               <TopDock>

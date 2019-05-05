@@ -1,6 +1,7 @@
 import {createActions} from 'reduxsauce';
 
 export const {Types, Creators} = createActions({
+  modalsClose: ["key"],
   promptSetCurrentText: ["text"],
   promptClear: null,
   promptHistoryAdd: null,

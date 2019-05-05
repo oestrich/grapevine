@@ -7,6 +7,7 @@
   top: 58px;
   bottom: 0px;
 
+  .game-modal,
   .client-modal,
   .settings {
     display: block;
@@ -17,6 +18,43 @@
     border-radius: 4px;
     left: calc(50% - 256px);
     padding: 16px;
+    z-index: 3;
+  }
+
+  .game-modal {
+    background-color: $grey-03;
+    color: $grey-4;
+    padding: 0;
+    width: 768px;
+
+    nav {
+      margin-bottom: 0;
+    }
+
+    .header {
+      padding: 12px;
+      cursor: grab;
+
+      &.dragging {
+        cursor: grabbing;
+      }
+    }
+
+    .actions i {
+      color: $grey-4;
+    }
+
+    .body {
+      border: 2px solid $grey-03;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      background-color: $black;
+      color: $grey-2;
+      margin-bottom: 0;
+      max-height: 400px;
+    }
   }
 
   .settings-toggle {
@@ -57,6 +95,7 @@
     background-color: $black;
     color: $grey-2;
     white-space: pre-wrap;
+    z-index: 2;
   }
 
   .connection {
@@ -87,7 +126,9 @@
   .prompt {
     display: flex;
     flex-shrink: 0;
-    margin: 16px;
+    padding: 16px;
+    z-index: 10;
+    background-color: white;
 
     .connection {
       display: flex;
@@ -120,6 +161,7 @@
   display: flex;
   background-color: $grey-3;
   flex-shrink: 0;
+  z-index: 3;
 
   .gauge {
     position: relative;
@@ -135,7 +177,7 @@
       padding-left: 12px;
       display: inline-block;
       width: 100%;
-      z-index: 3;
+      z-index: 13;
     }
   }
 
@@ -181,7 +223,7 @@
     width: 100%;
     height: 100%;
     border-radius: 4px;
-    z-index: 2;
+    z-index: 12;
     position: absolute;
     top: 0;
     left: 0;
