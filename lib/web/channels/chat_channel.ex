@@ -3,7 +3,7 @@ defmodule Web.ChatChannel do
   Chat with users on a gossip channel
   """
 
-  use Phoenix.Channel
+  use Web, :channel
 
   alias Grapevine.Channels
   alias Grapevine.Client

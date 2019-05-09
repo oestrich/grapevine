@@ -3,7 +3,7 @@ defmodule Web.MSSPChannel do
   Follow along with the grapevine from the site
   """
 
-  use Phoenix.Channel
+  use Web, :channel
 
   alias Grapevine.Telnet.MSSPClient
 

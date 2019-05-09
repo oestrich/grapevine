@@ -67,7 +67,7 @@ defmodule Web do
 
   def channel do
     quote do
-      use Phoenix.Channel
+      use Phoenix.Channel, log_join: :debug
       import Web.Gettext
     end
   end
