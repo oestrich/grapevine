@@ -5,6 +5,10 @@ export default class Keys {
     this.keysDown = [];
     this.listeners = {};
 
+    window.addEventListener("blur", e => {
+      this.keysDown = [];
+    });
+
     document.addEventListener("keydown", e => {
       this.keyDown(e.key);
     });

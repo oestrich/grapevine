@@ -18,13 +18,15 @@ let body = document.getElementById("body");
 let userToken = body.getAttribute("data-user-token");
 let sessionToken = body.getAttribute("data-session-token");
 
-const keys = new Keys();
+if (document.querySelector("[data-page=play]")) {
+  const keys = new Keys();
 
-document.addEventListener('keydown', e => {
-  if (!keys.isModifierKeyPressed()) {
-    document.getElementById('prompt').focus();
-  }
-});
+  document.addEventListener('keydown', e => {
+    if (!keys.isModifierKeyPressed()) {
+      document.getElementById('prompt').focus();
+    }
+  });
+}
 
 class Client extends React.Component {
   render() {

@@ -1,1 +1,3 @@
-<%= ReactView.react_component("Components.Play.Client", game: @game.short_name, gauges: @game.gauges) %>
+<div data-page="play">
+  <%= ReactView.react_component("Components.Play.Client", game: @game.short_name, gauges: @game.gauges) %>
+</div>
