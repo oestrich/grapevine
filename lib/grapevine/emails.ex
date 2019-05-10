@@ -52,7 +52,7 @@ defmodule Grapevine.Emails do
 
   def base_email() do
     new_email()
-    |> from("no-reply@grapevine.haus")
+    |> from("no-reply@mg.grapevine.haus")
   end
 
   defp alert_to() do
