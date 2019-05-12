@@ -9,7 +9,6 @@ defmodule Grapevine.Telnet.MSSPClient do
   alias Grapevine.Telnet.MSSPClient.Record
   alias GrapevineTelnet.Client
   alias Telnet.MSSP
-  alias Telnet.Options
 
   @behaviour Client
 
@@ -64,7 +63,7 @@ defmodule Grapevine.Telnet.MSSPClient do
   def receive(state, data) do
     state = Map.put(state, :mssp_buffer, Map.get(state, :mssp_buffer, "") <> data)
 
-    case Options.text_mssp?(state.mssp_buffer) do
+    case text_mssp?(state.mssp_buffer) do
       true ->
         record_text_mssp(state)
 
@@ -116,6 +115,10 @@ defmodule Grapevine.Telnet.MSSPClient do
       channel ->
         Web.Endpoint.broadcast("mssp:#{channel}", event, message)
     end
+  end
+
+  def text_mssp?(string) do
+    string =~ "MSSP-REPLY-START"
   end
 
   defmodule Record do
