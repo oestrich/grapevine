@@ -47,6 +47,7 @@ defmodule Grapevine.Mixfile do
       {:ex_aws_s3, "~> 2.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:gettext, "~> 0.11"},
+      {:grapevine_telnet, path: "../grapevine-telnet/", runtime: false},
       {:hackney, "~> 1.9"},
       {:jason, "~> 1.1"},
       {:libcluster, "~> 3.0"},
@@ -68,7 +69,6 @@ defmodule Grapevine.Mixfile do
       {:sweet_xml, "~> 0.6"},
       {:telemetry, "~> 0.3"},
       {:telemetry_poller, "~> 0.2"},
-      {:telnet, git: "https://github.com/oestrich/grapevine-telnet.git", runtime: false},
       {:timber, "~> 3.0"},
       {:timex, "~> 3.1"},
     ]

@@ -7,7 +7,7 @@ defmodule Web.PlayChannel do
 
   alias Grapevine.Authorizations
   alias Grapevine.Games
-  alias Telnet.WebClient
+  alias GrapevineTelnet.WebClient
   alias Web.Game
 
   def join("play:client", message, socket) do

@@ -2,7 +2,7 @@ defmodule Web.Manage.GameController do
   use Web, :controller
 
   alias Grapevine.Games
-  alias Telnet.Presence, as: TelnetPresence
+  alias GrapevineTelnet.Presence, as: TelnetPresence
 
   plug(Web.Plugs.VerifyUser)
 

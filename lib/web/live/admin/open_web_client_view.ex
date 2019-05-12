@@ -2,7 +2,7 @@ defmodule Web.Admin.OpenWebClientView do
   use Phoenix.HTML
   use Phoenix.LiveView
 
-  alias Telnet.Presence, as: TelnetPresence
+  alias GrapevineTelnet.Presence, as: TelnetPresence
   alias Web.TimeView
   alias Web.Router.Helpers, as: Routes
 
