@@ -48,7 +48,7 @@ release :grapevine do
   set applications: [
     :parse_trans,
     :runtime_tools,
-    telnet: :none
+    grapevine_telnet: :none
   ]
 
   set commands: [
