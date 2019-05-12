@@ -66,6 +66,7 @@ defmodule Grapevine.Application do
   # Start the telnet application in development mode
   defp start_telnet_application() do
     if @env == :dev do
+      :application.start(:telnet)
       :application.start(:grapevine_telnet)
     end
   end

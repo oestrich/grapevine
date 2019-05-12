@@ -8,8 +8,8 @@ defmodule Grapevine.Telnet.MSSPClient do
   alias Grapevine.Telnet.MSSPClient.Check
   alias Grapevine.Telnet.MSSPClient.Record
   alias GrapevineTelnet.Client
-  alias GrapevineTelnet.MSSP
-  alias GrapevineTelnet.Options
+  alias Telnet.MSSP
+  alias Telnet.Options
 
   @behaviour Client
 
