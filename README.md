@@ -30,7 +30,7 @@ This is only required to run Grapevine itself, the server. These are not require
 ```bash
 mix deps.get
 mix compile
-cd assets && npm install && node node_modules/brunch/bin/brunch build && cd ..
+cd assets && npm install -g yarn && yarn install && cd ..
 mix ecto.reset
 mix phx.server
 ```
