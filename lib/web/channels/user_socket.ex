@@ -7,9 +7,10 @@ defmodule Web.UserSocket do
   channel("mssp:*", Web.MSSPChannel)
   channel("play:client", Web.PlayChannel)
 
-  def connect(params, socket) do
+  def connect(params, socket, connection_info) do
     socket =
       socket
+      |> assign(:ip, connection_info.peer_data.address)
       |> load_user_token(params)
       |> load_session_token(params)
 

@@ -16,6 +16,8 @@ defmodule Grapevine.Games.ClientSettings do
     field(:character_message, :string)
     field(:character_name_path, :string)
 
+    field(:new_environ_enabled, :boolean, default: false)
+
     belongs_to(:game, Game)
 
     timestamps()

@@ -48,15 +48,17 @@ defmodule Web.PlayChannel do
   def start_client(socket) do
     {:ok, connection} = Games.get_web_client_connection(socket.assigns.game)
 
-    {:ok, pid} = WebClient.connect(socket.assigns.session_token,
-      game: socket.assigns.game,
-      client_settings: socket.assigns.game.client_settings,
-      type: connection.type,
-      host: connection.host,
-      port: connection.port,
-      certificate: connection.certificate,
-      channel_pid: socket.channel_pid
-    )
+    {:ok, pid} =
+      WebClient.connect(socket.assigns.session_token,
+        client_ip: socket.assigns.ip,
+        game: socket.assigns.game,
+        client_settings: socket.assigns.game.client_settings,
+        type: connection.type,
+        host: connection.host,
+        port: connection.port,
+        certificate: connection.certificate,
+        channel_pid: socket.channel_pid
+      )
 
     Process.flag(:trap_exit, true)
     Process.link(pid)
