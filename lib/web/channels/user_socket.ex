@@ -10,15 +10,24 @@ defmodule Web.UserSocket do
   channel("play:client", Web.PlayChannel)
 
   def connect(params, socket, connection_info) do
-    Logger.info("Web socket connection info - #{inspect(connection_info)}")
-
     socket =
       socket
-      |> assign(:ip, connection_info.peer_data.address)
+      |> assign(:ip, client_ip(connection_info))
       |> load_user_token(params)
       |> load_session_token(params)
 
     {:ok, socket}
+  end
+
+  def client_ip(connection_info) do
+    case Keyword.get(connection_info, "x-real-ip") do
+      nil ->
+        connection_info.peer_data.address
+
+      client_ip ->
+        {:ok, client_ip} = :inet.parse_address(String.to_charlist(client_ip))
+        client_ip
+    end
   end
 
   def load_user_token(socket, %{"token" => token}) do
