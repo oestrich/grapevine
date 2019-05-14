@@ -3,11 +3,15 @@ defmodule Web.UserSocket do
 
   alias Grapevine.Accounts
 
+  require Logger
+
   channel("chat:*", Web.ChatChannel)
   channel("mssp:*", Web.MSSPChannel)
   channel("play:client", Web.PlayChannel)
 
   def connect(params, socket, connection_info) do
+    Logger.info("Web socket connection info - #{inspect(connection_info)}")
+
     socket =
       socket
       |> assign(:ip, connection_info.peer_data.address)
