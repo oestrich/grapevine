@@ -20,13 +20,18 @@ defmodule Web.UserSocket do
   end
 
   def client_ip(connection_info) do
-    case Keyword.get(connection_info, "x-real-ip") do
-      nil ->
-        connection_info.peer_data.address
+    real_ip =
+      Enum.find(connection_info.x_headers, fn {key, _val} ->
+        key == "x-real-ip"
+      end)
 
-      client_ip ->
+    case real_ip do
+      {"x-real-ip", client_ip} ->
         {:ok, client_ip} = :inet.parse_address(String.to_charlist(client_ip))
         client_ip
+
+      _ ->
+        connection_info.peer_data.address
     end
   end
 
