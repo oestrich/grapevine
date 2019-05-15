@@ -10,7 +10,7 @@
     <section class="about">
       <div class="position-relative">
         <div class="col-md-6 mx-auto my-2">
-          <%= img_tag(static_path(@conn, "/images/grapevine.png"), class: "mb-3") %>
+          <%= img_tag(static_path(@conn, "/images/grapevine.png"), class: "mb-3", alt: "Grapevine") %>
         </div>
       </div>
 
@@ -36,7 +36,7 @@
 
       <figure>
         <%= link(to: static_path(@conn, "/images/web-client.png"), target: "_blank") do %>
-          <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured") %>
+          <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured", "Grapevine's Web Client") %>
           <span class="shadow"></span>
         <% end %>
       </figure>

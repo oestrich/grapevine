@@ -22,13 +22,19 @@ defmodule Web.GameView do
 
   def cover_img(game) do
     content_tag(:div, class: "cover") do
-      [img_tag(Storage.url(Images.cover_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+      [
+        img_tag(Storage.url(Images.cover_path(game, "thumbnail")), alt: "#{game.name} Cover Image"),
+        content_tag(:div, "", class: "shadow")
+      ]
     end
   end
 
   def hero_preview_img(game) do
     content_tag(:div, class: "cover") do
-      [img_tag(Storage.url(Images.hero_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+      [
+        img_tag(Storage.url(Images.hero_path(game, "thumbnail")), alt: "#{game.name} Hero Image"),
+        content_tag(:div, "", class: "shadow")
+      ]
     end
   end
 
@@ -36,13 +42,19 @@ defmodule Web.GameView do
 
   def hero_img(game) do
     content_tag(:div, class: "hero") do
-      [img_tag(Storage.url(Images.hero_path(game, "thumbnail"))), content_tag(:div, "", class: "shadow")]
+      [
+        img_tag(Storage.url(Images.hero_path(game, "thumbnail")), alt: "#{game.name} Hero Image"),
+        content_tag(:div, "", class: "shadow")
+      ]
     end
   end
 
   def default_cover_img(conn) do
     content_tag(:div, class: "cover") do
-      [img_tag(static_path(conn, "/images/default-cover.png")), content_tag(:div, "", class: "shadow")]
+      [
+        img_tag(static_path(conn, "/images/default-cover.png"), alt: "Default Game Cover"),
+        content_tag(:div, "", class: "shadow")
+      ]
     end
   end
 

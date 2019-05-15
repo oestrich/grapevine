@@ -34,7 +34,7 @@
         |
         <%= link("MSSP Check", to: mssp_path(@conn, :index)) %>
         <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>
-          <%= img_tag("/images/patron.png") %>
+          <%= img_tag("/images/patron.png", alt: "Patreon") %>
         <% end %>
       </div>
     </footer>

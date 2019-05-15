@@ -12,13 +12,13 @@
 
   <h4>Logo</h4>
 
-  <%= img_tag("/images/grapevine.png") %>
+  <%= img_tag("/images/grapevine.png", alt: "Grapevine Logo") %>
 
   <pre class="mt-3"><%= static_url(@conn, "/images/grapevine.png") %></pre>
 
   <h4 class="mt-3">Icon</h4>
 
-  <%= img_tag("/images/grapevine-icon.png") %>
+  <%= img_tag("/images/grapevine-icon.png", alt: "Grapevine Icon") %>
 
   <pre class="mt-3"><%= static_url(@conn, "/images/grapevine-icon.png") %></pre>
 

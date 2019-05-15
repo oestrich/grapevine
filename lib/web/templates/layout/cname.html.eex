@@ -7,7 +7,7 @@
       <nav class="navbar navbar-expand-md">
         <div class="container">
           <%= link(to: grapevine_url(), class: "navbar-brand", target: "_blank") do %>
-            <%= img_tag("/images/grapevine.png", height: 30) %>
+            <%= img_tag("/images/grapevine.png", height: 30, alt: "Grapevine") %>
           <% end %>
 
           <div class="collapse navbar-collapse" id="navbarLinks">
