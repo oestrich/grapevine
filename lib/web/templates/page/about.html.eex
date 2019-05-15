@@ -36,7 +36,7 @@
 
       <figure>
         <%= link(to: static_path(@conn, "/images/web-client.png"), target: "_blank") do %>
-          <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured", "Grapevine's Web Client") %>
+          <%= img_tag(static_path(@conn, "/images/web-client.png"), class: "featured", alt: "Grapevine's Web Client") %>
           <span class="shadow"></span>
         <% end %>
       </figure>
