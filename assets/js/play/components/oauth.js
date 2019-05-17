@@ -49,25 +49,27 @@ class OAuthAuthorization extends React.Component {
           </div>
         </nav>
 
-        <p className="lead">{game} wants to connect with the following permissions:</p>
+        <div className="body">
+          <p className="lead">{game} wants to connect with the following permissions:</p>
 
-        <ul>
-          {_.map(scopes, (scope) => {
-            return (
-              <li key={scope}>
-                {scope}
-              </li>
-            );
-          })}
-        </ul>
+          <ul>
+            {_.map(scopes, (scope) => {
+              return (
+                <li key={scope}>
+                  {scope}
+                </li>
+              );
+            })}
+          </ul>
 
-        <div className="btn btn-primary btn-block btn-flat" onClick={this.authorize}>
-          Authorize
-        </div>
+          <div className="btn btn-primary btn-block btn-flat" onClick={this.authorize}>
+            Authorize
+          </div>
 
-        <div className="btn btn-secondary btn-block btn-flat" onClick={this.close}>
-          Deny
-        </div>
+          <div className="btn btn-secondary btn-block btn-flat" onClick={this.close}>
+            Deny
+          </div>
+          </div>
       </section>
     );
   }

@@ -18,5 +18,7 @@ export const {Types, Creators} = createActions({
   socketReceiveConnection: ({type, host, port}) => ({type: "SOCKET_RECEIVE_CONNECTION", payload: {type, host, port}}),
   socketReceiveGMCP: ["message", "data"],
   socketReceiveOAuth: ["message"],
-  socketReceiveOption: ({key, value}) => ({type: "SOCKET_RECEIVE_OPTION", key, value})
+  socketReceiveOption: ({key, value}) => ({type: "SOCKET_RECEIVE_OPTION", key, value}),
+  voiceSetVoices: ["voices"],
+  voiceSetVoice: ["voice"],
 });

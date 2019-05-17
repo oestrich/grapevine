@@ -4,6 +4,7 @@ import {modalReducer} from "./modalReducer";
 import {promptReducer} from "./promptReducer";
 import {settingsReducer} from "./settingsReducer";
 import {socketReducer} from "./socketReducer";
+import {voiceReducer} from "./voiceReducer";
 
 // Selectors
 
@@ -63,13 +64,30 @@ export const getSocketOAuth = (state) => {
   return getSocketState(state).oauth;
 };
 
+export const getVoiceState = (state) => {
+  return state.voice;
+};
+
+export const getVoiceSynthesisPresent = (state) => {
+  return getVoiceState(state).synthesisPresent;
+};
+
+export const getVoiceCurrentVoice = (state) => {
+  return getVoiceState(state).currentVoice;
+};
+
+export const getVoiceVoices = (state) => {
+  return getVoiceState(state).voices;
+};
+
 // Reducers
 
 let rootReducer = combineReducers({
   modal: modalReducer,
   prompt: promptReducer,
   settings: settingsReducer,
-  socket: socketReducer
+  socket: socketReducer,
+  voice: voiceReducer
 });
 
 export const store = createStore(

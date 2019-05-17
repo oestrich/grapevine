@@ -3,6 +3,7 @@ import {Provider} from 'react-redux';
 import _ from 'underscore';
 
 import Keys from './keys';
+import {Creators} from "./redux/actions";
 import {store} from "./redux/store";
 
 import Gauges from "./components/gauges";
@@ -26,6 +27,17 @@ if (document.querySelector("[data-page=play]")) {
       document.getElementById('prompt').focus();
     }
   });
+}
+
+if ("speechSynthesis" in window) {
+  speechSynthesis.onvoiceschanged = () => {
+    let voices = _.filter(speechSynthesis.getVoices(), (voice) => {
+      return voice.name.match(/English/g);
+    });
+    voices = _.map(voices, (voice) => { return voice.name; });
+    let action = Creators.voiceSetVoices(voices);
+    store.dispatch(action);
+  };
 }
 
 class Client extends React.Component {

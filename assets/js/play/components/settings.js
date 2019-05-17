@@ -11,6 +11,9 @@ import {
   getSettingsFont,
   getSettingsFontSize,
   getSettingsOpen,
+  getVoiceSynthesisPresent,
+  getVoiceCurrentVoice,
+  getVoiceVoices,
 } from "../redux/store";
 
 const fontSizes = [10, 12, 14, 16, 18, 20, 22, 24];
@@ -33,17 +36,12 @@ class SettingsToggle extends React.Component {
   }
 }
 
-class Settings extends React.Component {
+class FontSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    this.close = this.close.bind(this);
     this.fontOnChange = this.fontOnChange.bind(this);
     this.fontSizeOnChange = this.fontSizeOnChange.bind(this);
-  }
-
-  close() {
-    this.props.settingsToggle();
   }
 
   fontOnChange(e) {
@@ -55,22 +53,12 @@ class Settings extends React.Component {
   }
 
   render() {
-    if (!this.props.open) {
-      return null;
-    }
-
     let font = this.props.font;
     let fontSize = this.props.fontSize;
 
     return (
-      <section className="settings">
-        <nav className="header">
-          <h3 className="name">Settings</h3>
-
-          <div className="actions">
-            <i className="close fa fa-times" onClick={this.close}></i>
-          </div>
-        </nav>
+      <Fragment>
+        <h4>Text</h4>
 
         <div className="form-group">
           <label htmlFor="settings-font">Font</label>
@@ -94,6 +82,83 @@ class Settings extends React.Component {
             })}
           </select>
         </div>
+      </Fragment>
+    );
+  }
+}
+
+class SynthesisSettings extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.voiceOnChange = this.voiceOnChange.bind(this);
+  }
+
+  voiceOnChange(e) {
+    this.props.setVoice(e.target.value);
+  }
+
+  render() {
+    if (!this.props.synthesisPresent) {
+      return null;
+    }
+
+    let currentVoice = this.props.currentVoice;
+    let voices = this.props.voices;
+
+    return (
+      <Fragment>
+        <h4>Speech Synthesis</h4>
+
+        <div className="form-group">
+          <label htmlFor="settings-voice">Voice</label>
+          <select id="settings-vocie" className="form-control" value={currentVoice} onChange={this.voiceOnChange}>
+            {_.map(voices, voice => {
+              return (
+                <option key={voice}>{voice}</option>
+              );
+            })}
+          </select>
+        </div>
+      </Fragment>
+    );
+  }
+}
+
+class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.close = this.close.bind(this);
+  }
+
+  close() {
+    this.props.settingsToggle();
+  }
+
+  render() {
+    if (!this.props.open) {
+      return null;
+    }
+
+    let font = this.props.font;
+    let fontSize = this.props.fontSize;
+
+    return (
+      <section className="settings">
+        <nav className="header">
+          <h3 className="name">Settings</h3>
+
+          <div className="actions">
+            <i className="close fa fa-times" onClick={this.close}></i>
+          </div>
+        </nav>
+
+        <div className="body">
+          <FontSettings />
+
+          <SynthesisSettings />
+        </div>
       </section>
     );
   }
@@ -106,20 +171,39 @@ Settings.contextTypes = {
 let mapStateToProps = (state) => {
   let font = getSettingsFont(state);
   let fontSize = getSettingsFontSize(state);
-  let open = getSettingsOpen(state);
 
-  return {font, fontSize, open};
+  return {font, fontSize};
+};
+
+FontSettings = connect(mapStateToProps, {
+  setFont: Creators.settingsSetFont,
+  setFontSize: Creators.settingsSetFontSize,
+})(FontSettings);
+
+mapStateToProps = (state) => {
+  let open = getSettingsOpen(state);
+  return {open};
 };
 
 Settings = connect(mapStateToProps, {
-  setFont: Creators.settingsSetFont,
-  setFontSize: Creators.settingsSetFontSize,
   settingsToggle: Creators.settingsToggle,
 })(Settings);
 
 SettingsToggle = connect(mapStateToProps, {
   settingsToggle: Creators.settingsToggle,
 })(SettingsToggle);
+
+mapStateToProps = (state) => {
+  let synthesisPresent = getVoiceSynthesisPresent(state);
+  let currentVoice = getVoiceCurrentVoice(state);
+  let voices = getVoiceVoices(state);
+
+  return {synthesisPresent, currentVoice, voices};
+};
+
+SynthesisSettings = connect(mapStateToProps, {
+  setVoice: Creators.voiceSetVoice,
+})(SynthesisSettings);
 
 export {
   Settings,
