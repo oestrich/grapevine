@@ -1,0 +1,6 @@
+---
+- name: Basic Ansible Setup
+  gather_facts: yes
+  hosts: all
+  roles:
+    - { role: setup, action: 'basics', tags: ['setup'] }

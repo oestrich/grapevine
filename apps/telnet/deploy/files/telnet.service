@@ -1,0 +1,18 @@
+[Unit]
+Description=Grapevine Telnet
+After=network.target
+
+[Service]
+User=deploy
+Group=deploy
+WorkingDirectory=/home/deploy/telnet
+Environment=LANG=en_US.UTF-8
+ExecStart=/home/deploy/telnet/bin/telnet foreground
+SyslogIdentifier=telnet
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=epmd.service

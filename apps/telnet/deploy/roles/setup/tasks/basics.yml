@@ -1,0 +1,41 @@
+---
+
+- name: Check that the telnet config exists
+  stat:
+    path: /etc/telnet.config.exs
+  register: telnet_config
+
+- name: copy telnet config
+  copy:
+    src: telnet.config.exs
+    dest: /etc/telnet.config.exs
+    mode: 0644
+  when: not telnet_config.stat.exists
+  become: yes
+
+- name: make telnet directory
+  file:
+    dest: /home/deploy/telnet
+    state: directory
+  become: yes
+  become_user: deploy
+
+- name: copy systemd file
+  copy:
+    src: telnet.service
+    dest: /etc/systemd/system/telnet.service
+  become: yes
+  notify: reload systemd
+
+- name: enable grapevine service
+  systemd:
+    name: grapevine.service
+    enabled: yes
+  become: yes
+
+- name: link the v5 of ncurses.so
+  file:
+    src: /lib/x86_64-linux-gnu/libncursesw.so.5
+    dest: /lib/x86_64-linux-gnu/libncursesw.so.6
+    state: link
+  become: yes
