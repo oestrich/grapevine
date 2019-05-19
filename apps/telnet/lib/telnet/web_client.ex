@@ -172,13 +172,17 @@ defmodule GrapevineTelnet.WebClient do
 
   def process_option(state, _option), do: {:noreply, state}
 
+  def respond_to_new_environ(state, []) do
+    client_ip = to_string(:inet_parse.ntoa(state.client_ip))
+    response = NewEnviron.encode(:is, [{"IPADDRESS", client_ip}])
+    Client.socket_send(response)
+    {:noreply, state}
+  end
+
   def respond_to_new_environ(state, variables) do
     case "IPADDRESS" in variables do
       true ->
-        client_ip = to_string(:inet_parse.ntoa(state.client_ip))
-        response = NewEnviron.encode(:is, [{"IPADDRESS", client_ip}])
-        Client.socket_send(response)
-        {:noreply, state}
+        respond_to_new_environ(state, [])
 
       false ->
         Client.socket_send(NewEnviron.encode(:is, []))
