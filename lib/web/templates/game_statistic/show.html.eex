@@ -1,0 +1,36 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Games", to: game_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @game.name %></li>
+    <li class="breadcrumb-item active" aria-current="page">Stats</li>
+  </ol>
+</nav>
+
+<section class="game">
+  <%= GameView.hero_img(@game) %>
+
+  <div class="container">
+    <nav>
+      <h3 class="name">
+        <%= GameView.online_status(@game) %>
+
+        <%= @game.name %>
+
+        <%= if @game.homepage_url do %>
+          <span class="home-page"><%= link(@game.homepage_url, to: @game.homepage_url) %></span>
+        <% end %>
+      </h3>
+    </nav>
+
+    <%= if @game.display_player_graph do %>
+      <div class="mt-3">
+        <h3>Player Stats</h3>
+
+        <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
+          <canvas></canvas>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

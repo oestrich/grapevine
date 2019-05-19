@@ -69,6 +69,7 @@ defmodule Web.Router do
     resources("/games", GameController, only: [:index, :show]) do
       resources("/achievements", AchievementController, only: [:index])
 
+      get("/stats", GameStatisticController, :show, as: :statistic)
       get("/stats/players", GameStatisticController, :players, as: :statistic)
     end
 
