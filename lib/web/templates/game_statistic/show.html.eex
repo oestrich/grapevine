@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
     <li class="breadcrumb-item"><%= link("Games", to: game_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item active" aria-current="page"><%= @game.name %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: game_path(@conn, :show, @game.short_name)) %></li>
     <li class="breadcrumb-item active" aria-current="page">Stats</li>
   </ol>
 </nav>
