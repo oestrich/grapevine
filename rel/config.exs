@@ -46,8 +46,6 @@ end
 release :grapevine do
   set version: current_version(:grapevine)
   set applications: [
-    :parse_trans,
-    :runtime_tools,
     grapevine_telnet: :none
   ]
 
