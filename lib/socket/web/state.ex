@@ -1,4 +1,4 @@
-defmodule Web.Socket.State do
+defmodule Socket.Web.State do
   @moduledoc """
   Struct for socket state
   """

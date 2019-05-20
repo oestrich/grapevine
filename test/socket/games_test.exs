@@ -1,9 +1,9 @@
-defmodule Web.Socket.GamesTest do
+defmodule Socket.Web.GamesTest do
   use Grapevine.DataCase
 
   alias Grapevine.Presence
-  alias Web.Socket.Router
-  alias Web.Socket.State
+  alias Socket.Web.Router
+  alias Socket.Web.State
 
   describe "games" do
     setup [:basic_setup, :status_updates]

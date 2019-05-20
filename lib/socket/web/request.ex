@@ -1,4 +1,4 @@
-defmodule Web.Socket.Request do
+defmodule Socket.Web.Request do
   @moduledoc """
   Handle the "request parsing" part of a new message
 

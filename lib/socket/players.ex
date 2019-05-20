@@ -3,7 +3,7 @@ defmodule Socket.Players do
   Player status subscription feature module
   """
 
-  use Web.Socket.Module
+  use Socket.Web.Module
 
   alias Grapevine.Presence
   alias Socket.Core

@@ -4,8 +4,8 @@ defmodule Socket.CoreTest do
   alias Grapevine.Presence
   alias Socket.Core
   alias Socket.Core.Heartbeat
-  alias Web.Socket.Router
-  alias Web.Socket.State
+  alias Socket.Web.Router
+  alias Socket.Web.State
 
   describe "authenticating" do
     setup do

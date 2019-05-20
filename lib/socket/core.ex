@@ -5,7 +5,7 @@ defmodule Socket.Core do
   Authenticate, heartbeat, etc
   """
 
-  use Web.Socket.Module
+  use Socket.Web.Module
 
   require Logger
 

@@ -1,4 +1,4 @@
-defmodule Web.Socket.RouterMacro do
+defmodule Socket.Web.RouterMacro do
   @moduledoc """
   Generate the router receive functions via a macro
   """
@@ -6,7 +6,7 @@ defmodule Web.Socket.RouterMacro do
   @doc """
   Macro to generate the receive functions
 
-      receives(Web.Socket) do
+      receives(Socket.Web) do
         module(Players, "players") do
           event("players/status", :request_status)
         end
@@ -16,8 +16,8 @@ defmodule Web.Socket.RouterMacro do
     out = parse_modules(module, opts[:do])
 
     quote do
-      alias Web.Socket.Request
-      alias Web.Socket.Response
+      alias Socket.Web.Request
+      alias Socket.Web.Response
 
       @doc """
       Receive a new event from the socket
