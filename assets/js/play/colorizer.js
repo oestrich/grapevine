@@ -46,6 +46,14 @@ export class EscapeSequence {
   includeDecoration(decoration) {
     return !!this.decorations && this.decorations.includes(decoration);
   }
+
+  getOptions() {
+    return {
+      color: this.color,
+      backgroundColor: this.backgroundColor,
+      decorations: this.decorations,
+    };
+  }
 }
 
 const basicColorCodes = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"];
@@ -110,6 +118,10 @@ const parse256Color = (color, key) => {
 };
 
 const mergeCodes = (oldCode, newCode) => {
+  if (newCode.reset) {
+    return {};
+  }
+
   let clone = Object.assign(Object.create(Object.getPrototypeOf(oldCode)), oldCode);
 
   let oldDecorations = (oldCode.decorations || []).slice(0);
@@ -125,7 +137,7 @@ export const parseEscapeColorCodes = (colorCodes) => {
 
   switch (true) {
     case colorCode == 0:
-      return {backgroundColor: null, color: null, decorations: null};
+      return {reset: true};
 
     case colorCode == 1:
       color = parseEscapeColorCodes(colorCodes);
@@ -178,7 +190,7 @@ export const parseEscapeColorCodes = (colorCodes) => {
   }
 };
 
-export const parseEscapeSequence = (sequence) => {
+export const parseEscapeSequence = (sequence, currentOptions) => {
   // taken from Anser, https://github.com/IonicaBizau/anser
   let matches = sequence.match(/^\u001b\[([!\x3c-\x3f]*)([\d;]*)([\x20-\x2c]*[\x40-\x7e])([\s\S]*)/m);
 
@@ -192,10 +204,11 @@ export const parseEscapeSequence = (sequence) => {
 
   let codes = matches[2].split(";").map((code) => { return parseInt(code); });
   let options = parseEscapeColorCodes(codes);
+  options = mergeCodes(currentOptions, options);
   return new EscapeSequence(matches[4], options);
 };
 
-export const segmentEscapes = (text) => {
+export const segmentEscapes = (text, options) => {
   let segments = text.split("\u001b");
 
   // insert the escape code back into restSegments
@@ -208,7 +221,11 @@ export const segmentEscapes = (text) => {
       return new EscapeSequence(segment);
     }
 
-    return parseEscapeSequence(segment);
+    segment = parseEscapeSequence(segment, options);
+    if (!(segment instanceof ParseError)) {
+      options = segment.getOptions();
+    }
+    return segment;
   });
 
   return segments;
@@ -224,14 +241,18 @@ let mergeSequences = (currentSequence, appendSequence) => {
   }
 
   if (currentSequence instanceof ParseError) {
-    return [parseEscapeSequence(currentSequence.sequence + appendSequence.text)];
+    return [parseEscapeSequence(currentSequence.sequence + appendSequence.text, {})];
   }
 
   return [Object.assign(currentSequence, {text: currentSequence.text + appendSequence.text})];
 };
 
 export const combineAndParseSegments = (currentSequence, text) => {
-  let segments = segmentEscapes(text);
+  let options = {};
+  if (currentSequence && currentSequence.getOptions !== undefined) {
+    options = currentSequence.getOptions();
+  }
+  let segments = segmentEscapes(text, options);
 
   if (segments.length == 1 && isTextOnly(segments[0])) {
     return mergeSequences(currentSequence, segments[0]);
@@ -287,6 +308,11 @@ export const detectLines = (sequences) => {
   });
 
   sequences = _.flatten(sequences);
+  let lastSequence = sequences.pop();
+  sequences = _.reject(sequences, (sequence) => {
+    return sequence.text === "";
+  });
+  sequences = [...sequences, lastSequence];
 
   // Merge lines together
   let currentLine = [];
