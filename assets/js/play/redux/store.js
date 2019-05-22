@@ -53,7 +53,13 @@ export const getSocketPromptType = (state) => {
 };
 
 export const getSocketLines = (state) => {
-  return getSocketState(state).lines;
+  let socketState = getSocketState(state);
+
+  if (socketState.lastLine) {
+    return [...socketState.lines, socketState.lastLine];
+  };
+
+  return socketState.lines;
 };
 
 export const getSocketGMCP = (state) => {

@@ -217,7 +217,13 @@ defmodule GrapevineTelnet.Client do
       send(self(), {:process, option})
     end)
 
-    state.module.receive(state, string)
+    case String.valid?(String.last(string)) do
+      true ->
+        state.module.receive(state, string)
+
+      false ->
+        {:noreply, %{state | buffer: string <> state.buffer}}
+    end
   end
 
   defp maybe_add_game_to_metadata(%{game: game}, metadata) when game != nil do
