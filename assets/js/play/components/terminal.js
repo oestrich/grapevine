@@ -8,16 +8,50 @@ import {
   getSocketLines
 } from "../redux/store";
 
+const defaultColors = {
+  black: "#676965",
+  red: "#d71e00",
+  green: "#5da602",
+  yellow: "#cfad00",
+  blue: "#417ab3",
+  magenta: "#88658d",
+  cyan: "#00a7aa",
+  white: "#dbded8",
+};
+
+const brightColors = {
+  black: "#676965",
+  red: "#f44135",
+  green: "#98e342",
+  yellow: "#fcea60",
+  blue: "#83afd8",
+  magenta: "#bc93b6",
+  cyan: "#37e5e7",
+  white: "#f1f1ef",
+};
+
 export class AnsiText extends React.Component {
+  transformColor(color, sequence) {
+    if (color.startsWith("#")) {
+      return color;
+    }
+
+    if (sequence.decoration === "bright") {
+      return brightColors[color];
+    } else {
+      return defaultColors[color];
+    }
+  }
+
   textStyle(sequence) {
     let style = {};
 
     if (sequence.backgroundColor) {
-      style.backgroundColor = sequence.backgroundColor;
+      style.backgroundColor = this.transformColor(sequence.backgroundColor, sequence);
     }
 
     if (sequence.color) {
-      style.color = sequence.color;
+      style.color = this.transformColor(sequence.color, sequence);
     }
 
     if (sequence.decoration == "bold") {
