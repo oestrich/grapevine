@@ -117,6 +117,13 @@ const parse256Color = (color, key) => {
   }
 };
 
+/**
+ * Merge two codes together
+ *
+ * If the new code is a reset, returns an empty code
+ *
+ * Decorations will be merged and uniqued
+ */
 const mergeCodes = (oldCode, newCode) => {
   if (newCode.reset) {
     return {};
@@ -131,6 +138,19 @@ const mergeCodes = (oldCode, newCode) => {
   return Object.assign(clone, newCode, {decorations});
 };
 
+/**
+ * Parse a set of color codes
+ *
+ * Will recurse through the list to find all codes that it can work on.
+ *
+ * Handles:
+ *  - Reset
+ *  - Bold
+ *  - Underline
+ *  - Basic colors, background, foreground
+ *  - 256 colors, background, foreground
+ *  - True colors, background, foreground
+ */
 export const parseEscapeColorCodes = (colorCodes) => {
   let colorCode = colorCodes.shift();
   let color, mode, r, g, b;
@@ -194,6 +214,14 @@ export const parseEscapeColorCodes = (colorCodes) => {
   }
 };
 
+/**
+ * Picks apart the pieces of the escape code
+ *
+ * May return a ParseError
+ *
+ * Merges the current escape sequence with the previous escape sequence
+ * to let them build up upon each other.
+ */
 export const parseEscapeSequence = (sequence, currentOptions) => {
   // taken from Anser, https://github.com/IonicaBizau/anser
   let matches = sequence.match(/^\u001b\[([!\x3c-\x3f]*)([\d;]*)([\x20-\x2c]*[\x40-\x7e])([\s\S]*)/m);
@@ -212,6 +240,12 @@ export const parseEscapeSequence = (sequence, currentOptions) => {
   return new EscapeSequence(matches[4], options);
 };
 
+/**
+ * Split incoming text into escape segments
+ *
+ * After splitting, build escape sequences from parsing the sequence. The last
+ * parsed sequence will flow through parsing.
+ */
 export const segmentEscapes = (text, options) => {
   let segments = text.split("\u001b");
 
@@ -235,10 +269,18 @@ export const segmentEscapes = (text, options) => {
   return segments;
 };
 
+/**
+ * Check if a segment contains only text
+ */
 let isTextOnly = (segment) => {
   return _.isEqual(Object.keys(segment), ["text"]);
 };
 
+/**
+ * Merge two sequences together
+ *
+ * Handles ParseErrors by joining the new text onto the previous sequence and re-parsing
+ */
 let mergeSequences = (currentSequence, appendSequence) => {
   if (currentSequence === null || currentSequence === undefined) {
     return [appendSequence];
@@ -251,6 +293,11 @@ let mergeSequences = (currentSequence, appendSequence) => {
   return [Object.assign(currentSequence, {text: currentSequence.text + appendSequence.text})];
 };
 
+/**
+ * Parses new text into sequences
+ *
+ * If the first segment is text only, merges into the current sequence
+ */
 export const combineAndParseSegments = (currentSequence, text) => {
   let options = {};
   if (currentSequence && currentSequence.getOptions !== undefined) {
@@ -273,6 +320,11 @@ export const combineAndParseSegments = (currentSequence, text) => {
   }
 };
 
+/**
+ * Parse new text and combine it with the previous line
+ *
+ * Merges the new sequences with the last line and detects the resulting lines.
+ */
 export const combineAndParse = (currentLine, text) => {
   let lastSegment;
   if (currentLine && currentLine.last()) {
@@ -289,6 +341,12 @@ export const combineAndParse = (currentLine, text) => {
   return detectLines([...currentLineSequences, ...segments]);
 };
 
+/**
+ * Split sequences apart and group by new lines
+ *
+ * Returns `Line`s with all sequences contained within. Each line ends
+ * with a `\n`.
+ */
 export const detectLines = (sequences) => {
   sequences = sequences.map((sequence) => {
     if (sequence instanceof ParseError) {
