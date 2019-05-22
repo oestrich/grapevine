@@ -37,10 +37,14 @@ export class EscapeSequence {
         this.backgroundColor = opts.backgroundColor;
       }
 
-      if (opts.decoration) {
-        this.decoration = opts.decoration;
+      if (opts.decorations) {
+        this.decorations = opts.decorations;
       }
     }
+  }
+
+  includeDecoration(decoration) {
+    return !!this.decorations && this.decorations.includes(decoration);
   }
 }
 
@@ -98,11 +102,21 @@ const parse256Color = (color, key) => {
       return {[key]: basicColorCodes[color]};
 
     case color < 16:
-      return {[key]: basicColorCodes[color - 8], decoration: "bright"};
+      return {[key]: basicColorCodes[color - 8], decorations: ["bright"]};
 
     default:
       return {[key]: colorizer256Colors[color]};
   }
+};
+
+const mergeCodes = (oldCode, newCode) => {
+  let clone = Object.assign(Object.create(Object.getPrototypeOf(oldCode)), oldCode);
+
+  let oldDecorations = (oldCode.decorations || []).slice(0);
+  let newDecorations = (newCode.decorations || []).slice(0);
+  let decorations = _.uniq(oldDecorations.concat(newDecorations));
+
+  return Object.assign(clone, newCode, {decorations});
 };
 
 export const parseEscapeColorCodes = (colorCodes) => {
@@ -111,27 +125,27 @@ export const parseEscapeColorCodes = (colorCodes) => {
 
   switch (true) {
     case colorCode == 0:
-      return {backgroundColor: null, color: null, decoration: null};
+      return {backgroundColor: null, color: null, decorations: null};
 
     case colorCode == 1:
       color = parseEscapeColorCodes(colorCodes);
-      return Object.assign(color, {decoration: "bold"});
+      return mergeCodes(color, {decorations: ["bold"]});
 
     case (colorCode >= 30 && colorCode < 38):
       color = parseEscapeColorCodes(colorCodes);
-      return Object.assign(color, {color: basicColorCodes[colorCode - 30]});
+      return mergeCodes(color, {color: basicColorCodes[colorCode - 30]});
 
     case (colorCode >= 40 && colorCode < 48):
       color = parseEscapeColorCodes(colorCodes);
-      return Object.assign({backgroundColor: basicColorCodes[colorCode - 40]});
+      return mergeCodes(color, {backgroundColor: basicColorCodes[colorCode - 40]});
 
     case (colorCode >= 90 && colorCode < 98):
       color = parseEscapeColorCodes(colorCodes);
-      return Object.assign(color, {color: basicColorCodes[colorCode - 90], decoration: "bright"});
+      return mergeCodes(color, {color: basicColorCodes[colorCode - 90], decorations: ["bright"]});
 
     case (colorCode >= 100 && colorCode < 108):
       color = parseEscapeColorCodes(colorCodes);
-      return Object.assign(color, {backgroundColor: basicColorCodes[colorCode - 100], decoration: "bright"});
+      return mergeCodes(color, {backgroundColor: basicColorCodes[colorCode - 100], decorations: ["bright"]});
 
     case colorCode == 38:
       mode = colorCodes.shift();
@@ -144,7 +158,7 @@ export const parseEscapeColorCodes = (colorCodes) => {
         color = {color: rgbToHex(r, g, b)};
       }
 
-      return Object.assign(parseEscapeColorCodes(colorCodes), color);
+      return mergeCodes(parseEscapeColorCodes(colorCodes), color);
 
     case colorCode == 48:
       mode = colorCodes.shift();
@@ -157,7 +171,7 @@ export const parseEscapeColorCodes = (colorCodes) => {
         color = {backgroundColor: rgbToHex(r, g, b)};
       }
 
-      return Object.assign(parseEscapeColorCodes(colorCodes), color);
+      return mergeCodes(parseEscapeColorCodes(colorCodes), color);
 
     default:
       return {};

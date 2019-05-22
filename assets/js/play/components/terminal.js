@@ -36,7 +36,7 @@ export class AnsiText extends React.Component {
       return color;
     }
 
-    if (sequence.decoration === "bright") {
+    if (sequence.includeDecoration("bright")) {
       return brightColors[color];
     } else {
       return defaultColors[color];
@@ -54,7 +54,7 @@ export class AnsiText extends React.Component {
       style.color = this.transformColor(sequence.color, sequence);
     }
 
-    if (sequence.decoration == "bold") {
+    if (sequence.includeDecoration("bold")) {
       style.fontWeight = "bolder";
     }
 
