@@ -9,7 +9,7 @@ import {
 } from "../redux/store";
 
 const defaultColors = {
-  black: "#676965",
+  black: "#373737",
   red: "#d71e00",
   green: "#5da602",
   yellow: "#cfad00",
@@ -30,8 +30,30 @@ const brightColors = {
   white: "#f1f1ef",
 };
 
+const defaultBackgroundColors = {
+  black: "#000000",
+  red: "#d71e00",
+  green: "#5da602",
+  yellow: "#cfad00",
+  blue: "#417ab3",
+  magenta: "#88658d",
+  cyan: "#00a7aa",
+  white: "#dbded8",
+};
+
+const brightBackgroundColors = {
+  black: "#676965",
+  red: "#f44135",
+  green: "#98e342",
+  yellow: "#fcea60",
+  blue: "#83afd8",
+  magenta: "#bc93b6",
+  cyan: "#37e5e7",
+  white: "#f1f1ef",
+};
+
 export class AnsiText extends React.Component {
-  transformColor(color, sequence) {
+  transformColor(color, sequence, colors, brightColors) {
     if (color.startsWith("#")) {
       return color;
     }
@@ -39,7 +61,7 @@ export class AnsiText extends React.Component {
     if (sequence.includeDecoration("bright")) {
       return brightColors[color];
     } else {
-      return defaultColors[color];
+      return colors[color];
     }
   }
 
@@ -47,15 +69,19 @@ export class AnsiText extends React.Component {
     let style = {};
 
     if (sequence.backgroundColor) {
-      style.backgroundColor = this.transformColor(sequence.backgroundColor, sequence);
+      style.backgroundColor = this.transformColor(sequence.backgroundColor, sequence, defaultBackgroundColors, brightBackgroundColors);
     }
 
     if (sequence.color) {
-      style.color = this.transformColor(sequence.color, sequence);
+      style.color = this.transformColor(sequence.color, sequence, defaultColors, brightColors);
     }
 
     if (sequence.includeDecoration("bold")) {
       style.fontWeight = "bolder";
+    }
+
+    if (sequence.includeDecoration("underline")) {
+      style.textDecoration = "underline";
     }
 
     return style;

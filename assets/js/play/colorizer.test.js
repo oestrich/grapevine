@@ -114,6 +114,7 @@ describe("determining an escape code", () => {
 
   test("decoration options", () => {
     expect(parseEscapeSequence("\u001b[1;33mHello", {})).toEqual({color: "yellow", decorations: ["bold"], text: "Hello"});
+    expect(parseEscapeSequence("\u001b[4mHello", {})).toEqual({decorations: ["underline"], text: "Hello"});
     expect(parseEscapeSequence("\u001b[33;1mHello", {})).toEqual({color: "yellow", decorations: ["bold"], text: "Hello"});
     expect(parseEscapeSequence("\u001b[93;1mHello", {})).toEqual({color: "yellow", decorations: ["bold", "bright"], text: "Hello"});
   });
