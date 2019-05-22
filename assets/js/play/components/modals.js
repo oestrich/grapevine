@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import {AnsiText} from "./terminal";
+import {Line} from "./terminal";
 
 import {
   Creators
@@ -18,8 +18,8 @@ class ModalBody extends React.Component {
     return (
       <div className="body">
         <pre>
-          {_.map(this.props.segments, (segment, i) => {
-            return (<AnsiText key={i} text={segment} />);
+          {_.map(this.props.lines, (line, i) => {
+            return (<Line key={i} sequences={line.sequences} />);
           })}
         </pre>
       </div>
@@ -94,7 +94,7 @@ class Modal extends React.Component {
           </div>
         </nav>
 
-        <ModalBody segments={modal.segments} />
+        <ModalBody lines={modal.lines} />
       </section>
     );
   }

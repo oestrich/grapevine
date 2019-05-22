@@ -9,18 +9,18 @@ import {
 } from "../redux/store";
 
 export class AnsiText extends React.Component {
-  textStyle(parsed) {
+  textStyle(sequence) {
     let style = {};
 
-    if (parsed.bg) {
-      style.backgroundColor = `rgb(${parsed.bg})`;
+    if (sequence.backgroundColor) {
+      style.backgroundColor = sequence.backgroundColor;
     }
 
-    if (parsed.fg) {
-      style.color = `rgb(${parsed.fg})`;
+    if (sequence.color) {
+      style.color = sequence.color;
     }
 
-    if (parsed.decoration == "bold") {
+    if (sequence.decoration == "bold") {
       style.fontWeight = "bolder";
     }
 
@@ -28,11 +28,27 @@ export class AnsiText extends React.Component {
   }
 
   render() {
-    let text = this.props.text;
+    let segment = this.props.text;
+
+    if (segment.text === undefined) {
+      return null;
+    }
 
     return (
-      <span style={this.textStyle(text)}>{text.content}</span>
+      <span style={this.textStyle(segment)}>{segment.text}</span>
     );
+  }
+}
+
+export class Line extends React.Component {
+  render() {
+    let sequences = this.props.sequences;
+
+    return sequences.map((sequence) => {
+      return (
+        <AnsiText key={sequence.id} text={sequence} />
+      );
+    });
   }
 }
 
@@ -76,11 +92,9 @@ class Terminal extends React.Component {
     return (
       <div ref={el => { this.terminal = el; }} className="terminal" style={style}>
         {_.map(lines, line => {
-          return _.map(line, segment => {
-            return (
-              <AnsiText key={segment.id} text={segment} />
-            );
-          });
+          return (
+            <Line key={line.id} sequences={line.sequences} />
+          );
         })}
         <div ref={el => { this.el = el; }} />
       </div>
