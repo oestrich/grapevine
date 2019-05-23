@@ -165,6 +165,7 @@ describe("combining new text with the last parsed segment", () => {
     let sequences = combineAndParseSegments([sequence], "mworld");
 
     expect(sequences).toEqual([
+      {text: ""},
       {color: "yellow", decorations: [], text: "world"}
     ]);
   });
@@ -285,6 +286,30 @@ describe("sample real game output", () => {
 
     expect(sequences).toEqual([
       new Line([{id: 0, color: "white", backgroundColor: "green", decorations: [], text: "WGK"}]),
+    ]);
+  });
+
+  test("last outpost", () => {
+    let inputs = [
+      "\u001b[33mYell",
+      "ow \u001b[1mbold\u001b[0m\u001b[3",
+      "3m \u001b[4munderline \u001b[",
+      "7mreverse\u001b[0m",
+    ];
+
+    let line = null;
+    inputs.map((input) => {
+      let lines = combineAndParse(line, input);
+      line = lines.pop();
+    });
+
+    expect(line.sequences).toEqual([
+      {id: 0, color: "yellow", decorations: [], text: "Yellow "},
+      {id: 1, color: "yellow", decorations: ["bold"], text: "bold"},
+      {id: 2, color: "yellow", decorations: [], text: " "},
+      {id: 3, color: "yellow", decorations: ["underline"], text: "underline "},
+      {id: 4, color: "yellow", decorations: ["underline"], text: "reverse"},
+      {id: 5, text: ""},
     ]);
   });
 });

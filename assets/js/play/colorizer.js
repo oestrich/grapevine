@@ -310,10 +310,16 @@ export const combineAndParseSegments = (currentSequences, text) => {
     currentSequence = currentSequences.pop();
   }
 
+  if (currentSequence instanceof ParseError) {
+    text = currentSequence.sequence + text;
+    currentSequence = new EscapeSequence("", currentSequence.getOptions());
+  }
+
   let options = {};
   if (currentSequence && !(currentSequence instanceof ParseError)) {
     options = currentSequence.getOptions();
   }
+
   let segments = segmentEscapes(text, options);
 
   let [firstSegment, ...restSegments] = segments;
