@@ -14,13 +14,13 @@ describe("processes text for color codes", () => {
     expect(segmentEscapes("\u001b[33mHello\u001b[0m", {})).toEqual([
       {text: ""},
       {color: "yellow", decorations: [], text: "Hello"},
-      {text: ""},
+      {decorations: [], text: ""},
     ]);
 
     expect(segmentEscapes("Hello, \u001b[33mWorld\u001b[0m", {})).toEqual([
       {text: "Hello, "},
       {color: "yellow", decorations: [], text: "World"},
-      {text: ""},
+      {decorations: [], text: ""},
     ]);
   });
 
@@ -28,7 +28,7 @@ describe("processes text for color codes", () => {
     expect(segmentEscapes("Hello, \u001b[1;33mWorld\u001b[0m", {})).toEqual([
       {text: "Hello, "},
       {color: "yellow", decorations: ["bold"], text: "World"},
-      {text: ""},
+      {decorations: [], text: ""},
     ]);
   });
 
@@ -309,7 +309,15 @@ describe("sample real game output", () => {
       {id: 2, color: "yellow", decorations: [], text: " "},
       {id: 3, color: "yellow", decorations: ["underline"], text: "underline "},
       {id: 4, color: "yellow", decorations: ["underline"], text: "reverse"},
-      {id: 5, text: ""},
+      {id: 5, decorations: [], text: ""},
+    ]);
+  });
+
+  test("lumen et umbra", () => {
+    let sequences = combineAndParse(null, "\u001B[0;40;1;32m \\");
+
+    expect(sequences).toEqual([
+      new Line([{id: 0, color: "green", backgroundColor: "black", decorations: ["bold"], text: " \\"}]),
     ]);
   });
 });

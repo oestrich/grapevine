@@ -128,7 +128,7 @@ const parse256Color = (color, key) => {
  */
 const mergeCodes = (oldCode, newCode) => {
   if (newCode.reset) {
-    return {};
+    return newCode;
   }
 
   let clone = Object.assign(Object.create(Object.getPrototypeOf(oldCode)), oldCode);
@@ -159,7 +159,8 @@ export const parseEscapeColorCodes = (colorCodes) => {
 
   switch (true) {
     case colorCode == 0:
-      return {reset: true};
+      color = parseEscapeColorCodes(colorCodes);
+      return mergeCodes({reset: true}, color);
 
     case colorCode == 1:
       color = parseEscapeColorCodes(colorCodes);
@@ -302,7 +303,8 @@ let mergeSequences = (currentSequence, appendSequence) => {
 /**
  * Parses new text into sequences
  *
- * If the first segment is text only, merges into the current sequence
+ * Merges the past sequences with the new sequences. Handles parsing errors
+ * with new text that fixes the parse error.
  */
 export const combineAndParseSegments = (currentSequences, text) => {
   let currentSequence;
