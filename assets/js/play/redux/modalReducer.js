@@ -1,8 +1,8 @@
 import _ from "underscore";
-import Anser from "anser";
 import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
+import {combineAndParse} from "../colorizer";
 
 const INITIAL_STATE = {
   modals: [],
@@ -12,7 +12,7 @@ class Modal {
   constructor(attrs) {
     this.key = attrs.key;
     this.title = attrs.title;
-    this.segments = Anser.ansiToJson(attrs.body);
+    this.lines = combineAndParse(null, attrs.body);
   }
 }
 

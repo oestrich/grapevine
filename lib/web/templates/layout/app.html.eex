@@ -2,7 +2,7 @@
 <html lang="en">
   <%= render("_head.html", assigns) %>
 
-  <body id="body" data-user-token="<%= @conn |> user_token() %>">
+  <body id="body" data-user-token="<%= @conn |> user_token() %>" data-live="true">
     <%= render("_header.html", assigns) %>
 
     <main>

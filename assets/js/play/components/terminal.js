@@ -8,31 +8,107 @@ import {
   getSocketLines
 } from "../redux/store";
 
+const defaultColors = {
+  black: "#373737",
+  red: "#d71e00",
+  green: "#5da602",
+  yellow: "#cfad00",
+  blue: "#417ab3",
+  magenta: "#88658d",
+  cyan: "#00a7aa",
+  white: "#dbded8",
+};
+
+const brightColors = {
+  black: "#676965",
+  red: "#f44135",
+  green: "#98e342",
+  yellow: "#fcea60",
+  blue: "#83afd8",
+  magenta: "#bc93b6",
+  cyan: "#37e5e7",
+  white: "#f1f1ef",
+};
+
+const defaultBackgroundColors = {
+  black: "#000000",
+  red: "#d71e00",
+  green: "#5da602",
+  yellow: "#cfad00",
+  blue: "#417ab3",
+  magenta: "#88658d",
+  cyan: "#00a7aa",
+  white: "#dbded8",
+};
+
+const brightBackgroundColors = {
+  black: "#676965",
+  red: "#f44135",
+  green: "#98e342",
+  yellow: "#fcea60",
+  blue: "#83afd8",
+  magenta: "#bc93b6",
+  cyan: "#37e5e7",
+  white: "#f1f1ef",
+};
+
 export class AnsiText extends React.Component {
-  textStyle(parsed) {
+  transformColor(color, sequence, colors, brightColors) {
+    if (color.startsWith("#")) {
+      return color;
+    }
+
+    if (sequence.includeDecoration("bright")) {
+      return brightColors[color];
+    } else {
+      return colors[color];
+    }
+  }
+
+  textStyle(sequence) {
     let style = {};
 
-    if (parsed.bg) {
-      style.backgroundColor = `rgb(${parsed.bg})`;
+    if (sequence.backgroundColor) {
+      style.backgroundColor = this.transformColor(sequence.backgroundColor, sequence, defaultBackgroundColors, brightBackgroundColors);
     }
 
-    if (parsed.fg) {
-      style.color = `rgb(${parsed.fg})`;
+    if (sequence.color) {
+      style.color = this.transformColor(sequence.color, sequence, defaultColors, brightColors);
     }
 
-    if (parsed.decoration == "bold") {
+    if (sequence.includeDecoration("bold")) {
       style.fontWeight = "bolder";
+    }
+
+    if (sequence.includeDecoration("underline")) {
+      style.textDecoration = "underline";
     }
 
     return style;
   }
 
   render() {
-    let text = this.props.text;
+    let segment = this.props.text;
+
+    if (segment.text === undefined) {
+      return null;
+    }
 
     return (
-      <span style={this.textStyle(text)}>{text.content}</span>
+      <span style={this.textStyle(segment)}>{segment.text}</span>
     );
+  }
+}
+
+export class Line extends React.Component {
+  render() {
+    let sequences = this.props.sequences;
+
+    return sequences.map((sequence) => {
+      return (
+        <AnsiText key={sequence.id} text={sequence} />
+      );
+    });
   }
 }
 
@@ -76,11 +152,9 @@ class Terminal extends React.Component {
     return (
       <div ref={el => { this.terminal = el; }} className="terminal" style={style}>
         {_.map(lines, line => {
-          return _.map(line, segment => {
-            return (
-              <AnsiText key={segment.id} text={segment} />
-            );
-          });
+          return (
+            <Line key={line.id} sequences={line.sequences} />
+          );
         })}
         <div ref={el => { this.el = el; }} />
       </div>
