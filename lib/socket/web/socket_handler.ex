@@ -1,4 +1,4 @@
-defmodule Web.SocketHandler do
+defmodule Socket.Web.SocketHandler do
   @moduledoc """
   Cowboy WebSocket handler
   """
@@ -7,8 +7,8 @@ defmodule Web.SocketHandler do
 
   alias Metrics.Server, as: Metrics
   alias Socket.Core.Heartbeat
-  alias Web.Socket.Router
-  alias Web.Socket.State
+  alias Socket.Web.Router
+  alias Socket.Web.State
 
   require Logger
 

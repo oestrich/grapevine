@@ -1,8 +1,8 @@
-defmodule Web.Socket.RequestTest do
+defmodule Socket.Web.RequestTest do
   use ExUnit.Case
 
-  alias Web.Socket.Request
-  alias Web.Socket.State
+  alias Socket.Web.Request
+  alias Socket.Web.State
 
   describe "checks for supports" do
     test "support flag is present" do

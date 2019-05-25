@@ -3,7 +3,7 @@ defmodule Socket.Achievements do
   Achievement management
   """
 
-  use Web.Socket.Module
+  use Socket.Web.Module
 
   alias Grapevine.Achievements
 

@@ -14,6 +14,7 @@ defmodule Grapevine.Application do
       cluster_supervisor(),
       supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
+      {Socket.Application, [name: Socket.Application]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Presence, []},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},

@@ -1,4 +1,4 @@
-defmodule Web.Socket.Module do
+defmodule Socket.Web.Module do
   @moduledoc """
   A Module is tied to a support flag
 
@@ -7,9 +7,9 @@ defmodule Web.Socket.Module do
 
   defmacro __using__(_) do
     quote do
-      import Web.Socket.Module
+      import Socket.Web.Module
 
-      alias Web.Socket.Module.Token
+      alias Socket.Web.Module.Token
 
       def token() do
         %Token{assigns: %{}, view: __MODULE__.View}
