@@ -25,23 +25,12 @@ class SocketProvider extends React.Component {
   }
 
   processText() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
     this.props.socketGA();
   }
 
   appendText(message) {
     this.props.socketEcho(message);
-
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
-    this.timer = setTimeout(() => {
-      this.processText();
-    }, 200);
+    this.processText();
   }
 
   receiveConnection(data) {
