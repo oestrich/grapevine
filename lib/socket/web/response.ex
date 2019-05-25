@@ -1,4 +1,4 @@
-defmodule Web.Socket.Response do
+defmodule Socket.Web.Response do
   @moduledoc """
   Token for responding to a request frame
   """

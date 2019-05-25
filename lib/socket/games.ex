@@ -3,7 +3,7 @@ defmodule Socket.Games do
   Games support flag
   """
 
-  use Web.Socket.Module
+  use Socket.Web.Module
 
   alias Grapevine.Games
   alias Grapevine.Presence

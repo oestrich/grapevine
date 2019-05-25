@@ -1,4 +1,4 @@
-defmodule Web.Socket.Router do
+defmodule Socket.Web.Router do
   @moduledoc """
   WebSocket Implementation
 
@@ -9,7 +9,7 @@ defmodule Web.Socket.Router do
 
   alias Socket.Core
 
-  import Web.Socket.RouterMacro
+  import Socket.Web.RouterMacro
 
   receives(Socket) do
     module(Core, "channels") do

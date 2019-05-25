@@ -3,7 +3,7 @@ defmodule Socket.Tells do
   Implementation for the `tells` flag
   """
 
-  use Web.Socket.Module
+  use Socket.Web.Module
 
   alias Grapevine.Presence
 

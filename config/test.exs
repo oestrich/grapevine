@@ -10,6 +10,8 @@ config :grapevine, Web.Endpoint,
   http: [port: 4001],
   server: false
 
+config :grapevine, :socket, http: [port: 4111]
+
 config :logger, level: :error
 
 # Configure your database

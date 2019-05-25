@@ -16,15 +16,6 @@ config :grapevine, Web.Endpoint,
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
   live_view: [signing_salt: "SWvL1X6M5XJHDfJjnWxhzUU4P5wwzIjR"],
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
-  http: [
-    dispatch: [
-      {:_,
-       [
-         {"/socket", Web.SocketHandler, []},
-         {:_, Phoenix.Endpoint.Cowboy2Handler, {Web.Endpoint, []}}
-       ]}
-    ]
-  ],
   pubsub: [name: Grapevine.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :phoenix, template_engines: [leex: Phoenix.LiveView.Engine]
