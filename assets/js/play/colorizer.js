@@ -380,11 +380,9 @@ export const detectLines = (sequences) => {
 
   sequences = _.flatten(sequences);
   let lastSequence = sequences.pop();
-  if (!(lastSequence instanceof ParseError)) {
-    sequences = _.reject(sequences, (sequence) => {
-      return sequence.text === "";
-    });
-  }
+  sequences = _.reject(sequences, (sequence) => {
+    return sequence.text === "";
+  });
   sequences = [...sequences, lastSequence];
 
   // Merge lines together
