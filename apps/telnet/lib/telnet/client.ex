@@ -336,7 +336,7 @@ defmodule GrapevineTelnet.Client do
     start_term_type = <<255, 250, 24, 0>>
     end_term_type = <<255, 240>>
 
-    mtts = 1 + 2 + 4 + 8 + 128 + 256
+    mtts = 1 + 4 + 8 + 128 + 256
 
     case state.term_type do
       :grapevine ->
