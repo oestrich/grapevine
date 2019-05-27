@@ -13,6 +13,7 @@ export const {Types, Creators} = createActions({
   socketConnected: null,
   socketDisconnected: null,
   socketEcho: ["text"],
+  socketInput: ["text"],
   socketGA: null,
   socketOAuthClose: null,
   socketReceiveConnection: ({type, host, port}) => ({type: "SOCKET_RECEIVE_CONNECTION", payload: {type, host, port}}),

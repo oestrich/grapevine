@@ -1,5 +1,6 @@
 import {socketReducer} from "./socketReducer";
 import {Creators} from "./actions";
+import {Line} from "../colorizer/models";
 
 describe("socket reducer", () => {
   test("socket connected", () => {
@@ -26,6 +27,16 @@ describe("socket reducer", () => {
     state = socketReducer(state, Creators.socketEcho("World"));
 
     expect(state.buffer).toEqual("Hello\nWorld");
+  });
+
+  test("socket input", () => {
+    let state = {lines: [], lineId: 0};
+
+    state = socketReducer(state, Creators.socketInput("World"));
+
+    expect(state.lastLine.sequences).toEqual([
+      {id: 0, color: "white", backgroundColor: "black", decorations: [], opts: {}, text: "World"},
+    ]);
   });
 
   test("socket go ahead", () => {

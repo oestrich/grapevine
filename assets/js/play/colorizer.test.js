@@ -1,5 +1,5 @@
-import {parse} from "./colorizer";
-import {Line, ParseError, EscapeSequence} from "./colorizer/models";
+import {parse, appendInput} from "./colorizer";
+import {Line, EscapeSequence, InputSequence, ParseError} from "./colorizer/models";
 
 describe("combining new text with the last line", () => {
   test("no initial sequence to merge with", () => {
@@ -55,6 +55,19 @@ describe("parse errors", () => {
     let [sequence, sequence2] = line.sequences;
     expect(sequence2.color).toEqual("yellow");
     expect(sequence2.decorations).toEqual(["bold"]);
+  });
+});
+
+describe("appending game input", () => {
+  test("appends to the last line and passes the options through", () => {
+    let line = new Line([new EscapeSequence("Hello", {color: "yellow"})]);
+
+    [line] = appendInput(line, "hello");
+
+    expect(line.sequences).toEqual([
+      {id: 0, color: "yellow", text: "Hello"},
+      {id: 1, color: "white", backgroundColor: "black", decorations: [], opts: {color: "yellow"}, text: "hello"},
+    ]);
   });
 });
 

@@ -29,6 +29,10 @@ class Sequence {
     }
   }
 
+  includeDecoration(decoration) {
+    return !!this.decorations && this.decorations.includes(decoration);
+  }
+
   getOptions() {
     return {
       color: this.color,
@@ -43,9 +47,25 @@ export class EscapeSequence extends Sequence {
     super(opts);
     this.text = text;
   }
+}
 
-  includeDecoration(decoration) {
-    return !!this.decorations && this.decorations.includes(decoration);
+export class InputSequence extends Sequence {
+  constructor(text, opts) {
+    super(opts);
+
+    this.text = text;
+    this.color = "white";
+    this.backgroundColor = "black";
+    this.decorations = [];
+    this.opts = opts;
+  }
+
+  getOptions() {
+    return {
+      color: this.opts.color,
+      backgroundColor: this.opts.backgroundColor,
+      decorations: this.opts.decorations,
+    };
   }
 }
 

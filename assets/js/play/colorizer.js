@@ -1,4 +1,5 @@
 import {combineAndParseSegments, detectLines} from "./colorizer/parser";
+import {InputSequence} from "./colorizer/models";
 
 /**
  * Parse new text and combine it with the previous line
@@ -13,4 +14,20 @@ export const parse = (currentLine, text) => {
 
   sequences = combineAndParseSegments(sequences, text);
   return detectLines(sequences);
+};
+
+export const appendInput = (currentLine, text) => {
+  let sequences = [];
+  if (currentLine) {
+    sequences = currentLine.sequences;
+  }
+  let lastSequence = sequences.pop();
+
+  if (lastSequence) {
+    let input = new InputSequence(text, lastSequence.getOptions());
+    return detectLines([...sequences, lastSequence, input]);
+  } else {
+    let input = new InputSequence(text, {});
+    return detectLines([input]);
+  }
 };

@@ -2,7 +2,7 @@ import _ from "underscore";
 import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
-import {combineAndParse} from "../colorizer";
+import * as colorizer from "../colorizer";
 
 const INITIAL_STATE = {
   modals: [],
@@ -12,7 +12,7 @@ class Modal {
   constructor(attrs) {
     this.key = attrs.key;
     this.title = attrs.title;
-    this.lines = combineAndParse(null, attrs.body);
+    this.lines = colorizer.parse(null, attrs.body);
   }
 }
 

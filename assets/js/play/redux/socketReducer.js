@@ -3,6 +3,7 @@ import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 import * as colorize from "../colorizer";
+import {InputSequence} from "../colorizer/models";
 
 const MAX_LINES = 1000;
 
@@ -19,9 +20,7 @@ const INITIAL_STATE = {
   },
 }
 
-let parseText = (state, text) => {
-  let lines = colorize.parse(state.lastLine, text);
-
+let appendLines = (state, lines) => {
   let increment = 0;
   lines = lines.map(line => {
     line.id = state.lineId + increment;
@@ -34,6 +33,11 @@ let parseText = (state, text) => {
   let lastLine = lines.pop();
 
   return {...state, lastLine: lastLine, lines: lines, lineId: state.lineId + increment};
+};
+
+let parseText = (state, text) => {
+  let lines = colorize.parse(state.lastLine, text);
+  return appendLines(state, lines);
 };
 
 export const socketConnected = (state, action) => {
@@ -53,6 +57,12 @@ export const socketDisconnected = (state, action) => {
 export const socketEcho = (state, action) => {
   const {text} = action;
   return {...state, buffer: state.buffer + text};
+};
+
+export const socketInput = (state, action) => {
+  const {text} = action;
+  let lines = colorize.appendInput(state.lastLine, text);
+  return appendLines(state, lines);
 };
 
 export const socketGA = (state, action) => {
@@ -102,6 +112,7 @@ export const HANDLERS = {
   [Types.SOCKET_CONNECTED]: socketConnected,
   [Types.SOCKET_DISCONNECTED]: socketDisconnected,
   [Types.SOCKET_ECHO]: socketEcho,
+  [Types.SOCKET_INPUT]: socketInput,
   [Types.SOCKET_GA]: socketGA,
   [Types.SOCKET_O_AUTH_CLOSE]: socketOAuthClose,
   [Types.SOCKET_RECEIVE_CONNECTION]: socketReceiveConnection,
