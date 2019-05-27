@@ -2,7 +2,7 @@ import _ from "underscore";
 import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
-import {combineAndParse} from "../colorizer";
+import * as colorize from "../colorizer";
 
 const MAX_LINES = 1000;
 
@@ -20,7 +20,7 @@ const INITIAL_STATE = {
 }
 
 let parseText = (state, text) => {
-  let lines = combineAndParse(state.lastLine, text);
+  let lines = colorize.parse(state.lastLine, text);
 
   let increment = 0;
   lines = lines.map(line => {
