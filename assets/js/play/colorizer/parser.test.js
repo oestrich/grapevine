@@ -121,6 +121,11 @@ describe("determining an escape code", () => {
     expect(parseEscapeSequence("\u001b[5m", {})).toEqual({decorations: ["blink"], text: ""});
     expect(parseEscapeSequence("\u001b[6m", {})).toEqual({decorations: ["blink"], text: ""});
   });
+
+  test("reverse video", () => {
+    expect(parseEscapeSequence("\u001b[7m", {color: "white", backgroundColor: "green"})).
+      toEqual({color: "green", backgroundColor: "white", decorations: [], text: ""});
+  });
 });
 
 describe("combining new text with the last parsed segment", () => {

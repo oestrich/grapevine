@@ -80,7 +80,11 @@ const mergeCodes = (oldCode, newCode) => {
   let newDecorations = (newCode.decorations || []).slice(0);
   let decorations = _.uniq(oldDecorations.concat(newDecorations));
 
-  return Object.assign(clone, newCode, {decorations});
+  if (newCode.reverse) {
+    return Object.assign(clone, newCode, {decorations, color: clone.backgroundColor, backgroundColor: clone.color});
+  } else {
+    return Object.assign(clone, newCode, {decorations});
+  }
 };
 
 /**
@@ -116,6 +120,10 @@ export const parseEscapeColorCodes = (colorCodes) => {
     case colorCode == 5 || colorCode == 6:
       color = parseEscapeColorCodes(colorCodes);
       return mergeCodes(color, {decorations: ["blink"]});
+
+    case colorCode == 7:
+      color = parseEscapeColorCodes(colorCodes);
+      return mergeCodes(color, {reverse: true});
 
     case (colorCode >= 30 && colorCode < 38):
       color = parseEscapeColorCodes(colorCodes);
@@ -175,12 +183,13 @@ export const parseEscapeColorCodes = (colorCodes) => {
 export const parseEscapeSequence = (sequence, currentOptions) => {
   // taken from Anser, https://github.com/IonicaBizau/anser
   let matches = sequence.match(/^\u001b\[([!\x3c-\x3f]*)([\d;]*)([\x20-\x2c]*[\x40-\x7e])([\s\S]*)/m);
+  const unsupportedCodes = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "S", "T", "mf", "i", "n", "u", "s", "h", "l"];
 
   if (!matches) {
     return new ParseError(sequence, currentOptions);
   }
 
-  if (matches[3] === "J" || matches[3] === "u" || matches[3] === "s") {
+  if (unsupportedCodes.includes(matches[3])) {
     return new EscapeSequence(matches[4], currentOptions);
   }
 
