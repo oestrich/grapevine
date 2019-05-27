@@ -86,7 +86,7 @@ describe("sample real game output", () => {
       {id: 1, color: "yellow", decorations: ["bold"], text: "bold"},
       {id: 2, color: "yellow", decorations: [], text: " "},
       {id: 3, color: "yellow", decorations: ["underline"], text: "underline "},
-      {id: 4, color: "yellow", decorations: ["underline"], text: "reverse"},
+      {id: 4, backgroundColor: "yellow", decorations: ["underline"], text: "reverse"},
       {id: 5, decorations: [], text: ""},
     ]);
   });
