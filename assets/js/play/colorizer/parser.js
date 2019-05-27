@@ -113,6 +113,10 @@ export const parseEscapeColorCodes = (colorCodes) => {
       color = parseEscapeColorCodes(colorCodes);
       return mergeCodes(color, {decorations: ["underline"]});
 
+    case colorCode == 5 || colorCode == 6:
+      color = parseEscapeColorCodes(colorCodes);
+      return mergeCodes(color, {decorations: ["blink"]});
+
     case (colorCode >= 30 && colorCode < 38):
       color = parseEscapeColorCodes(colorCodes);
       return mergeCodes(color, {color: basicColorCodes[colorCode - 30]});

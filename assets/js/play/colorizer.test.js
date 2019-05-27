@@ -63,7 +63,7 @@ describe("sample real game output", () => {
     let sequences = parse(null, "\u001b[37m\u001b[42m\u001b[5mWGK");
 
     expect(sequences).toEqual([
-      new Line([{id: 0, color: "white", backgroundColor: "green", decorations: [], text: "WGK"}]),
+      new Line([{id: 0, color: "white", backgroundColor: "green", decorations: ["blink"], text: "WGK"}]),
     ]);
   });
 

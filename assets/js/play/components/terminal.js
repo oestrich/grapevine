@@ -87,6 +87,14 @@ export class AnsiText extends React.Component {
     return style;
   }
 
+  className(sequence) {
+    if (sequence.includeDecoration("blink")) {
+      return "blink";
+    }
+
+    return "";
+  }
+
   render() {
     let segment = this.props.text;
 
@@ -95,7 +103,7 @@ export class AnsiText extends React.Component {
     }
 
     return (
-      <span style={this.textStyle(segment)}>{segment.text}</span>
+      <span className={this.className(segment)} style={this.textStyle(segment)}>{segment.text}</span>
     );
   }
 }

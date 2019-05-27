@@ -116,6 +116,11 @@ describe("determining an escape code", () => {
     expect(parseEscapeSequence("\u001b[33;1mHello", {})).toEqual({color: "yellow", decorations: ["bold"], text: "Hello"});
     expect(parseEscapeSequence("\u001b[93;1mHello", {})).toEqual({color: "yellow", decorations: ["bold", "bright"], text: "Hello"});
   });
+
+  test("blinking", () => {
+    expect(parseEscapeSequence("\u001b[5m", {})).toEqual({decorations: ["blink"], text: ""});
+    expect(parseEscapeSequence("\u001b[6m", {})).toEqual({decorations: ["blink"], text: ""});
+  });
 });
 
 describe("combining new text with the last parsed segment", () => {
