@@ -98,4 +98,19 @@ describe("sample real game output", () => {
       new Line([{id: 0, color: "green", backgroundColor: "black", decorations: ["bold"], text: " \\"}]),
     ]);
   });
+
+  test("realms of despair", () => {
+    let line = `Press [ENTER] \u001b[0m\u001b[2J\n\u001b[u\u001b[s`;
+    let lines = parse(null, line);
+
+    expect(lines).toEqual([
+      new Line([
+        {id: 0, text: "Press [ENTER] "},
+        {id: 1, decorations: [], text: "\n"},
+      ]),
+      new Line([
+        {id: 0, decorations: [], text: ""},
+      ]),
+    ]);
+  });
 });

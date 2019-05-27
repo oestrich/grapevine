@@ -176,6 +176,10 @@ export const parseEscapeSequence = (sequence, currentOptions) => {
     return new ParseError(sequence, currentOptions);
   }
 
+  if (matches[3] === "J" || matches[3] === "u" || matches[3] === "s") {
+    return new EscapeSequence(matches[4], currentOptions);
+  }
+
   if (matches[1] !== "" || matches[3] !== "m") {
     return new ParseError(sequence, currentOptions);
   }
