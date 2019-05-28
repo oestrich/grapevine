@@ -1,21 +1,21 @@
 import {Line, EscapeSequence, ParseError} from "./models";
 
 import {
-  segmentEscapes,
+  splitByEscapeSequence,
   parseEscapeSequence,
-  combineAndParseSegments,
+  parseSequences,
   detectLines,
 } from "./parser";
 
 describe("processes text for color codes", () => {
   test("simple escape codes", () => {
-    expect(segmentEscapes("\u001b[33mHello\u001b[0m", {})).toEqual([
+    expect(splitByEscapeSequence("\u001b[33mHello\u001b[0m", {})).toEqual([
       {text: ""},
       {color: "yellow", decorations: [], text: "Hello"},
       {decorations: [], text: ""},
     ]);
 
-    expect(segmentEscapes("Hello, \u001b[33mWorld\u001b[0m", {})).toEqual([
+    expect(splitByEscapeSequence("Hello, \u001b[33mWorld\u001b[0m", {})).toEqual([
       {text: "Hello, "},
       {color: "yellow", decorations: [], text: "World"},
       {decorations: [], text: ""},
@@ -23,7 +23,7 @@ describe("processes text for color codes", () => {
   });
 
   test("with bold", () => {
-    expect(segmentEscapes("Hello, \u001b[1;33mWorld\u001b[0m", {})).toEqual([
+    expect(splitByEscapeSequence("Hello, \u001b[1;33mWorld\u001b[0m", {})).toEqual([
       {text: "Hello, "},
       {color: "yellow", decorations: ["bold"], text: "World"},
       {decorations: [], text: ""},
@@ -31,7 +31,7 @@ describe("processes text for color codes", () => {
   });
 
   test("parse error in middle", () => {
-    expect(segmentEscapes("Hello, \u001b[33Lost\u001b[33mHow are you?", {})).toEqual([
+    expect(splitByEscapeSequence("Hello, \u001b[33Lost\u001b[33mHow are you?", {})).toEqual([
       {text: "Hello, "},
       {sequence: "\u001b[33Lost"},
       {color: "yellow", decorations: [], text: "How are you?"}
@@ -39,7 +39,7 @@ describe("processes text for color codes", () => {
   });
 
   test("trailing parse error", () => {
-    expect(segmentEscapes("Hello, \u001b[33")).toEqual([
+    expect(splitByEscapeSequence("Hello, \u001b[33")).toEqual([
       {text: "Hello, "},
       {sequence: "\u001b[33"}
     ]);
@@ -128,9 +128,9 @@ describe("determining an escape code", () => {
   });
 });
 
-describe("combining new text with the last parsed segment", () => {
+describe("combining new text with the last parsed splitByEscapeSequence", () => {
   test("no initial sequence to merge with", () => {
-    let sequences = combineAndParseSegments([], ", world");
+    let sequences = parseSequences([], ", world");
 
     expect(sequences).toEqual([{text: ", world"}]);
   });
@@ -138,7 +138,7 @@ describe("combining new text with the last parsed segment", () => {
   test("append straight to the text", () => {
     let sequence = new EscapeSequence("Hello", {color: "yellow"});
 
-    let sequences = combineAndParseSegments([sequence], ", world");
+    let sequences = parseSequences([sequence], ", world");
 
     expect(sequences).toEqual([
       {color: "yellow", text: "Hello, world"}
@@ -148,7 +148,7 @@ describe("combining new text with the last parsed segment", () => {
   test("changing colors", () => {
     let sequence = new EscapeSequence("Hello");
 
-    let sequences = combineAndParseSegments([sequence], ", \u001b[33mworld");
+    let sequences = parseSequences([sequence], ", \u001b[33mworld");
 
     expect(sequences).toEqual([
       {text: "Hello, "},
@@ -159,7 +159,7 @@ describe("combining new text with the last parsed segment", () => {
   test("changing bold status", () => {
     let sequence = new EscapeSequence("Hello", {color: "yellow"});
 
-    let sequences = combineAndParseSegments([sequence], ", \u001b[1mworld");
+    let sequences = parseSequences([sequence], ", \u001b[1mworld");
 
     expect(sequences).toEqual([
       {color: "yellow", text: "Hello, "},
@@ -170,7 +170,7 @@ describe("combining new text with the last parsed segment", () => {
   test("appending to a parse error and converting to a proper sequence", () => {
     let sequence = new ParseError("\u001b[33");
 
-    let sequences = combineAndParseSegments([sequence], "mworld");
+    let sequences = parseSequences([sequence], "mworld");
 
     expect(sequences).toEqual([
       {text: ""},
@@ -181,7 +181,7 @@ describe("combining new text with the last parsed segment", () => {
   test("new text includes a parse error that is trying to merge", () => {
     let sequence = new EscapeSequence("Hello");
 
-    let sequences = combineAndParseSegments([sequence], "\u001b[33");
+    let sequences = parseSequences([sequence], "\u001b[33");
 
     expect(sequences).toEqual([
       {text: "Hello"},

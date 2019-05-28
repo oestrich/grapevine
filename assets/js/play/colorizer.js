@@ -1,4 +1,4 @@
-import {combineAndParseSegments, detectLines} from "./colorizer/parser";
+import {parseSequences, detectLines} from "./colorizer/parser";
 import {InputSequence} from "./colorizer/models";
 
 /**
@@ -12,7 +12,7 @@ export const parse = (currentLine, text) => {
     sequences = currentLine.sequences;
   }
 
-  sequences = combineAndParseSegments(sequences, text);
+  sequences = parseSequences(sequences, text);
   return detectLines(sequences);
 };
 

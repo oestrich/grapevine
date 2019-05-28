@@ -1,65 +1,163 @@
 import _ from "underscore";
 import {Line, EscapeSequence, ParseError} from "./models";
+import {basicColorCodes, rgbToHex, parse256Color} from "./colors";
 
-const basicColorCodes = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"];
-
-const toHex = (decimal) => {
-  let hex = decimal.toString(16);
-  if (hex.length < 2) {
-    hex = "0" + hex;
-  }
-  return hex;
-};
-
-
-const rgbToHex = (r, g, b) => {
-  return "#" + toHex(r) + toHex(g) + toHex(b);
-};
-
-// Mostly from Anser, https://github.com/IonicaBizau/anser
-const memoize256Colors = () => {
-  window.colorizer256Colors = [];
-
-  // Index 0..15 : System color
-  for (let i = 0; i < 16; ++i) {
-    window.colorizer256Colors.push(null);
+/**
+ * Parses new text into sequences
+ *
+ * Merges the past sequences with the new sequences. Handles parsing errors
+ * with new text that fixes the parse error.
+ */
+export const parseSequences = (currentSequences, text) => {
+  let currentSequence;
+  if (_.last(currentSequences)) {
+    currentSequence = currentSequences.pop();
   }
 
-  // Index 16..231 : RGB 6x6x6
-  // https://gist.github.com/jasonm23/2868981#file-xterm-256color-yaml
-  let levels = [0, 95, 135, 175, 215, 255];
-  let r, g, b;
-  for (let r = 0; r < 6; ++r) {
-    for (let g = 0; g < 6; ++g) {
-      for (let b = 0; b < 6; ++b) {
-        window.colorizer256Colors.push(rgbToHex(levels[r], levels[g], levels[b]));
-      }
-    }
+  if (currentSequence instanceof ParseError) {
+    text = currentSequence.sequence + text;
+    currentSequence = new EscapeSequence("", currentSequence.getOptions());
   }
 
-  // Index 232..255 : Grayscale
-  let level = 8;
-  for (let i = 0; i < 24; ++i, level += 10) {
-    window.colorizer256Colors.push(rgbToHex(level, level, level));
+  let options = {};
+  if (currentSequence && !(currentSequence instanceof ParseError)) {
+    options = currentSequence.getOptions();
   }
-};
 
-const parse256Color = (color, key) => {
-  // memoize colors to the window
-  if (window.colorizer256Colors == undefined) {
-    memoize256Colors();
-  }
+  let sequences = splitByEscapeSequence(text, options);
+
+  let [firstSegment, ...restSegments] = sequences;
 
   switch (true) {
-    case color < 8:
-      return {[key]: basicColorCodes[color]};
-
-    case color < 16:
-      return {[key]: basicColorCodes[color - 8], decorations: ["bright"]};
+    case isTextOnly(firstSegment):
+      return [...currentSequences, ...mergeSequences(currentSequence, firstSegment), ...restSegments];
 
     default:
-      return {[key]: colorizer256Colors[color]};
+      return [...currentSequences, currentSequence, firstSegment, ...restSegments];
   }
+};
+
+/**
+ * Split sequences apart and group by new lines
+ *
+ * Returns `Line`s with all sequences contained within. Each line ends
+ * with a `\n`.
+ */
+export const detectLines = (sequences) => {
+  sequences = sequences.map((sequence) => {
+    if (sequence instanceof ParseError) {
+      return [sequence];
+    }
+
+    let lines = sequence.text.split("\n");
+
+    lines = lines.map((line) => {
+      let clone = Object.assign(Object.create(Object.getPrototypeOf(sequence)), sequence);
+      return Object.assign(clone, {text: line});
+    });
+
+    let lastLine = lines.pop();
+
+    lines = lines.map((line) => {
+      return Object.assign(line, {text: line.text + "\n"});
+    });
+
+    return [...lines, lastLine];
+  });
+
+  sequences = _.flatten(sequences);
+  let lastSequence = sequences.pop();
+  sequences = _.reject(sequences, (sequence) => {
+    return sequence.text === "";
+  });
+  sequences = [...sequences, lastSequence];
+
+  // Merge lines together
+  let currentLine = [];
+  let mergedLines = [];
+
+  sequences.map((sequence) => {
+    if (_.last(sequence.text) === "\n") {
+      currentLine.push(sequence);
+      mergedLines.push(currentLine);
+      currentLine = [];
+    } else {
+      currentLine.push(sequence);
+    }
+  });
+
+  mergedLines.push(currentLine);
+  mergedLines = _.reject(mergedLines, lines => {
+    return lines.length == 0;
+  });
+
+  return mergedLines.map((sequences) => {
+    sequences = sequences.map((sequence, i) => {
+      return Object.assign(sequence, {id: i});
+    });
+
+    return new Line(sequences);
+  });
+};
+
+/**
+ * Picks apart the pieces of the escape code
+ *
+ * May return a ParseError
+ *
+ * Merges the current escape sequence with the previous escape sequence
+ * to let them build up upon each other.
+ */
+export const parseEscapeSequence = (sequence, currentOptions) => {
+  // taken from Anser, https://github.com/IonicaBizau/anser
+  let matches = sequence.match(/^\u001b\[([!\x3c-\x3f]*)([\d;]*)([\x20-\x2c]*[\x40-\x7e])([\s\S]*)/m);
+  const unsupportedCodes = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "S", "T", "mf", "i", "n", "u", "s", "h", "l"];
+
+  if (!matches) {
+    return new ParseError(sequence, currentOptions);
+  }
+
+  if (unsupportedCodes.includes(matches[3])) {
+    return new EscapeSequence(matches[4], currentOptions);
+  }
+
+  if (matches[1] !== "" || matches[3] !== "m") {
+    return new ParseError(sequence, currentOptions);
+  }
+
+  let codes = matches[2].split(";").map((code) => { return parseInt(code); });
+  let options = parseEscapeColorCodes(codes);
+  options = mergeCodes(currentOptions, options);
+  return new EscapeSequence(matches[4], options);
+};
+
+/**
+ * Split incoming text into escape sequences
+ *
+ * After splitting, build escape sequences from parsing the sequence. The last
+ * parsed sequence will flow through parsing.
+ */
+export const splitByEscapeSequence = (text, options) => {
+  let sequences = text.split("\u001b");
+
+  // insert the escape code back into restSegments
+  let [firstSegment, ...restSegments] = sequences;
+  restSegments = restSegments.map((sequence) => { return `\u001b${sequence}`; });
+  sequences = [firstSegment, ...restSegments];
+
+  sequences = sequences.map((sequence) => {
+    if (!sequence.startsWith("\u001b")) {
+      return new EscapeSequence(sequence);
+    }
+
+    sequence = parseEscapeSequence(sequence, options);
+    if (!(sequence instanceof ParseError)) {
+      options = sequence.getOptions();
+    }
+    return sequence;
+  });
+
+  return sequences;
 };
 
 /**
@@ -100,7 +198,7 @@ const mergeCodes = (oldCode, newCode) => {
  *  - 256 colors, background, foreground
  *  - True colors, background, foreground
  */
-export const parseEscapeColorCodes = (colorCodes) => {
+const parseEscapeColorCodes = (colorCodes) => {
   let colorCode = colorCodes.shift();
   let color, mode, r, g, b;
 
@@ -173,70 +271,10 @@ export const parseEscapeColorCodes = (colorCodes) => {
 };
 
 /**
- * Picks apart the pieces of the escape code
- *
- * May return a ParseError
- *
- * Merges the current escape sequence with the previous escape sequence
- * to let them build up upon each other.
+ * Check if a sequence contains only text
  */
-export const parseEscapeSequence = (sequence, currentOptions) => {
-  // taken from Anser, https://github.com/IonicaBizau/anser
-  let matches = sequence.match(/^\u001b\[([!\x3c-\x3f]*)([\d;]*)([\x20-\x2c]*[\x40-\x7e])([\s\S]*)/m);
-  const unsupportedCodes = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "S", "T", "mf", "i", "n", "u", "s", "h", "l"];
-
-  if (!matches) {
-    return new ParseError(sequence, currentOptions);
-  }
-
-  if (unsupportedCodes.includes(matches[3])) {
-    return new EscapeSequence(matches[4], currentOptions);
-  }
-
-  if (matches[1] !== "" || matches[3] !== "m") {
-    return new ParseError(sequence, currentOptions);
-  }
-
-  let codes = matches[2].split(";").map((code) => { return parseInt(code); });
-  let options = parseEscapeColorCodes(codes);
-  options = mergeCodes(currentOptions, options);
-  return new EscapeSequence(matches[4], options);
-};
-
-/**
- * Split incoming text into escape segments
- *
- * After splitting, build escape sequences from parsing the sequence. The last
- * parsed sequence will flow through parsing.
- */
-export const segmentEscapes = (text, options) => {
-  let segments = text.split("\u001b");
-
-  // insert the escape code back into restSegments
-  let [firstSegment, ...restSegments] = segments;
-  restSegments = restSegments.map((segment) => { return `\u001b${segment}`; });
-  segments = [firstSegment, ...restSegments];
-
-  segments = segments.map((segment) => {
-    if (!segment.startsWith("\u001b")) {
-      return new EscapeSequence(segment);
-    }
-
-    segment = parseEscapeSequence(segment, options);
-    if (!(segment instanceof ParseError)) {
-      options = segment.getOptions();
-    }
-    return segment;
-  });
-
-  return segments;
-};
-
-/**
- * Check if a segment contains only text
- */
-let isTextOnly = (segment) => {
-  return _.isEqual(Object.keys(segment), ["text"]);
+let isTextOnly = (sequence) => {
+  return _.isEqual(Object.keys(sequence), ["text"]);
 };
 
 /**
@@ -258,102 +296,4 @@ let mergeSequences = (currentSequence, appendSequence) => {
   }
 
   return [Object.assign(currentSequence, {text: currentSequence.text + appendSequence.text})];
-};
-
-/**
- * Parses new text into sequences
- *
- * Merges the past sequences with the new sequences. Handles parsing errors
- * with new text that fixes the parse error.
- */
-export const combineAndParseSegments = (currentSequences, text) => {
-  let currentSequence;
-  if (_.last(currentSequences)) {
-    currentSequence = currentSequences.pop();
-  }
-
-  if (currentSequence instanceof ParseError) {
-    text = currentSequence.sequence + text;
-    currentSequence = new EscapeSequence("", currentSequence.getOptions());
-  }
-
-  let options = {};
-  if (currentSequence && !(currentSequence instanceof ParseError)) {
-    options = currentSequence.getOptions();
-  }
-
-  let segments = segmentEscapes(text, options);
-
-  let [firstSegment, ...restSegments] = segments;
-
-  switch (true) {
-    case isTextOnly(firstSegment):
-      return [...currentSequences, ...mergeSequences(currentSequence, firstSegment), ...restSegments];
-
-    default:
-      return [...currentSequences, currentSequence, firstSegment, ...restSegments];
-  }
-};
-
-/**
- * Split sequences apart and group by new lines
- *
- * Returns `Line`s with all sequences contained within. Each line ends
- * with a `\n`.
- */
-export const detectLines = (sequences) => {
-  sequences = sequences.map((sequence) => {
-    if (sequence instanceof ParseError) {
-      return [sequence];
-    }
-
-    let lines = sequence.text.split("\n");
-
-    lines = lines.map((line) => {
-      let clone = Object.assign(Object.create(Object.getPrototypeOf(sequence)), sequence);
-      return Object.assign(clone, {text: line});
-    });
-
-    let lastLine = lines.pop();
-
-    lines = lines.map((line) => {
-      return Object.assign(line, {text: line.text + "\n"});
-    });
-
-    return [...lines, lastLine];
-  });
-
-  sequences = _.flatten(sequences);
-  let lastSequence = sequences.pop();
-  sequences = _.reject(sequences, (sequence) => {
-    return sequence.text === "";
-  });
-  sequences = [...sequences, lastSequence];
-
-  // Merge lines together
-  let currentLine = [];
-  let mergedLines = [];
-
-  sequences.map((sequence) => {
-    if (_.last(sequence.text) === "\n") {
-      currentLine.push(sequence);
-      mergedLines.push(currentLine);
-      currentLine = [];
-    } else {
-      currentLine.push(sequence);
-    }
-  });
-
-  mergedLines.push(currentLine);
-  mergedLines = _.reject(mergedLines, lines => {
-    return lines.length == 0;
-  });
-
-  return mergedLines.map((sequences) => {
-    sequences = sequences.map((sequence, i) => {
-      return Object.assign(sequence, {id: i});
-    });
-
-    return new Line(sequences);
-  });
 };
