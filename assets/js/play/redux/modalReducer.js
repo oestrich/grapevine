@@ -12,7 +12,7 @@ class Modal {
   constructor(attrs) {
     this.key = attrs.key;
     this.title = attrs.title;
-    this.lines = colorizer.parse(null, attrs.body);
+    this.lines = colorizer.parse(attrs.body);
   }
 }
 

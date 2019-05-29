@@ -6,12 +6,11 @@ import {InputSequence} from "./colorizer/models";
  *
  * Merges the new sequences with the last line and detects the resulting lines.
  */
-export const parse = (currentLine, text) => {
+export const parse = (text, currentLine) => {
   let sequences = [];
   if (currentLine) {
     sequences = currentLine.sequences;
   }
-
   sequences = parseSequences(sequences, text);
   return detectLines(sequences);
 };

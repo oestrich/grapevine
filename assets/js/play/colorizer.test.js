@@ -3,7 +3,7 @@ import {Line, EscapeSequence, InputSequence, ParseError} from "./colorizer/model
 
 describe("combining new text with the last line", () => {
   test("no initial sequence to merge with", () => {
-    let sequences = parse(null, ", world");
+    let sequences = parse(", world");
 
     expect(sequences).toEqual([
       new Line([
@@ -16,7 +16,7 @@ describe("combining new text with the last line", () => {
     let sequence = new EscapeSequence("Hello", {color: "yellow"});
     let line = new Line([sequence]);
 
-    let sequences = parse(line, ", world");
+    let sequences = parse(", world", line);
 
     expect(sequences).toEqual([
       new Line([
@@ -31,15 +31,15 @@ describe("parse errors", () => {
     let lastSequence = new ParseError("\u001b");
     let line = new Line([lastSequence]);
 
-    [line] = parse(line, "[");
-    [line] = parse(line, "3");
-    [line] = parse(line, "3");
-    [line] = parse(line, "m");
+    [line] = parse("[", line);
+    [line] = parse("3", line);
+    [line] = parse("3", line);
+    [line] = parse("m", line);
 
     let [sequence] = line.sequences;
     expect(sequence.color).toEqual("yellow");
 
-    [line] = parse(line, "hello");
+    [line] = parse("hello", line);
 
     [sequence] = line.sequences;
     expect(sequence.color).toEqual("yellow");
@@ -49,8 +49,8 @@ describe("parse errors", () => {
   test("combines multiple sequences", () => {
     let line = new Line([new EscapeSequence("Hello", {color: "yellow"})]);
 
-    [line] = parse(line, "\u001b[");
-    [line] = parse(line, "1m");
+    [line] = parse("\u001b[", line);
+    [line] = parse("1m", line);
 
     let [sequence, sequence2] = line.sequences;
     expect(sequence2.color).toEqual("yellow");
@@ -73,7 +73,7 @@ describe("appending game input", () => {
 
 describe("sample real game output", () => {
   test("darkwind", () => {
-    let sequences = parse(null, "\u001b[37m\u001b[42m\u001b[5mWGK");
+    let sequences = parse("\u001b[37m\u001b[42m\u001b[5mWGK");
 
     expect(sequences).toEqual([
       new Line([{id: 0, color: "white", backgroundColor: "green", decorations: ["blink"], text: "WGK"}]),
@@ -90,7 +90,7 @@ describe("sample real game output", () => {
 
     let line = null;
     inputs.map((input) => {
-      let lines = parse(line, input);
+      let lines = parse(input, line);
       line = lines.pop();
     });
 
@@ -105,7 +105,7 @@ describe("sample real game output", () => {
   });
 
   test("lumen et umbra", () => {
-    let sequences = parse(null, "\u001B[0;40;1;32m \\");
+    let sequences = parse("\u001B[0;40;1;32m \\");
 
     expect(sequences).toEqual([
       new Line([{id: 0, color: "green", backgroundColor: "black", decorations: ["bold"], text: " \\"}]),
@@ -114,7 +114,7 @@ describe("sample real game output", () => {
 
   test("realms of despair", () => {
     let line = `Press [ENTER] \u001b[0m\u001b[2J\n\u001b[u\u001b[s`;
-    let lines = parse(null, line);
+    let lines = parse(line);
 
     expect(lines).toEqual([
       new Line([

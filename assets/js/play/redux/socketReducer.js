@@ -36,7 +36,7 @@ let appendLines = (state, lines) => {
 };
 
 let parseText = (state, text) => {
-  let lines = colorize.parse(state.lastLine, text);
+  let lines = colorize.parse(text, state.lastLine);
   return appendLines(state, lines);
 };
 
