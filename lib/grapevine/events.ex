@@ -99,12 +99,12 @@ defmodule Grapevine.Events do
   end
 
   @doc """
-  Get an event and preload it by the slug
+  Get an event and preload it by the uid
   """
-  def get_slug(id) do
+  def get_uid(id) do
     case Ecto.UUID.cast(id) do
       {:ok, id} ->
-        case Repo.get_by(Event, slug: id) do
+        case Repo.get_by(Event, uid: id) do
           nil ->
             {:error, :not_found}
 

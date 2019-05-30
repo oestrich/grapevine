@@ -16,12 +16,12 @@ defmodule Web.EventController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, event} <- Events.get_slug(id) do
+    with {:ok, event} <- Events.get_uid(id) do
       conn
       |> assign(:event, event)
       |> assign(:game, event.game)
       |> assign(:title, "Event - Grapevine")
-      |> assign(:open_graph_url, Routes.event_url(conn, :show, event.slug))
+      |> assign(:open_graph_url, Routes.event_url(conn, :show, event.uid))
       |> render("show.html")
     end
   end
