@@ -348,7 +348,7 @@ defmodule GrapevineTelnet.Client do
         {:noreply, state}
 
       :ansi ->
-        socket_send(start_term_type <> "ANSI-256COLOR" <> end_term_type,
+        socket_send(start_term_type <> "ANSI-TRUECOLOR" <> end_term_type,
           telemetry: [:term_type, :details]
         )
 
