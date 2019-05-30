@@ -12,6 +12,7 @@ defmodule Grapevine.Events.Event do
   @type t :: %__MODULE__{}
 
   schema "events" do
+    field(:uid, Ecto.UUID, read_after_writes: true)
     field(:title, :string)
     field(:description, :string)
     field(:start_date, :date)

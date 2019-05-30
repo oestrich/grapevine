@@ -15,7 +15,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">
-          <%= link(@event.title, to: Routes.event_path(@conn, :show, @event.id)) %>
+          <%= link(@event.title, to: Routes.event_path(@conn, :show, @event.slug)) %>
         </h5>
         <h6 class="card-subtitle mb-2 text-muted"><%= @event.start_date %> to <%= @event.end_date %></h6>
         <div class="card-text"><%= text_to_html(@event.description) %></div>

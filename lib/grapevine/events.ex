@@ -99,6 +99,25 @@ defmodule Grapevine.Events do
   end
 
   @doc """
+  Get an event and preload it by the slug
+  """
+  def get_slug(id) do
+    case Ecto.UUID.cast(id) do
+      {:ok, id} ->
+        case Repo.get_by(Event, slug: id) do
+          nil ->
+            {:error, :not_found}
+
+          event ->
+            {:ok, Repo.preload(event, [:game])}
+        end
+
+      :error ->
+        {:error, :not_found}
+    end
+  end
+
+  @doc """
   Create a new event for a game
   """
   def create(game, params) do
