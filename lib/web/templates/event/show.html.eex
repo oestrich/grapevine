@@ -1,0 +1,25 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: Routes.game_path(@conn, :show, @game.short_name)) %></li>
+    <li class="breadcrumb-item active" aria-current="page">Events</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <section class="col-md-6 offset-md-3">
+    <nav>
+      <h3 class="name"><%= link(@event.game.name, to: Routes.game_path(@conn, :show, @event.game.short_name)) %></h3>
+    </nav>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%= link(@event.title, to: Routes.event_path(@conn, :show, @event.id)) %>
+        </h5>
+        <h6 class="card-subtitle mb-2 text-muted"><%= @event.start_date %> to <%= @event.end_date %></h6>
+        <div class="card-text"><%= text_to_html(@event.description) %></div>
+      </div>
+    </div>
+  </section>
+</div>

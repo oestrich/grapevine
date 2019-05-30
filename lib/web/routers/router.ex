@@ -64,7 +64,7 @@ defmodule Web.Router do
 
     get("/games/online", GameController, :online)
 
-    resources("/events", EventController, only: [:index])
+    resources("/events", EventController, only: [:index, :show])
 
     resources("/games", GameController, only: [:index, :show]) do
       resources("/achievements", AchievementController, only: [:index])
