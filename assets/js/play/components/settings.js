@@ -108,7 +108,7 @@ class SynthesisSettings extends React.Component {
 
     return (
       <Fragment>
-        <h4>Speech Synthesis</h4>
+        <h4>Speech Synthesis (Beta)</h4>
 
         <div className="form-group">
           <label htmlFor="settings-voice">Voice</label>

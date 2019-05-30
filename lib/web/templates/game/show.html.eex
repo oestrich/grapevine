@@ -95,13 +95,13 @@
 
       <div class="row">
         <%= Enum.map(@events, fn event -> %>
-          <div class="col-md-3">
+          <div class="col-md-6">
             <div class="card mt-3">
               <div class="card-body">
-                <h5 class="card-title"><%= event.title %></h5>
+                <h5 class="card-title"><%= link(event.title, to: Routes.event_path(@conn, :show, event.id)) %></h5>
                 <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
                 <%= if event.description do %>
-                  <p class="card-text"><%= text_to_html(event.description) %></p>
+                  <p class="card-text"><%= EventView.event_description(event) %></p>
                 <% end %>
               </div>
             </div>

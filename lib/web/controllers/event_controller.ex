@@ -3,6 +3,8 @@ defmodule Web.EventController do
 
   alias Grapevine.Events
 
+  action_fallback(Web.FallbackController)
+
   def index(conn, _params) do
     conn
     |> assign(:events, Events.next_month())
@@ -11,5 +13,16 @@ defmodule Web.EventController do
     |> assign(:open_graph_description, "See upcoming events for games on Grapevine.")
     |> assign(:open_graph_url, event_url(conn, :index))
     |> render("index.html")
+  end
+
+  def show(conn, %{"id" => id}) do
+    with {:ok, event} <- Events.get(id) do
+      conn
+      |> assign(:event, event)
+      |> assign(:game, event.game)
+      |> assign(:title, "Event - Grapevine")
+      |> assign(:open_graph_url, Routes.event_url(conn, :show, event.id))
+      |> render("show.html")
+    end
   end
 end
