@@ -35,7 +35,6 @@ components:
             properties:
               client_id:
                 type: string
-                descrip
               client_secret:
                 type: string
               supports:
