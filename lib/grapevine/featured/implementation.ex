@@ -56,11 +56,11 @@ defmodule Grapevine.Featured.Implementation do
   end
 
   def featured_games() do
-    random_games_using = random_games_using_grapevine([])
-    selected_ids = Enum.map(random_games_using, & &1.id)
+    top_games = top_games_player_count([])
+    selected_ids = Enum.map(top_games, & &1.id)
 
-    top_games = top_games_player_count(already_picked: selected_ids)
-    selected_ids = selected_ids ++ Enum.map(top_games, & &1.id)
+    random_games_using = random_games_using_grapevine(already_picked: selected_ids)
+    selected_ids = selected_ids ++ Enum.map(random_games_using, & &1.id)
 
     random_games = random_games(already_picked: selected_ids)
 
