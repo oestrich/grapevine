@@ -1,5 +1,5 @@
-import {parse, appendInput} from "./colorizer";
-import {Line, EscapeSequence, InputSequence, ParseError} from "./colorizer/models";
+import {parse, appendInput} from "./index";
+import {Line, EscapeSequence, InputSequence, ParseError} from "./models";
 
 describe("combining new text with the last line", () => {
   test("no initial sequence to merge with", () => {

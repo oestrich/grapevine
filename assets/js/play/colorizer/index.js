@@ -1,5 +1,5 @@
-import {parseSequences, detectLines} from "./colorizer/parser";
-import {InputSequence} from "./colorizer/models";
+import {parseSequences, detectLines} from "./parser";
+import {InputSequence} from "./models";
 
 /**
  * Parse new text and combine it with the previous line
@@ -15,6 +15,11 @@ export const parse = (text, currentLine) => {
   return detectLines(sequences);
 };
 
+/**
+ * Append text to the current line
+ *
+ * Returns an array of new lines
+ */
 export const appendInput = (currentLine, text) => {
   let sequences = [];
   if (currentLine) {
