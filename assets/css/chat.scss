@@ -1,0 +1,37 @@
+@import "colors";
+
+@import "prompt";
+@import "terminal";
+
+.chat {
+  @include terminal();
+  @include prompt();
+
+  .connection {
+    margin-right: 16px;
+
+    .green {
+      color: $green;
+    }
+
+    .red {
+      color: $red;
+    }
+  }
+
+  .channel {
+    color: $purple;
+  }
+
+  .player {
+    color: $yellow;
+  }
+
+  .green {
+    color: $green;
+  }
+
+  .red {
+    color: $red;
+  }
+}

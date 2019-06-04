@@ -1,0 +1,28 @@
+@mixin prompt() {
+  .prompt {
+    display: flex;
+    flex-shrink: 0;
+    padding: 16px;
+    z-index: 10;
+    background-color: white;
+
+    .connection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        flex: 1;
+      }
+    }
+
+    #prompt {
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    #send {
+      margin-left: 8px;
+    }
+  }
+}

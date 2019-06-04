@@ -5,8 +5,8 @@ import Sizzle from "sizzle";
 
 import "./charts"
 import "./live"
-import {Channels} from "./chat"
-import {Client} from "./play/client"
+import {Client as ChatClient} from "./chat/client";
+import {Client as PlayClient} from "./play/client";
 
 import MSSPSocket from "./mssp";
 window.MSSPSocket = MSSPSocket;
@@ -20,8 +20,11 @@ import RedirectURI from "./redirect-uri";
 window.Components = {
   Connection,
   RedirectURI,
+  Chat: {
+    Client: ChatClient
+  },
   Play: {
-    Client
+    Client: PlayClient
   }
 }
 
@@ -45,8 +48,4 @@ class ReactPhoenix {
 
 document.addEventListener("DOMContentLoaded", e => {
   ReactPhoenix.init();
-
-  if (Sizzle(".chat").length > 0) {
-    new Channels().join()
-  }
 })
