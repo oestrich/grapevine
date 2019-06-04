@@ -1,11 +1,10 @@
 @import "colors";
+@import "prompt";
+@import "terminal";
 
 .play {
-  border-top: 2px solid $grey-02;
-  width: 100%;
-  position: absolute;
-  top: 58px;
-  bottom: 0px;
+  @include terminal();
+  @include prompt();
 
   .client-modal,
   .settings {
@@ -90,23 +89,6 @@
     }
   }
 
-  .window {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-  }
-
-  .terminal {
-    width: 100%;
-    padding: 16px;
-    flex-grow: 1;
-    overflow-y: scroll;
-    background-color: $black;
-    color: $grey-2;
-    white-space: pre-wrap;
-    z-index: 2;
-  }
-
   .connection {
     margin-right: 16px;
 
@@ -130,37 +112,6 @@
       border-color: rgba($yellow-1, 0.6);
       color: $grey-04;
     }
-  }
-
-  .prompt {
-    display: flex;
-    flex-shrink: 0;
-    padding: 16px;
-    z-index: 10;
-    background-color: white;
-
-    .connection {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        flex: 1;
-      }
-    }
-
-    #prompt {
-      flex: 1;
-      margin-right: 8px;
-    }
-
-    #send {
-      margin-left: 8px;
-    }
-  }
-
-  pre {
-    height: 100%;
   }
 }
 

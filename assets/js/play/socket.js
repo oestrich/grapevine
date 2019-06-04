@@ -1,6 +1,6 @@
 import {Socket} from "phoenix";
-import Sizzle from "sizzle"
-import _ from "underscore"
+import Sizzle from "sizzle";
+import _ from "underscore";
 
 class ClientSocket {
   constructor(client, game, userToken, sessionToken) {

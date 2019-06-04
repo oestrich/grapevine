@@ -4,7 +4,7 @@ import _ from 'underscore';
 
 import Keys from './keys';
 import {Creators} from "./redux/actions";
-import {store} from "./redux/store";
+import {makeStore} from "./redux/store";
 
 import Gauges from "./components/gauges";
 import Modals from "./components/modals";
@@ -19,7 +19,11 @@ let body = document.getElementById("body");
 let userToken = body.getAttribute("data-user-token");
 let sessionToken = body.getAttribute("data-session-token");
 
+let store = null;
+
 if (document.querySelector("[data-page=play]")) {
+  store = makeStore();
+
   const keys = new Keys();
 
   document.addEventListener('keydown', e => {
@@ -27,17 +31,17 @@ if (document.querySelector("[data-page=play]")) {
       document.getElementById('prompt').focus();
     }
   });
-}
 
-if ("speechSynthesis" in window) {
-  speechSynthesis.onvoiceschanged = () => {
-    let voices = _.filter(speechSynthesis.getVoices(), (voice) => {
-      return voice.name.match(/English/g);
-    });
-    voices = _.map(voices, (voice) => { return voice.name; });
-    let action = Creators.voiceSetVoices(voices);
-    store.dispatch(action);
-  };
+  if ("speechSynthesis" in window) {
+    speechSynthesis.onvoiceschanged = () => {
+      let voices = _.filter(speechSynthesis.getVoices(), (voice) => {
+        return voice.name.match(/English/g);
+      });
+      voices = _.map(voices, (voice) => { return voice.name; });
+      let action = Creators.voiceSetVoices(voices);
+      store.dispatch(action);
+    };
+  }
 }
 
 class Client extends React.Component {

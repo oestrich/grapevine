@@ -41,7 +41,6 @@ defmodule Web.ChatChannel do
       message: message,
     }
 
-    Web.Endpoint.broadcast("chat:#{message.channel}", "broadcast", message)
     Client.broadcast(message)
 
     {:noreply, socket}

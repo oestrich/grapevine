@@ -24,8 +24,15 @@ defmodule Grapevine.Client.Server do
   def broadcast(message) do
     Web.Endpoint.broadcast("channels:#{message.channel}", "channels/broadcast", %{
       "channel" => message.channel,
-      "game" => "grapevine",
+      "game" => "Grapevine",
       "game_id" => @client_id,
+      "name" => message.name,
+      "message" => message.message
+    })
+
+    Web.Endpoint.broadcast("chat:#{message.channel}", "broadcast", %{
+      "channel" => message.channel,
+      "game" => "Grapevine",
       "name" => message.name,
       "message" => message.message
     })

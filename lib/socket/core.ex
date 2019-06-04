@@ -126,6 +126,7 @@ defmodule Socket.Core do
       |> assign(:message, message)
       |> payload("send")
       |> broadcast("channels:#{channel}", "channels/broadcast")
+      |> payload("send-chat")
       |> broadcast("chat:#{channel}", "broadcast")
 
       {:ok, state}
@@ -204,6 +205,15 @@ defmodule Socket.Core do
         "channel" => channel,
         "game" => game.short_name,
         "game_id" => game.client_id,
+        "name" => name,
+        "message" => message
+      }
+    end
+
+    def payload("send-chat", %{channel: channel, game: game, name: name, message: message}) do
+      %{
+        "channel" => channel,
+        "game" => game.short_name,
         "name" => name,
         "message" => message
       }

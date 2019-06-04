@@ -1,0 +1,30 @@
+@import "colors";
+
+@mixin terminal() {
+  border-top: 2px solid $grey-02;
+  width: 100%;
+  position: absolute;
+  top: 58px;
+  bottom: 0px;
+
+  pre {
+    height: 100%;
+  }
+
+  .window {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
+
+  .terminal {
+    width: 100%;
+    padding: 16px;
+    flex-grow: 1;
+    overflow-y: scroll;
+    background-color: $black;
+    color: $grey-2;
+    white-space: pre-wrap;
+    z-index: 2;
+  }
+}
