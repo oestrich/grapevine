@@ -47,6 +47,16 @@
 
           <table class="table">
             <tbody>
+              <%= if @game.discord_invite_url do %>
+                <tr class="discord">
+                  <th>Discord Server Invite</th>
+                  <td>
+                    <%= link(to: @game.discord_invite_url, target: "_blank", alt: "Discord server invite") do %>
+                      <%= img_tag(Routes.static_path(@conn, "/images/discord.png"), height: 30, alt: "Discord") %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
               <tr>
                 <th>Grapevine Name</th>
                 <td><%= @game.short_name %></td>

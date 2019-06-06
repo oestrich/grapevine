@@ -37,6 +37,7 @@ defmodule Grapevine.Games.Game do
     field(:tagline, :string)
     field(:description, :string)
     field(:homepage_url, :string)
+    field(:discord_invite_url, :string)
 
     field(:client_id, Ecto.UUID)
     field(:client_secret, Ecto.UUID)
@@ -75,7 +76,8 @@ defmodule Grapevine.Games.Game do
       :display,
       :allow_character_registration,
       :enable_web_client,
-      :allow_anonymous_client
+      :allow_anonymous_client,
+      :discord_invite_url
     ])
     |> validate_required([
       :name,
@@ -94,6 +96,7 @@ defmodule Grapevine.Games.Game do
     |> validate_length(:tagline, max: 70)
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/.+\./)
+    |> validate_format(:discord_invite_url, ~r/^https:\/\/discord.gg\//, message: "should start with https://discord.gg/")
     |> Grapevine.Schema.ensure(:client_id, UUID.uuid4())
     |> Grapevine.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :games_lower_name_index)

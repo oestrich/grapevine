@@ -34,6 +34,8 @@
   <% end %>
 
   <%= if @mode == :edit do %>
+    <%= FormView.text_field(f, :discord_invite_url, label: "Discord Invite URL") %>
+
     <%= FormView.checkbox_field(f, :display, label: "Display in Connected Games?") %>
 
     <%= FormView.checkbox_field(f, :allow_character_registration, label: "Allow Character Registrations on Grapevine?") %>

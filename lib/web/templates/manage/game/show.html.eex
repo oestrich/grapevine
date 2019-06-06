@@ -41,6 +41,10 @@
           The server is running <code><%= @game.user_agent %></code>.
         <% end %>
 
+        <%= if @game.discord_invite_url do %>
+          <div>Discord invite: <%= link(@game.discord_invite_url, to: @game.discord_invite_url) %></div>
+        <% end %>
+
         <div>
           <%= if @game.display do %>
             <%= @game.name %> <b>will</b> display in connected list.
