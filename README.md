@@ -56,6 +56,8 @@ docker-compose up grapevine
 
 ### Telnet Web Client
 
+Telnet connections live in the `apps/telnet` application. This node holds the telnet connections so the main application can reboot on deploys and not drop active game connections.
+
 For deployment the telnet application needs to be on its own erlang node. You can connect with something similar to:
 
 ```elixir
