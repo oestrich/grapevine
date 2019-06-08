@@ -60,6 +60,7 @@ defmodule Grapevine.Application do
         {Metrics.GameInstrumenter, :dispatch_game_count, []},
         {Metrics.SocketInstrumenter, :dispatch_socket_count, []},
       ],
+      name: Grapevine.Poller,
       period: 10_000
     ]
   end

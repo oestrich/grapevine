@@ -42,6 +42,7 @@ defmodule GrapevineTelnet.Application do
       measurements: [
         {GrapevineTelnet.Metrics.ClientInstrumenter, :dispatch_client_count, []}
       ],
+      name: GrapevineTelnet.Poller,
       period: 10_000
     ]
   end
