@@ -14,7 +14,7 @@ defmodule Web.SessionController do
   def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
     case Accounts.validate_login(email, password) do
       {:ok, user} ->
-        :telemetry.execute([:grapevine, :accounts, :session, :login], 1)
+        :telemetry.execute([:grapevine, :accounts, :session, :login], %{count: 1})
 
         conn
         |> put_flash(:info, "You have signed in.")
@@ -29,7 +29,7 @@ defmodule Web.SessionController do
   end
 
   def delete(conn, _params) do
-    :telemetry.execute([:grapevine, :accounts, :session, :logout], 1)
+    :telemetry.execute([:grapevine, :accounts, :session, :logout], %{count: 1})
 
     conn
     |> clear_session()

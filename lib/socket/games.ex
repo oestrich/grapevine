@@ -34,7 +34,7 @@ defmodule Socket.Games do
   """
   def request_status(state, %{"ref" => ref, "payload" => %{"game" => game_name}})
       when ref != nil do
-    :telemetry.execute([:grapevine, :events, :games, :status], 1, %{game: game_name})
+    :telemetry.execute([:grapevine, :events, :games, :status], %{count: 1}, %{game: game_name})
 
     Presence.online_games()
     |> Enum.find(&find_game(&1, game_name))
@@ -44,7 +44,7 @@ defmodule Socket.Games do
   end
 
   def request_status(state, %{"ref" => ref}) when ref != nil do
-    :telemetry.execute([:grapevine, :events, :games, :status], 1, %{all: true})
+    :telemetry.execute([:grapevine, :events, :games, :status], %{count: 1}, %{all: true})
 
     Presence.online_games()
     |> Enum.filter(& &1.game.display)

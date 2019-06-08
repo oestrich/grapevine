@@ -21,7 +21,7 @@ defmodule Grapevine.Channels do
 
     case Repo.insert(changeset) do
       {:ok, channel} ->
-        :telemetry.execute([:grapevine, :channels, :create], 1, %{id: channel.id})
+        :telemetry.execute([:grapevine, :channels, :create], %{count: 1}, %{id: channel.id})
         {:ok, channel}
 
       {:error, changeset} ->

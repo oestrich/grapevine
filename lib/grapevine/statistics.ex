@@ -14,7 +14,7 @@ defmodule Grapevine.Statistics do
   Record a game's player count at a specific time on the socket
   """
   def record_socket_players(game, players, time) do
-    :telemetry.execute([:grapevine, :statistics, :players, :record], length(players), %{time: time})
+    :telemetry.execute([:grapevine, :statistics, :players, :record], %{count: length(players)}, %{time: time})
 
     %PlayerStatistic{}
     |> PlayerStatistic.socket_changeset(game, players, time)
@@ -26,7 +26,7 @@ defmodule Grapevine.Statistics do
   Record a game's player count at a specific time on MSSP
   """
   def record_mssp_players(game, player_count, time) do
-    :telemetry.execute([:grapevine, :statistics, :players, :record], player_count, %{time: time})
+    :telemetry.execute([:grapevine, :statistics, :players, :record], %{count: player_count}, %{time: time})
 
     %PlayerStatistic{}
     |> PlayerStatistic.mssp_changeset(game, player_count, time)

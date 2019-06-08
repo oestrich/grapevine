@@ -13,7 +13,7 @@ defmodule GrapevineTelnet.Application do
       phoenix_pubsub(),
       {GrapevineTelnet.ClientSupervisor, [name: {:global, GrapevineTelnet.ClientSupervisor}]},
       {GrapevineTelnet.Presence, []},
-      {Telemetry.Poller, telemetry_opts()}
+      {:telemetry_poller, telemetry_opts()}
     ]
 
     report_errors = Application.get_env(:grapevine_telnet, :errors)[:report]

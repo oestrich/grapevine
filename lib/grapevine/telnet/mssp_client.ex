@@ -50,7 +50,7 @@ defmodule Grapevine.Telnet.MSSPClient do
   def process_option(state, {:mssp, data}) do
     maybe_forward("mssp/received", data, state)
     state.mssp_module.record_option(state, data)
-    :telemetry.execute([:telnet, :mssp, :option, :success], 1, state)
+    :telemetry.execute([:telnet, :mssp, :option, :success], %{count: 1}, state)
 
     Logger.debug("Shutting down MSSP check", type: :mssp)
 
@@ -75,7 +75,7 @@ defmodule Grapevine.Telnet.MSSPClient do
   @impl true
   def handle_info({:text_mssp_request}, state) do
     :gen_tcp.send(state.socket, "mssp-request\n")
-    :telemetry.execute([:telnet, :mssp, :text, :sent], 1, state)
+    :telemetry.execute([:telnet, :mssp, :text, :sent], %{count: 1}, state)
 
     {:noreply, Map.put(state, :mssp_buffer, <<>>)}
   end
@@ -85,7 +85,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     state.mssp_module.record_fail(state)
 
     Grapevine.Telnet.record_no_mssp(state.host, state.port)
-    :telemetry.execute([:telnet, :mssp, :failed], 1, state)
+    :telemetry.execute([:telnet, :mssp, :failed], %{count: 1}, state)
 
     {:stop, :normal, state}
   end
@@ -101,7 +101,7 @@ defmodule Grapevine.Telnet.MSSPClient do
       data ->
         maybe_forward("mssp/received", data, state)
         state.mssp_module.record_text(state, data)
-        :telemetry.execute([:telnet, :mssp, :text, :success], 1, state)
+        :telemetry.execute([:telnet, :mssp, :text, :success], %{count: 1}, state)
 
         {:stop, :normal, state}
     end

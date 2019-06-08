@@ -17,14 +17,14 @@ defmodule Socket.Core.Authenticate do
   @disable_debug_seconds 300
 
   def process(state, payload) do
-    :telemetry.execute([:grapevine, :sockets, :connect], 1, %{})
+    :telemetry.execute([:grapevine, :sockets, :connect], %{count: 1}, %{})
 
     with {:ok, game} <- validate_socket(payload),
          {:ok, supports} <- validate_supports(payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
-        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], %{count: 1}, %{
           reason: "invalid authenticat event"
         })
 
@@ -32,7 +32,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :missing_supports} ->
-        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], %{count: 1}, %{
           reason: "missing supports"
         })
 
@@ -40,7 +40,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :must_support_channels} ->
-        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], %{count: 1}, %{
           reason: "must support channels"
         })
 
@@ -48,7 +48,7 @@ defmodule Socket.Core.Authenticate do
          state}
 
       {:error, :unknown_supports} ->
-        :telemetry.execute([:grapevine, :sockets, :connect, :failure], 1, %{
+        :telemetry.execute([:grapevine, :sockets, :connect, :failure], %{count: 1}, %{
           reason: "unknown set of supports"
         })
 
@@ -78,7 +78,7 @@ defmodule Socket.Core.Authenticate do
 
     maybe_schedule_disable_debug(state)
 
-    :telemetry.execute([:grapevine, :sockets, :connect, :success], 1, %{
+    :telemetry.execute([:grapevine, :sockets, :connect, :success], %{count: 1}, %{
       game: game.name,
       channels: channels,
       supports: supports

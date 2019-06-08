@@ -65,10 +65,10 @@ defmodule Metrics.SocketInstrumenter do
   Called from the telemetry-poller
   """
   def dispatch_socket_count() do
-    :telemetry.execute([:grapevine, :sockets, :online], Server.online_sockets(), %{})
+    :telemetry.execute([:grapevine, :sockets, :online], %{count: Server.online_sockets()}, %{})
   end
 
-  def handle_event([:grapevine, :sockets, :online], count, _metadata, _config) do
+  def handle_event([:grapevine, :sockets, :online], %{count: count}, _metadata, _config) do
     Gauge.set([name: :grapevine_socket_count], count)
   end
 

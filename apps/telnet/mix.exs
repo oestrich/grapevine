@@ -33,8 +33,8 @@ defmodule GrapevineTelnet.MixProject do
       {:prometheus_ex, "~> 3.0"},
       {:prometheus_plugs, "~> 1.1.1"},
       {:sentry, "~> 7.0"},
-      {:telemetry, "~> 0.3.0"},
-      {:telemetry_poller, "~> 0.2.0"},
+      {:telemetry, "~> 0.3"},
+      {:telemetry_poller, "~> 0.2"},
       {:telnet, git: "https://github.com/oestrich/telnet-elixir.git"},
       {:timex, "~> 3.1"}
     ]

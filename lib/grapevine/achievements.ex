@@ -132,11 +132,11 @@ defmodule Grapevine.Achievements do
   defp _create(game, changeset) do
     case Repo.insert(changeset) do
       {:ok, achievement} ->
-        :telemetry.execute([:grapevine, :achievements, :create, :success], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :achievements, :create, :success], %{count: 1}, %{game_id: game.id})
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :achievements, :create, :failure], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :achievements, :create, :failure], %{count: 1}, %{game_id: game.id})
         {:error, changeset}
     end
   end
@@ -149,14 +149,14 @@ defmodule Grapevine.Achievements do
 
     case Repo.update(changeset) do
       {:ok, achievement} ->
-        :telemetry.execute([:grapevine, :achievements, :update, :success], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :update, :success], %{count: 1}, %{
           game_id: achievement.game_id
         })
 
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :achievements, :update, :failure], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :update, :failure], %{count: 1}, %{
           game_id: achievement.game_id
         })
 
@@ -170,14 +170,14 @@ defmodule Grapevine.Achievements do
   def delete(achievement) do
     case Repo.delete(achievement) do
       {:ok, achievement} ->
-        :telemetry.execute([:grapevine, :achievements, :delete, :success], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :delete, :success], %{count: 1}, %{
           game_id: achievement.game_id
         })
 
         {:ok, achievement}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :achievements, :delete, :failure], 1, %{
+        :telemetry.execute([:grapevine, :achievements, :delete, :failure], %{count: 1}, %{
           game_id: achievement.game_id
         })
 

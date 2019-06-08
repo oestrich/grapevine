@@ -120,7 +120,6 @@
         {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
         {Credo.Check.Warning.IExPry, []},
         {Credo.Check.Warning.IoInspect, []},
-        {Credo.Check.Warning.LazyLogging, []},
         {Credo.Check.Warning.OperationOnSameValues, []},
         {Credo.Check.Warning.OperationWithConstantResult, []},
         {Credo.Check.Warning.RaiseInsideRescue, []},
@@ -150,7 +149,8 @@
         #
         # Custom checks can be created using `mix credo.gen.check`.
         #
-        {Credo.Check.Refactor.MapInto, false}
+        {Credo.Check.Refactor.MapInto, false},
+        {Credo.Check.Warning.LazyLogging, false}
       ]
     }
   ]

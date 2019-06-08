@@ -95,7 +95,7 @@ defmodule GrapevineTelnet.Client do
 
     state = module.init(state, opts)
 
-    :telemetry.execute([:telnet, :start], 1, state)
+    :telemetry.execute([:telnet, :start], %{count: 1}, state)
 
     {:ok, state, {:continue, :connect}}
   end
@@ -103,14 +103,14 @@ defmodule GrapevineTelnet.Client do
   def handle_continue(:connect, state) do
     case connect(state) do
       {:ok, socket} ->
-        :telemetry.execute([:telnet, :connection, :connected], 1, state)
+        :telemetry.execute([:telnet, :connection, :connected], %{count: 1}, state)
         state.module.connected(state)
 
         {:noreply, Map.put(state, :socket, socket)}
 
       {:error, error} ->
         state.module.connection_failed(state, error)
-        :telemetry.execute([:telnet, :connection, :failed], 1, %{error: error})
+        :telemetry.execute([:telnet, :connection, :failed], %{count: 1}, %{error: error})
 
         {:stop, :normal, state}
     end
@@ -130,7 +130,7 @@ defmodule GrapevineTelnet.Client do
         metadata = Keyword.get(opts, :metadata, %{})
         metadata = maybe_add_game_to_metadata(state, metadata)
 
-        :telemetry.execute([:telnet] ++ opts[:telemetry], 1, metadata)
+        :telemetry.execute([:telnet] ++ opts[:telemetry], %{count: 1}, metadata)
 
       false ->
         :ok
@@ -366,7 +366,7 @@ defmodule GrapevineTelnet.Client do
 
   defp process_option(state, option = {:gmcp, _, _}) do
     metadata = maybe_add_game_to_metadata(state, %{})
-    :telemetry.execute([:telnet, :gmcp, :received], 1, metadata)
+    :telemetry.execute([:telnet, :gmcp, :received], %{count: 1}, metadata)
 
     state.module.process_option(state, option)
   end

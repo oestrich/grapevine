@@ -82,10 +82,14 @@ defmodule GrapevineTelnet.Metrics.ClientInstrumenter do
   Called from the telemetry-poller
   """
   def dispatch_client_count() do
-    :telemetry.execute([:telnet, :clients, :online], Presence.online_client_count(), %{})
+    :telemetry.execute(
+      [:telnet, :clients, :online],
+      %{count: Presence.online_client_count()},
+      %{}
+    )
   end
 
-  def handle_event([:telnet, :clients, :online], count, _metadata, _config) do
+  def handle_event([:telnet, :clients, :online], %{count: count}, _metadata, _config) do
     Gauge.set([name: :telnet_client_count], count)
   end
 

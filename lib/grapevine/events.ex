@@ -128,11 +128,11 @@ defmodule Grapevine.Events do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        :telemetry.execute([:grapevine, :game_events, :create, :success], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :game_events, :create, :success], %{count: 1}, %{game_id: game.id})
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :game_events, :create, :failure], 1, %{game_id: game.id})
+        :telemetry.execute([:grapevine, :game_events, :create, :failure], %{count: 1}, %{game_id: game.id})
         {:error, changeset}
     end
   end
@@ -145,14 +145,14 @@ defmodule Grapevine.Events do
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        :telemetry.execute([:grapevine, :game_events, :update, :success], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :update, :success], %{count: 1}, %{
           game_id: event.game_id
         })
 
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :game_events, :update, :failure], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :update, :failure], %{count: 1}, %{
           game_id: event.game_id
         })
 
@@ -166,14 +166,14 @@ defmodule Grapevine.Events do
   def delete(event) do
     case Repo.delete(event) do
       {:ok, event} ->
-        :telemetry.execute([:grapevine, :game_events, :delete, :success], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :delete, :success], %{count: 1}, %{
           game_id: event.game_id
         })
 
         {:ok, event}
 
       {:error, changeset} ->
-        :telemetry.execute([:grapevine, :game_events, :delete, :failure], 1, %{
+        :telemetry.execute([:grapevine, :game_events, :delete, :failure], %{count: 1}, %{
           game_id: event.game_id
         })
 

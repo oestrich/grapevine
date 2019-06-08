@@ -46,7 +46,7 @@ defmodule Grapevine.Accounts do
 
     case Repo.insert(changeset) do
       {:ok, user} ->
-        :telemetry.execute([:grapevine, :accounts, :create], 1)
+        :telemetry.execute([:grapevine, :accounts, :create], %{count: 1})
         deliver_verify_email(user)
         {:ok, user}
 
@@ -56,7 +56,7 @@ defmodule Grapevine.Accounts do
   end
 
   defp deliver_verify_email(user) do
-    :telemetry.execute([:grapevine, :accounts, :email, :send_verify], 1)
+    :telemetry.execute([:grapevine, :accounts, :email, :send_verify], %{count: 1})
 
     user
     |> Emails.verify_email()
