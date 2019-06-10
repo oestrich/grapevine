@@ -6,7 +6,7 @@ defmodule Socket.Web.SocketHandler do
   @behaviour :cowboy_websocket
 
   alias Metrics.Server, as: Metrics
-  alias Socket.Core.Heartbeat
+  alias Socket.Handler.Core.Heartbeat
   alias Socket.Web.Router
   alias Socket.Web.State
 

@@ -1,4 +1,4 @@
-defmodule Socket.Games do
+defmodule Socket.Handler.Games do
   @moduledoc """
   Games support flag
   """
@@ -7,7 +7,7 @@ defmodule Socket.Games do
 
   alias Grapevine.Games
   alias Grapevine.Presence
-  alias Socket.Core
+  alias Socket.Handler.Core
 
   @doc """
   Check if the socket supports games

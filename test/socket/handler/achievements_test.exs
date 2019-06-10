@@ -1,7 +1,7 @@
-defmodule Socket.AchievementsTest do
+defmodule Socket.Handler.AchievementsTest do
   use Grapevine.DataCase
 
-  alias Socket.Achievements
+  alias Socket.Handler.Achievements
   alias Socket.Web.State
 
   describe "syncing the list of achievements" do

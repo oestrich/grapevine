@@ -1,4 +1,4 @@
-defmodule Socket.PlayersTest do
+defmodule Socket.Handler.PlayersTest do
   use Grapevine.DataCase
 
   alias Grapevine.Presence

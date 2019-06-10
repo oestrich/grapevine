@@ -1,4 +1,4 @@
-defmodule Socket.Core do
+defmodule Socket.Handler.Core do
   @moduledoc """
   Core events
 
@@ -9,12 +9,11 @@ defmodule Socket.Core do
 
   require Logger
 
-  alias Grapevine.Applications.Application
   alias Grapevine.Channels
   alias Grapevine.Games
   alias Grapevine.Presence
-  alias Grapevine.Text
-  alias Socket.Core.Authenticate
+  alias Socket.Handler.Core.Authenticate
+  alias Socket.Text
 
   @valid_supports ["achievements", "channels", "games", "players", "tells"]
 
@@ -141,8 +140,6 @@ defmodule Socket.Core do
   def valid_support?(support) do
     Enum.member?(@valid_supports, support)
   end
-
-  defp check_channel_subscribed_to(%{game: %Application{}}, channel), do: {:ok, channel}
 
   defp check_channel_subscribed_to(state, channel) do
     case channel in state.channels do

@@ -1,7 +1,7 @@
-defmodule Grapevine.TextTest do
+defmodule Socket.TextTest do
   use ExUnit.Case
 
-  alias Grapevine.Text
+  alias Socket.Text
 
   describe "strip mxp" do
     test "removes tags" do

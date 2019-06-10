@@ -1,9 +1,9 @@
-defmodule Socket.CoreTest do
+defmodule Socket.Handler.CoreTest do
   use Grapevine.DataCase
 
   alias Grapevine.Presence
-  alias Socket.Core
-  alias Socket.Core.Heartbeat
+  alias Socket.Handler.Core
+  alias Socket.Handler.Core.Heartbeat
   alias Socket.Web.Router
   alias Socket.Web.State
 
@@ -116,46 +116,6 @@ defmodule Socket.CoreTest do
       assert_receive {:broadcast, %{error: ~s(Could not subscribe to 'this is bad')}}
     after
       Presence.reset()
-    end
-
-    test "validating as an application", %{state: state} do
-      application = create_application()
-
-      frame = %{
-        "event" => "authenticate",
-        "payload" => %{
-          "client_id" => application.client_id,
-          "client_secret" => application.client_secret,
-          "supports" => ["channels"]
-        }
-      }
-
-      {:ok, response, state} = Router.receive(state, frame)
-
-      assert response.status == "success"
-
-      assert state.status == "active"
-      assert state.game.id == application.id
-    after
-      Presence.reset()
-    end
-
-    test "invalid application credentials", %{state: state} do
-      application = create_application()
-
-      frame = %{
-        "event" => "authenticate",
-        "payload" => %{
-          "client_id" => application.client_id,
-          "client_secret" => "bad secret",
-          "supports" => ["channels"]
-        }
-      }
-
-      {:disconnect, response, state} = Router.receive(state, frame)
-
-      assert response.status == "failure"
-      assert state.status == "inactive"
     end
   end
 

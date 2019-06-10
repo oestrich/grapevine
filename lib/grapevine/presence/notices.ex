@@ -5,7 +5,7 @@ defmodule Grapevine.Presence.Notices do
 
   alias Grapevine.Presence
   alias Grapevine.Presence.Client
-  alias Socket.Games
+  alias Socket.Handler.Games
 
   @doc """
   Maybe send a notice to games that care that another game went online

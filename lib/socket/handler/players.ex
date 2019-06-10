@@ -1,4 +1,4 @@
-defmodule Socket.Players do
+defmodule Socket.Handler.Players do
   @moduledoc """
   Player status subscription feature module
   """
@@ -6,7 +6,7 @@ defmodule Socket.Players do
   use Socket.Web.Module
 
   alias Grapevine.Presence
-  alias Socket.Core
+  alias Socket.Handler.Core
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it
