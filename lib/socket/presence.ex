@@ -1,4 +1,4 @@
-defmodule Grapevine.Presence do
+defmodule Socket.Presence do
   @moduledoc """
   Track online presence of games
   """
@@ -7,9 +7,9 @@ defmodule Grapevine.Presence do
 
   alias Grapevine.Applications.Application
   alias Grapevine.Games.Game
-  alias Grapevine.Presence.Client
-  alias Grapevine.Presence.Notices
-  alias Grapevine.Presence.Server
+  alias Socket.Presence.Client
+  alias Socket.Presence.Notices
+  alias Socket.Presence.Server
 
   @ets_key :grapevine_presence
 

@@ -5,8 +5,8 @@ defmodule Socket.Handler.Players do
 
   use Socket.Web.Module
 
-  alias Grapevine.Presence
   alias Socket.Handler.Core
+  alias Socket.Presence
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it

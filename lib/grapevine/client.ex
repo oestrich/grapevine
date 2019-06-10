@@ -25,7 +25,7 @@ defmodule Grapevine.Client do
   Gets injected to the online games
   """
   def presence() do
-    %Grapevine.Presence.State{
+    %Socket.Presence.State{
       game: %Grapevine.Client.Application{},
       players: ["system"],
       channels: [],

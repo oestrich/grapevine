@@ -1,9 +1,9 @@
 defmodule Socket.Handler.CoreTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Presence
   alias Socket.Handler.Core
   alias Socket.Handler.Core.Heartbeat
+  alias Socket.Presence
   alias Socket.Web.Router
   alias Socket.Web.State
 

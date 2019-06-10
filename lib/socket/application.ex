@@ -18,6 +18,7 @@ defmodule Socket.Application do
     config = Keyword.merge(@default_config, config)
 
     children = [
+      {Socket.Presence, []},
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: Socket.Endpoint,

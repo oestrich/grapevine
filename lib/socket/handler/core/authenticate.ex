@@ -7,11 +7,11 @@ defmodule Socket.Handler.Core.Authenticate do
 
   alias Grapevine.Channels
   alias Grapevine.Games
-  alias Grapevine.Presence
   alias Socket.Handler.Core
   alias Socket.Handler.Games, as: SocketGames
   alias Socket.Handler.Players
   alias Socket.Handler.Tells
+  alias Socket.Presence
 
   @disable_debug_seconds 300
 

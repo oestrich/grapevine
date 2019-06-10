@@ -5,7 +5,7 @@ defmodule Socket.Handler.Tells do
 
   use Socket.Web.Module
 
-  alias Grapevine.Presence
+  alias Socket.Presence
 
   @doc """
   Subscribe to the game's tells internal channel if the socket supports it

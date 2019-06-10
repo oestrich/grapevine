@@ -6,8 +6,8 @@ defmodule Socket.Handler.Games do
   use Socket.Web.Module
 
   alias Grapevine.Games
-  alias Grapevine.Presence
   alias Socket.Handler.Core
+  alias Socket.Presence
 
   @doc """
   Check if the socket supports games

@@ -1,7 +1,7 @@
-defmodule Grapevine.PresenceTest do
+defmodule Socket.PresenceTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Presence
+  alias Socket.Presence
 
   describe "updating presence of a game" do
     test "on update the game is shown as online" do

@@ -1,4 +1,4 @@
-defmodule Grapevine.Presence.Client do
+defmodule Socket.Presence.Client do
   @moduledoc """
   Implementation of the Presence client
   """
@@ -7,7 +7,7 @@ defmodule Grapevine.Presence.Client do
   alias Grapevine.Client
   alias Grapevine.Games
 
-  import Grapevine.Presence, only: [ets_key: 0]
+  import Socket.Presence, only: [ets_key: 0]
 
   @timeout_seconds 60
 

@@ -16,7 +16,6 @@ defmodule Grapevine.Application do
       supervisor(Web.Endpoint, []),
       {Socket.Application, [name: Socket.Application]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
-      {Grapevine.Presence, []},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},
       {:telemetry_poller, telemetry_opts()},

@@ -1,7 +1,7 @@
 defmodule Socket.Handler.TellsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Presence
+  alias Socket.Presence
   alias Socket.Web.Router
   alias Socket.Web.State
   alias Socket.Handler.Tells

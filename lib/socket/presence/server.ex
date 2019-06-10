@@ -1,17 +1,17 @@
-defmodule Grapevine.Presence.Server do
+defmodule Socket.Presence.Server do
   @moduledoc """
   Implementation of the Presence server
   """
 
-  import Grapevine.Presence, only: [ets_key: 0]
+  import Socket.Presence, only: [ets_key: 0]
 
   alias Grapevine.Applications.Application
   alias Grapevine.Games.Game
-  alias Grapevine.PlayerPresence
-  alias Grapevine.Presence.Client
-  alias Grapevine.Presence.Notices
-  alias Grapevine.Presence.State
   alias Grapevine.Statistics
+  alias Socket.PlayerPresence
+  alias Socket.Presence.Client
+  alias Socket.Presence.Notices
+  alias Socket.Presence.State
 
   def track(state, socket, game) do
     state = Map.put(state, :sockets, [{type(game), game.id, socket} | state.sockets])

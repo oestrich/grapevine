@@ -1,4 +1,4 @@
-defmodule Grapevine.Presence.State do
+defmodule Socket.Presence.State do
   @moduledoc """
   Struct for game presence
   """
