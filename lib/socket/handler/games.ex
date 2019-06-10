@@ -80,9 +80,9 @@ defmodule Socket.Handler.Games do
   @doc """
   Broadcast a game connecting for the first time to Grapevine
 
-  See `Grapevine.Presence.Notices` as well
+  See `Socket.Presence.Notices` as well
   """
-  def broadcast_connect_event(:game, game_id) do
+  def broadcast_connect_event(game_id) do
     with {:ok, game} <- Games.get(game_id) do
       token()
       |> assign(:game, game)
@@ -91,14 +91,12 @@ defmodule Socket.Handler.Games do
     end
   end
 
-  def broadcast_connect_event(:application, _app_id), do: :ok
-
   @doc """
   Broadcast a game disconnecting completely from Grapevine
 
-  See `Grapevine.Presence.Notices` as well
+  See `Socket.Presence.Notices` as well
   """
-  def broadcast_disconnect_event(:game, game_id) do
+  def broadcast_disconnect_event(game_id) do
     with {:ok, game} <- Games.get(game_id) do
       token()
       |> assign(:game, game)
@@ -106,8 +104,6 @@ defmodule Socket.Handler.Games do
       |> broadcast("games:status", "games/disconnect")
     end
   end
-
-  def broadcast_disconnect_event(:application, _app_id), do: :ok
 
   defmodule View do
     @moduledoc """

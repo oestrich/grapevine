@@ -153,12 +153,10 @@ defmodule Socket.Handler.Core do
 
   @doc """
   Filter the connected game from the list of games
-
-  Checks the struct for application sockets
   """
   def remove_self_from_game_list(games, state) do
     Enum.reject(games, fn %{game: game} ->
-      game.id == state.game.id && game.__struct__ == state.game.__struct__
+      game.id == state.game.id
     end)
   end
 

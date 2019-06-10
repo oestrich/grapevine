@@ -3,5 +3,5 @@ defmodule Socket.Presence.State do
   Struct for game presence
   """
 
-  defstruct [:type, :game, :players, :supports, :channels, :timestamp]
+  defstruct [:game, :players, :supports, :channels, :timestamp]
 end

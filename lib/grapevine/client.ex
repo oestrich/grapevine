@@ -20,22 +20,6 @@ defmodule Grapevine.Client do
   @client Application.get_env(:grapevine, :modules)[:client]
 
   @doc """
-  Local client presence data
-
-  Gets injected to the online games
-  """
-  def presence() do
-    %Socket.Presence.State{
-      game: %Grapevine.Client.Application{},
-      players: ["system"],
-      channels: [],
-      supports: ["channels", "players", "tells"],
-      type: :grapevine,
-      timestamp: Timex.now()
-    }
-  end
-
-  @doc """
   Broadcast a message to a channel
   """
   def broadcast(message) do

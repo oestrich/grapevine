@@ -1,4 +1,4 @@
-defmodule Grapevine.Client.Application do
+defmodule Socket.Presence.GrapevineApplication do
   @moduledoc """
   A struct resembling a Game
   """

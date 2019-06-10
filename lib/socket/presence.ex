@@ -5,7 +5,6 @@ defmodule Socket.Presence do
 
   use GenServer
 
-  alias Grapevine.Applications.Application
   alias Grapevine.Games.Game
   alias Socket.Presence.Client
   alias Socket.Presence.Notices
@@ -35,21 +34,15 @@ defmodule Socket.Presence do
 
   @spec track(Socket.state()) :: :ok
   def track(state) do
-    case state.game do
-      %Application{} ->
-        :ok
-
-      %Game{} ->
-        message = {:track, self(), state.game, state.supports, state.channels, state.players}
-        GenServer.call(__MODULE__, message)
-    end
+    message = {:track, self(), state.game, state.supports, state.channels, state.players}
+    GenServer.call(__MODULE__, message)
   end
 
   @doc false
-  def delay_disconnect(type, game_id) do
+  def delay_disconnect(game_id) do
     Process.send_after(
       __MODULE__,
-      {:disconnected, type, game_id},
+      {:disconnected, game_id},
       :timer.seconds(Client.timeout_seconds())
     )
   end
@@ -94,8 +87,8 @@ defmodule Socket.Presence do
     {:reply, :ok, initial_state()}
   end
 
-  def handle_info({:disconnected, type, game_id}, state) do
-    Notices.maybe_broadcast_disconnect_event(type, game_id)
+  def handle_info({:disconnected, game_id}, state) do
+    Notices.maybe_broadcast_disconnect_event(game_id)
     {:noreply, state}
   end
 

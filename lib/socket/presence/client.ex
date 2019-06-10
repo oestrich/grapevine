@@ -3,9 +3,8 @@ defmodule Socket.Presence.Client do
   Implementation of the Presence client
   """
 
-  alias Grapevine.Applications
-  alias Grapevine.Client
   alias Grapevine.Games
+  alias Socket.Presence.GrapevineApplication
 
   import Socket.Presence, only: [ets_key: 0]
 
@@ -29,7 +28,16 @@ defmodule Socket.Presence.Client do
   end
 
   defp append_grapevine(games) do
-    [Client.presence() | games]
+    grapevine_presence =
+      %Socket.Presence.State{
+        game: %GrapevineApplication{},
+        players: ["system"],
+        channels: [],
+        supports: ["channels", "players", "tells"],
+        timestamp: Timex.now()
+      }
+
+    [grapevine_presence | games]
   end
 
   @doc """
@@ -65,18 +73,6 @@ defmodule Socket.Presence.Client do
         presence
         |> Map.put(:type, :game)
         |> Map.put(:game, game)
-
-      {:error, :not_found} ->
-        nil
-    end
-  end
-
-  defp fetch_from_db({"application:" <> application_id, presence}) do
-    case Applications.get(application_id) do
-      {:ok, application} ->
-        presence
-        |> Map.put(:type, :application)
-        |> Map.put(:game, application)
 
       {:error, :not_found} ->
         nil
