@@ -24,8 +24,14 @@ defmodule Web.GameController do
 
   def show(conn, %{"id" => short_name}) do
     with {:ok, game} <- Games.get_by_short(short_name, display: true) do
+      presence =
+        Enum.find(Presence.online_games(), fn presence ->
+          presence.game.id == game.id
+        end)
+
       conn
       |> assign(:game, game)
+      |> assign(:presence, presence)
       |> assign(:events, Events.recent(game))
       |> assign(:title, "#{game.name} - Grapevine")
       |> assign(:open_graph_title, game.name)
