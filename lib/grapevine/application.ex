@@ -15,6 +15,7 @@ defmodule Grapevine.Application do
       supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
       {Socket.Application, [name: Socket.Application]},
+      {Grapevine.Presence, [name: Grapevine.Presence]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
       {Metrics.Server, []},

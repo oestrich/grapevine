@@ -1,19 +1,26 @@
-defmodule Socket.Presence.Client do
+defmodule Grapevine.Presence.Client do
   @moduledoc """
-  Implementation of the Presence client
+  Main node version of the socket presence
   """
 
   alias Grapevine.Games
-  alias Socket.Presence.GrapevineApplication
 
-  import Socket.Presence, only: [ets_key: 0]
-
+  @ets_key :grapevine_presence_cache
   @timeout_seconds 60
 
   @doc """
-  Number of seconds that a game can be offline before the game is considered offline
+  Create the ets table for the node cache
   """
-  def timeout_seconds(), do: @timeout_seconds
+  def create_table() do
+    :ets.new(@ets_key, [:set, :protected, :named_table])
+  end
+
+  @doc """
+  Update the local cache of the game's presence
+  """
+  def update_presence(presence) do
+    :ets.insert(@ets_key, {presence.game_id, presence})
+  end
 
   @doc """
   Get a list of games that are connected and online
@@ -24,33 +31,28 @@ defmodule Socket.Presence.Client do
     |> Enum.filter(&filter_online/1)
     |> Enum.map(&fetch_from_db/1)
     |> Enum.reject(&is_nil/1)
-    |> append_grapevine()
-  end
-
-  defp append_grapevine(games) do
-    grapevine_presence =
-      %Socket.Presence.State{
-        game: %GrapevineApplication{},
-        players: ["system"],
-        channels: [],
-        supports: ["channels", "players", "tells"],
-        timestamp: Timex.now()
-      }
-
-    [grapevine_presence | games]
   end
 
   @doc """
   Fetch a game by id from ETS
   """
   def fetch_from_ets(id) do
-    case :ets.lookup(ets_key(), id) do
+    case :ets.lookup(@ets_key, id) do
       [{^id, presence}] ->
         {id, presence}
 
       _ ->
         nil
     end
+  end
+
+  @doc """
+  Filter for presence online status
+  """
+  def filter_online(nil), do: false
+
+  def filter_online({_game_id, presence}) do
+    game_online?(presence)
   end
 
   @doc """
@@ -61,13 +63,10 @@ defmodule Socket.Presence.Client do
     Timex.after?(presence.timestamp, oldest_online)
   end
 
-  defp filter_online(nil), do: false
-
-  defp filter_online({_game_id, presence}) do
-    game_online?(presence)
-  end
-
-  defp fetch_from_db({"game:" <> game_id, presence}) do
+  @doc """
+  Load the game from the database
+  """
+  def fetch_from_db({game_id, presence}) do
     case Games.get(game_id) do
       {:ok, game} ->
         Map.put(presence, :game, game)
@@ -78,14 +77,14 @@ defmodule Socket.Presence.Client do
   end
 
   def keys() do
-    key = :ets.first(ets_key())
+    key = :ets.first(@ets_key)
     keys(key, [key])
   end
 
   def keys(:"$end_of_table", [:"$end_of_table" | accumulator]), do: accumulator
 
   def keys(current_key, accumulator) do
-    next_key = :ets.next(ets_key(), current_key)
+    next_key = :ets.next(@ets_key, current_key)
     keys(next_key, [next_key | accumulator])
   end
 end

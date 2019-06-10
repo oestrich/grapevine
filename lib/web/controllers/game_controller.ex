@@ -3,7 +3,7 @@ defmodule Web.GameController do
 
   alias Grapevine.Events
   alias Grapevine.Games
-  alias Socket.Presence
+  alias Grapevine.Presence
 
   action_fallback(Web.FallbackController)
 

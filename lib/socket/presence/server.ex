@@ -30,11 +30,18 @@ defmodule Socket.Presence.Server do
   end
 
   def update_game(state, game, supports, channels, players) do
-    :ets.insert(
-      ets_key(),
-      {ets_key(game),
-       %State{supports: supports, channels: channels, players: players, timestamp: Timex.now()}}
-    )
+    presence = %State{
+      supports: supports,
+      channels: channels,
+      players: players,
+      timestamp: Timex.now()
+    }
+
+    :ets.insert(ets_key(), {ets_key(game), presence})
+
+    presence = Map.take(presence, [:supports, :channels, :players, :timestamp])
+    presence = Map.put(presence, :game_id, game.id)
+    Web.Endpoint.broadcast("game:presence", "games/update", presence)
 
     PlayerPresence.update_count(game.id, length(players || []))
 
