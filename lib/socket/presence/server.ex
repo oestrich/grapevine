@@ -38,14 +38,18 @@ defmodule Socket.Presence.Server do
     }
 
     :ets.insert(ets_key(), {ets_key(game), presence})
-
-    presence = Map.take(presence, [:supports, :channels, :players, :timestamp])
-    presence = Map.put(presence, :game_id, game.id)
-    Web.Endpoint.broadcast("game:presence", "games/update", presence)
-
+    broadcast_update(game, presence)
     PlayerPresence.update_count(game.id, length(players || []))
-
     {:ok, state}
+  end
+
+  defp broadcast_update(game, presence) do
+    presence =
+      presence
+      |> Map.take([:supports, :channels, :players, :timestamp])
+      |> Map.put(:game_id, game.id)
+
+    Web.Endpoint.broadcast("game:presence", "games/update", presence)
   end
 
   def record_statistics(state) do
