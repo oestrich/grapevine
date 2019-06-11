@@ -39,7 +39,7 @@ defmodule Grapevine.Mixfile do
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:discourse, "~> 0.0.1"},
-      {:distillery, "~> 2.0", runtime: false},
+      {:distillery, "2.0.12", runtime: false},
       {:earmark, "~> 1.2"},
       {:ecto, "~> 3.0"},
       {:ecto_sql, "~> 3.0"},
