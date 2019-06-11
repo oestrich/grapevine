@@ -1,9 +1,17 @@
-export const getSocketState = (state) => {
-  return state.socket;
+export const getPromptState = (state) => {
+  return state.prompt;
 };
 
-export const getSocketActiveChannel = (state) => {
-  return getSocketState(state).activeChannel;
+export const getPromptActiveChannel = (state) => {
+  return getPromptState(state).activeChannel;
+};
+
+export const getPromptMessage = (state) => {
+  return getPromptState(state).message;
+};
+
+export const getSocketState = (state) => {
+  return state.socket;
 };
 
 export const getSocketChannels = (state) => {

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import {ConnectionStatus} from "./connection_status";
 import {Creators} from "../redux/actions";
-import {getSocketActiveChannel, getSocketChannels} from "../redux/selectors";
+import {getPromptActiveChannel, getPromptMessage, getSocketChannels} from "../redux/selectors";
 
 class Prompt extends React.Component {
   constructor(props) {
@@ -15,10 +15,6 @@ class Prompt extends React.Component {
     this.onChannelChange = this.onChannelChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
-
-    this.state = {
-      text: "",
-    }
   }
 
   buttonSendMessage(e) {
@@ -36,13 +32,13 @@ class Prompt extends React.Component {
   }
 
   sendMessage() {
-    const message = this.state.text;
+    const message = this.props.message;
     this.context.socket.send(this.props.activeChannel, message);
-    this.setState({text: ""});
+    this.props.setMessage("");
   }
 
   onTextChange(e) {
-    this.setState({text: e.target.value});
+    this.props.setMessage(e.target.value);
   }
 
   onChannelChange(e) {
@@ -62,7 +58,7 @@ class Prompt extends React.Component {
   }
 
   render() {
-    let text = this.state.text;
+    let message = this.props.message;
 
     return (
       <div className="prompt">
@@ -71,7 +67,7 @@ class Prompt extends React.Component {
         {this.renderAciveChannel()}
 
         <input id="prompt"
-          value={text}
+          value={message}
           onChange={this.onTextChange}
           type="text"
           className="form-control"
@@ -88,13 +84,16 @@ Prompt.contextTypes = {
 };
 
 let mapStateToProps = (state) => {
-  const activeChannel = getSocketActiveChannel(state);
+  const activeChannel = getPromptActiveChannel(state);
   const channels = getSocketChannels(state);
-  return {activeChannel, channels};
+  const message = getPromptMessage(state);
+
+  return {activeChannel, channels, message};
 };
 
 Prompt = connect(mapStateToProps, {
-  setActiveChannel: Creators.socketSetActiveChannel,
+  setMessage: Creators.promptSetMessage,
+  setActiveChannel: Creators.promptSetActiveChannel,
 })(Prompt);
 
 export {Prompt};
