@@ -7,6 +7,7 @@ defmodule Socket.Web.SocketHandler do
 
   alias Metrics.Server, as: Metrics
   alias Socket.Handler.Core.Heartbeat
+  alias Socket.PubSub
   alias Socket.Web.Router
   alias Socket.Web.State
 
@@ -25,7 +26,7 @@ defmodule Socket.Web.SocketHandler do
     Metrics.socket_online()
 
     # General purpose channels
-    Web.Endpoint.subscribe("system")
+    PubSub.subscribe("system")
 
     {:ok, %State{status: "inactive"}}
   end
@@ -59,30 +60,30 @@ defmodule Socket.Web.SocketHandler do
   end
 
   # Ignore broadcasts from the same client id
-  def websocket_info(message = %Phoenix.Socket.Broadcast{event: "restart"}, state) do
+  def websocket_info(%{event: "restart", payload: payload}, state) do
     message = %{
       event: "restart",
       ref: UUID.uuid4(),
       payload: %{
-        downtime: message.payload["downtime"] + Enum.random(-5..5)
+        downtime: payload["downtime"] + Enum.random(-5..5)
       }
     }
 
     {:reply, {:text, Jason.encode!(message)}, state}
   end
 
-  def websocket_info(message = %Phoenix.Socket.Broadcast{}, state) do
+  def websocket_info(%{event: event, payload: payload}, state) do
     client_id = state.game.client_id
 
-    case Map.get(message.payload, "game_id") do
+    case Map.get(payload, "game_id") do
       ^client_id ->
         {:ok, state}
 
       _ ->
         message = %{
-          event: message.event,
+          event: event,
           ref: UUID.uuid4(),
-          payload: Map.delete(message.payload, "game_id")
+          payload: Map.delete(payload, "game_id")
         }
 
         {:reply, {:text, Jason.encode!(message)}, state}

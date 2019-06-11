@@ -10,6 +10,7 @@ defmodule Socket.Presence.Server do
   alias Socket.Presence.Client
   alias Socket.Presence.Notices
   alias Socket.Presence.State
+  alias Socket.PubSub
 
   def track(state, socket, game) do
     state = Map.put(state, :sockets, [{game.id, socket} | state.sockets])
@@ -49,7 +50,7 @@ defmodule Socket.Presence.Server do
       |> Map.take([:supports, :channels, :players, :timestamp])
       |> Map.put(:game_id, game.id)
 
-    Web.Endpoint.broadcast("game:presence", "games/update", presence)
+    PubSub.broadcast("game:presence", "games/update", presence)
   end
 
   def record_statistics(state) do

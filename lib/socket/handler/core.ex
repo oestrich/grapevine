@@ -13,6 +13,7 @@ defmodule Socket.Handler.Core do
   alias Grapevine.Games
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate
+  alias Socket.PubSub
   alias Socket.Text
 
   @valid_supports ["achievements", "channels", "games", "players", "tells"]
@@ -66,7 +67,7 @@ defmodule Socket.Handler.Core do
       Presence.update_game(state)
 
       :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-      Web.Endpoint.subscribe("channels:#{channel}")
+      PubSub.subscribe("channels:#{channel}")
 
       {:ok, state}
     else
@@ -94,7 +95,7 @@ defmodule Socket.Handler.Core do
       Presence.update_game(state)
 
       :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{channel: channel})
-      Web.Endpoint.unsubscribe("channels:#{channel}")
+      PubSub.unsubscribe("channels:#{channel}")
 
       {:ok, state}
     else
@@ -177,7 +178,7 @@ defmodule Socket.Handler.Core do
 
   def subscribe_channel({:ok, channel}) do
     :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-    Web.Endpoint.subscribe("channels:#{channel}")
+    PubSub.subscribe("channels:#{channel}")
   end
 
   defmodule View do

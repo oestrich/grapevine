@@ -25,7 +25,7 @@ defmodule Grapevine.Presence do
     {:noreply, state}
   end
 
-  def handle_info(%Phoenix.Socket.Broadcast{topic: "game:presence", event: "games/update", payload: presence}, state) do
+  def handle_info(%{topic: "game:presence", event: "games/update", payload: presence}, state) do
     Client.update_presence(presence)
     {:noreply, state}
   end

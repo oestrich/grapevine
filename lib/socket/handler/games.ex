@@ -8,6 +8,7 @@ defmodule Socket.Handler.Games do
   alias Grapevine.Games
   alias Socket.Handler.Core
   alias Socket.Presence
+  alias Socket.PubSub
 
   @doc """
   Check if the socket supports games
@@ -20,7 +21,7 @@ defmodule Socket.Handler.Games do
   def maybe_listen_to_games_channel(state) do
     case supports_games?(state) do
       true ->
-        Web.Endpoint.subscribe("games:status")
+        PubSub.subscribe("games:status")
 
       false ->
         :ok
