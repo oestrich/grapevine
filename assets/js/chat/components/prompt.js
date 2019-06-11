@@ -5,13 +5,14 @@ import {connect} from 'react-redux';
 
 import {ConnectionStatus} from "./connection_status";
 import {Creators} from "../redux/actions";
-import {getSocketActiveChannel} from "../redux/selectors";
+import {getSocketActiveChannel, getSocketChannels} from "../redux/selectors";
 
 class Prompt extends React.Component {
   constructor(props) {
     super(props);
 
     this.buttonSendMessage = this.buttonSendMessage.bind(this);
+    this.onChannelChange = this.onChannelChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
 
@@ -44,12 +45,30 @@ class Prompt extends React.Component {
     this.setState({text: e.target.value});
   }
 
+  onChannelChange(e) {
+    this.props.setActiveChannel(e.target.value);
+  }
+
+  renderAciveChannel() {
+    return (
+      <select value={this.props.activeChannel} className="active-channel form-control" onChange={this.onChannelChange}>
+        {this.props.channels.map((channel, i) => {
+          return (
+            <option key={i}>{channel}</option>
+          );
+        })}
+      </select>
+    );
+  }
+
   render() {
     let text = this.state.text;
 
     return (
       <div className="prompt">
         <ConnectionStatus />
+
+        {this.renderAciveChannel()}
 
         <input id="prompt"
           value={text}
@@ -70,11 +89,12 @@ Prompt.contextTypes = {
 
 let mapStateToProps = (state) => {
   const activeChannel = getSocketActiveChannel(state);
-  return {activeChannel};
+  const channels = getSocketChannels(state);
+  return {activeChannel, channels};
 };
 
 Prompt = connect(mapStateToProps, {
-  socketReceiveChat: Creators.socketReceiveChat,
+  setActiveChannel: Creators.socketSetActiveChannel,
 })(Prompt);
 
 export {Prompt};

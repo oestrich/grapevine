@@ -38,6 +38,11 @@ export const socketReceiveBroadcast = (state, action) => {
   return {...state, messages: [...state.messages, {...message, type: "broadcast"}]};
 };
 
+export const socketSetActiveChannel = (state, action) => {
+  const {channel} = action;
+  return {...state, activeChannel: channel};
+};
+
 export const socketSubscribeChannel = (state, action) => {
   const {channel} = action;
 
@@ -54,6 +59,7 @@ const HANDLERS = {
   [Types.SOCKET_CONNECTED]: socketConnected,
   [Types.SOCKET_DISCONNECTED]: socketDisconnected,
   [Types.SOCKET_RECEIVE_BROADCAST]: socketReceiveBroadcast,
+  [Types.SOCKET_SET_ACTIVE_CHANNEL]: socketSetActiveChannel,
   [Types.SOCKET_SUBSCRIBE_CHANNEL]: socketSubscribeChannel,
 };
 

@@ -19,6 +19,11 @@
     }
   }
 
+  .active-channel {
+    max-width: 128px;
+    margin-right: 12px;
+  }
+
   .channel {
     color: $purple;
   }
