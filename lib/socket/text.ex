@@ -1,4 +1,4 @@
-defmodule Grapevine.Text do
+defmodule Socket.Text do
   @moduledoc """
   Incoming text modifications
 

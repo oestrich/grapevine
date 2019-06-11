@@ -4,7 +4,6 @@ defmodule Web.GameView do
   alias Grapevine.Achievements
   alias Grapevine.Channels
   alias Grapevine.Games.Images
-  alias Grapevine.Presence
   alias Grapevine.UserAgents
   alias Stein.Storage
   alias Web.EventView
@@ -188,19 +187,10 @@ defmodule Web.GameView do
     end
   end
 
-  def online_players(game) do
-    presence =
-      Enum.find(Presence.online_games(), fn presence ->
-        presence.game.id == game.id
-      end)
+  def online_players(nil), do: []
 
-    case presence do
-      nil ->
-        []
-
-      presence ->
-        presence.players
-    end
+  def online_players(presence) do
+    presence.players
   end
 
   def online_status(game) do

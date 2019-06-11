@@ -1,12 +1,13 @@
-defmodule Socket.Players do
+defmodule Socket.Handler.Players do
   @moduledoc """
   Player status subscription feature module
   """
 
   use Socket.Web.Module
 
-  alias Grapevine.Presence
-  alias Socket.Core
+  alias Socket.Handler.Core
+  alias Socket.Presence
+  alias Socket.PubSub
 
   @doc """
   Maybe subcsribe to the players status channel, only if the socket supports it
@@ -14,7 +15,7 @@ defmodule Socket.Players do
   def maybe_listen_to_players_channel(state) do
     case supports_players?(state) do
       true ->
-        Web.Endpoint.subscribe("players:status")
+        PubSub.subscribe("players:status")
 
       false ->
         :ok

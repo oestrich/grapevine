@@ -5,6 +5,8 @@ defmodule Socket.Web.Module do
   Similar to a Phoenix controller
   """
 
+  alias Socket.PubSub
+
   defmacro __using__(_) do
     quote do
       import Socket.Web.Module
@@ -51,7 +53,7 @@ defmodule Socket.Web.Module do
   Broadcast over the internal phoenix channel
   """
   def broadcast(token, topic, event) do
-    Web.Endpoint.broadcast(topic, event, token.payload)
+    PubSub.broadcast(topic, event, token.payload)
     token
   end
 end

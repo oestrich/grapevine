@@ -7,11 +7,11 @@ defmodule Socket.Web.Router do
 
   require Logger
 
-  alias Socket.Core
+  alias Socket.Handler.Core
 
   import Socket.Web.RouterMacro
 
-  receives(Socket) do
+  receives(Socket.Handler) do
     module(Core, "channels") do
       event("heartbeat", :heartbeat)
 

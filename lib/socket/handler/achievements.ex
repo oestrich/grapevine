@@ -1,4 +1,4 @@
-defmodule Socket.Achievements do
+defmodule Socket.Handler.Achievements do
   @moduledoc """
   Achievement management
   """

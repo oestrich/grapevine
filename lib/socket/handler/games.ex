@@ -1,4 +1,4 @@
-defmodule Socket.Games do
+defmodule Socket.Handler.Games do
   @moduledoc """
   Games support flag
   """
@@ -6,8 +6,9 @@ defmodule Socket.Games do
   use Socket.Web.Module
 
   alias Grapevine.Games
-  alias Grapevine.Presence
-  alias Socket.Core
+  alias Socket.Handler.Core
+  alias Socket.Presence
+  alias Socket.PubSub
 
   @doc """
   Check if the socket supports games
@@ -20,7 +21,7 @@ defmodule Socket.Games do
   def maybe_listen_to_games_channel(state) do
     case supports_games?(state) do
       true ->
-        Web.Endpoint.subscribe("games:status")
+        PubSub.subscribe("games:status")
 
       false ->
         :ok
@@ -80,9 +81,9 @@ defmodule Socket.Games do
   @doc """
   Broadcast a game connecting for the first time to Grapevine
 
-  See `Grapevine.Presence.Notices` as well
+  See `Socket.Presence.Notices` as well
   """
-  def broadcast_connect_event(:game, game_id) do
+  def broadcast_connect_event(game_id) do
     with {:ok, game} <- Games.get(game_id) do
       token()
       |> assign(:game, game)
@@ -91,14 +92,12 @@ defmodule Socket.Games do
     end
   end
 
-  def broadcast_connect_event(:application, _app_id), do: :ok
-
   @doc """
   Broadcast a game disconnecting completely from Grapevine
 
-  See `Grapevine.Presence.Notices` as well
+  See `Socket.Presence.Notices` as well
   """
-  def broadcast_disconnect_event(:game, game_id) do
+  def broadcast_disconnect_event(game_id) do
     with {:ok, game} <- Games.get(game_id) do
       token()
       |> assign(:game, game)
@@ -106,8 +105,6 @@ defmodule Socket.Games do
       |> broadcast("games:status", "games/disconnect")
     end
   end
-
-  def broadcast_disconnect_event(:application, _app_id), do: :ok
 
   defmodule View do
     @moduledoc """

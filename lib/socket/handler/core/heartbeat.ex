@@ -1,4 +1,4 @@
-defmodule Socket.Core.Heartbeat do
+defmodule Socket.Handler.Core.Heartbeat do
   @moduledoc """
   Handle a heartbeat internally to Grapevine
   """

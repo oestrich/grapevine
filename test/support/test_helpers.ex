@@ -1,7 +1,6 @@
 defmodule Grapevine.TestHelpers do
   alias Grapevine.Accounts
   alias Grapevine.Achievements
-  alias Grapevine.Applications
   alias Grapevine.Authorizations
   alias Grapevine.Channels
   alias Grapevine.Games
@@ -85,21 +84,6 @@ defmodule Grapevine.TestHelpers do
     {:ok, connection} = Games.create_connection(game, attributes)
 
     connection
-  end
-
-  def create_application(attributes \\ %{}) do
-    attributes =
-      Map.merge(
-        %{
-          name: "Grapevine",
-          short_name: "Grapevine"
-        },
-        attributes
-      )
-
-    {:ok, application} = Applications.create(attributes)
-
-    application
   end
 
   def presence_state(game, state) do

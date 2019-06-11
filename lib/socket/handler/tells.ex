@@ -1,11 +1,12 @@
-defmodule Socket.Tells do
+defmodule Socket.Handler.Tells do
   @moduledoc """
   Implementation for the `tells` flag
   """
 
   use Socket.Web.Module
 
-  alias Grapevine.Presence
+  alias Socket.Presence
+  alias Socket.PubSub
 
   @doc """
   Subscribe to the game's tells internal channel if the socket supports it
@@ -13,7 +14,7 @@ defmodule Socket.Tells do
   def maybe_subscribe(state) do
     case supports_tells?(state) do
       true ->
-        Web.Endpoint.subscribe("tells:#{state.game.short_name}")
+        PubSub.subscribe("tells:#{state.game.short_name}")
 
       false ->
         :ok

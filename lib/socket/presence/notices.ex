@@ -1,11 +1,11 @@
-defmodule Grapevine.Presence.Notices do
+defmodule Socket.Presence.Notices do
   @moduledoc """
   Send a notice if a game comes online or goes offline
   """
 
-  alias Grapevine.Presence
-  alias Grapevine.Presence.Client
-  alias Socket.Games
+  alias Socket.Handler.Games
+  alias Socket.Presence
+  alias Socket.Presence.Client
 
   @doc """
   Maybe send a notice to games that care that another game went online
@@ -15,10 +15,10 @@ defmodule Grapevine.Presence.Notices do
   - the game is still "online", a socket is offline but too recently
   """
   def maybe_broadcast_connect_event(state, socket) do
-    with {:ok, type, game_id} <- get_game_id(state, socket),
-         {:ok, :only} <- check_only_socket(state, socket, type, game_id),
-         {:ok, :offline} <- check_game_offline(type, game_id) do
-      Games.broadcast_connect_event(type, game_id)
+    with {:ok, game_id} <- get_game_id(state, socket),
+         {:ok, :only} <- check_only_socket(state, socket, game_id),
+         {:ok, :offline} <- check_game_offline(game_id) do
+      Games.broadcast_connect_event(game_id)
     end
   end
 
@@ -32,9 +32,9 @@ defmodule Grapevine.Presence.Notices do
   Does not send a notice if there are multiple sockets connected for a game
   """
   def maybe_start_broadcast_disconnect_event(state, socket) do
-    with {:ok, type, game_id} <- get_game_id(state, socket),
-         {:ok, :only} <- check_only_socket(state, socket, type, game_id) do
-      Presence.delay_disconnect(type, game_id)
+    with {:ok, game_id} <- get_game_id(state, socket),
+         {:ok, :only} <- check_only_socket(state, socket, game_id) do
+      Presence.delay_disconnect(game_id)
     end
   end
 
@@ -43,29 +43,33 @@ defmodule Grapevine.Presence.Notices do
 
   Sends a notice only if the game is still offline.
   """
-  def maybe_broadcast_disconnect_event(type, game_id) do
-    with {:ok, :offline} <- check_game_offline(type, game_id) do
-      Games.broadcast_disconnect_event(type, game_id)
+  def maybe_broadcast_disconnect_event(game_id) do
+    with {:ok, :offline} <- check_game_offline(game_id) do
+      Games.broadcast_disconnect_event(game_id)
     end
   end
 
   defp get_game_id(state, socket) do
-    socket = Enum.find(state.sockets, fn {_type, _game_id, pid} -> pid == socket end)
+    socket = Enum.find(state.sockets, fn {_game_id, pid} -> pid == socket end)
 
     case socket do
       nil ->
         {:error, :not_found}
 
-      {type, game_id, _} ->
-        {:ok, type, game_id}
+      {game_id, _} ->
+        {:ok, game_id}
     end
   end
 
-  defp check_only_socket(state, socket, type, game_id) do
+  defp check_only_socket(state, socket, game_id) do
     sockets =
       state.sockets
-      |> Enum.reject(&(elem(&1, 2) == socket))
-      |> Enum.filter(&(elem(&1, 0) == type && elem(&1, 1) == game_id))
+      |> Enum.reject(fn {_game_id, socket_pid} ->
+        socket_pid == socket
+      end)
+      |> Enum.filter(fn {socket_game_id, _socket_pid} ->
+        socket_game_id == game_id
+      end)
 
     case Enum.empty?(sockets) do
       true ->
@@ -76,8 +80,8 @@ defmodule Grapevine.Presence.Notices do
     end
   end
 
-  defp check_game_offline(type, game_id) do
-    case Client.fetch_from_ets("#{type}:#{game_id}") do
+  defp check_game_offline(game_id) do
+    case Client.fetch_from_ets("game:#{game_id}") do
       nil ->
         {:ok, :offline}
 

@@ -1,8 +1,8 @@
-defmodule Grapevine.Presence.ServerTest do
+defmodule Socket.Presence.ServerTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Presence
-  alias Grapevine.Presence.Server
+  alias Socket.Presence
+  alias Socket.Presence.Server
   alias Grapevine.Statistics
 
   describe "recording online game stats" do

@@ -1,18 +1,17 @@
-defmodule Socket.Core.Authenticate do
+defmodule Socket.Handler.Core.Authenticate do
   @moduledoc """
   Handles the "authenticate" event
   """
 
   require Logger
 
-  alias Grapevine.Applications
   alias Grapevine.Channels
   alias Grapevine.Games
-  alias Grapevine.Presence
-  alias Socket.Core
-  alias Socket.Games, as: SocketGames
-  alias Socket.Players
-  alias Socket.Tells
+  alias Socket.Handler.Core
+  alias Socket.Handler.Games, as: SocketGames
+  alias Socket.Handler.Players
+  alias Socket.Handler.Tells
+  alias Socket.Presence
 
   @disable_debug_seconds 300
 
@@ -114,13 +113,7 @@ defmodule Socket.Core.Authenticate do
     client_id = Map.get(payload, "client_id")
     client_secret = Map.get(payload, "client_secret")
 
-    case Games.validate_socket(client_id, client_secret, payload) do
-      {:ok, game} ->
-        {:ok, game}
-
-      {:error, :invalid} ->
-        Applications.validate_socket(client_id, client_secret)
-    end
+    Games.validate_socket(client_id, client_secret, payload)
   end
 
   defp validate_supports(payload) do

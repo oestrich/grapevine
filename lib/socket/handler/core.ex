@@ -1,4 +1,4 @@
-defmodule Socket.Core do
+defmodule Socket.Handler.Core do
   @moduledoc """
   Core events
 
@@ -9,12 +9,12 @@ defmodule Socket.Core do
 
   require Logger
 
-  alias Grapevine.Applications.Application
   alias Grapevine.Channels
   alias Grapevine.Games
-  alias Grapevine.Presence
-  alias Grapevine.Text
-  alias Socket.Core.Authenticate
+  alias Socket.Presence
+  alias Socket.Handler.Core.Authenticate
+  alias Socket.PubSub
+  alias Socket.Text
 
   @valid_supports ["achievements", "channels", "games", "players", "tells"]
 
@@ -67,7 +67,7 @@ defmodule Socket.Core do
       Presence.update_game(state)
 
       :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-      Web.Endpoint.subscribe("channels:#{channel}")
+      PubSub.subscribe("channels:#{channel}")
 
       {:ok, state}
     else
@@ -95,7 +95,7 @@ defmodule Socket.Core do
       Presence.update_game(state)
 
       :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{channel: channel})
-      Web.Endpoint.unsubscribe("channels:#{channel}")
+      PubSub.unsubscribe("channels:#{channel}")
 
       {:ok, state}
     else
@@ -142,8 +142,6 @@ defmodule Socket.Core do
     Enum.member?(@valid_supports, support)
   end
 
-  defp check_channel_subscribed_to(%{game: %Application{}}, channel), do: {:ok, channel}
-
   defp check_channel_subscribed_to(state, channel) do
     case channel in state.channels do
       true ->
@@ -156,12 +154,10 @@ defmodule Socket.Core do
 
   @doc """
   Filter the connected game from the list of games
-
-  Checks the struct for application sockets
   """
   def remove_self_from_game_list(games, state) do
     Enum.reject(games, fn %{game: game} ->
-      game.id == state.game.id && game.__struct__ == state.game.__struct__
+      game.id == state.game.id
     end)
   end
 
@@ -182,7 +178,7 @@ defmodule Socket.Core do
 
   def subscribe_channel({:ok, channel}) do
     :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-    Web.Endpoint.subscribe("channels:#{channel}")
+    PubSub.subscribe("channels:#{channel}")
   end
 
   defmodule View do
