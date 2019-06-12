@@ -1,7 +1,7 @@
 import {combineReducers, createStore, applyMiddleware, compose} from 'redux';
 
 import {promptReducer} from "./promptReducer";
-import {socketReducer} from "./socket_reducer";
+import {socketReducer} from "./socketReducer";
 
 let rootReducer = combineReducers({
   prompt: promptReducer,

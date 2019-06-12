@@ -2,7 +2,7 @@ import {createReducer} from "reduxsauce";
 
 import {Types} from "./actions";
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   channels: [],
   connected: false,
   messages: [],
