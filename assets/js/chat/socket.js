@@ -4,11 +4,14 @@ import _ from "underscore";
 
 import {Creators} from "./redux/actions";
 
+const MAX_RETRIES = 50;
+
 class ClientSocket {
   constructor(store, userToken) {
     this.channels = {};
     this.store = store;
     this.userToken = userToken;
+    this.retryCount = 0;
   }
 
   connected()  {
@@ -25,12 +28,24 @@ class ClientSocket {
 
   join() {
     this.socket = new Socket("/websocket", {params: {token: this.userToken}});
+
     this.socket.onOpen(() => {
+      this.retryCount = 0;
       this.connected();
     });
+
+    this.socket.onError(() => {
+      this.retryCount += 1;
+
+      if (this.retryCount > MAX_RETRIES) {
+        this.socket.disconnect();
+      }
+    });
+
     this.socket.onClose(() => {
       this.disconnected();
     });
+
     this.socket.connect();
 
     return this;
