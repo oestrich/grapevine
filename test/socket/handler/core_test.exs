@@ -216,6 +216,20 @@ defmodule Socket.Handler.CoreTest do
       game_name = game.short_name
       refute_receive %{payload: %{"channel" => "grapevine", "game" => ^game_name}}, 50
     end
+
+    test "records the message", %{state: state} do
+      {:ok, :skip, _state} =
+        Router.receive(state, %{
+          "event" => "channels/send",
+          "payload" => %{
+            "channel" => "grapevine",
+            "name" => "Player",
+            "message" => "Hello!"
+          }
+        })
+
+      assert length(Repo.all(Grapevine.Messages.Message)) == 1
+    end
   end
 
   describe "changing subscriptions" do

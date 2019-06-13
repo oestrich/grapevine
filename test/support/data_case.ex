@@ -23,6 +23,8 @@ defmodule Grapevine.DataCase do
       import Ecto.Query
       import Grapevine.DataCase
       import Grapevine.TestHelpers
+
+      alias Grapevine.TestHelpers
     end
   end
 

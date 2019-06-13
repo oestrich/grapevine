@@ -11,6 +11,7 @@ defmodule Socket.Handler.Core do
 
   alias Grapevine.Channels
   alias Grapevine.Games
+  alias Grapevine.Messages
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate
   alias Socket.PubSub
@@ -62,12 +63,12 @@ defmodule Socket.Handler.Core do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
          {:error, :not_subscribed} <- check_channel_subscribed_to(state, channel) do
-      state = Map.put(state, :channels, [channel | state.channels])
+      state = Map.put(state, :channels, [channel.name | state.channels])
 
       Presence.update_game(state)
 
-      :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-      PubSub.subscribe("channels:#{channel}")
+      :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel.name})
+      PubSub.subscribe("channels:#{channel.name}")
 
       {:ok, state}
     else
@@ -88,14 +89,15 @@ defmodule Socket.Handler.Core do
   """
   def channel_unsubscribe(state, %{"payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
+         {:ok, channel} <- Channels.ensure_channel(channel),
          {:ok, channel} <- check_channel_subscribed_to(state, channel) do
-      channels = List.delete(state.channels, channel)
+      channels = List.delete(state.channels, channel.name)
       state = Map.put(state, :channels, channels)
 
       Presence.update_game(state)
 
-      :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{channel: channel})
-      PubSub.unsubscribe("channels:#{channel}")
+      :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{channel: channel.name})
+      PubSub.unsubscribe("channels:#{channel.name}")
 
       {:ok, state}
     else
@@ -115,19 +117,22 @@ defmodule Socket.Handler.Core do
     :telemetry.execute([:grapevine, :events, :channels, :send], %{count: 1}, %{})
 
     with {:ok, channel} <- Map.fetch(payload, "channel"),
+         {:ok, channel} <- Channels.ensure_channel(channel),
          {:ok, channel} <- check_channel_subscribed_to(state, channel) do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
 
+      Messages.create(state.game, channel, %{name: name, text: message})
+
       token()
-      |> assign(:channel, channel)
+      |> assign(:channel, channel.name)
       |> assign(:game, state.game)
       |> assign(:name, name)
       |> assign(:message, message)
       |> payload("send")
-      |> broadcast("channels:#{channel}", "channels/broadcast")
+      |> broadcast("channels:#{channel.name}", "channels/broadcast")
       |> payload("send-chat")
-      |> broadcast("chat:#{channel}", "broadcast")
+      |> broadcast("chat:#{channel.name}", "broadcast")
 
       {:ok, state}
     else
@@ -143,7 +148,7 @@ defmodule Socket.Handler.Core do
   end
 
   defp check_channel_subscribed_to(state, channel) do
-    case channel in state.channels do
+    case channel.name in state.channels do
       true ->
         {:ok, channel}
 
@@ -177,8 +182,8 @@ defmodule Socket.Handler.Core do
   end
 
   def subscribe_channel({:ok, channel}) do
-    :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel})
-    PubSub.subscribe("channels:#{channel}")
+    :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel.name})
+    PubSub.subscribe("channels:#{channel.name}")
   end
 
   defmodule View do

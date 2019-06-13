@@ -32,20 +32,22 @@ defmodule Grapevine.Channels do
   @doc """
   Ensure a channel exists
   """
-  @spec ensure_channel(name()) :: {:ok, name()} | {:error, name()}
+  @spec ensure_channel(name()) :: {:ok, Message.t()} | {:error, name()}
+  def ensure_channel(nil), do: {:error, nil}
+
   def ensure_channel(name) do
     case Repo.get_by(Channel, name: name) do
       nil ->
         case create(%{name: name}) do
           {:ok, channel} ->
-            {:ok, channel.name}
+            {:ok, channel}
 
           {:error, _} ->
             {:error, name}
         end
 
       channel ->
-        {:ok, channel.name}
+        {:ok, channel}
     end
   end
 
