@@ -3,10 +3,14 @@ defmodule Grapevine.Repo.Migrations.CreateMessages do
 
   def change do
     create table(:messages) do
-      add(:channel_id, references(:channels), null: false)
-      add(:game_id, references(:games), null: false)
+      add(:channel, :text, null: false)
+      add(:game, :text, null: false)
       add(:name, :text, null: false)
       add(:text, :text, null: false)
+
+      add(:channel_id, references(:channels), null: false)
+      add(:game_id, references(:games))
+      add(:user_id, references(:users))
 
       timestamps(updated_at: false)
     end

@@ -36,8 +36,8 @@ defmodule Web.ChatChannel do
     %{channel: channel, user: user} = socket.assigns
 
     message = %Broadcast{
-      channel: channel.name,
-      name: user.username,
+      channel: channel,
+      user: user,
       message: message,
     }
 

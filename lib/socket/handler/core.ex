@@ -122,7 +122,7 @@ defmodule Socket.Handler.Core do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
 
-      Messages.create(state.game, channel, %{name: name, text: message})
+      Messages.record_socket(state.game, channel, %{name: name, text: message})
 
       token()
       |> assign(:channel, channel.name)

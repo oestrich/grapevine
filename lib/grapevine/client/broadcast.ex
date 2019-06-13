@@ -3,6 +3,5 @@ defmodule Grapevine.Client.Broadcast do
   Struct for messages being broadcast on a channel
   """
 
-  @derive Jason.Encoder
-  defstruct [:channel, :name, :message]
+  defstruct [:channel, :user, :message]
 end
