@@ -18,7 +18,7 @@ defmodule Grapevine.MessagesTest do
       assert message.channel_id == channel.id
 
       assert message.channel == channel.name
-      assert message.game == game.name
+      assert message.game == game.short_name
       assert message.name == "player"
       assert message.text == "howdy"
     end
