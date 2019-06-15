@@ -20,6 +20,7 @@
     "react-dom": "^16.5.2",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "reduxsauce": "^1.0.1",
     "sass-loader": "^7.1.0",
     "sizzle": "^2.3.3",

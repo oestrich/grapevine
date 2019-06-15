@@ -24,8 +24,7 @@ export class Client extends React.Component {
     this.socket.join();
 
     this.props.channels.map(channelName => {
-      this.store.dispatch(Creators.socketSubscribeChannel(channelName));
-      this.socket.connectChannel(channelName);
+      this.store.dispatch(Creators.socketSubscribeChannel(this.socket, channelName));
     });
   }
 
