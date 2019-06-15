@@ -1,5 +1,5 @@
 import {INITIAL_STATE, socketReducer} from "./socketReducer";
-import {Creators} from "./actions";
+import {Creators, Types} from "./actions";
 
 describe("socket connected", () => {
   test("sets to connected", () => {
@@ -52,7 +52,7 @@ describe("new broadcast message", () => {
 
 describe("subscribe to a channel", () => {
   test("appends to the list of known channels", () => {
-    let state = socketReducer(INITIAL_STATE, Creators.socketSubscribeChannel("gossip"));
+    let state = socketReducer(INITIAL_STATE, {type: Types.SOCKET_SUBSCRIBE_CHANNEL, channel: "gossip"});
 
     expect(state.channels).toEqual(["gossip"]);
   });

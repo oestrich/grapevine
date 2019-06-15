@@ -1,5 +1,5 @@
 import {promptReducer} from "./promptReducer";
-import {Creators} from "./actions";
+import {Creators, Types} from "./actions";
 
 describe("set active channel", () => {
   test("updates state", () => {
@@ -41,7 +41,7 @@ describe("subscribe to a channel", () => {
   test("first channel sets the active channel", () => {
     let state = {channels: [], activeChannel: null};
 
-    state = promptReducer(state, Creators.socketSubscribeChannel("gossip"));
+    state = promptReducer(state, {type: Types.SOCKET_SUBSCRIBE_CHANNEL, channel: "gossip"});
 
     expect(state).toEqual({channels: ["gossip"], activeChannel: "gossip"});
   });
@@ -49,7 +49,7 @@ describe("subscribe to a channel", () => {
   test("appends to the list of known channels", () => {
     let state = {channels: ["gossip"], activeChannel: "gossip"};
 
-    state = promptReducer(state, Creators.socketSubscribeChannel("testing"));
+    state = promptReducer(state, {type: Types.SOCKET_SUBSCRIBE_CHANNEL, channel: "testing"});
 
     expect(state).toEqual({channels: ["gossip", "testing"], activeChannel: "gossip"});
   });
