@@ -28,7 +28,7 @@ export const setMessage = (state, action) => {
   return {...state, message: message};
 };
 
-export const subscribeChannel = (state, action) => {
+export const subscribedChannel = (state, action) => {
   const {channel} = action;
 
   state = {...state, channels: [...state.channels, channel]};
@@ -43,7 +43,7 @@ export const subscribeChannel = (state, action) => {
 const HANDLERS = {
   [Types.PROMPT_SET_ACTIVE_CHANNEL]: setActiveChannel,
   [Types.PROMPT_SET_MESSAGE]: setMessage,
-  [Types.SOCKET_SUBSCRIBE_CHANNEL]: subscribeChannel,
+  [Types.SOCKET_SUBSCRIBED_CHANNEL]: subscribedChannel,
 };
 
 export const promptReducer = createReducer(INITIAL_STATE, HANDLERS);

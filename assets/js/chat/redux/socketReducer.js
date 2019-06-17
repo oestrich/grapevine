@@ -37,7 +37,7 @@ export const socketReceiveBroadcast = (state, action) => {
   return {...state, messages: [...state.messages, {...message, type: "broadcast"}]};
 };
 
-export const socketSubscribeChannel = (state, action) => {
+export const socketSubscribedChannel = (state, action) => {
   const {channel} = action;
 
   state = {...state, channels: [...state.channels, channel]};
@@ -53,7 +53,7 @@ const HANDLERS = {
   [Types.SOCKET_CONNECTED]: socketConnected,
   [Types.SOCKET_DISCONNECTED]: socketDisconnected,
   [Types.SOCKET_RECEIVE_BROADCAST]: socketReceiveBroadcast,
-  [Types.SOCKET_SUBSCRIBE_CHANNEL]: socketSubscribeChannel,
+  [Types.SOCKET_SUBSCRIBED_CHANNEL]: socketSubscribedChannel,
 };
 
 export const socketReducer = createReducer(INITIAL_STATE, HANDLERS);

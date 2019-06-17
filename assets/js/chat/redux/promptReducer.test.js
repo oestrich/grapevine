@@ -41,7 +41,7 @@ describe("subscribe to a channel", () => {
   test("first channel sets the active channel", () => {
     let state = {channels: [], activeChannel: null};
 
-    state = promptReducer(state, Creators.socketSubscribeChannel("gossip"));
+    state = promptReducer(state, Creators.socketSubscribedChannel("gossip"));
 
     expect(state).toEqual({channels: ["gossip"], activeChannel: "gossip"});
   });
@@ -49,7 +49,7 @@ describe("subscribe to a channel", () => {
   test("appends to the list of known channels", () => {
     let state = {channels: ["gossip"], activeChannel: "gossip"};
 
-    state = promptReducer(state, Creators.socketSubscribeChannel("testing"));
+    state = promptReducer(state, Creators.socketSubscribedChannel("testing"));
 
     expect(state).toEqual({channels: ["gossip", "testing"], activeChannel: "gossip"});
   });

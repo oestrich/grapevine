@@ -6,17 +6,13 @@ const {Types, Creators} = createActions({
   socketConnected: null,
   socketDisconnected: null,
   socketReceiveBroadcast: ["message"],
-  socketSubscribeChannel: ["channel"],
+  socketSubscribedChannel: ["channel"],
 });
 
 Creators.socketSubscribeChannel = (socket, channelName) => {
   return (dispatch) => {
     socket.connectChannel(channelName);
-
-    return dispatch({
-      type: Types.SOCKET_SUBSCRIBE_CHANNEL,
-      channel: channelName,
-    });
+    dispatch(Creators.socketSubscribedChannel(channelName));
   };
 };
 

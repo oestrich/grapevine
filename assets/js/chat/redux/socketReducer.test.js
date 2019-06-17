@@ -52,7 +52,7 @@ describe("new broadcast message", () => {
 
 describe("subscribe to a channel", () => {
   test("appends to the list of known channels", () => {
-    let state = socketReducer(INITIAL_STATE, Creators.socketSubscribeChannel("gossip"));
+    let state = socketReducer(INITIAL_STATE, Creators.socketSubscribedChannel("gossip"));
 
     expect(state.channels).toEqual(["gossip"]);
   });
