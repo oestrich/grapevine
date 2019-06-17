@@ -1,4 +1,4 @@
-defmodule Grapevine.Games.Game do
+defmodule Data.Games.Game do
   @moduledoc """
   Game Schema
   """
@@ -10,10 +10,10 @@ defmodule Grapevine.Games.Game do
   alias Grapevine.Accounts.User
   alias Grapevine.Achievements.Achievement
   alias Grapevine.Events.Event
-  alias Grapevine.Games
-  alias Grapevine.Games.ClientSettings
-  alias Grapevine.Games.Connection
-  alias Grapevine.Games.RedirectURI
+  alias Data.Games
+  alias Data.Games.ClientSettings
+  alias Data.Games.Connection
+  alias Data.Games.RedirectURI
   alias Grapevine.Gauges.Gauge
   alias Grapevine.Statistics.Session
 

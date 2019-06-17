@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateAchievements do
+defmodule Data.Repo.Migrations.CreateAchievements do
   use Ecto.Migration
 
   def change do

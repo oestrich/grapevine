@@ -1,7 +1,7 @@
 defmodule Web.Manage.EventController do
   use Web, :controller
 
-  alias Grapevine.Games
+  alias Data.Games
   alias Grapevine.Events
 
   plug(Web.Plugs.VerifyUser)

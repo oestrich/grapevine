@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddCoverKeyToGames do
+defmodule Data.Repo.Migrations.AddCoverKeyToGames do
   use Ecto.Migration
 
   def change do

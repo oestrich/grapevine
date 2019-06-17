@@ -1,7 +1,7 @@
 defmodule Web.Manage.GaugeController do
   use Web, :controller
 
-  alias Grapevine.Games
+  alias Data.Games
   alias Grapevine.Gauges
 
   def new(conn, %{"game_id" => game_id}) do

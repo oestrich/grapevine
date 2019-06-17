@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddUserAgents do
+defmodule Data.Repo.Migrations.AddUserAgents do
   use Ecto.Migration
 
   def change do

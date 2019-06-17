@@ -3,7 +3,7 @@ defmodule Web.Manage.ConnectionController do
 
   plug(Web.Plugs.VerifyUser)
 
-  alias Grapevine.Games
+  alias Data.Games
 
   def create(conn, %{"game_id" => game_id, "connection" => params}) do
     %{current_user: user} = conn.assigns

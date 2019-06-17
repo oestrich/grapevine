@@ -1,7 +1,7 @@
-defmodule Grapevine.Games.GameTest do
+defmodule Data.Games.GameTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   setup do
     %{game: %Game{}}

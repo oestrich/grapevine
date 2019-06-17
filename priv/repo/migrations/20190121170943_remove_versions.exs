@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.RemoveVersions do
+defmodule Data.Repo.Migrations.RemoveVersions do
   use Ecto.Migration
 
   def up do

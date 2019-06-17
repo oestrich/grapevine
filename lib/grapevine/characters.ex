@@ -6,7 +6,7 @@ defmodule Grapevine.Characters do
   import Ecto.Query
 
   alias Grapevine.Characters.Character
-  alias Grapevine.Repo
+  alias Data.Repo
 
   @type id :: integer()
 

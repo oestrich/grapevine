@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateConnections do
+defmodule Data.Repo.Migrations.CreateConnections do
   use Ecto.Migration
 
   def change do

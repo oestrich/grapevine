@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateGameStats do
+defmodule Data.Repo.Migrations.CreateGameStats do
   use Ecto.Migration
 
   def change do

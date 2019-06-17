@@ -5,7 +5,7 @@ defmodule Grapevine.CNAMEs do
 
   use GenServer
 
-  alias Grapevine.Games
+  alias Data.Games
 
   @ets_key :cnames
 

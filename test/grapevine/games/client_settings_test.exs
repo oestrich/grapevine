@@ -1,7 +1,7 @@
-defmodule Grapevine.Games.ClientSettingsTest do
+defmodule Data.Games.ClientSettingsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Games.ClientSettings
+  alias Data.Games.ClientSettings
 
   describe "validations" do
     test "validates character_message and character_name_path are required together" do

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddDisplayToGames do
+defmodule Data.Repo.Migrations.AddDisplayToGames do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddUniqueIndexOnConnections do
+defmodule Data.Repo.Migrations.AddUniqueIndexOnConnections do
   use Ecto.Migration
 
   def change do

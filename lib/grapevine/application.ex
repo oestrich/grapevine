@@ -12,7 +12,7 @@ defmodule Grapevine.Application do
 
     children = [
       cluster_supervisor(),
-      supervisor(Grapevine.Repo, []),
+      {Data.Repo, []},
       supervisor(Web.Endpoint, []),
       {Socket.Application, [name: Socket.Application]},
       {Grapevine.Presence, [name: Grapevine.Presence]},
@@ -69,7 +69,7 @@ defmodule Grapevine.Application do
   defp start_telnet_application() do
     if @env == :dev do
       :application.start(:telnet)
-      :application.start(:grapevine_telnet)
+      #:application.start(:grapevine_telnet)
     end
   end
 end

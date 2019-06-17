@@ -1,7 +1,7 @@
-defmodule Grapevine.GamesTest do
+defmodule Data.GamesTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Games
+  alias Data.Games
   alias Grapevine.UserAgents
 
   describe "registering a new game" do
@@ -312,7 +312,7 @@ defmodule Grapevine.GamesTest do
 
       {:ok, redirect_uri} = Games.delete_redirect_uri(redirect_uri)
 
-      refute Grapevine.Repo.get(Games.RedirectURI, redirect_uri.id)
+      refute Repo.get(Games.RedirectURI, redirect_uri.id)
     end
   end
 

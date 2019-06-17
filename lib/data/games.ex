@@ -1,18 +1,18 @@
-defmodule Grapevine.Games do
+defmodule Data.Games do
   @moduledoc """
   Context for games
   """
 
+  alias Data.Games.ClientSettings
+  alias Data.Games.Connection
+  alias Data.Games.Game
+  alias Data.Games.Images
+  alias Data.Games.RedirectURI
+  alias Data.Repo
   alias Grapevine.Accounts.User
   alias Grapevine.Alerts
   alias Grapevine.Filter
-  alias Grapevine.Games.ClientSettings
-  alias Grapevine.Games.Connection
-  alias Grapevine.Games.Game
-  alias Grapevine.Games.Images
-  alias Grapevine.Games.RedirectURI
   alias Grapevine.Notifications
-  alias Grapevine.Repo
   alias Grapevine.Telnet
   alias Grapevine.UserAgents
 

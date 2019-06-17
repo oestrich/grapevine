@@ -5,8 +5,8 @@ defmodule Grapevine.Achievements do
 
   import Ecto.Query
 
+  alias Data.Repo
   alias Grapevine.Achievements.Achievement
-  alias Grapevine.Repo
 
   @max_points 500
 

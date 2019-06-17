@@ -6,7 +6,7 @@ defmodule Grapevine.Gauges do
   import Ecto.Query
 
   alias Grapevine.Gauges.Gauge
-  alias Grapevine.Repo
+  alias Data.Repo
 
   def colors(), do: Gauge.colors()
 

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateCharacters do
+defmodule Data.Repo.Migrations.CreateCharacters do
   use Ecto.Migration
 
   def change do

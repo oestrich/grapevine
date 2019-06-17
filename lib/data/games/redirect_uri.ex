@@ -1,4 +1,4 @@
-defmodule Grapevine.Games.RedirectURI do
+defmodule Data.Games.RedirectURI do
   @moduledoc """
   Redirect URI Schema
   """
@@ -7,7 +7,7 @@ defmodule Grapevine.Games.RedirectURI do
 
   import Ecto.Changeset
 
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   @type t :: %__MODULE__{}
 

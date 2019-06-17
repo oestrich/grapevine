@@ -6,11 +6,11 @@ defmodule Grapevine.Accounts do
   import Ecto.Query
   require Logger
 
+  alias Data.Games.Game
+  alias Data.Repo
   alias Grapevine.Accounts.User
   alias Grapevine.Emails
-  alias Grapevine.Games.Game
   alias Grapevine.Mailer
-  alias Grapevine.Repo
 
   @type id :: integer()
   @type user_params :: map()

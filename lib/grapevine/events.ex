@@ -6,7 +6,7 @@ defmodule Grapevine.Events do
   import Ecto.Query
 
   alias Grapevine.Events.Event
-  alias Grapevine.Repo
+  alias Data.Repo
 
   @doc """
   New changeset for an event

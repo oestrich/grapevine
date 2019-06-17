@@ -7,7 +7,7 @@ defmodule Grapevine.Statistics.Session do
 
   import Ecto.Changeset
 
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   @type t :: %__MODULE__{}
 

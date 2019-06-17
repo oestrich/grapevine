@@ -3,7 +3,7 @@ defmodule Web.Manage.RedirectURIController do
 
   plug(Web.Plugs.VerifyUser)
 
-  alias Grapevine.Games
+  alias Data.Games
 
   def create(conn, %{"game_id" => game_id, "redirect_uri" => %{"uri" => uri}}) do
     %{current_user: user} = conn.assigns

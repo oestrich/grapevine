@@ -8,7 +8,7 @@ defmodule Grapevine.Characters.Character do
   import Ecto.Changeset
 
   alias Grapevine.Accounts.User
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   @type t :: %__MODULE__{}
 

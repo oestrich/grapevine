@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.ChangeLowerShortnameIndexOnGames do
+defmodule Data.Repo.Migrations.ChangeLowerShortnameIndexOnGames do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddPasswordResetFieldsToUsers do
+defmodule Data.Repo.Migrations.AddPasswordResetFieldsToUsers do
   use Ecto.Migration
 
   def change do

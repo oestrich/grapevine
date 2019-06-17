@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddDisplayPlayerGraphToGames do
+defmodule Data.Repo.Migrations.AddDisplayPlayerGraphToGames do
   use Ecto.Migration
 
   def up do

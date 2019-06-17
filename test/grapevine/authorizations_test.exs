@@ -4,7 +4,7 @@ defmodule Grapevine.AuthorizationsTest do
   alias Grapevine.Authorizations
   alias Grapevine.Authorizations.AccessToken
   alias Grapevine.Authorizations.Authorization
-  alias Grapevine.Games
+  alias Data.Games
 
   describe "starting to authenticate" do
     setup [:with_user, :with_game]

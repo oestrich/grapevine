@@ -1,4 +1,4 @@
-defmodule Grapevine.Games.ClientSettings do
+defmodule Data.Games.ClientSettings do
   @moduledoc """
   Client settings Schema
   """
@@ -7,7 +7,7 @@ defmodule Grapevine.Games.ClientSettings do
 
   import Ecto.Changeset
 
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   @type t :: %__MODULE__{}
 

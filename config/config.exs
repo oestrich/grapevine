@@ -8,7 +8,7 @@ use Mix.Config
 # General application configuration
 config :grapevine,
   namespace: Web,
-  ecto_repos: [Grapevine.Repo]
+  ecto_repos: [Data.Repo]
 
 # Configures the endpoint
 config :grapevine, Web.Endpoint,

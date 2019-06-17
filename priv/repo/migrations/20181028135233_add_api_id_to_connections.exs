@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddApiIdToConnections do
+defmodule Data.Repo.Migrations.AddApiIdToConnections do
   use Ecto.Migration
 
   def up do

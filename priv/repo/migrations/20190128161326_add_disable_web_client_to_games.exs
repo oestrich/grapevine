@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddDisableWebClientToGames do
+defmodule Data.Repo.Migrations.AddDisableWebClientToGames do
   use Ecto.Migration
 
   def change do

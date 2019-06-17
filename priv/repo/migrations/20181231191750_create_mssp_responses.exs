@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateMsspResponses do
+defmodule Data.Repo.Migrations.CreateMsspResponses do
   use Ecto.Migration
 
   def change do

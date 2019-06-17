@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddHasMsspToConnections do
+defmodule Data.Repo.Migrations.AddHasMsspToConnections do
   use Ecto.Migration
 
   def change do

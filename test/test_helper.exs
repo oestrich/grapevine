@@ -1,3 +1,3 @@
 ExUnit.start()
 
-Ecto.Adapters.SQL.Sandbox.mode(Grapevine.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Data.Repo, :manual)

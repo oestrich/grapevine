@@ -3,7 +3,7 @@ defmodule Grapevine.UserAgents do
   User agent context
   """
 
-  alias Grapevine.Repo
+  alias Data.Repo
   alias Grapevine.UserAgents.UserAgent
 
   @type user_agent :: String.t()

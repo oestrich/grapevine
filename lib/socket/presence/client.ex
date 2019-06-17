@@ -3,7 +3,7 @@ defmodule Socket.Presence.Client do
   Implementation of the Presence client
   """
 
-  alias Grapevine.Games
+  alias Data.Games
   alias Socket.Presence.GrapevineApplication
 
   import Socket.Presence, only: [ets_key: 0]

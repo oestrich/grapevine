@@ -2,7 +2,7 @@ defmodule Grapevine.Authorizations.AuthorizationTest do
   use ExUnit.Case
 
   alias Grapevine.Authorizations.Authorization
-  alias Grapevine.Games.Game
+  alias Data.Games.Game
 
   describe "redirect_uri validations" do
     setup [:with_game]

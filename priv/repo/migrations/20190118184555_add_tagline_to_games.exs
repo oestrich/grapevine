@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddTaglineToGames do
+defmodule Data.Repo.Migrations.AddTaglineToGames do
   use Ecto.Migration
 
   def change do

@@ -3,7 +3,7 @@ defmodule Grapevine.Presence.Client do
   Main node version of the socket presence
   """
 
-  alias Grapevine.Games
+  alias Data.Games
 
   @ets_key :grapevine_presence_cache
   @timeout_seconds 60

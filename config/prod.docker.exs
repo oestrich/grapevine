@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :grapevine, Grapevine.Repo,
+config :grapevine, Data.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "grapevine",
   hostname: "postgres",

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateGauges do
+defmodule Data.Repo.Migrations.CreateGauges do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddUndockedToGauges do
+defmodule Data.Repo.Migrations.AddUndockedToGauges do
   use Ecto.Migration
 
   def change do

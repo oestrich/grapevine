@@ -2,7 +2,7 @@ defmodule Grapevine.Featured.ImplementationTest do
   use Grapevine.DataCase
 
   alias Grapevine.Featured.Implementation
-  alias Grapevine.Games
+  alias Data.Games
   alias Grapevine.Statistics
 
   describe "determining the amount of milliseconds to delay" do

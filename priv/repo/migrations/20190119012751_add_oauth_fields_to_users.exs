@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddOauthFieldsToUsers do
+defmodule Data.Repo.Migrations.AddOauthFieldsToUsers do
   use Ecto.Migration
 
   def change do

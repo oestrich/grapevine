@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateOauthTables do
+defmodule Data.Repo.Migrations.CreateOauthTables do
   use Ecto.Migration
 
   def change do

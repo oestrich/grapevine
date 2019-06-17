@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.AddDiscordInviteToGames do
+defmodule Data.Repo.Migrations.AddDiscordInviteToGames do
   use Ecto.Migration
 
   def change do

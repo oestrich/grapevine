@@ -1,4 +1,4 @@
-defmodule Grapevine.Repo.Migrations.CreateAlerts do
+defmodule Data.Repo.Migrations.CreateAlerts do
   use Ecto.Migration
 
   def change do
