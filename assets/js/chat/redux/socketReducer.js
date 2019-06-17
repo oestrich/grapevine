@@ -1,6 +1,18 @@
-import {createReducer} from "reduxsauce";
+import {createActions, createReducer} from "reduxsauce";
 
-import {Types} from "./actions";
+export const {Types: SocketTypes, Creators: SocketCreators} = createActions({
+  socketConnected: null,
+  socketDisconnected: null,
+  socketReceiveBroadcast: ["message"],
+  socketSubscribedChannel: ["channel"],
+});
+
+SocketCreators.socketSubscribeChannel = (socket, channelName) => {
+  return (dispatch) => {
+    socket.connectChannel(channelName);
+    dispatch(SocketCreators.socketSubscribedChannel(channelName));
+  };
+};
 
 export const INITIAL_STATE = {
   channels: [],
@@ -50,10 +62,10 @@ export const socketSubscribedChannel = (state, action) => {
 };
 
 const HANDLERS = {
-  [Types.SOCKET_CONNECTED]: socketConnected,
-  [Types.SOCKET_DISCONNECTED]: socketDisconnected,
-  [Types.SOCKET_RECEIVE_BROADCAST]: socketReceiveBroadcast,
-  [Types.SOCKET_SUBSCRIBED_CHANNEL]: socketSubscribedChannel,
+  [SocketTypes.SOCKET_CONNECTED]: socketConnected,
+  [SocketTypes.SOCKET_DISCONNECTED]: socketDisconnected,
+  [SocketTypes.SOCKET_RECEIVE_BROADCAST]: socketReceiveBroadcast,
+  [SocketTypes.SOCKET_SUBSCRIBED_CHANNEL]: socketSubscribedChannel,
 };
 
 export const socketReducer = createReducer(INITIAL_STATE, HANDLERS);

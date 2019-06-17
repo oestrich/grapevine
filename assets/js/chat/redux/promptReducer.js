@@ -1,9 +1,14 @@
 import _ from "underscore";
-import {createReducer} from "reduxsauce";
+import {createActions, createReducer} from "reduxsauce";
 
-import {Types} from "./actions";
+import {SocketTypes} from "./socketReducer";
 
-const INITIAL_STATE = {
+export const {Types: PromptTypes, Creators: PromptCreators} = createActions({
+  promptSetMessage: ["message"],
+  promptSetActiveChannel: ["channel"],
+});
+
+export const INITIAL_STATE = {
   activeChannel: null,
   channels: [],
   message: "",
@@ -41,9 +46,9 @@ export const subscribedChannel = (state, action) => {
 };
 
 const HANDLERS = {
-  [Types.PROMPT_SET_ACTIVE_CHANNEL]: setActiveChannel,
-  [Types.PROMPT_SET_MESSAGE]: setMessage,
-  [Types.SOCKET_SUBSCRIBED_CHANNEL]: subscribedChannel,
+  [PromptTypes.PROMPT_SET_ACTIVE_CHANNEL]: setActiveChannel,
+  [PromptTypes.PROMPT_SET_MESSAGE]: setMessage,
+  [SocketTypes.SOCKET_SUBSCRIBED_CHANNEL]: subscribedChannel,
 };
 
 export const promptReducer = createReducer(INITIAL_STATE, HANDLERS);

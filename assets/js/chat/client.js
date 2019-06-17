@@ -5,7 +5,7 @@ import {Prompt} from "./components/prompt";
 import {SocketProvider} from "./components/socket_provider";
 import Terminal from "./components/terminal";
 
-import {Creators} from "./redux/actions";
+import {SocketCreators} from "./redux/socketReducer";
 import {makeStore} from "./redux/store";
 import {ClientSocket} from "./socket";
 
@@ -24,7 +24,7 @@ export class Client extends React.Component {
     this.socket.join();
 
     this.props.channels.map(channelName => {
-      this.store.dispatch(Creators.socketSubscribeChannel(this.socket, channelName));
+      this.store.dispatch(SocketCreators.socketSubscribeChannel(this.socket, channelName));
     });
   }
 

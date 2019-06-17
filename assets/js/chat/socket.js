@@ -2,7 +2,7 @@ import {Socket} from "phoenix";
 import Sizzle from "sizzle";
 import _ from "underscore";
 
-import {Creators} from "./redux/actions";
+import {SocketCreators} from "./redux/socketReducer";
 
 const MAX_RETRIES = 50;
 
@@ -15,15 +15,15 @@ class ClientSocket {
   }
 
   connected()  {
-    this.store.dispatch(Creators.socketConnected());
+    this.store.dispatch(SocketCreators.socketConnected());
   }
 
   disconnected() {
-    this.store.dispatch(Creators.socketDisconnected());
+    this.store.dispatch(SocketCreators.socketDisconnected());
   }
 
   receiveBroadcast(data) {
-    this.store.dispatch(Creators.socketReceiveBroadcast(data));
+    this.store.dispatch(SocketCreators.socketReceiveBroadcast(data));
   }
 
   join() {

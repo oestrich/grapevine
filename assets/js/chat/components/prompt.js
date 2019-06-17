@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {ConnectionStatus} from "./connection_status";
-import {Creators} from "../redux/actions";
+import {PromptCreators} from "../redux/promptReducer";
 import {getPromptActiveChannel, getPromptMessage, getSocketChannels} from "../redux/selectors";
 
 class Prompt extends React.Component {
@@ -92,8 +92,8 @@ let mapStateToProps = (state) => {
 };
 
 Prompt = connect(mapStateToProps, {
-  setMessage: Creators.promptSetMessage,
-  setActiveChannel: Creators.promptSetActiveChannel,
+  setMessage: PromptCreators.promptSetMessage,
+  setActiveChannel: PromptCreators.promptSetActiveChannel,
 })(Prompt);
 
 export {Prompt};
