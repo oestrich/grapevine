@@ -1,4 +1,4 @@
-FROM elixir:1.7.2-alpine as builder
+FROM elixir:1.8-alpine as builder
 
 # The nuclear approach:
 # RUN apk add --no-cache alpine-sdk
@@ -18,10 +18,10 @@ RUN mix deps.get --only prod
 
 RUN mix deps.compile
 
-FROM node:8.6 as frontend
+FROM node:10.13 as frontend
 
 WORKDIR /app
-COPY assets/package*.json /app/
+COPY assets/package.json assets/yarn.lock /app/
 COPY --from=builder /app/deps/phoenix /deps/phoenix
 COPY --from=builder /app/deps/phoenix_html /deps/phoenix_html
 COPY --from=builder /app/deps/phoenix_live_view /deps/phoenix_live_view
@@ -34,7 +34,8 @@ RUN npm run deploy
 FROM builder as releaser
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
-ENV COOKIE="zR2/sR0Ohy5xeVMjMHsCt5Jl76lTpeI0LU57zu8XrnfLLzHZFuIsWxQYiMLBpToU"
+ARG cookie
+ENV COOKIE=${cookie}
 RUN mix phx.digest
 RUN mix release --env=prod --no-tar
 
