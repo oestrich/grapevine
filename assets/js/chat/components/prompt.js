@@ -33,6 +33,11 @@ class Prompt extends React.Component {
 
   sendMessage() {
     const message = this.props.message;
+
+    if (message === "") {
+      return;
+    }
+
     this.context.socket.send(this.props.activeChannel, message);
     this.props.setMessage("");
   }

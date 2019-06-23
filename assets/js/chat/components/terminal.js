@@ -60,11 +60,30 @@ class Terminal extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  componentWillUpdate() {
+    let visibleBottom = this.terminal.scrollTop + this.terminal.clientHeight;
+    this.triggerScroll = !(visibleBottom + 250 < this.terminal.scrollHeight);
+  }
+
+  scrollToBottom() {
+    if (this.triggerScroll) {
+      this.el.scrollIntoView();
+    }
+  }
+
   render() {
     let messages = this.props.messages;
 
     return (
-      <div className="terminal">
+      <div ref={el => { this.terminal = el; }} className="terminal">
         {_.map(messages, this.renderMessage)}
         <div ref={el => { this.el = el; }} />
       </div>
