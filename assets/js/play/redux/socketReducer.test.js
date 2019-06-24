@@ -1,6 +1,6 @@
 import {socketReducer} from "./socketReducer";
 import {Creators} from "./actions";
-import {Line} from "../colorizer/models";
+import {Line} from "@grapevine/ansi/dist/models";
 
 describe("socket reducer", () => {
   test("socket connected", () => {

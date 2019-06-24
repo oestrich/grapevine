@@ -1,9 +1,9 @@
 import _ from "underscore";
 import {createReducer} from "reduxsauce";
+import * as ansi from "@grapevine/ansi";
+import {InputSequence} from "@grapevine/ansi/dist/models";
 
 import {Types} from "./actions";
-import * as colorize from "../colorizer";
-import {InputSequence} from "../colorizer/models";
 
 const MAX_LINES = 1000;
 
@@ -36,7 +36,7 @@ let appendLines = (state, lines) => {
 };
 
 let parseText = (state, text) => {
-  let lines = colorize.parse(text, state.lastLine);
+  let lines = ansi.parse(text, state.lastLine);
   return appendLines(state, lines);
 };
 
@@ -61,7 +61,7 @@ export const socketEcho = (state, action) => {
 
 export const socketInput = (state, action) => {
   const {text} = action;
-  let lines = colorize.appendInput(state.lastLine, text);
+  let lines = ansi.appendInput(state.lastLine, text);
   return appendLines(state, lines);
 };
 

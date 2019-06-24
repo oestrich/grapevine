@@ -1,8 +1,8 @@
 import _ from "underscore";
 import {createReducer} from "reduxsauce";
+import * as ansi from "@grapevine/ansi";
 
 import {Types} from "./actions";
-import * as colorizer from "../colorizer";
 
 const INITIAL_STATE = {
   modals: [],
@@ -12,7 +12,7 @@ class Modal {
   constructor(attrs) {
     this.key = attrs.key;
     this.title = attrs.title;
-    this.lines = colorizer.parse(attrs.body);
+    this.lines = ansi.parse(attrs.body);
   }
 }
 
