@@ -39,8 +39,9 @@ ENV COOKIE=${cookie}
 RUN mix phx.digest
 RUN mix release --env=prod --no-tar
 
-FROM alpine:3.8
-RUN apk add -U bash libssl1.0
+FROM alpine:3.9
+ENV LANG=C.UTF-8
+RUN apk add -U bash openssl imagemagick
 WORKDIR /app
 COPY --from=releaser /app/_build/prod/rel/grapevine /app/
 COPY config/prod.docker.exs /etc/grapevine/config.exs
