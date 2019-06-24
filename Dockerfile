@@ -43,7 +43,7 @@ FROM alpine:3.8
 RUN apk add -U bash libssl1.0
 WORKDIR /app
 COPY --from=releaser /app/_build/prod/rel/grapevine /app/
-COPY config/prod.docker.exs /etc/grapevine.config.exs
+COPY config/prod.docker.exs /etc/grapevine/config.exs
 
 ENV MIX_ENV=prod
 
