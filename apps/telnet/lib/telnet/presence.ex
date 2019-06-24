@@ -7,6 +7,7 @@ defmodule GrapevineTelnet.Presence do
 
   alias __MODULE__.Implementation
   alias __MODULE__.OpenClient
+  alias GrapevineTelnet.PubSub
   alias GrapevineTelnet.Statistics
 
   @ets_key GrapevineTelnet.Presence
@@ -126,7 +127,7 @@ defmodule GrapevineTelnet.Presence do
   end
 
   defp broadcast(event, client) do
-    Phoenix.Channel.Server.broadcast(Grapevine.PubSub, "telnet:presence", event, client)
+    PubSub.broadcast("telnet:presence", event, client)
   end
 
   defp create_table() do

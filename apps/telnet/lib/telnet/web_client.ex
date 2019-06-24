@@ -9,6 +9,7 @@ defmodule GrapevineTelnet.WebClient do
   alias GrapevineTelnet.ClientSupervisor
   alias GrapevineTelnet.Features
   alias GrapevineTelnet.Presence
+  alias GrapevineTelnet.PubSub
   alias Telnet.NewEnviron
 
   @behaviour Client
@@ -54,6 +55,7 @@ defmodule GrapevineTelnet.WebClient do
     Process.link(channel_pid)
 
     Presence.client_online(state.sid, opts)
+    PubSub.subscribe("system")
 
     state
     |> Map.put(:game, Keyword.get(opts, :game))
@@ -295,6 +297,15 @@ defmodule GrapevineTelnet.WebClient do
   def handle_info({:event, "system/disconnect", _payload}, state) do
     disconnected(state)
     {:stop, :normal, state}
+  end
+
+  def handle_info(%{topic: "system", event: "restart"}, state) do
+    message = """
+    \e[31;1m\nSYSTEM:\e[37;1m The Grapevine web application will be restarting shortly.\e[0m
+    \e[31;1mSYSTEM:\e[37;1m Your session will not be disconnected.\e[0m
+    """
+    maybe_forward(state, :echo, message)
+    {:noreply, state}
   end
 
   defp rebroadcast_gmcp(state = %{features: %{gmcp: true}}) do
