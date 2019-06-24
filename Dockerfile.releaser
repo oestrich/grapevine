@@ -18,8 +18,6 @@ COPY assets /app
 RUN yarn run deploy
 
 FROM builder as releaser
-ARG sha
-ENV SHA=${sha}
 ARG cookie
 ENV COOKIE=${cookie}
 COPY --from=frontend /priv/static /app/priv/static
