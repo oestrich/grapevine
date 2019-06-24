@@ -12,7 +12,7 @@
     <section>
       <h3>Edit <%= @game.name %></h3>
 
-      <%= render("_form.html", changeset: @changeset, url: manage_game_path(@conn, :update, @game.id), submit: "Update Game", mode: :edit, game: @game) %>
+      <%= render("_form.html", conn: @conn, changeset: @changeset, url: manage_game_path(@conn, :update, @game.id), submit: "Update Game", mode: :edit, game: @game) %>
     </section>
   </div>
 </div>

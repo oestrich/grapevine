@@ -54,6 +54,14 @@
         </div>
 
         <div>
+          <%= if @game.display_players do %>
+            <%= @game.name %> <b>will</b> display players in connected list.
+          <% else %>
+            <%= @game.name %> <b>will not</b> display players in connected list.
+          <% end %>
+        </div>
+
+        <div>
           <%= if @game.allow_character_registration do %>
             Characters <b>can</b> be registered.
           <% else %>
