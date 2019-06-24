@@ -78,6 +78,11 @@ defmodule Web.PlayChannel do
     {:noreply, socket}
   end
 
+  def handle_in(event = "system/" <> _, params, socket) do
+    WebClient.event(socket.assigns.client_pid, event, params)
+    {:noreply, socket}
+  end
+
   def handle_in("oauth", %{"state" => "accept"}, socket) do
     with true <- secure_telnet?(socket),
          {:ok, authorization} <- Map.fetch(socket.assigns, :authorization) do

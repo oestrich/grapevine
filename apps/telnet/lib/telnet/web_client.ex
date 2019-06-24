@@ -292,6 +292,11 @@ defmodule GrapevineTelnet.WebClient do
     end
   end
 
+  def handle_info({:event, "system/disconnect", _payload}, state) do
+    disconnected(state)
+    {:stop, :normal, state}
+  end
+
   defp rebroadcast_gmcp(state = %{features: %{gmcp: true}}) do
     Enum.each(state.features.message_cache, fn {message, data} ->
       maybe_forward(state, :gmcp, {message, data})
