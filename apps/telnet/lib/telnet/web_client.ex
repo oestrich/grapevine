@@ -304,6 +304,7 @@ defmodule GrapevineTelnet.WebClient do
     \e[31;1m\nSYSTEM:\e[37;1m The Grapevine web application will be restarting shortly.\e[0m
     \e[31;1mSYSTEM:\e[37;1m Your session will not be disconnected.\e[0m
     """
+
     maybe_forward(state, :echo, message)
     {:noreply, state}
   end
