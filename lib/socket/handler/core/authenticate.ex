@@ -19,7 +19,7 @@ defmodule Socket.Handler.Core.Authenticate do
     :telemetry.execute([:grapevine, :sockets, :connect], %{count: 1}, %{})
 
     with {:ok, game} <- validate_socket(payload),
-         {:ok, supports} <- validate_supports(payload) do
+         {:ok, supports} <- validate_supports(game, payload) do
       finalize_auth(state, game, payload, supports)
     else
       {:error, :invalid} ->
@@ -116,10 +116,11 @@ defmodule Socket.Handler.Core.Authenticate do
     Games.validate_socket(client_id, client_secret, payload)
   end
 
-  defp validate_supports(payload) do
+  defp validate_supports(game, payload) do
     with {:ok, supports} <- get_supports(payload),
          {:ok, supports} <- check_supports_for_channels(supports),
-         {:ok, supports} <- check_unknown_supports(supports) do
+         {:ok, supports} <- check_unknown_supports(supports),
+         {:ok, supports} <- check_for_players_and_tells(game, supports) do
       {:ok, supports}
     end
   end
@@ -154,6 +155,17 @@ defmodule Socket.Handler.Core.Authenticate do
 
       false ->
         {:error, :unknown_supports}
+    end
+  end
+
+  defp check_for_players_and_tells(game, supports) do
+    case game.display_players do
+      true ->
+        {:ok, supports}
+
+      false ->
+        supports = List.delete(supports, "tells")
+        {:ok, supports}
     end
   end
 
