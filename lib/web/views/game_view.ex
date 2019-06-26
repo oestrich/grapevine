@@ -187,10 +187,8 @@ defmodule Web.GameView do
     end
   end
 
-  def online_players(nil), do: []
-
-  def online_players(presence) do
-    presence.players
+  def display_players?(game, players) do
+    game.display_players && !Enum.empty?(players)
   end
 
   def online_status(game) do

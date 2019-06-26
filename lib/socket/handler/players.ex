@@ -55,7 +55,7 @@ defmodule Socket.Handler.Players do
   end
 
   defp maybe_broadcast_signin(state, name) do
-    case state.game.display do
+    case display?(state.game) do
       true ->
         token()
         |> assign(:game, state.game)
@@ -96,7 +96,7 @@ defmodule Socket.Handler.Players do
   end
 
   defp maybe_broadcast_signout(state, name) do
-    case state.game.display do
+    case display?(state.game) do
       true ->
         token()
         |> assign(:game, state.game)
@@ -127,7 +127,7 @@ defmodule Socket.Handler.Players do
     :telemetry.execute([:grapevine, :events, :players, :status], %{count: 1}, %{all: true})
 
     Presence.online_games()
-    |> Enum.filter(& &1.game.display)
+    |> Enum.filter(&display?(&1.game))
     |> Core.remove_self_from_game_list(state)
     |> Enum.each(&relay_state(&1, ref))
 
@@ -138,6 +138,10 @@ defmodule Socket.Handler.Players do
 
   defp find_game(state, name) do
     state.game.short_name == name
+  end
+
+  defp display?(game) do
+    game.display && game.display_players
   end
 
   defp maybe_relay_state(nil, ref) do

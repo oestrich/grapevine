@@ -13,7 +13,7 @@
 
       <p class="lead">You will have a chance to fill in information, such as connection info, after entering in basic data.</p>
 
-      <%= render("_form.html", changeset: @changeset, url: manage_game_path(@conn, :create), submit: "Create Game", mode: :create) %>
+      <%= render("_form.html", conn: @conn, changeset: @changeset, url: manage_game_path(@conn, :create), submit: "Create Game", mode: :create) %>
     </section>
   </div>
 </div>

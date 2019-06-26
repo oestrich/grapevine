@@ -117,6 +117,28 @@ defmodule Socket.Handler.CoreTest do
     after
       Presence.reset()
     end
+
+    test "trying to support tells with player display off", %{state: state, game: game} do
+      game |> Ecto.Changeset.change(%{display_players: false}) |> Repo.update()
+
+      frame = %{
+        "event" => "authenticate",
+        "payload" => %{
+          "client_id" => game.client_id,
+          "client_secret" => game.client_secret,
+          "supports" => ["channels", "tells"],
+          "channels" => []
+        }
+      }
+
+      {:ok, response, _state} = Router.receive(state, frame)
+
+      assert response.status == "success"
+
+      assert [_, %{supports: ["channels"]}] = Presence.online_games()
+    after
+      Presence.reset()
+    end
   end
 
   describe "heartbeats" do
