@@ -191,12 +191,6 @@ defmodule Web.GameView do
     game.display_players && !Enum.empty?(players)
   end
 
-  def online_players(nil), do: []
-
-  def online_players(presence) do
-    presence.players
-  end
-
   def online_status(game) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -1)
 

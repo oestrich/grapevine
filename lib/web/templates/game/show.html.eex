@@ -88,11 +88,11 @@
     <% end %>
 
     <div class="row mt-3">
-      <%= if !Enum.empty?(online_players(@presence)) do %>
+      <%= if display_players?(@game, @players) do %>
         <div class="col-md-12">
           <h4>Online Players</h4>
           <div class="players">
-            <%= Enum.map(online_players(@presence), fn player -> %>
+            <%= Enum.map(@players, fn player -> %>
               <span class="player"><%= player %></span>
             <% end) %>
           </div>
