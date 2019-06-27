@@ -1,7 +1,7 @@
-defmodule Grapevine.CharactersTest do
+defmodule GrapevineData.CharactersTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Characters
+  alias GrapevineData.Characters
 
   describe "registration" do
     test "starts registration" do

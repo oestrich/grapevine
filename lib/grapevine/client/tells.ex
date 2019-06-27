@@ -4,7 +4,7 @@ defmodule Grapevine.Client.Tells do
   """
 
   alias GrapevineData.Accounts
-  alias Grapevine.Characters
+  alias GrapevineData.Characters
   alias Grapevine.Client
   alias GrapevineData.Games
 

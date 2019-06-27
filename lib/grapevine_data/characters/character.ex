@@ -1,4 +1,4 @@
-defmodule Grapevine.Characters.Character do
+defmodule GrapevineData.Characters.Character do
   @moduledoc """
   Character schema
   """
