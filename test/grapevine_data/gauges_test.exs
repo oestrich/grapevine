@@ -1,7 +1,7 @@
-defmodule Grapevine.GaugesTest do
+defmodule GrapevineData.GaugesTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Gauges
+  alias GrapevineData.Gauges
 
   describe "create a gauge" do
     test "successful" do

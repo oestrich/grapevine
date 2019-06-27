@@ -14,7 +14,7 @@ defmodule GrapevineData.Games.Game do
   alias GrapevineData.Games.ClientSettings
   alias GrapevineData.Games.Connection
   alias GrapevineData.Games.RedirectURI
-  alias Grapevine.Gauges.Gauge
+  alias GrapevineData.Gauges.Gauge
   alias Grapevine.Statistics.Session
 
   @type t :: %__MODULE__{}

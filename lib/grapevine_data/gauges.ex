@@ -1,11 +1,11 @@
-defmodule Grapevine.Gauges do
+defmodule GrapevineData.Gauges do
   @moduledoc """
   Context for web client gauge's
   """
 
   import Ecto.Query
 
-  alias Grapevine.Gauges.Gauge
+  alias GrapevineData.Gauges.Gauge
   alias GrapevineData.Repo
 
   def colors(), do: Gauge.colors()

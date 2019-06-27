@@ -1,4 +1,4 @@
-defmodule Grapevine.Gauges.Gauge do
+defmodule GrapevineData.Gauges.Gauge do
   @moduledoc """
   Gauge Schema
   """
