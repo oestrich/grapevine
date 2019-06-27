@@ -1,7 +1,7 @@
-defmodule Grapevine.Channels.ChannelTest do
+defmodule GrapevineData.Channels.ChannelTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Channels.Channel
+  alias GrapevineData.Channels.Channel
 
   describe "validations on channel" do
     test "letters only" do

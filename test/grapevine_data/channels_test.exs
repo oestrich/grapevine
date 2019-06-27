@@ -1,7 +1,7 @@
-defmodule Grapevine.ChannelsTest do
+defmodule GrapevineData.ChannelsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Channels
+  alias GrapevineData.Channels
 
   describe "creating a channel" do
     test "creates a new channel" do

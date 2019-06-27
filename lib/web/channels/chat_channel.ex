@@ -5,7 +5,7 @@ defmodule Web.ChatChannel do
 
   use Web, :channel
 
-  alias Grapevine.Channels
+  alias GrapevineData.Channels
   alias Grapevine.Client
   alias Grapevine.Client.Broadcast
 

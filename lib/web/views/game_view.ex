@@ -2,7 +2,7 @@ defmodule Web.GameView do
   use Web, :view
 
   alias GrapevineData.Achievements
-  alias Grapevine.Channels
+  alias GrapevineData.Channels
   alias GrapevineData.Games.Images
   alias Grapevine.UserAgents
   alias Stein.Storage

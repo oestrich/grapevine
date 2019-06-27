@@ -1,4 +1,4 @@
-defmodule Grapevine.Channels.Channel do
+defmodule GrapevineData.Channels.Channel do
   @moduledoc """
   Channel schema
   """
@@ -7,7 +7,7 @@ defmodule Grapevine.Channels.Channel do
 
   import Ecto.Changeset
 
-  alias Grapevine.Channels
+  alias GrapevineData.Channels
 
   @type t :: %__MODULE__{}
 

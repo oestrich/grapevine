@@ -1,11 +1,11 @@
-defmodule Grapevine.Channels do
+defmodule GrapevineData.Channels do
   @moduledoc """
   Context for channels
   """
 
   import Ecto.Query
 
-  alias Grapevine.Channels.Channel
+  alias GrapevineData.Channels.Channel
   alias GrapevineData.Repo
 
   @type opts :: Keyword.t()
