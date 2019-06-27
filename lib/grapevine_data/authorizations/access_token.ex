@@ -1,4 +1,4 @@
-defmodule Grapevine.Authorizations.AccessToken do
+defmodule GrapevineData.Authorizations.AccessToken do
   @moduledoc """
   Access token schema
   """
@@ -7,7 +7,7 @@ defmodule Grapevine.Authorizations.AccessToken do
 
   import Ecto.Changeset
 
-  alias Grapevine.Authorizations.Authorization
+  alias GrapevineData.Authorizations.Authorization
 
   @type t :: %__MODULE__{}
 

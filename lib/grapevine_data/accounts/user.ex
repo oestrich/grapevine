@@ -7,7 +7,7 @@ defmodule GrapevineData.Accounts.User do
 
   import Ecto.Changeset
 
-  alias Grapevine.Authorizations.Authorization
+  alias GrapevineData.Authorizations.Authorization
   alias Grapevine.Characters.Character
   alias GrapevineData.Accounts
   alias GrapevineData.Games.Game

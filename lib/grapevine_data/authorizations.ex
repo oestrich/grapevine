@@ -1,12 +1,12 @@
-defmodule Grapevine.Authorizations do
+defmodule GrapevineData.Authorizations do
   @moduledoc """
   Authorize remote logins
   """
 
   import Ecto.Query
 
-  alias Grapevine.Authorizations.AccessToken
-  alias Grapevine.Authorizations.Authorization
+  alias GrapevineData.Authorizations.AccessToken
+  alias GrapevineData.Authorizations.Authorization
   alias GrapevineData.Games
   alias GrapevineData.Repo
 

@@ -1,9 +1,9 @@
-defmodule Grapevine.AuthorizationsTest do
+defmodule GrapevineData.AuthorizationsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Authorizations
-  alias Grapevine.Authorizations.AccessToken
-  alias Grapevine.Authorizations.Authorization
+  alias GrapevineData.Authorizations
+  alias GrapevineData.Authorizations.AccessToken
+  alias GrapevineData.Authorizations.Authorization
   alias GrapevineData.Games
 
   describe "starting to authenticate" do
