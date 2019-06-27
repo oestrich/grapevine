@@ -1,7 +1,7 @@
-defmodule Grapevine.TelnetTest do
+defmodule GrapevineData.TelnetTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Telnet
+  alias GrapevineData.Telnet
 
   describe "recording a successful response" do
     test "first time" do

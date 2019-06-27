@@ -1,4 +1,4 @@
-defmodule Grapevine.Telnet.MSSPResponse do
+defmodule GrapevineData.Telnet.MSSPResponse do
   @moduledoc """
   Connection Schema
   """

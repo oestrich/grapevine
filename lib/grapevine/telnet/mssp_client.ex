@@ -84,7 +84,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     maybe_forward("mssp/terminated", %{}, state)
     state.mssp_module.record_fail(state)
 
-    Grapevine.Telnet.record_no_mssp(state.host, state.port)
+    GrapevineData.Telnet.record_no_mssp(state.host, state.port)
     :telemetry.execute([:telnet, :mssp, :failed], %{count: 1}, state)
 
     {:stop, :normal, state}
@@ -182,7 +182,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     Check MSSP for a game
     """
 
-    alias Grapevine.Telnet
+    alias GrapevineData.Telnet
 
     def init(opts, state) do
       state
