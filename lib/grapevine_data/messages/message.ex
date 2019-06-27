@@ -1,4 +1,4 @@
-defmodule Grapevine.Messages.Message do
+defmodule GrapevineData.Messages.Message do
   @moduledoc """
   Message Schema
   """

@@ -11,7 +11,7 @@ defmodule Socket.Handler.Core do
 
   alias GrapevineData.Channels
   alias GrapevineData.Games
-  alias Grapevine.Messages
+  alias GrapevineData.Messages
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate
   alias Socket.PubSub

@@ -1,7 +1,7 @@
-defmodule Grapevine.MessagesTest do
+defmodule GrapevineData.MessagesTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Messages
+  alias GrapevineData.Messages
 
   describe "log a message" do
     test "from the socket" do

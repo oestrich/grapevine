@@ -1,9 +1,9 @@
-defmodule Grapevine.Messages do
+defmodule GrapevineData.Messages do
   @moduledoc """
   Record messages posted in the chat
   """
 
-  alias Grapevine.Messages.Message
+  alias GrapevineData.Messages.Message
   alias GrapevineData.Repo
 
   @doc """
