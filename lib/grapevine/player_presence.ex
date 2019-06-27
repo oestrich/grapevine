@@ -44,7 +44,7 @@ defmodule Grapevine.PlayerPresence do
 
     alias GrapevineData.Games
     alias Grapevine.PlayerPresence
-    alias Grapevine.Statistics
+    alias GrapevineData.Statistics
     alias Web.Endpoint
 
     def current_total_count() do

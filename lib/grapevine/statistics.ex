@@ -1,4 +1,4 @@
-defmodule Grapevine.Statistics do
+defmodule GrapevineData.Statistics do
   @moduledoc """
   Track statistics about a game
   """
@@ -7,8 +7,8 @@ defmodule Grapevine.Statistics do
 
   alias Grapevine.PlayerPresence
   alias GrapevineData.Repo
-  alias Grapevine.Statistics.PlayerStatistic
-  alias Grapevine.Statistics.Session
+  alias GrapevineData.Statistics.PlayerStatistic
+  alias GrapevineData.Statistics.Session
 
   @doc """
   Record a game's player count at a specific time on the socket

@@ -80,7 +80,7 @@ defmodule Grapevine.Featured.Implementation do
     limit = Keyword.get(opts, :select, 6)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
-    Grapevine.Statistics.PlayerStatistic
+    GrapevineData.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
     |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps, g], ps.recorded_at >= ^last_few_days)

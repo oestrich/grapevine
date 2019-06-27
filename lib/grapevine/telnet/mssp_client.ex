@@ -127,7 +127,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     """
 
     alias GrapevineData.Games
-    alias Grapevine.Statistics
+    alias GrapevineData.Statistics
 
     def init(opts, state) do
       connection = Keyword.get(opts, :connection)

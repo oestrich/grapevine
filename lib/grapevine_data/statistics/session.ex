@@ -1,4 +1,4 @@
-defmodule Grapevine.Statistics.Session do
+defmodule GrapevineData.Statistics.Session do
   @moduledoc """
   Web client session Schema
   """

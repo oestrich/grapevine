@@ -1,4 +1,4 @@
-defmodule Grapevine.Statistics.PlayerStatistic do
+defmodule GrapevineData.Statistics.PlayerStatistic do
   @moduledoc """
   Player Statistic Schema
   """
