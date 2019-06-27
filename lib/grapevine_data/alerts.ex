@@ -1,11 +1,11 @@
-defmodule Grapevine.Alerts do
+defmodule GrapevineData.Alerts do
   @moduledoc """
   Context for alerts
   """
 
   import Ecto.Query
 
-  alias Grapevine.Alerts.Alert
+  alias GrapevineData.Alerts.Alert
   alias Grapevine.Emails
   alias Grapevine.Mailer
   alias GrapevineData.Repo

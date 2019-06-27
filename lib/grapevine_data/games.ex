@@ -10,7 +10,7 @@ defmodule GrapevineData.Games do
   alias GrapevineData.Games.RedirectURI
   alias GrapevineData.Repo
   alias GrapevineData.Accounts.User
-  alias Grapevine.Alerts
+  alias GrapevineData.Alerts
   alias Grapevine.Filter
   alias Grapevine.Notifications
   alias Grapevine.Telnet

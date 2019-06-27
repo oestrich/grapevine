@@ -1,4 +1,4 @@
-defmodule Grapevine.Alerts.Alert do
+defmodule GrapevineData.Alerts.Alert do
   @moduledoc """
   Alert Schema
   """
