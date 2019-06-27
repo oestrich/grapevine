@@ -4,8 +4,8 @@ defmodule Grapevine.TestHelpers do
   alias Grapevine.Authorizations
   alias Grapevine.Channels
   alias Grapevine.Gauges
-  alias Data.Games
-  alias Data.Repo
+  alias GrapevineData.Games
+  alias GrapevineData.Repo
 
   def create_channel(attributes \\ %{}) do
     attributes =

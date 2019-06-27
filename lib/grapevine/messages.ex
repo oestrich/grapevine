@@ -4,7 +4,7 @@ defmodule Grapevine.Messages do
   """
 
   alias Grapevine.Messages.Message
-  alias Data.Repo
+  alias GrapevineData.Repo
 
   @doc """
   Create a message from the socket

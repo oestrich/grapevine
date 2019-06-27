@@ -15,7 +15,7 @@ defmodule Grapevine.ReleaseTasks do
   ]
 
   @repos [
-    Data.Repo
+    GrapevineData.Repo
   ]
 
   def migrate() do

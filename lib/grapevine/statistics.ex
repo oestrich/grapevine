@@ -6,7 +6,7 @@ defmodule Grapevine.Statistics do
   import Ecto.Query
 
   alias Grapevine.PlayerPresence
-  alias Data.Repo
+  alias GrapevineData.Repo
   alias Grapevine.Statistics.PlayerStatistic
   alias Grapevine.Statistics.Session
 

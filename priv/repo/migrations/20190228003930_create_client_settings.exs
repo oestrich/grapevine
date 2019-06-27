@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.CreateClientSettings do
+defmodule GrapevineData.Repo.Migrations.CreateClientSettings do
   use Ecto.Migration
 
   def change do

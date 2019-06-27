@@ -42,7 +42,7 @@ defmodule Grapevine.PlayerPresence do
   defmodule Implementation do
     @moduledoc false
 
-    alias Data.Games
+    alias GrapevineData.Games
     alias Grapevine.PlayerPresence
     alias Grapevine.Statistics
     alias Web.Endpoint

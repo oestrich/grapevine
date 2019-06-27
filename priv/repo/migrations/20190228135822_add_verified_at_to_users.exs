@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddVerifiedAtToUsers do
+defmodule GrapevineData.Repo.Migrations.AddVerifiedAtToUsers do
   use Ecto.Migration
 
   def change do

@@ -57,7 +57,7 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
-config :grapevine, Data.Repo,
+config :grapevine, GrapevineData.Repo,
   database: "grapevine_dev",
   hostname: "localhost",
   pool_size: 10,

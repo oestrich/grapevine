@@ -12,7 +12,7 @@ defmodule Grapevine.Application do
 
     children = [
       cluster_supervisor(),
-      {Data.Repo, []},
+      {GrapevineData.Repo, []},
       supervisor(Web.Endpoint, []),
       {Socket.Application, [name: Socket.Application]},
       {Grapevine.Presence, [name: Grapevine.Presence]},

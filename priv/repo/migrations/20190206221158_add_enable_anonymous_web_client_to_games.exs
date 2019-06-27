@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddEnableAnonymousWebClientToGames do
+defmodule GrapevineData.Repo.Migrations.AddEnableAnonymousWebClientToGames do
   use Ecto.Migration
 
   def change do

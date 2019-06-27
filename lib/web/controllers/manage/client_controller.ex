@@ -1,7 +1,7 @@
 defmodule Web.Manage.ClientController do
   use Web, :controller
 
-  alias Data.Games
+  alias GrapevineData.Games
   alias Grapevine.Gauges
 
   def show(conn, %{"game_id" => id}) do

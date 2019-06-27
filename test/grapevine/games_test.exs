@@ -1,7 +1,7 @@
-defmodule Data.GamesTest do
+defmodule GrapevineData.GamesTest do
   use Grapevine.DataCase
 
-  alias Data.Games
+  alias GrapevineData.Games
   alias Grapevine.UserAgents
 
   describe "registering a new game" do

@@ -9,7 +9,7 @@ defmodule Grapevine.Messages.Message do
 
   alias Grapevine.Accounts.User
   alias Grapevine.Channels.Channel
-  alias Data.Games.Game
+  alias GrapevineData.Games.Game
 
   @type t :: %__MODULE__{}
 

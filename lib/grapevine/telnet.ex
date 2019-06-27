@@ -4,7 +4,7 @@ defmodule Grapevine.Telnet do
   """
 
   alias Grapevine.Telnet.MSSPResponse
-  alias Data.Repo
+  alias GrapevineData.Repo
 
   @telnet Application.get_env(:grapevine, :modules)[:telnet]
 

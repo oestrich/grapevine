@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.CreateEvents do
+defmodule GrapevineData.Repo.Migrations.CreateEvents do
   use Ecto.Migration
 
   def change do

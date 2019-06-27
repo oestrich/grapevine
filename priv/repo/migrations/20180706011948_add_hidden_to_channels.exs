@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddHiddenToChannels do
+defmodule GrapevineData.Repo.Migrations.AddHiddenToChannels do
   use Ecto.Migration
 
   def change do

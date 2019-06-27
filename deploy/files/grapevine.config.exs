@@ -18,7 +18,7 @@ config :grapevine, Web.Endpoint,
 config :grapevine, :socket, tls: true
 
 # Configure your database
-config :grapevine, Data.Repo,
+config :grapevine, GrapevineData.Repo,
   database: "grapevine",
   hostname: "localhost",
   pool_size: 10

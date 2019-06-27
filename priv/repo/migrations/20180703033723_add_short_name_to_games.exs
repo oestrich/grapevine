@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddShortNameToGames do
+defmodule GrapevineData.Repo.Migrations.AddShortNameToGames do
   use Ecto.Migration
 
   def up do

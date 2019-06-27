@@ -9,7 +9,7 @@ defmodule Grapevine.Authorizations.Authorization do
 
   alias Grapevine.Accounts.User
   alias Grapevine.Authorizations.AccessToken
-  alias Data.Games.Game
+  alias GrapevineData.Games.Game
 
   @type t :: %__MODULE__{}
 

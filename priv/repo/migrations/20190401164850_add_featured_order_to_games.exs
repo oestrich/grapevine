@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddFeaturedOrderToGames do
+defmodule GrapevineData.Repo.Migrations.AddFeaturedOrderToGames do
   use Ecto.Migration
 
   def change do

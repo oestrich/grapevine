@@ -5,7 +5,7 @@ defmodule Socket.Handler.Games do
 
   use Socket.Web.Module
 
-  alias Data.Games
+  alias GrapevineData.Games
   alias Socket.Handler.Core
   alias Socket.Presence
   alias Socket.PubSub

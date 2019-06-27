@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddHeroImageFieldsToGames do
+defmodule GrapevineData.Repo.Migrations.AddHeroImageFieldsToGames do
   use Ecto.Migration
 
   def change do

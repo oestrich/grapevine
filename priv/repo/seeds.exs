@@ -1,8 +1,8 @@
 alias Grapevine.Accounts
 alias Grapevine.Applications
 alias Grapevine.Channels
-alias Data.Games
-alias Data.Repo
+alias GrapevineData.Games
+alias GrapevineData.Repo
 
 {:ok, channel} = Channels.create(%{name: "gossip"})
 channel

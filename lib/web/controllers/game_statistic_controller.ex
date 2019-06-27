@@ -1,7 +1,7 @@
 defmodule Web.GameStatisticController do
   use Web, :controller
 
-  alias Data.Games
+  alias GrapevineData.Games
   alias Grapevine.Statistics
 
   def show(conn, %{"game_id" => short_name}) do

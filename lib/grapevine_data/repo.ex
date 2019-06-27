@@ -1,4 +1,4 @@
-defmodule Data.Repo do
+defmodule GrapevineData.Repo do
   @moduledoc """
   The socket repo
   """

@@ -6,7 +6,7 @@ defmodule Grapevine.Client.Tells do
   alias Grapevine.Accounts
   alias Grapevine.Characters
   alias Grapevine.Client
-  alias Data.Games
+  alias GrapevineData.Games
 
   @doc """
   Receive a tell

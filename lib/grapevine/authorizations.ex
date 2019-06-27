@@ -7,8 +7,8 @@ defmodule Grapevine.Authorizations do
 
   alias Grapevine.Authorizations.AccessToken
   alias Grapevine.Authorizations.Authorization
-  alias Data.Games
-  alias Data.Repo
+  alias GrapevineData.Games
+  alias GrapevineData.Repo
 
   @doc """
   Check for a username before allowing oauth to proceed

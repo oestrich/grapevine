@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.AddCovertExtensionToGames do
+defmodule GrapevineData.Repo.Migrations.AddCovertExtensionToGames do
   use Ecto.Migration
 
   def change do

@@ -6,8 +6,8 @@ defmodule Grapevine.Accounts do
   import Ecto.Query
   require Logger
 
-  alias Data.Games.Game
-  alias Data.Repo
+  alias GrapevineData.Games.Game
+  alias GrapevineData.Repo
   alias Grapevine.Accounts.User
   alias Grapevine.Emails
   alias Grapevine.Mailer

@@ -5,7 +5,7 @@ defmodule Socket.Presence do
 
   use GenServer
 
-  alias Data.Games.Game
+  alias GrapevineData.Games.Game
   alias Socket.Presence.Client
   alias Socket.Presence.Notices
   alias Socket.Presence.Server

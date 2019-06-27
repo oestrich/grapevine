@@ -1,10 +1,10 @@
-defmodule Data.Games.Images do
+defmodule GrapevineData.Games.Images do
   @moduledoc """
   Handle uploading images to remote storage for games
   """
 
-  alias Data.Games.Game
-  alias Data.Repo
+  alias GrapevineData.Games.Game
+  alias GrapevineData.Repo
   alias Grapevine.Images
   alias Stein.Storage
 

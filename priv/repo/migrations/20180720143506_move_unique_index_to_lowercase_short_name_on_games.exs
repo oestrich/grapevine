@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.MoveUniqueIndexToLowercaseShortNameOnGames do
+defmodule GrapevineData.Repo.Migrations.MoveUniqueIndexToLowercaseShortNameOnGames do
   use Ecto.Migration
 
   def up do

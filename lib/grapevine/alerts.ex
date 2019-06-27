@@ -8,7 +8,7 @@ defmodule Grapevine.Alerts do
   alias Grapevine.Alerts.Alert
   alias Grapevine.Emails
   alias Grapevine.Mailer
-  alias Data.Repo
+  alias GrapevineData.Repo
 
   @doc """
   The most recent 20 alerts

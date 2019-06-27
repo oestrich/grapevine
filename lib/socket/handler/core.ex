@@ -10,7 +10,7 @@ defmodule Socket.Handler.Core do
   require Logger
 
   alias Grapevine.Channels
-  alias Data.Games
+  alias GrapevineData.Games
   alias Grapevine.Messages
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate

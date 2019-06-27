@@ -126,7 +126,7 @@ defmodule Grapevine.Telnet.MSSPClient do
     Record player counts from MSSP
     """
 
-    alias Data.Games
+    alias GrapevineData.Games
     alias Grapevine.Statistics
 
     def init(opts, state) do

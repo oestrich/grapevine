@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Configure your database
-config :grapevine, Data.Repo,
+config :grapevine, GrapevineData.Repo,
   database: "grapevine_test",
   hostname: "localhost",
   username: "grapevine",

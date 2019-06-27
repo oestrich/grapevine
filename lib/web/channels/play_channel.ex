@@ -6,7 +6,7 @@ defmodule Web.PlayChannel do
   use Web, :channel
 
   alias Grapevine.Authorizations
-  alias Data.Games
+  alias GrapevineData.Games
   alias GrapevineTelnet.WebClient
   alias Web.Game
 

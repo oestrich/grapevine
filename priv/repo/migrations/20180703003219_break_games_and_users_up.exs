@@ -1,4 +1,4 @@
-defmodule Data.Repo.Migrations.BreakGamesAndUsersUp do
+defmodule GrapevineData.Repo.Migrations.BreakGamesAndUsersUp do
   use Ecto.Migration
 
   def up do

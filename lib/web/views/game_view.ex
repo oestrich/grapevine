@@ -3,7 +3,7 @@ defmodule Web.GameView do
 
   alias Grapevine.Achievements
   alias Grapevine.Channels
-  alias Data.Games.Images
+  alias GrapevineData.Games.Images
   alias Grapevine.UserAgents
   alias Stein.Storage
   alias Web.EventView

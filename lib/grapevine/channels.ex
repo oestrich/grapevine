@@ -6,7 +6,7 @@ defmodule Grapevine.Channels do
   import Ecto.Query
 
   alias Grapevine.Channels.Channel
-  alias Data.Repo
+  alias GrapevineData.Repo
 
   @type opts :: Keyword.t()
   @type name :: String.t()
