@@ -1,7 +1,7 @@
 defmodule Web.GameController do
   use Web, :controller
 
-  alias Grapevine.Events
+  alias GrapevineData.Events
   alias GrapevineData.Games
   alias Grapevine.Presence
 

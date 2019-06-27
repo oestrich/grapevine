@@ -9,7 +9,7 @@ defmodule GrapevineData.Games.Game do
 
   alias GrapevineData.Accounts.User
   alias GrapevineData.Achievements.Achievement
-  alias Grapevine.Events.Event
+  alias GrapevineData.Events.Event
   alias GrapevineData.Games
   alias GrapevineData.Games.ClientSettings
   alias GrapevineData.Games.Connection

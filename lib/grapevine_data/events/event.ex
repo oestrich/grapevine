@@ -1,4 +1,4 @@
-defmodule Grapevine.Events.Event do
+defmodule GrapevineData.Events.Event do
   @moduledoc """
   Event Schema
   """

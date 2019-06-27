@@ -1,11 +1,11 @@
-defmodule Grapevine.Events do
+defmodule GrapevineData.Events do
   @moduledoc """
   Contect for managing a game's events
   """
 
   import Ecto.Query
 
-  alias Grapevine.Events.Event
+  alias GrapevineData.Events.Event
   alias GrapevineData.Repo
 
   @doc """
