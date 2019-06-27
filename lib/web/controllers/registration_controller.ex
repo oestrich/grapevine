@@ -1,7 +1,7 @@
 defmodule Web.RegistrationController do
   use Web, :controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias GrapevineData.Games
   alias Web.SessionController
 

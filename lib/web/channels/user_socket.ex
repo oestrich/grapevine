@@ -1,7 +1,7 @@
 defmodule Web.UserSocket do
   use Phoenix.Socket
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
 
   require Logger
 

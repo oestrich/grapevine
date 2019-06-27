@@ -6,7 +6,7 @@ defmodule Web.Plugs.EnsureUserVerified do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias Web.Router.Helpers, as: Routes
 
   def init(default), do: default

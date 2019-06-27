@@ -7,7 +7,7 @@ defmodule Grapevine.Authorizations.Authorization do
 
   import Ecto.Changeset
 
-  alias Grapevine.Accounts.User
+  alias GrapevineData.Accounts.User
   alias Grapevine.Authorizations.AccessToken
   alias GrapevineData.Games.Game
 

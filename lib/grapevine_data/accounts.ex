@@ -1,4 +1,4 @@
-defmodule Grapevine.Accounts do
+defmodule GrapevineData.Accounts do
   @moduledoc """
   Context for accounts
   """
@@ -6,9 +6,9 @@ defmodule Grapevine.Accounts do
   import Ecto.Query
   require Logger
 
+  alias GrapevineData.Accounts.User
   alias GrapevineData.Games.Game
   alias GrapevineData.Repo
-  alias Grapevine.Accounts.User
   alias Grapevine.Emails
   alias Grapevine.Mailer
 

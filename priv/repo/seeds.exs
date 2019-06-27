@@ -1,4 +1,4 @@
-alias Grapevine.Accounts
+alias GrapevineData.Accounts
 alias Grapevine.Applications
 alias Grapevine.Channels
 alias GrapevineData.Games

@@ -3,7 +3,7 @@ defmodule Grapevine.Client.Tells do
   Implementation details for the Tells GenServer
   """
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias Grapevine.Characters
   alias Grapevine.Client
   alias GrapevineData.Games

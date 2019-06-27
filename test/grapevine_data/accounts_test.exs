@@ -1,12 +1,12 @@
-defmodule Grapevine.AccountsTest do
+defmodule GrapevineData.AccountsTest do
   use Grapevine.DataCase
   use Bamboo.Test
 
-  alias Grapevine.Accounts
-  alias Grapevine.Accounts.User
+  alias GrapevineData.Accounts
+  alias GrapevineData.Accounts.User
   alias Grapevine.Emails
 
-  doctest Grapevine.Accounts
+  doctest GrapevineData.Accounts
 
   describe "registering a new account" do
     test "successful" do

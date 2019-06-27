@@ -1,7 +1,7 @@
 defmodule Web.SessionController do
   use Web, :controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
 
   def new(conn, _params) do
     changeset = Accounts.new()

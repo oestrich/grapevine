@@ -1,7 +1,7 @@
 defmodule Web.Manage.SettingController do
   use Web, :controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias GrapevineData.Games
 
   plug(Web.Plugs.VerifyUser)

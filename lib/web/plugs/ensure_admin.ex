@@ -6,7 +6,7 @@ defmodule Web.Plugs.EnsureAdmin do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias Web.ErrorView
   alias Web.LayoutView
 
