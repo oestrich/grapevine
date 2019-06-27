@@ -1,4 +1,4 @@
-defmodule Grapevine.Achievements do
+defmodule GrapevineData.Achievements do
   @moduledoc """
   Contect for managing a game's achievements
   """
@@ -6,7 +6,7 @@ defmodule Grapevine.Achievements do
   import Ecto.Query
 
   alias GrapevineData.Repo
-  alias Grapevine.Achievements.Achievement
+  alias GrapevineData.Achievements.Achievement
 
   @max_points 500
 

@@ -1,7 +1,7 @@
-defmodule Grapevine.AchievementsTest do
+defmodule GrapevineData.AchievementsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Achievements
+  alias GrapevineData.Achievements
 
   describe "create a new achievement" do
     test "successful" do

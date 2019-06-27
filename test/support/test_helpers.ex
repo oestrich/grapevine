@@ -1,6 +1,6 @@
 defmodule Grapevine.TestHelpers do
   alias GrapevineData.Accounts
-  alias Grapevine.Achievements
+  alias GrapevineData.Achievements
   alias Grapevine.Authorizations
   alias Grapevine.Channels
   alias Grapevine.Gauges

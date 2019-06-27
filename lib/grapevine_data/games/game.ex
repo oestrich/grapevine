@@ -8,7 +8,7 @@ defmodule GrapevineData.Games.Game do
   import Ecto.Changeset
 
   alias GrapevineData.Accounts.User
-  alias Grapevine.Achievements.Achievement
+  alias GrapevineData.Achievements.Achievement
   alias Grapevine.Events.Event
   alias GrapevineData.Games
   alias GrapevineData.Games.ClientSettings

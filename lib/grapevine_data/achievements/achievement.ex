@@ -1,4 +1,4 @@
-defmodule Grapevine.Achievements.Achievement do
+defmodule GrapevineData.Achievements.Achievement do
   @moduledoc """
   Achievement Schema
   """

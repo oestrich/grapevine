@@ -1,7 +1,7 @@
-defmodule Grapevine.Achievements.AchievementTest do
+defmodule GrapevineData.Achievements.AchievementTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Achievements.Achievement
+  alias GrapevineData.Achievements.Achievement
 
   describe "validations" do
     test "validating total progress is required if partial progress is true" do
