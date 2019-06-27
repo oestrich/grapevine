@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name}}-grapevine
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+spec:
+  rules:
+  - host: grapevine.haus
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ .Release.Name }}-grapevine
+            servicePort: phoenix
+        - path: /socket
+          backend:
+            serviceName: {{ .Release.Name }}-grapevine
+            servicePort: socket

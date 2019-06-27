@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-grapevine-telnet
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "chart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      component: telnet
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "chart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        component: telnet
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.grapevine_telnet.repository }}:{{ .Values.image.grapevine_telnet.tag }}"
+          imagePullPolicy: {{ .Values.image.grapevine_telnet.pullPolicy }}
+          volumeMounts:
+          - name: telnet-config
+            mountPath: "/etc/telnet"
+            readOnly: true
+          env:
+          - name: "REPLACE_OS_VARS"
+            value: "true"
+          - name: "POD_IP"
+            valueFrom:
+              fieldRef:
+                fieldPath: "status.podIP"
+          ports:
+          - name: metrics
+            containerPort: 4101
+            protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          resources:
+            {{- toYaml .Values.resources.grapevine_telnet | nindent 12 }}
+      volumes:
+      - name: telnet-config
+        secret:
+          secretName: {{ .Values.secrets.grapevine_telnet }}

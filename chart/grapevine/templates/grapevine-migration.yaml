@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-grapevine-migration
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "chart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.grapevine.repository }}:{{ .Values.image.grapevine.tag }}"
+          imagePullPolicy: {{ .Values.image.grapevine.pullPolicy }}
+          args: ["migrate"]
+          env:
+          - name: "REPLACE_OS_VARS"
+            value: "true"
+          - name: "POD_IP"
+            valueFrom:
+              fieldRef:
+                fieldPath: "status.podIP"
+          volumeMounts:
+          - name: grapevine-config
+            mountPath: "/etc/grapevine"
+            readOnly: true
+      volumes:
+      - name: grapevine-config
+        secret:
+          secretName: grapevine-config
+      restartPolicy: Never

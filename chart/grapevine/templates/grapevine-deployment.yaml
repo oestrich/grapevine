@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-grapevine
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "chart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "chart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        component: web
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.grapevine.repository }}:{{ .Values.image.grapevine.tag }}"
+          imagePullPolicy: {{ .Values.image.grapevine.pullPolicy }}
+          volumeMounts:
+          - name: grapevine-config
+            mountPath: "/etc/grapevine"
+            readOnly: true
+          env:
+          - name: "REPLACE_OS_VARS"
+            value: "true"
+          - name: "POD_IP"
+            valueFrom:
+              fieldRef:
+                fieldPath: "status.podIP"
+          ports:
+            - name: phoenix
+              containerPort: 4100
+              protocol: TCP
+            - name: socket
+              containerPort: 4110
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: phoenix
+              httpHeaders:
+              - name: Host
+                value: grapevine.haus
+          readinessProbe:
+            httpGet:
+              path: /
+              port: phoenix
+              httpHeaders:
+              - name: Host
+                value: grapevine.haus
+          resources:
+            {{- toYaml .Values.resources.grapevine | nindent 12 }}
+      volumes:
+      - name: grapevine-config
+        secret:
+          secretName: {{ .Values.secrets.grapevine }}

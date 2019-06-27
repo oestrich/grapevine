@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name}}-grapevine
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: 4100
+      targetPort: phoenix
+      protocol: TCP
+      name: phoenix
+    - port: 4110
+      targetPort: socket
+      protocol: TCP
+      name: socket
+  selector:
+    app.kubernetes.io/name: {{ include "chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: web
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name}}-grapevine-headless
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: {{ include "chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: web

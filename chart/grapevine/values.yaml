@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  grapevine:
+    repository: oestrich/grapevine
+    tag: fe17c0449c404dc38f5e820eaf5b4689fe2c124f
+    pullPolicy: IfNotPresent
+  grapevine_telnet:
+    repository: oestrich/grapevine_telnet
+    tag: fe17c0449c404dc38f5e820eaf5b4689fe2c124f
+    pullPolicy: IfNotPresent
+
+secrets:
+  grapevine: grapevine-config
+  grapevine_telnet: telnet-config
+
+resources:
+  grapevine: {}
+  grapevine_telnet: {}
