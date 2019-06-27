@@ -34,7 +34,7 @@ environment :prod do
   set vm_args: "rel/vm.args.eex"
 
   set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/telnet.config.exs"]}
+    {Mix.Releases.Config.Providers.Elixir, ["/etc/telnet/config.exs"]}
   ]
 end
 

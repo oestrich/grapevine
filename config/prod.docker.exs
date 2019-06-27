@@ -10,10 +10,17 @@ config :grapevine, Data.Repo,
 
 config :grapevine, Web.Endpoint,
   http: [port: 4100],
-  url: [host: {:system, "HOST"}, port: 443, scheme: "https"],
-  server: true,
+  url: [host: "grapevine.haus", port: 443, scheme: "https"],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :logger, level: :info
+config :grapevine, :socket, tls: true
 
-config :phoenix, :serve_endpoints, true
+# Configure your database
+config :grapevine, Grapevine.Repo,
+  hostname: "localhost",
+  username: "grapevine",
+  password: "password",
+  database: "grapevine",
+  pool_size: 10
+
+config :grapevine, :errors, report: false

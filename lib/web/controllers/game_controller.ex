@@ -31,7 +31,7 @@ defmodule Web.GameController do
 
       conn
       |> assign(:game, game)
-      |> assign(:presence, presence)
+      |> assign(:players, players(presence))
       |> assign(:events, Events.recent(game))
       |> assign(:title, "#{game.name} - Grapevine")
       |> assign(:open_graph_title, game.name)
@@ -48,4 +48,7 @@ defmodule Web.GameController do
     |> assign(:games, games)
     |> render(:online)
   end
+
+  defp players(nil), do: []
+  defp players(%{players: players}), do: players
 end

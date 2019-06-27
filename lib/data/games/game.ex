@@ -25,6 +25,7 @@ defmodule Data.Games.Game do
     field(:user_agent, :string)
     field(:version, :string, default: "1.0.0")
     field(:display, :boolean, default: true)
+    field(:display_players, :boolean, default: true)
     field(:allow_character_registration, :boolean, default: true)
     field(:enable_web_client, :boolean, default: false)
     field(:allow_anonymous_client, :boolean, default: false)
@@ -74,6 +75,7 @@ defmodule Data.Games.Game do
       :tagline,
       :description,
       :display,
+      :display_players,
       :allow_character_registration,
       :enable_web_client,
       :allow_anonymous_client,
@@ -83,8 +85,8 @@ defmodule Data.Games.Game do
       :name,
       :short_name,
       :display,
+      :display_players,
       :user_id,
-      :display,
       :allow_character_registration,
       :enable_web_client,
       :allow_anonymous_client

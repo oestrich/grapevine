@@ -691,6 +691,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@grapevine/ansi@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@grapevine/ansi/-/ansi-1.0.1.tgz#844ef1616b7b31de63b68596382d2ca4525945bb"
+  integrity sha512-weYeN4buT98Rbhe2iuEo2aBkYp51cuGxXjeqCQU6/M+79h2Tur4TgtexI4lTJ08u2WxBOUbedxCAqRSliyPW6A==
+  dependencies:
+    underscore "^1.9.1"
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"

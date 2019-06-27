@@ -32,7 +32,7 @@
             </div>
           <% end %>
 
-          <%= unless Enum.empty?(players) do %>
+          <%= if display_players?(game, players) do %>
             <h5>Players (<%= Enum.count(players) %>)</h5>
             <div class="players">
               <%= Enum.map(players, fn player -> %>

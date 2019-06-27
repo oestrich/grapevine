@@ -31,7 +31,7 @@ defmodule Grapevine.Application do
     report_errors = Application.get_env(:grapevine, :errors)[:report]
 
     if report_errors do
-      {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
+      Logger.add_backend(Sentry.LoggerBackend)
     end
 
     start_telnet_application()

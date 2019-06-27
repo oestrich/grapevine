@@ -1,52 +1,44 @@
-FROM elixir:1.7.2-alpine as builder
-
-# The nuclear approach:
-# RUN apk add --no-cache alpine-sdk
-RUN apk add --no-cache \
-    gcc \
-    git \
-    make \
-    musl-dev
-
-RUN mix local.rebar --force && \
-    mix local.hex --force
-
-WORKDIR /app
+FROM elixir:1.8-alpine as builder
 ENV MIX_ENV=prod
-COPY mix.* /app/
-RUN mix deps.get --only prod
+RUN apk update && \
+  apk upgrade --no-cache && \
+  apk add --no-cache gcc git make musl-dev && \
+  mix local.rebar --force && \
+  mix local.hex --force
+WORKDIR /opt/app
+COPY mix.* /opt/app/
+RUN mix deps.get --only prod && \
+  mix deps.compile
 
-RUN mix deps.compile
-
-FROM node:8.6 as frontend
-
-WORKDIR /app
-COPY assets/package*.json /app/
-COPY --from=builder /app/deps/phoenix /deps/phoenix
-COPY --from=builder /app/deps/phoenix_html /deps/phoenix_html
-COPY --from=builder /app/deps/phoenix_live_view /deps/phoenix_live_view
-
+FROM node:10.13 as frontend
+WORKDIR /opt/app
+COPY assets/package.json assets/yarn.lock /opt/app/
+COPY --from=builder /opt/app/deps/phoenix /opt/deps/phoenix
+COPY --from=builder /opt/app/deps/phoenix_html /opt/deps/phoenix_html
+COPY --from=builder /opt/app/deps/phoenix_live_view /opt/deps/phoenix_live_view
 RUN npm install -g yarn && yarn install
-
-COPY assets /app
+COPY assets /opt/app
 RUN npm run deploy
 
 FROM builder as releaser
-COPY --from=frontend /priv/static /app/priv/static
-COPY . /app/
-ENV COOKIE="zR2/sR0Ohy5xeVMjMHsCt5Jl76lTpeI0LU57zu8XrnfLLzHZFuIsWxQYiMLBpToU"
-RUN mix phx.digest
-RUN mix release --env=prod --no-tar
+COPY --from=frontend /opt/priv/static /opt/app/priv/static
+COPY . /opt/app/
+ARG cookie
+ENV COOKIE=${cookie}
+RUN mix phx.digest && \
+  mix release --env=prod --no-tar
 
-FROM alpine:3.8
-RUN apk add -U bash libssl1.0
-WORKDIR /app
-COPY --from=releaser /app/_build/prod/rel/grapevine /app/
-COPY config/prod.docker.exs /etc/grapevine.config.exs
+FROM alpine:3.9
+ENV LANG=C.UTF-8
+RUN apk update && \
+  apk add -U bash openssl-dev imagemagick && \
+  rm -rf /var/cache/apk/*
+WORKDIR /opt/app
+COPY --from=releaser /opt/app/_build/prod/rel/grapevine /opt/app/
+COPY config/prod.docker.exs /etc/grapevine/config.exs
 
 ENV MIX_ENV=prod
-
-EXPOSE 4001
+EXPOSE 4100
 
 ENTRYPOINT ["bin/grapevine"]
 CMD ["foreground"]

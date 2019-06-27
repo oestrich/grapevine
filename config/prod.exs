@@ -23,7 +23,7 @@ config :grapevine, :web, url: [host: "grapevine.haus", scheme: "https", port: 44
 # Do not print debug messages in production
 config :logger,
   level: :info,
-  backends: [Timber.LoggerBackends.HTTP],
+  backends: [:console, Timber.LoggerBackends.HTTP],
   utc_log: true
 
 # ## SSL Support

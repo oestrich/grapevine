@@ -1,9 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {getSocketConnectionState, getSocketConnection} from "../redux/store";
 
 class ConnectionStatus extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onConnectionToggle = this.onConnectionToggle.bind(this);
+  }
+
+  onConnectionToggle(e) {
+    if (this.props.connected) {
+      this.context.socket.event("system/disconnect", {});
+    } else {
+      this.context.socket.join();
+    }
+  }
+
   connectionClassName() {
     if (this.props.connected) {
       return "green";
@@ -34,12 +49,16 @@ class ConnectionStatus extends React.Component {
 
   render() {
     return (
-      <div className="connection">
+      <div className="connection" onClick={this.onConnectionToggle}>
         <i className={`fa ${this.connectionIcon()} ${this.connectionClassName()}`} title={this.connectionTitle()} />
       </div>
     );
   }
 }
+
+ConnectionStatus.contextTypes = {
+  socket: PropTypes.object,
+};
 
 let mapStateToProps = (state) => {
   const connected = getSocketConnectionState(state);

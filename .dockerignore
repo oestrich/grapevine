@@ -39,3 +39,5 @@ contrib
 docker-compose.yml
 docs
 tmp
+
+test

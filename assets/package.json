@@ -8,6 +8,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@grapevine/ansi": "^1.0.0",
     "ansi_up": "^3.0.0",
     "chart.js": "^2.7.3",
     "jquery": "^3.3.1",
