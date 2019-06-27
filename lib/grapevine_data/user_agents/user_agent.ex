@@ -1,4 +1,4 @@
-defmodule Grapevine.UserAgents.UserAgent do
+defmodule GrapevineData.UserAgents.UserAgent do
   @moduledoc """
   Game Schema
   """

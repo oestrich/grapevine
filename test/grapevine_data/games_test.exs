@@ -2,7 +2,7 @@ defmodule GrapevineData.GamesTest do
   use Grapevine.DataCase
 
   alias GrapevineData.Games
-  alias Grapevine.UserAgents
+  alias GrapevineData.UserAgents
 
   describe "registering a new game" do
     test "successful" do

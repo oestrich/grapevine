@@ -2,7 +2,7 @@ defmodule Web.Manage.GameView do
   use Web, :view
 
   alias GrapevineData.Channels
-  alias Grapevine.UserAgents
+  alias GrapevineData.UserAgents
   alias Web.FormView
   alias Web.GameView
   alias Web.Manage.ConnectionView

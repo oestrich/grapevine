@@ -14,7 +14,7 @@ defmodule GrapevineData.Games do
   alias Grapevine.Filter
   alias Grapevine.Notifications
   alias Grapevine.Telnet
-  alias Grapevine.UserAgents
+  alias GrapevineData.UserAgents
 
   import Ecto.Query
 

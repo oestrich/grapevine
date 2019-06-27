@@ -1,7 +1,7 @@
-defmodule Grapevine.UserAgentsTest do
+defmodule GrapevineData.UserAgentsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.UserAgents
+  alias GrapevineData.UserAgents
 
   describe "register a user agent" do
     test "successful" do
