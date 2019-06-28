@@ -3,18 +3,18 @@ defmodule GrapevineData.Games do
   Context for games
   """
 
+  alias GrapevineData.Accounts.User
+  alias GrapevineData.Alerts
+  alias GrapevineData.Filter
   alias GrapevineData.Games.ClientSettings
   alias GrapevineData.Games.Connection
   alias GrapevineData.Games.Game
   alias GrapevineData.Games.Images
   alias GrapevineData.Games.RedirectURI
   alias GrapevineData.Repo
-  alias GrapevineData.Accounts.User
-  alias GrapevineData.Alerts
-  alias Grapevine.Filter
+  alias GrapevineData.UserAgents
   alias Grapevine.Notifications
   alias Grapevine.Telnet
-  alias GrapevineData.UserAgents
 
   import Ecto.Query
 

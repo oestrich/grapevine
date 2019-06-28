@@ -99,8 +99,8 @@ defmodule GrapevineData.Games.Game do
     |> validate_format(:short_name, ~r/^[a-zA-Z0-9]+$/)
     |> validate_format(:homepage_url, ~r/^https?:\/\/.+\./)
     |> validate_format(:discord_invite_url, ~r/^https:\/\/discord.gg\//, message: "should start with https://discord.gg/")
-    |> Grapevine.Schema.ensure(:client_id, UUID.uuid4())
-    |> Grapevine.Schema.ensure(:client_secret, UUID.uuid4())
+    |> GrapevineData.Schema.ensure(:client_id, UUID.uuid4())
+    |> GrapevineData.Schema.ensure(:client_secret, UUID.uuid4())
     |> unique_constraint(:name, name: :games_lower_name_index)
     |> unique_constraint(:short_name, name: :games_lower_short_name_index)
   end

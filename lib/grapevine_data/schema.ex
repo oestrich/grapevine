@@ -1,4 +1,4 @@
-defmodule Grapevine.Schema do
+defmodule GrapevineData.Schema do
   @moduledoc """
   Helper for setting up Ecto
   """
