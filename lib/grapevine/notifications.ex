@@ -4,7 +4,7 @@ defmodule Grapevine.Notifications do
   """
 
   alias Grapevine.Emails
-  alias Grapevine.Mailer
+  alias GrapevineData.Mailer
 
   def new_game(game) do
     :telemetry.execute([:grapevine, :games, :create], %{count: 1}, %{id: game.id})

@@ -10,7 +10,7 @@ defmodule GrapevineData.Accounts do
   alias GrapevineData.Games.Game
   alias GrapevineData.Repo
   alias Grapevine.Emails
-  alias Grapevine.Mailer
+  alias GrapevineData.Mailer
 
   @type id :: integer()
   @type user_params :: map()

@@ -7,7 +7,7 @@ defmodule GrapevineData.Alerts do
 
   alias GrapevineData.Alerts.Alert
   alias Grapevine.Emails
-  alias Grapevine.Mailer
+  alias GrapevineData.Mailer
   alias GrapevineData.Repo
 
   @doc """

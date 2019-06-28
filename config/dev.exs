@@ -65,7 +65,7 @@ config :grapevine, GrapevineData.Repo,
 
 config :phoenix, :plug_init_mode, :runtime
 
-config :grapevine, Grapevine.Mailer,
+config :grapevine, GrapevineData.Mailer,
   adapter: Bamboo.LocalAdapter,
   alert_to: ["admin@example.com"]
 

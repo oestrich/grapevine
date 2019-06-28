@@ -22,7 +22,7 @@ config :grapevine, GrapevineData.Repo,
 
 config :bcrypt_elixir, :log_rounds, 4
 
-config :grapevine, Grapevine.Mailer, adapter: Bamboo.TestAdapter
+config :grapevine, GrapevineData.Mailer, adapter: Bamboo.TestAdapter
 
 config :grapevine, :modules,
   telnet: Test.Telnet,
