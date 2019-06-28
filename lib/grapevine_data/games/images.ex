@@ -4,8 +4,8 @@ defmodule GrapevineData.Games.Images do
   """
 
   alias GrapevineData.Games.Game
+  alias GrapevineData.Images
   alias GrapevineData.Repo
-  alias Grapevine.Images
   alias Stein.Storage
 
   @doc """

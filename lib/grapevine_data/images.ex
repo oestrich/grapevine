@@ -1,4 +1,4 @@
-defmodule Grapevine.Images do
+defmodule GrapevineData.Images do
   @moduledoc """
   Common module for dealing with image conversion
   """
