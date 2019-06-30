@@ -45,15 +45,6 @@ MIX_ENV=test mix ecto.migrate
 mix test
 ```
 
-### Docker
-
-```bash
-docker-compose build grapevine
-docker-compose up -d postgres
-docker-compose run --rm grapevine migrate
-docker-compose up grapevine
-```
-
 ### Telnet Web Client
 
 Telnet connections live in the `apps/telnet` application. This node holds the telnet connections so the main application can reboot on deploys and not drop active game connections.
