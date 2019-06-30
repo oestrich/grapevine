@@ -112,14 +112,14 @@ defmodule GrapevineData.GamesTest do
 
     test "is owned", %{user: user, game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       assert Games.user_owns_connection?(user, connection)
     end
 
     test "is not owned", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       user = create_user(%{username: "other", email: "other@example.com"})
       refute Games.user_owns_connection?(user, connection)
@@ -134,7 +134,7 @@ defmodule GrapevineData.GamesTest do
 
     test "web", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       assert connection.game_id == game.id
       assert connection.type == "web"
@@ -143,7 +143,7 @@ defmodule GrapevineData.GamesTest do
 
     test "telnet", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000}, &connection_hook/1)
 
       assert connection.game_id == game.id
       assert connection.type == "telnet"
@@ -153,7 +153,7 @@ defmodule GrapevineData.GamesTest do
 
     test "secure telnet", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000}, &connection_hook/1)
 
       assert connection.game_id == game.id
       assert connection.type == "secure telnet"
@@ -166,13 +166,13 @@ defmodule GrapevineData.GamesTest do
         type: "secure telnet",
         host: "example.com",
         port: 4000
-      })
+      }, &connection_hook/1)
 
       {:error, changeset} = Games.create_connection(game, %{
         type: "secure telnet",
         host: "example.com",
         port: 4000
-      })
+      }, &connection_hook/1)
 
       assert changeset.errors[:type]
     end
@@ -186,27 +186,27 @@ defmodule GrapevineData.GamesTest do
 
     test "web", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
-      {:ok, connection} = Games.update_connection(connection, %{url: "http://example.com/"})
+      {:ok, connection} = Games.update_connection(connection, %{url: "http://example.com/"}, &connection_hook/1)
 
       assert connection.url == "http://example.com/"
     end
 
     test "telnet", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000})
+        Games.create_connection(game, %{type: "telnet", host: "example.com", port: 4000}, &connection_hook/1)
 
-      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
+      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"}, &connection_hook/1)
 
       assert connection.host == "game.example.com"
     end
 
     test "secure telnet", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000})
+        Games.create_connection(game, %{type: "secure telnet", host: "example.com", port: 4000}, &connection_hook/1)
 
-      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"})
+      {:ok, connection} = Games.update_connection(connection, %{host: "game.example.com"}, &connection_hook/1)
 
       assert connection.host == "game.example.com"
     end
@@ -220,7 +220,7 @@ defmodule GrapevineData.GamesTest do
 
     test "deletes it", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       {:ok, _connection} = Games.delete_connection(connection)
     end
@@ -234,7 +234,7 @@ defmodule GrapevineData.GamesTest do
 
     test "with mssp", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       {:ok, connection} = Games.connection_has_mssp(connection)
 
@@ -243,7 +243,7 @@ defmodule GrapevineData.GamesTest do
 
     test "marks the game as showing the player graph", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       {:ok, connection} = Games.connection_has_mssp(connection)
 
@@ -253,7 +253,7 @@ defmodule GrapevineData.GamesTest do
 
     test "without mssp", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       {:ok, connection} = Games.connection_has_mssp(connection)
       {:ok, alert} = Games.connection_has_no_mssp(connection)
@@ -263,7 +263,7 @@ defmodule GrapevineData.GamesTest do
 
     test "known without mssp", %{game: game} do
       {:ok, connection} =
-        Games.create_connection(game, %{type: "web", url: "http://example.com/play"})
+        Games.create_connection(game, %{type: "web", url: "http://example.com/play"}, &connection_hook/1)
 
       :ok = Games.connection_has_no_mssp(connection)
     end
@@ -394,4 +394,6 @@ defmodule GrapevineData.GamesTest do
       assert client_settings.character_name_path == "full_name"
     end
   end
+
+  defp connection_hook(_connection), do: :ok
 end

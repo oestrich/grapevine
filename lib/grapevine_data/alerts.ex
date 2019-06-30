@@ -6,8 +6,7 @@ defmodule GrapevineData.Alerts do
   import Ecto.Query
 
   alias GrapevineData.Alerts.Alert
-  alias Grapevine.Emails
-  alias GrapevineData.Mailer
+  alias GrapevineData.Notifications
   alias GrapevineData.Repo
 
   @doc """
@@ -28,10 +27,7 @@ defmodule GrapevineData.Alerts do
 
     case Repo.insert(changeset) do
       {:ok, alert} ->
-        alert
-        |> Emails.new_alert()
-        |> Mailer.deliver_later()
-
+        Notifications.new_alert(alert)
         {:ok, alert}
 
       {:error, changeset} ->

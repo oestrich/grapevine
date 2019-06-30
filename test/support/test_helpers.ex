@@ -1,5 +1,5 @@
 defmodule Grapevine.TestHelpers do
-  alias GrapevineData.Accounts
+  alias Grapevine.Accounts
   alias GrapevineData.Achievements
   alias GrapevineData.Authorizations
   alias GrapevineData.Channels
@@ -28,7 +28,7 @@ defmodule Grapevine.TestHelpers do
   end
 
   def user_struct(attributes \\ %{}) do
-    struct(Accounts.User, user_attributes(attributes))
+    struct(GrapevineData.Accounts.User, user_attributes(attributes))
   end
 
   def user_attributes(attributes) do
@@ -81,7 +81,7 @@ defmodule Grapevine.TestHelpers do
         attributes
       )
 
-    {:ok, connection} = Games.create_connection(game, attributes)
+    {:ok, connection} = Games.create_connection(game, attributes, fn _connection -> :ok end)
 
     connection
   end

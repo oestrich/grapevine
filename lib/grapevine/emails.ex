@@ -56,6 +56,6 @@ defmodule Grapevine.Emails do
   end
 
   defp alert_to() do
-    Application.get_env(:grapevine, GrapevineData.Mailer)[:alert_to]
+    Application.get_env(:grapevine, Grapevine.Mailer)[:alert_to]
   end
 end

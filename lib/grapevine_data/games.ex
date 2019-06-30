@@ -11,10 +11,9 @@ defmodule GrapevineData.Games do
   alias GrapevineData.Games.Game
   alias GrapevineData.Games.Images
   alias GrapevineData.Games.RedirectURI
+  alias GrapevineData.Notifications
   alias GrapevineData.Repo
   alias GrapevineData.UserAgents
-  alias Grapevine.Notifications
-  alias Grapevine.Telnet
 
   import Ecto.Query
 
@@ -456,7 +455,7 @@ defmodule GrapevineData.Games do
   @doc """
   Create a new game connection
   """
-  def create_connection(game, params) do
+  def create_connection(game, params, fun) do
     changeset =
       game
       |> Ecto.build_assoc(:connections)
@@ -464,7 +463,7 @@ defmodule GrapevineData.Games do
 
     case changeset |> Repo.insert() do
       {:ok, connection} ->
-        maybe_check_mssp(connection)
+        fun.(connection)
         {:ok, connection}
 
       {:error, changeset} ->
@@ -472,26 +471,15 @@ defmodule GrapevineData.Games do
     end
   end
 
-  defp maybe_check_mssp(connection) do
-    case connection.type do
-      "telnet" ->
-        connection = Repo.preload(connection, [:game])
-        Telnet.check_connection(connection)
-
-      _ ->
-        :ok
-    end
-  end
-
   @doc """
   Update a game connection
   """
-  def update_connection(connection, params) do
+  def update_connection(connection, params, fun) do
     changeset = Connection.update_changeset(connection, params)
 
     case Repo.update(changeset) do
       {:ok, connection} ->
-        maybe_check_mssp(connection)
+        fun.(connection)
         {:ok, connection}
 
       {:error, changeset} ->
@@ -503,13 +491,7 @@ defmodule GrapevineData.Games do
   Delete a game connection
   """
   def delete_connection(connection) do
-    case Repo.delete(connection) do
-      {:ok, connection} ->
-        {:ok, connection}
-
-      {:error, changeset} ->
-        {:error, changeset}
-    end
+    Repo.delete(connection)
   end
 
   @doc """

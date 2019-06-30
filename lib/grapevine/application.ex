@@ -23,7 +23,8 @@ defmodule Grapevine.Application do
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
       {Grapevine.Featured, [name: Grapevine.Featured]},
-      {Grapevine.Statistics.Server, []}
+      {Grapevine.Statistics.Server, []},
+      {Grapevine.Notifications, []}
     ]
 
     Metrics.Setup.setup()
@@ -69,7 +70,7 @@ defmodule Grapevine.Application do
   defp start_telnet_application() do
     if @env == :dev do
       :application.start(:telnet)
-      #:application.start(:grapevine_telnet)
+      :application.start(:grapevine_telnet)
     end
   end
 end

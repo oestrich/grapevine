@@ -4,7 +4,7 @@ defmodule Grapevine.Contact do
   """
 
   alias Grapevine.Emails
-  alias GrapevineData.Mailer
+  alias Grapevine.Mailer
 
   def send(params) do
     with {:ok, name} <- Map.fetch(params, "name"),

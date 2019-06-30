@@ -1,7 +1,7 @@
 defmodule Web.RegistrationResetController do
   use Web, :controller
 
-  alias GrapevineData.Accounts
+  alias Grapevine.Accounts
 
   def new(conn, _params) do
     changeset = Accounts.new()

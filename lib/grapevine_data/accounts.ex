@@ -9,8 +9,6 @@ defmodule GrapevineData.Accounts do
   alias GrapevineData.Accounts.User
   alias GrapevineData.Games.Game
   alias GrapevineData.Repo
-  alias Grapevine.Emails
-  alias GrapevineData.Mailer
 
   @type id :: integer()
   @type user_params :: map()
@@ -40,14 +38,13 @@ defmodule GrapevineData.Accounts do
   @doc """
   Register a new user
   """
-  @spec register(user_params()) :: {:ok, User.t()}
-  def register(params) do
+  def register(params, fun) do
     changeset = %User{} |> User.create_changeset(params)
 
     case Repo.insert(changeset) do
       {:ok, user} ->
         :telemetry.execute([:grapevine, :accounts, :create], %{count: 1})
-        deliver_verify_email(user)
+        fun.(user)
         {:ok, user}
 
       {:error, changeset} ->
@@ -55,47 +52,26 @@ defmodule GrapevineData.Accounts do
     end
   end
 
-  defp deliver_verify_email(user) do
-    :telemetry.execute([:grapevine, :accounts, :email, :send_verify], %{count: 1})
-
-    user
-    |> Emails.verify_email()
-    |> Mailer.deliver_later()
-  end
-
   @doc """
   Update a user
 
   May send a new email verification if the email changes
   """
-  def update(user, params) do
+  def update(user, params, fun) do
     case is_nil(user.username) do
       true ->
         user
         |> User.update_with_username_changeset(params)
         |> Repo.update()
-        |> maybe_send_new_verification(user)
+        |> fun.(user)
 
       false ->
         user
         |> User.update_without_username_changeset(params)
         |> Repo.update()
-        |> maybe_send_new_verification(user)
+        |> fun.(user)
     end
   end
-
-  defp maybe_send_new_verification({:ok, user}, original_user) do
-    case user.email == original_user.email do
-      true ->
-        {:ok, user}
-
-      false ->
-        deliver_verify_email(user)
-        {:ok, user}
-    end
-  end
-
-  defp maybe_send_new_verification(result, _original_user), do: result
 
   @doc """
   Change a user's password
@@ -199,13 +175,8 @@ defmodule GrapevineData.Accounts do
   @doc """
   Start password reset
   """
-  @spec start_password_reset(String.t()) :: :ok
-  def start_password_reset(email) do
-    Stein.Accounts.start_password_reset(Repo, User, email, fn user ->
-      user
-      |> Emails.password_reset()
-      |> Mailer.deliver_now()
-    end)
+  def start_password_reset(email, fun) do
+    Stein.Accounts.start_password_reset(Repo, User, email, fun)
   end
 
   @doc """
