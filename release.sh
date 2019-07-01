@@ -14,5 +14,5 @@ docker build --build-arg cookie=${COOKIE} -f Dockerfile.releaser -t grapevine:re
 echo -e "\ntravis_fold:end:docker-build\r"
 
 docker run -ti --name grapevine_releaser_${DOCKER_UUID} grapevine:releaser /bin/true
-docker cp grapevine_releaser_${DOCKER_UUID}:/app/_build/prod/rel/grapevine/releases/2.3.0/grapevine.tar.gz tmp/
+docker cp grapevine_releaser_${DOCKER_UUID}:/opt/grapevine.tar.gz tmp/
 docker rm grapevine_releaser_${DOCKER_UUID}

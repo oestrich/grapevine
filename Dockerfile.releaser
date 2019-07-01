@@ -24,4 +24,6 @@ ENV COOKIE=${cookie}
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
 RUN mix phx.digest
-RUN mix distillery.release --env=prod
+RUN mix release && \
+  cd _build/prod/rel/grapevine/ && \
+  tar czf /opt/grapevine.tar.gz .
