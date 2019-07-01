@@ -1,7 +1,7 @@
 defmodule Web.Manage.CharacterController do
   use Web, :controller
 
-  alias Grapevine.Characters
+  alias GrapevineData.Characters
 
   def index(conn, _params) do
     %{current_user: user} = conn.assigns

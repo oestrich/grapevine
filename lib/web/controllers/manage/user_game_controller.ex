@@ -3,7 +3,7 @@ defmodule Web.Manage.UserGameController do
 
   plug(Web.Plugs.VerifyUser)
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
 
   def index(conn, _params) do
     %{current_user: user} = conn.assigns

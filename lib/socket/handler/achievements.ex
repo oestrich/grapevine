@@ -5,7 +5,7 @@ defmodule Socket.Handler.Achievements do
 
   use Socket.Web.Module
 
-  alias Grapevine.Achievements
+  alias GrapevineData.Achievements
 
   @doc """
   Sync the list of achievements

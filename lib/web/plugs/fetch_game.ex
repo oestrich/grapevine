@@ -5,7 +5,7 @@ defmodule Web.Plugs.FetchGame do
 
   import Plug.Conn
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
 
   def init(default), do: default
 

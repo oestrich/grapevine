@@ -21,6 +21,8 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
+apps/data/_build
+apps/data/deps
 apps/telnet/_build
 apps/telnet/deps
 assets/node_modules/

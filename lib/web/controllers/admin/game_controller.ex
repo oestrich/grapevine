@@ -1,7 +1,7 @@
 defmodule Web.Admin.GameController do
   use Web, :controller
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
 
   def index(conn, _params) do
     conn

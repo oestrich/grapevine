@@ -1,7 +1,7 @@
-defmodule Grapevine.EventsTest do
+defmodule GrapevineData.EventsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Events
+  alias GrapevineData.Events
 
   describe "create a new event" do
     test "successful" do

@@ -2,7 +2,7 @@ defmodule Web.RegistrationController do
   use Web, :controller
 
   alias Grapevine.Accounts
-  alias Grapevine.Games
+  alias GrapevineData.Games
   alias Web.SessionController
 
   def new(conn, _params) do

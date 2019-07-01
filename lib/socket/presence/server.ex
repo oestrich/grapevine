@@ -5,7 +5,7 @@ defmodule Socket.Presence.Server do
 
   import Socket.Presence, only: [ets_key: 0]
 
-  alias Grapevine.Statistics
+  alias GrapevineData.Statistics
   alias Socket.PlayerPresence
   alias Socket.Presence.Client
   alias Socket.Presence.Notices

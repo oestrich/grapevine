@@ -3,10 +3,10 @@ defmodule Grapevine.Client.Tells do
   Implementation details for the Tells GenServer
   """
 
-  alias Grapevine.Accounts
-  alias Grapevine.Characters
+  alias GrapevineData.Accounts
+  alias GrapevineData.Characters
   alias Grapevine.Client
-  alias Grapevine.Games
+  alias GrapevineData.Games
 
   @doc """
   Receive a tell

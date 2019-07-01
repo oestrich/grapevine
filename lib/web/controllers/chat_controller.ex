@@ -1,7 +1,7 @@
 defmodule Web.ChatController do
   use Web, :controller
 
-  alias Grapevine.Channels
+  alias GrapevineData.Channels
 
   def index(conn, _params) do
     conn

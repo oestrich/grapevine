@@ -1,7 +1,7 @@
 defmodule Web.Oauth.TokenController do
   use Web, :controller
 
-  alias Grapevine.Authorizations
+  alias GrapevineData.Authorizations
 
   def create(conn, params = %{"grant_type" => "authorization_code"}) do
     with {:ok, code} <- Map.fetch(params, "code"),

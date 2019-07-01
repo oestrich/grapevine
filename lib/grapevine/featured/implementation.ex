@@ -5,8 +5,8 @@ defmodule Grapevine.Featured.Implementation do
 
   import Ecto.Query
 
-  alias Grapevine.Games
-  alias Grapevine.Repo
+  alias GrapevineData.Games
+  alias GrapevineData.Repo
 
   @doc """
   Calculate the delay to the next cycle check which runs at 6 AM UTC
@@ -39,7 +39,7 @@ defmodule Grapevine.Featured.Implementation do
   end
 
   defp reset_all(multi) do
-    Ecto.Multi.update_all(multi, :update_all, Grapevine.Games.Game, set: [featured_order: nil])
+    Ecto.Multi.update_all(multi, :update_all, GrapevineData.Games.Game, set: [featured_order: nil])
   end
 
   defp update_selected(multi) do
@@ -80,7 +80,7 @@ defmodule Grapevine.Featured.Implementation do
     limit = Keyword.get(opts, :select, 6)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
-    Grapevine.Statistics.PlayerStatistic
+    GrapevineData.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
     |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps, g], ps.recorded_at >= ^last_few_days)
@@ -103,7 +103,7 @@ defmodule Grapevine.Featured.Implementation do
     limit = Keyword.get(opts, :select, 3)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
-    Grapevine.Games.Game
+    GrapevineData.Games.Game
     |> where([g], g.display == true and not is_nil(g.cover_key))
     |> where([g], g.last_seen_at > ^active_cutoff)
     |> where([g], g.id not in ^already_picked_games)
@@ -118,7 +118,7 @@ defmodule Grapevine.Featured.Implementation do
     limit = Keyword.get(opts, :select, 3)
     already_picked_games = Keyword.get(opts, :already_picked, [])
 
-    Grapevine.Games.Game
+    GrapevineData.Games.Game
     |> where([g], g.display == true and not is_nil(g.cover_key))
     |> where([g], g.telnet_last_seen_at > ^mssp_cutoff)
     |> where([g], g.id not in ^already_picked_games)

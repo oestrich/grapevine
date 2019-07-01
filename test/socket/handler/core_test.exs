@@ -250,7 +250,7 @@ defmodule Socket.Handler.CoreTest do
           }
         })
 
-      assert length(Repo.all(Grapevine.Messages.Message)) == 1
+      assert length(Repo.all(GrapevineData.Messages.Message)) == 1
     end
   end
 

@@ -7,7 +7,7 @@ defmodule Grapevine.Client.Server do
 
   alias Grapevine.Client.Server.State
   alias Grapevine.Client.Tells
-  alias Grapevine.Messages
+  alias GrapevineData.Messages
 
   @behaviour Grapevine.Client
 
