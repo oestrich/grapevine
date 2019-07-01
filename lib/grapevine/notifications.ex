@@ -39,7 +39,7 @@ defmodule Grapevine.Notifications do
     def new_alert(alert) do
       alert
       |> Emails.new_alert()
-      |> Mailer.deliver_later()
+      |> Mailer.deliver_now()
     end
 
     def new_game(game) do
@@ -47,7 +47,7 @@ defmodule Grapevine.Notifications do
 
       game
       |> Emails.new_game_registered()
-      |> Mailer.deliver_later()
+      |> Mailer.deliver_now()
     end
   end
 end
