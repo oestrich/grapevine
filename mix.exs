@@ -10,7 +10,8 @@ defmodule Grapevine.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -82,6 +83,19 @@ defmodule Grapevine.Mixfile do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp releases() do
+    [
+      grapevine: [
+        include_executables_for: [:unix],
+        applications: [
+          grapevine_telnet: :none,
+          runtime_tools: :permanent
+        ],
+        config_providers: [{Grapevine.JSONConfigProvider, "/etc/grapevine/config.exs"}]
+      ],
     ]
   end
 end

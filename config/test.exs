@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 #
 # Don't forget to update .travis/test.exs!
@@ -8,6 +8,7 @@ use Mix.Config
 # you can enable the server option below.
 config :grapevine, Web.Endpoint,
   http: [port: 4001],
+  url: [host: "localhost"],
   server: false
 
 config :grapevine, :socket, http: [port: 4111]

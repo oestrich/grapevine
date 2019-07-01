@@ -1,0 +1,6 @@
+{
+  "database_url": "grapevine",
+  "report_errors": true,
+  "sentry_dsn": "...",
+  "web_secret_key_base": "..."
+}
