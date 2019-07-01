@@ -105,7 +105,7 @@ defmodule GrapevineData.Channels do
   """
   @spec name_blocklist() :: [name()]
   def name_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:grapevine), "channels/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine_data), "channels/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

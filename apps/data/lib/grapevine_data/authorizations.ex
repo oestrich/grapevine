@@ -31,31 +31,32 @@ defmodule GrapevineData.Authorizations do
   def start_auth(user, game, params) do
     :telemetry.execute([:web, :oauth, :start], %{count: 1}, %{user_id: user.id, game_id: game.id})
 
-    with {:ok, redirect_uri} <- Map.fetch(params, "redirect_uri") do
-      scopes =
-        params
-        |> Map.get("scope", "")
-        |> String.split(" ")
-        |> Enum.sort()
+    case Map.fetch(params, "redirect_uri") do
+      {:ok, redirect_uri} ->
+        scopes =
+          params
+          |> Map.get("scope", "")
+          |> String.split(" ")
+          |> Enum.sort()
 
-      params = Map.put(params, "scopes", scopes)
+        params = Map.put(params, "scopes", scopes)
 
-      opts = [
-        user_id: user.id,
-        game_id: game.id,
-        redirect_uri: redirect_uri,
-        active: true,
-        scopes: scopes,
-      ]
+        opts = [
+          user_id: user.id,
+          game_id: game.id,
+          redirect_uri: redirect_uri,
+          active: true,
+          scopes: scopes,
+        ]
 
-      case Repo.get_by(Authorization, opts) do
-        nil ->
-          create_authorization(user, game, params)
+        case Repo.get_by(Authorization, opts) do
+          nil ->
+            create_authorization(user, game, params)
 
-        authorization ->
-          refresh_code(authorization)
-      end
-    else
+          authorization ->
+            refresh_code(authorization)
+        end
+
       _ ->
         create_authorization(user, game, params)
     end
@@ -101,15 +102,16 @@ defmodule GrapevineData.Authorizations do
   end
 
   def get_token(token) do
-    with {:ok, token} <- Ecto.UUID.cast(token) do
-      case Repo.get_by(AccessToken, access_token: token) do
-        nil ->
-          {:error, :not_found}
+    case Ecto.UUID.cast(token) do
+      {:ok, token} ->
+        case Repo.get_by(AccessToken, access_token: token) do
+          nil ->
+            {:error, :not_found}
 
-        access_token ->
-          {:ok, Repo.preload(access_token, [authorization: [:user]])}
-      end
-    else
+          access_token ->
+            {:ok, Repo.preload(access_token, [authorization: [:user]])}
+        end
+
       _ ->
         {:error, :not_found}
     end

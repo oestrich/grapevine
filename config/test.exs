@@ -15,7 +15,7 @@ config :grapevine, :socket, http: [port: 4111]
 config :logger, level: :error
 
 # Configure your database
-config :grapevine, GrapevineData.Repo,
+config :grapevine_data, GrapevineData.Repo,
   database: "grapevine_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

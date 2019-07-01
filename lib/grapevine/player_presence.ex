@@ -26,6 +26,10 @@ defmodule Grapevine.PlayerPresence do
   def init(opts) do
     opts = Enum.into(opts, %{})
     :ets.new(Implementation.table_name(opts), [:set, :protected, :named_table])
+
+    :ok = :pg2.create(__MODULE__)
+    :ok = :pg2.join(__MODULE__, self())
+
     {:ok, opts, {:continue, :load_table}}
   end
 

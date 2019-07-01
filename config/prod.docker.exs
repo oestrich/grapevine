@@ -16,7 +16,7 @@ config :grapevine, Web.Endpoint,
 config :grapevine, :socket, tls: true
 
 # Configure your database
-config :grapevine, Grapevine.Repo,
+config :grapevine_data, GrapevineData.Repo,
   hostname: "localhost",
   username: "grapevine",
   password: "password",

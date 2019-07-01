@@ -1,6 +1,5 @@
 defmodule GrapevineData.AccountsTest do
   use Grapevine.DataCase
-  use Bamboo.Test
 
   alias GrapevineData.Accounts
   alias GrapevineData.Accounts.User

@@ -127,15 +127,16 @@ defmodule GrapevineData.Accounts do
   """
   @spec get_by_registration_key(registration_key()) :: {:ok, User.t()} | {:error, :not_found}
   def get_by_registration_key(key) do
-    with {:ok, key} <- Ecto.UUID.cast(key) do
-      case Repo.get_by(User, registration_key: key) do
-        nil ->
-          {:error, :not_found}
+    case Ecto.UUID.cast(key) do
+      {:ok, key} ->
+        case Repo.get_by(User, registration_key: key) do
+          nil ->
+            {:error, :not_found}
 
-        user ->
-          {:ok, user}
-      end
-    else
+          user ->
+            {:ok, user}
+        end
+
       _ ->
         {:error, :not_found}
     end
@@ -196,7 +197,7 @@ defmodule GrapevineData.Accounts do
   """
   @spec username_blocklist() :: [username()]
   def username_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:grapevine), "users/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine_data), "users/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

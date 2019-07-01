@@ -656,7 +656,7 @@ defmodule GrapevineData.Games do
   """
   @spec name_blocklist() :: [game_name()]
   def name_blocklist() do
-    blocklist = Path.join(:code.priv_dir(:grapevine), "games/block-list.txt")
+    blocklist = Path.join(:code.priv_dir(:grapevine_data), "games/block-list.txt")
     {:ok, blocklist} = File.read(blocklist)
 
     blocklist

@@ -5,7 +5,6 @@ defmodule GrapevineData.Statistics do
 
   import Ecto.Query
 
-  alias Grapevine.PlayerPresence
   alias GrapevineData.Repo
   alias GrapevineData.Statistics.PlayerStatistic
   alias GrapevineData.Statistics.Session
@@ -35,8 +34,18 @@ defmodule GrapevineData.Statistics do
   end
 
   def broadcast_count({:ok, player_statistics}) do
-    PlayerPresence.update_count(player_statistics.game_id, player_statistics.player_count)
-    {:ok, player_statistics}
+    case :pg2.get_members(Grapevine.PlayerPresence) do
+      members when is_list(members) ->
+        Enum.each(members, fn pid ->
+          %{game_id: game_id, player_count: count} = player_statistics
+          GenServer.cast(pid, {:update_count, game_id, count})
+        end)
+
+        {:ok, player_statistics}
+
+      {:error, {:no_such_group, Grapevine.PlayerPresence}} ->
+        {:ok, player_statistics}
+    end
   end
 
   def broadcast_count(result), do: result
