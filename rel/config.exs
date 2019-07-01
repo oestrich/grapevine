@@ -2,19 +2,19 @@
 # They can then be used by adding `plugin MyPlugin` to
 # either an environment, or release definition, where
 # `MyPlugin` is the name of the plugin module.
-Path.join(["rel", "plugins", "*.exs"])
+~w(rel plugins *.exs)
+|> Path.join()
 |> Path.wildcard()
 |> Enum.map(&Code.eval_file(&1))
 
-use Mix.Releases.Config,
-    # This sets the default release built by `mix release`
+use Distillery.Releases.Config,
+    # This sets the default release built by `mix distillery.release`
     default_release: :default,
-    # This sets the default environment used by `mix release`
+    # This sets the default environment used by `mix distillery.release`
     default_environment: Mix.env()
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/configuration.html
-
 
 # You may define one or more environments in this file,
 # an environment's settings will override those of a release
@@ -31,10 +31,10 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :crypto.hash(:sha256, System.get_env("COOKIE")) |> Base.encode16 |> String.to_atom
-  set vm_args: "rel/vm.args.eex"
+  set vm_args: "rel/vm.args"
 
   set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/grapevine/config.exs"]}
+    {Distillery.Releases.Config.Providers.Elixir, ["/etc/grapevine/config.exs"]}
   ]
 end
 
