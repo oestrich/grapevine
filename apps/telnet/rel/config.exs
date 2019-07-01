@@ -41,7 +41,7 @@ environment :prod do
   set vm_args: "rel/vm.args"
 
   set config_providers: [
-    {Mix.Releases.Config.Providers.Elixir, ["/etc/telnet/config.exs"]}
+    {Distillery.Releases.Config.Providers.Elixir, ["/etc/telnet/config.exs"]}
   ]
 end
 
