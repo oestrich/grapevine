@@ -10,8 +10,3 @@ mix compile --force --warnings-as-errors
 mix test
 mix credo
 cd ../..
-
-cd apps/data
-mix compile --force --warnings-as-errors
-mix test
-mix credo
