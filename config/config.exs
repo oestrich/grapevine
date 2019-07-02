@@ -22,8 +22,6 @@ config(:grapevine, :socket, tls: false)
 # Configures Elixir's Logger
 config(:bamboo, :json_library, Jason)
 
-config(:distillery, no_warn_missing: [:elixir_make])
-
 config(:ecto_sql, :json_library, Jason)
 
 config(:logger, :console, format: "$time $metadata[$level] $message\n", metadata: [:user_id])
