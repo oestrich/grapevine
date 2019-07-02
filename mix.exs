@@ -55,7 +55,6 @@ defmodule Grapevine.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:pid_file, "~> 0.1.0"},
       {:plug_cowboy, "~> 2.0", override: true},
       {:poison, "~> 4.0"},
       {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
