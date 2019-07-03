@@ -1,5 +1,7 @@
 import Config
 
+config(:grapevine, Grapevine.Mailer, adapter: Bamboo.SMTPAdapter, server: "smtp.mailgun.org", port: 587)
+
 config(:grapevine, Web.Endpoint,
   http: [port: 4100],
   url: [host: "grapevine.haus", port: 443, scheme: "https"],
