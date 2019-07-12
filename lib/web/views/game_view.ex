@@ -217,10 +217,10 @@ defmodule Web.GameView do
         link(connection.url, to: connection.url, target: "_blank")
 
       "telnet" ->
-        "#{connection.host}:#{connection.port}"
+        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
 
       "secure telnet" ->
-        "#{connection.host}:#{connection.port}"
+        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
     end
   end
 end
