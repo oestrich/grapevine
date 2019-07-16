@@ -92,7 +92,7 @@ defmodule Grapevine.Mixfile do
           grapevine_telnet: :none,
           runtime_tools: :permanent
         ],
-        config_providers: [{Grapevine.ConfigProvider, "/etc/grapevine/config.json"}]
+        config_providers: [{Grapevine.ConfigProvider, "/etc/grapevine/config.exs"}]
       ],
     ]
   end
