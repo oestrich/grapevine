@@ -23,7 +23,6 @@ defmodule GrapevineTelnet.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:distillery, "~> 2.0", runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:jason, "~> 1.1"},
       {:libcluster, "~> 3.0"},

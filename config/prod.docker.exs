@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :grapevine, GrapevineData.Repo,
   adapter: Ecto.Adapters.Postgres,

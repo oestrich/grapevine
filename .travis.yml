@@ -11,9 +11,9 @@ env:
   global:
   - PGPORT=5433
 elixir:
-  - 1.8.0
+  - 1.9.0
 otp_release:
-  - 21.2
+  - 22.0
 env:
   - MIX_ENV=test
 cache:

@@ -10,7 +10,8 @@ defmodule Grapevine.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -38,7 +39,6 @@ defmodule Grapevine.Mixfile do
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:discourse, "~> 0.0.1"},
-      {:distillery, "~> 2.0", runtime: false},
       {:earmark, "~> 1.2"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
@@ -55,7 +55,6 @@ defmodule Grapevine.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:pid_file, "~> 0.1.0"},
       {:plug_cowboy, "~> 2.0", override: true},
       {:poison, "~> 4.0"},
       {:prometheus_ex, git: "https://github.com/deadtrickster/prometheus.ex.git", override: true},
@@ -82,6 +81,19 @@ defmodule Grapevine.Mixfile do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp releases() do
+    [
+      grapevine: [
+        include_executables_for: [:unix],
+        applications: [
+          grapevine_telnet: :none,
+          runtime_tools: :permanent
+        ],
+        config_providers: [{Grapevine.ConfigProvider, "/etc/grapevine/config.exs"}]
+      ],
     ]
   end
 end
