@@ -24,10 +24,16 @@ defmodule Web.Game do
   def client_allowed?(game, assigns, user_key) do
     case game.allow_anonymous_client do
       true ->
-        true
+        {:ok, :allowed}
 
       false ->
-        Map.has_key?(assigns, user_key) && !is_nil(Map.get(assigns, user_key))
+        case Map.has_key?(assigns, user_key) && !is_nil(Map.get(assigns, user_key)) do
+          true ->
+            {:ok, :allowed}
+
+          false ->
+            {:error, :not_signed_in}
+        end
     end
   end
 end
