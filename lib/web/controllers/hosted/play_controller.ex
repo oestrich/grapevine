@@ -27,10 +27,10 @@ defmodule Web.Hosted.PlayController do
 
   defp check_user_allowed(conn, game) do
     case Game.client_allowed?(game, conn.assigns, :current_user) do
-      true ->
+      {:ok, :allowed} ->
         {:ok, game}
 
-      false ->
+      {:error, _} ->
         {:error, :not_allowed}
     end
   end
