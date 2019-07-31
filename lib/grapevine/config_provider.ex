@@ -24,10 +24,6 @@ defmodule Grapevine.ConfigProvider do
 
     Config.Reader.merge(
       config,
-      discourse: [
-        {:url, json["discourse_url"]},
-        {:secret, json["discourse_url"]}
-      ],
       ex_aws: [
         {:access_key_id, json["exaws_key_id"]},
         {:secret_access_key, json["exaws_secret_access_key"]}

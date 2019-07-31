@@ -38,7 +38,6 @@ defmodule Grapevine.Mixfile do
       {:bamboo_smtp, "~> 1.5"},
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:discourse, "~> 0.0.1"},
       {:earmark, "~> 1.2"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},

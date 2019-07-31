@@ -154,12 +154,6 @@ defmodule Web.Router do
     get("/users/me", UserController, :show)
   end
 
-  scope "/sso/discourse", Web.SSO do
-    pipe_through([:browser, :logged_in, :verified])
-
-    get("/", DiscourseController, :new)
-  end
-
   scope "/oauth", Web.Oauth do
     pipe_through([:browser, :logged_in, :verified])
 

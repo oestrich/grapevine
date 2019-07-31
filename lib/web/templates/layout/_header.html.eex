@@ -19,9 +19,6 @@
             <%= link("Events", to: event_path(@conn, :index), class: "nav-link") %>
           </li>
           <li class="nav-item">
-            <%= link("Forums", to: "https://forum.grapevine.haus", class: "nav-link") %>
-          </li>
-          <li class="nav-item">
             <%= link("Games", to: game_path(@conn, :index), class: "nav-link") %>
           </li>
           <%= if Map.get(assigns, :current_user) do %>

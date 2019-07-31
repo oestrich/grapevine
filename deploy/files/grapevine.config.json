@@ -1,7 +1,5 @@
 {
   "database_url": "postgresql://localhost:5432/grapevine",
-  "discourse_url": "...",
-  "discourse_secret": "...",
   "email_alert_to": [],
   "email_smtp_username": "...",
   "email_smpt_password": "...",
