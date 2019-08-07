@@ -8,6 +8,7 @@ defmodule GrapevineData.Statistics do
   alias GrapevineData.Repo
   alias GrapevineData.Statistics.PlayerStatistic
   alias GrapevineData.Statistics.Session
+  alias Stein.Pagination
 
   @doc """
   Record a game's player count at a specific time on the socket
@@ -73,6 +74,20 @@ defmodule GrapevineData.Statistics do
         |> Session.closed_changeset(time)
         |> Repo.update()
     end
+  end
+
+  @doc """
+  Fetch recent sessions
+  """
+  def recent_sessions(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    query =
+      Session
+      |> preload([:game])
+      |> order_by([s], desc: s.started_at)
+
+    Pagination.paginate(Repo, query, opts)
   end
 
   @doc """
