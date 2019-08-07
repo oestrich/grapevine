@@ -8,7 +8,7 @@ defmodule Grapevine.Statistics.Server do
   alias GrapevineData.Statistics
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, [], [name: {:global, GrapevineData.Statistics}])
+    GenServer.start_link(__MODULE__, [], [name: {:global, Grapevine.Statistics}])
   end
 
   def init(_) do
