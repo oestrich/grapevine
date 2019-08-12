@@ -4,6 +4,8 @@ defmodule Web.GameStatisticController do
   alias GrapevineData.Games
   alias GrapevineData.Statistics
 
+  action_fallback(Web.FallbackController)
+
   def show(conn, %{"game_id" => short_name}) do
     with {:ok, game} <- Games.get_by_short(short_name, display: true) do
       conn
