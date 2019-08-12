@@ -15,7 +15,7 @@
       <h3 class="name">
         <%= GameView.online_status(@game) %>
 
-        <%= @game.name %>
+        <%= @game.name %> - Stats
 
         <%= if @game.homepage_url do %>
           <span class="home-page"><%= link(@game.homepage_url, to: @game.homepage_url) %></span>
@@ -25,9 +25,19 @@
 
     <%= if @game.display_player_graph do %>
       <div class="mt-3">
-        <h3>Player Stats</h3>
+        <h3>Last 48 Hours of Players</h3>
+        <span>Every Hour</span>
 
-        <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name) %>">
+        <div id="player-stats-hours" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "48-hours") %>">
+          <canvas></canvas>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <h3>Last Week of Players</h3>
+        <span>Every 4 Hours</span>
+
+        <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "week") %>">
           <canvas></canvas>
         </div>
       </div>

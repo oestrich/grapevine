@@ -119,14 +119,37 @@ defmodule GrapevineData.Statistics do
     interval = Timex.Interval.new(from: last_few_days, until: Timex.now(), step: [hours: 1])
 
     Enum.map(interval, fn time ->
-      {time, find_nearest_stats(stats, time)}
+      {time, find_nearest_stats(stats, time, [hours: 1])}
     end)
   end
 
-  defp find_nearest_stats(stats, time) do
+  @doc """
+  Get the last week's worth of statistics
+  """
+  def last_week(game) do
+    last_few_days =
+      Timex.now()
+      |> Timex.shift(days: -7)
+      |> Timex.set(minute: 0, second: 0)
+      |> DateTime.truncate(:second)
+
+    stats =
+      PlayerStatistic
+      |> where([ps], ps.game_id == ^game.id)
+      |> where([ps], ps.recorded_at >= ^last_few_days)
+      |> Repo.all()
+
+    interval = Timex.Interval.new(from: last_few_days, until: Timex.now(), step: [hours: 4])
+
+    Enum.map(interval, fn time ->
+      {time, find_nearest_stats(stats, time, [hours: 4])}
+    end)
+  end
+
+  defp find_nearest_stats(stats, time, time_opts) do
     values =
       Enum.filter(stats, fn stat ->
-        interval = Timex.Interval.new(from: time, until: [hours: 1])
+        interval = Timex.Interval.new(from: time, until: time_opts)
         stat.recorded_at in interval
       end)
 
