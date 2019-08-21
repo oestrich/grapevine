@@ -5,7 +5,7 @@ defmodule Grapevine.Telnet.Worker do
 
   use GenServer
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
   alias Grapevine.Telnet.MSSPClient
 
   @initial_delay 60 * 1000

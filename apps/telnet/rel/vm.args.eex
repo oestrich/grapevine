@@ -1,22 +1,11 @@
-## Name of the node
--name <%= release_name %>@${POD_IP}
+## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
+## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
 
-## Cookie for distributed erlang
--setcookie <%= release.profile.cookie %>
-
-## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
-## (Disabled by default..use with caution!)
-##-heart
-
-## Enable kernel poll and a few async threads
-##+K true
-##+A 5
+## Number of dirty schedulers doing IO work (file, sockets, etc)
+##+SDio 5
 
 ## Increase number of concurrent ports/sockets
-##-env ERL_MAX_PORTS 4096
+##+Q 65536
 
 ## Tweak GC to run more often
 ##-env ERL_FULLSWEEP_AFTER 10
-
-# Enable SMP automatically based on availability
--smp auto

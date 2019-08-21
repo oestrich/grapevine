@@ -11,11 +11,11 @@ defmodule Grapevine.ReleaseTasks do
   ]
 
   @apps [
-    :grapevine
+    :grapevine_data
   ]
 
   @repos [
-    Grapevine.Repo
+    GrapevineData.Repo
   ]
 
   def migrate() do
@@ -33,7 +33,7 @@ defmodule Grapevine.ReleaseTasks do
     IO.puts("Loading grapevine...")
 
     # Load the code for grapevine, but don't start it
-    Application.load(:grapevine)
+    Application.load(:grapevine_data)
 
     IO.puts("Starting dependencies..")
     # Start apps necessary for executing migrations
@@ -48,7 +48,7 @@ defmodule Grapevine.ReleaseTasks do
 
   defp run_migrations_for(app) do
     IO.puts("Running migrations for #{app}")
-    Ecto.Migrator.run(Grapevine.Repo, migrations_path(app), :up, all: true)
+    Ecto.Migrator.run(GrapevineData.Repo, migrations_path(app), :up, all: true)
   end
 
   defp migrations_path(app), do: Path.join([priv_dir(app), "repo", "migrations"])

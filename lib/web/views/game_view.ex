@@ -1,10 +1,10 @@
 defmodule Web.GameView do
   use Web, :view
 
-  alias Grapevine.Achievements
-  alias Grapevine.Channels
-  alias Grapevine.Games.Images
-  alias Grapevine.UserAgents
+  alias GrapevineData.Achievements
+  alias GrapevineData.Channels
+  alias GrapevineData.Games.Images
+  alias GrapevineData.UserAgents
   alias Stein.Storage
   alias Web.EventView
 
@@ -217,10 +217,10 @@ defmodule Web.GameView do
         link(connection.url, to: connection.url, target: "_blank")
 
       "telnet" ->
-        "#{connection.host}:#{connection.port}"
+        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
 
       "secure telnet" ->
-        "#{connection.host}:#{connection.port}"
+        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
     end
   end
 end

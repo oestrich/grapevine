@@ -5,8 +5,8 @@ defmodule Web.PlayChannel do
 
   use Web, :channel
 
-  alias Grapevine.Authorizations
-  alias Grapevine.Games
+  alias GrapevineData.Authorizations
+  alias GrapevineData.Games
   alias GrapevineTelnet.WebClient
   alias Web.Game
 
@@ -37,10 +37,10 @@ defmodule Web.PlayChannel do
 
   defp check_user_allowed(socket, game) do
     case Game.client_allowed?(game, socket.assigns, :user) do
-      true ->
+      {:ok, :allowed} ->
         {:ok, game}
 
-      false ->
+      {:error, _} ->
         {:error, "game is not open"}
     end
   end

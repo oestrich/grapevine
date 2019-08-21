@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 #
 # Don't forget to update .travis/test.exs!
@@ -8,6 +8,7 @@ use Mix.Config
 # you can enable the server option below.
 config :grapevine, Web.Endpoint,
   http: [port: 4001],
+  url: [host: "localhost"],
   server: false
 
 config :grapevine, :socket, http: [port: 4111]
@@ -15,7 +16,7 @@ config :grapevine, :socket, http: [port: 4111]
 config :logger, level: :error
 
 # Configure your database
-config :grapevine, Grapevine.Repo,
+config :grapevine_data, GrapevineData.Repo,
   database: "grapevine_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

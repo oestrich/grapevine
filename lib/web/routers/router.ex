@@ -145,6 +145,8 @@ defmodule Web.Router do
 
     resources("/alerts", AlertController, only: [:index])
 
+    resources("/client_sessions", ClientSessionController, only: [:index])
+
     resources("/games", GameController, only: [:index, :show])
   end
 
@@ -152,12 +154,6 @@ defmodule Web.Router do
     pipe_through([:api, :api_authenticated])
 
     get("/users/me", UserController, :show)
-  end
-
-  scope "/sso/discourse", Web.SSO do
-    pipe_through([:browser, :logged_in, :verified])
-
-    get("/", DiscourseController, :new)
   end
 
   scope "/oauth", Web.Oauth do

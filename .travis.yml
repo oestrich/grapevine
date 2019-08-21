@@ -11,29 +11,30 @@ env:
   global:
   - PGPORT=5433
 elixir:
-  - 1.8.0
+  - 1.9.0
 otp_release:
-  - 21.2
+  - 22.0
 env:
   - MIX_ENV=test
 cache:
   directories:
     - deps
     - _build/
+    - apps/data/deps/
+    - apps/data/_build/
 branches:
   only:
   - master
 install:
   - sudo -u postgres psql -p 5433 -c "create user grapevine with superuser password 'password';"
   - cp .travis/test.exs config/test.extra.exs
+  - cp .travis/test.exs apps/data/config/test.extra.exs
   - mix local.rebar --force
   - mix local.hex --force
-  - mix deps.get
-  - mix compile
+  - mix do deps.get, compile
+  - cd apps/data && mix do deps.get, compile && cd ../..
   - mix do ecto.create, ecto.migrate
   - nvm install 10.13.0 && nvm use 10.13.0
+  - cd assets && yarn install && cd ..
 script:
-  - mix credo
-  - mix test
-  - cd assets && yarn install && yarn test && cd ..
-  - ./release.sh
+  - ./verify.sh

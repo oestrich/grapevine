@@ -2,8 +2,8 @@ defmodule Grapevine.Featured.ImplementationTest do
   use Grapevine.DataCase
 
   alias Grapevine.Featured.Implementation
-  alias Grapevine.Games
-  alias Grapevine.Statistics
+  alias GrapevineData.Games
+  alias GrapevineData.Statistics
 
   describe "determining the amount of milliseconds to delay" do
     test "for the next cycle" do

@@ -1,0 +1,16 @@
+{
+  "database_url": "postgresql://localhost:5432/grapevine",
+  "email_alert_to": [],
+  "email_smtp_username": "...",
+  "email_smpt_password": "...",
+  "exaws_key_id": "...",
+  "exaws_secret_access_key": "...",
+  "report_errors": true,
+  "sentry_dsn": "...",
+  "stein_bucket": "...",
+  "socket_tls": true,
+  "timber_api_key": "...",
+  "cluster_topology_hosts": ["grapevine@localhost", "telnet@localhost"],
+  "web_analytics_id": "...",
+  "web_secret_key_base": "..."
+}

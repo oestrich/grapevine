@@ -3,7 +3,7 @@ defmodule Socket.Presence.ServerTest do
 
   alias Socket.Presence
   alias Socket.Presence.Server
-  alias Grapevine.Statistics
+  alias GrapevineData.Statistics
 
   describe "recording online game stats" do
     test "saves state" do

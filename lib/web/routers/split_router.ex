@@ -7,7 +7,7 @@ defmodule Web.SplitRouter do
   import Phoenix.Controller
 
   alias Grapevine.CNAMEs
-  alias Grapevine.Games
+  alias GrapevineData.Games
 
   @config Application.get_env(:grapevine, :web)[:url]
 

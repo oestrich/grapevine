@@ -1,7 +1,7 @@
 defmodule Web.PlayController do
   use Web, :controller
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
   alias Web.Game
 
   action_fallback(Web.FallbackController)
@@ -21,6 +21,12 @@ defmodule Web.PlayController do
     else
       {:error, :not_found} ->
         {:error, :not_found}
+
+      {:error, :not_signed_in} ->
+        conn
+        |> put_flash(:error, "You must be signed in in order to use the web client for this game.")
+        |> put_session(:last_path, Routes.play_path(conn, :show, short_name))
+        |> redirect(to: Routes.session_path(conn, :new))
 
       {:error, _} ->
         conn
@@ -49,11 +55,11 @@ defmodule Web.PlayController do
 
   defp check_user_allowed(conn, game) do
     case Game.client_allowed?(game, conn.assigns, :current_user) do
-      true ->
+      {:ok, :allowed} ->
         {:ok, game}
 
-      false ->
-        {:error, :not_allowed}
+      {:error, error} ->
+        {:error, error}
     end
   end
 end

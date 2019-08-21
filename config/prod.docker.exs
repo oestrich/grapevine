@@ -1,7 +1,12 @@
-use Mix.Config
+import Config
 
-config :grapevine, Web.Endpoint,
-  secret_key_base: "secret"
+config :grapevine, GrapevineData.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "grapevine",
+  hostname: "postgres",
+  username: "grapevine",
+  password: "grapevine",
+  pool_size: 10
 
 config :grapevine, Web.Endpoint,
   http: [port: 4100],
@@ -11,7 +16,7 @@ config :grapevine, Web.Endpoint,
 config :grapevine, :socket, tls: true
 
 # Configure your database
-config :grapevine, Grapevine.Repo,
+config :grapevine_data, GrapevineData.Repo,
   hostname: "localhost",
   username: "grapevine",
   password: "password",

@@ -1,8 +1,8 @@
 defmodule Web.AchievementController do
   use Web, :controller
 
-  alias Grapevine.Achievements
-  alias Grapevine.Games
+  alias GrapevineData.Achievements
+  alias GrapevineData.Games
 
   action_fallback(Web.FallbackController)
 

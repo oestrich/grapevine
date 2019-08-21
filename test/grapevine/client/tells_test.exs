@@ -1,7 +1,7 @@
 defmodule Grapevine.Client.TellsTest do
   use Grapevine.DataCase
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
   alias Grapevine.Client.Tells
 
   describe "receiving tells" do

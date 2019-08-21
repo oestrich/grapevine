@@ -1,7 +1,7 @@
 defmodule Web.Client.PlayController do
   use Web, :controller
 
-  alias Grapevine.Games
+  alias GrapevineData.Games
   alias Web.Game
 
   action_fallback(Web.FallbackController)
@@ -27,10 +27,10 @@ defmodule Web.Client.PlayController do
 
   defp check_user_allowed(conn, game) do
     case Game.client_allowed?(game, conn.assigns, :current_user) do
-      true ->
+      {:ok, :allowed} ->
         {:ok, game}
 
-      false ->
+      {:error, _} ->
         {:error, :not_allowed}
     end
   end

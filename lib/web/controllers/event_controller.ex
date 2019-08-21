@@ -1,7 +1,7 @@
 defmodule Web.EventController do
   use Web, :controller
 
-  alias Grapevine.Events
+  alias GrapevineData.Events
 
   action_fallback(Web.FallbackController)
 

@@ -26,6 +26,10 @@ defmodule Grapevine.PlayerPresence do
   def init(opts) do
     opts = Enum.into(opts, %{})
     :ets.new(Implementation.table_name(opts), [:set, :protected, :named_table])
+
+    :ok = :pg2.create(__MODULE__)
+    :ok = :pg2.join(__MODULE__, self())
+
     {:ok, opts, {:continue, :load_table}}
   end
 
@@ -42,9 +46,9 @@ defmodule Grapevine.PlayerPresence do
   defmodule Implementation do
     @moduledoc false
 
-    alias Grapevine.Games
+    alias GrapevineData.Games
     alias Grapevine.PlayerPresence
-    alias Grapevine.Statistics
+    alias GrapevineData.Statistics
     alias Web.Endpoint
 
     def current_total_count() do

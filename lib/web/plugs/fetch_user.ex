@@ -5,8 +5,8 @@ defmodule Web.Plugs.FetchUser do
 
   import Plug.Conn
 
-  alias Grapevine.Accounts
-  alias Grapevine.Authorizations
+  alias GrapevineData.Accounts
+  alias GrapevineData.Authorizations
 
   def init(default), do: default
 

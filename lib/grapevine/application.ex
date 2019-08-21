@@ -12,7 +12,6 @@ defmodule Grapevine.Application do
 
     children = [
       cluster_supervisor(),
-      supervisor(Grapevine.Repo, []),
       supervisor(Web.Endpoint, []),
       {Socket.Application, [name: Socket.Application]},
       {Grapevine.Presence, [name: Grapevine.Presence]},
@@ -23,7 +22,8 @@ defmodule Grapevine.Application do
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
       {Grapevine.Featured, [name: Grapevine.Featured]},
-      {Grapevine.Statistics.Server, []}
+      {Grapevine.Statistics.Server, []},
+      {Grapevine.Notifications, []}
     ]
 
     Metrics.Setup.setup()

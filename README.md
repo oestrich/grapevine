@@ -20,9 +20,9 @@ View the websocket details on [Grapevine][websocket-docs].
 
 This is only required to run Grapevine itself, the server. These are not required to connect as a game. See the above [websocket docs][websocket-docs] for connecting as a client.
 
-- PostgreSQL 10
-- Elixir 1.8.0
-- Erlang 21.2.6
+- PostgreSQL 11
+- Elixir 1.9.0
+- Erlang 22.0.4
 - node.js 10.13.0
 
 ### Setup
@@ -43,15 +43,6 @@ This will start a web server on port 4100. You can now load [http://localhost:41
 MIX_ENV=test mix ecto.create
 MIX_ENV=test mix ecto.migrate
 mix test
-```
-
-### Docker
-
-```bash
-docker-compose build grapevine
-docker-compose up -d postgres
-docker-compose run --rm grapevine migrate
-docker-compose up grapevine
 ```
 
 ### Telnet Web Client
@@ -77,7 +68,7 @@ config :grapevine,
 
 ## Setting up a new Play CNAME
 
-- Game sets the CNAME to `grapevine.haus`
+- Game sets the CNAME to `client.grapevine.haus`
 - Game must have a homepage url
 - Game must have the web client enabled
 - Update game's record for their CNAME

@@ -1,7 +1,7 @@
 defmodule Web.RegistrationVerifyController do
   use Web, :controller
 
-  alias Grapevine.Accounts
+  alias GrapevineData.Accounts
 
   def show(conn, %{"token" => token}) do
     with {:ok, user} <- Accounts.verify_email(token) do

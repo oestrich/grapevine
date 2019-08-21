@@ -7,6 +7,9 @@
       <%= link("Alerts", to: admin_alert_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">
+      <%= link("Client Sessions", to: admin_client_session_path(@conn, :index), class: "nav-link") %>
+    </li>
+    <li class="nav-item">
       <%= link("Games", to: admin_game_path(@conn, :index), class: "nav-link") %>
     </li>
   </ul>
