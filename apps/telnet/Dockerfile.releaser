@@ -8,7 +8,8 @@ RUN mix deps.get --only prod && \
   mix deps.compile
 
 FROM builder as releaser
-ARG cookie
-ENV COOKIE=${cookie}
+ENV MIX_ENV=prod
 COPY . /app/
-RUN mix distillery.release --env=prod
+RUN mix release && \
+  cd _build/prod/rel/telnet/ && \
+  tar czf /opt/telnet.tar.gz .

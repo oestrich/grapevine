@@ -5,9 +5,10 @@ defmodule GrapevineTelnet.MixProject do
     [
       app: :grapevine_telnet,
       version: "1.0.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -36,6 +37,19 @@ defmodule GrapevineTelnet.MixProject do
       {:telemetry_poller, "~> 0.2"},
       {:telnet, git: "https://github.com/oestrich/telnet-elixir.git"},
       {:timex, "~> 3.1"}
+    ]
+  end
+
+  defp releases() do
+    [
+      telnet: [
+        include_executables_for: [:unix],
+        applications: [
+          grapevine_telnet: :permanent,
+          runtime_tools: :permanent
+        ],
+        config_providers: [{GrapevineTelnet.ConfigProvider, "/etc/telnet/config.exs"}]
+      ]
     ]
   end
 end

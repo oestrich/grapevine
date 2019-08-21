@@ -19,8 +19,7 @@ COPY assets /app
 RUN yarn run deploy
 
 FROM builder as releaser
-ARG cookie
-ENV COOKIE=${cookie}
+ENV MIX_ENV=prod
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
 RUN mix phx.digest
