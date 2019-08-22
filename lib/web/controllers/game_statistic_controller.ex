@@ -32,11 +32,11 @@ defmodule Web.GameStatisticController do
     end
   end
 
-  def players(conn, %{"game_id" => short_name, "series" => "week"}) do
+  def players(conn, params = %{"game_id" => short_name, "series" => "week"}) do
     case Games.get_by_short(short_name) do
       {:ok, game} ->
         conn
-        |> assign(:statistics, Statistics.last_week(game))
+        |> assign(:statistics, Statistics.last_week(game, stat_type(params)))
         |> render("players.json")
 
       {:error, :not_found} ->
@@ -45,4 +45,12 @@ defmodule Web.GameStatisticController do
         |> redirect(to: page_path(conn, :index))
     end
   end
+
+  defp stat_type(%{"type" => "avg"}), do: :avg
+
+  defp stat_type(%{"type" => "max"}), do: :max
+
+  defp stat_type(%{"type" => "min"}), do: :min
+
+  defp stat_type(_), do: :max
 end

@@ -119,14 +119,14 @@ defmodule GrapevineData.Statistics do
     interval = Timex.Interval.new(from: last_few_days, until: Timex.now(), step: [hours: 1])
 
     Enum.map(interval, fn time ->
-      {time, find_nearest_stats(stats, time, [hours: 1])}
+      {time, find_nearest_stats(stats, time, :max, [hours: 1])}
     end)
   end
 
   @doc """
   Get the last week's worth of statistics
   """
-  def last_week(game) do
+  def last_week(game, type) do
     last_few_days =
       Timex.now()
       |> Timex.shift(days: -7)
@@ -142,11 +142,11 @@ defmodule GrapevineData.Statistics do
     interval = Timex.Interval.new(from: last_few_days, until: Timex.now(), step: [hours: 4])
 
     Enum.map(interval, fn time ->
-      {time, find_nearest_stats(stats, time, [hours: 4])}
+      {time, find_nearest_stats(stats, time, type, [hours: 4])}
     end)
   end
 
-  defp find_nearest_stats(stats, time, time_opts) do
+  defp find_nearest_stats(stats, time, type, time_opts) do
     values =
       Enum.filter(stats, fn stat ->
         interval = Timex.Interval.new(from: time, until: time_opts)
@@ -160,9 +160,19 @@ defmodule GrapevineData.Statistics do
       false ->
         values
         |> Enum.map(& &1.player_count)
-        |> Enum.max()
+        |> select_time(type)
     end
   end
+
+  defp select_time([], :avg), do: 0
+
+  defp select_time(values, :avg) when is_list(values) do
+    Enum.sum(values) / length(values)
+  end
+
+  defp select_time(values, :max), do: Enum.max(values)
+
+  defp select_time(values, :min), do: Enum.min(values)
 
   @doc """
   Get the most recent count of a game

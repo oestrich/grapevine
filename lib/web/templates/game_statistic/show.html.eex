@@ -28,7 +28,7 @@
         <h3>Last 48 Hours of Players</h3>
         <span>Every Hour</span>
 
-        <div id="player-stats-hours" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "48-hours") %>">
+        <div id="player-stats-hours" class="chart" data-type='48-hours' data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "48-hours") %>">
           <canvas></canvas>
         </div>
       </div>
@@ -37,7 +37,7 @@
         <h3>Last Week of Players</h3>
         <span>Every 4 Hours</span>
 
-        <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "week") %>">
+        <div id="player-stats-week" class="chart" data-type="week" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "week") %>">
           <canvas></canvas>
         </div>
       </div>
