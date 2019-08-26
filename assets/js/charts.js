@@ -43,7 +43,6 @@ document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement =
         scales: {
           yAxes: [{
             ticks: {
-              maxTicksLimit: 4,
               min: 0,
               suggestedMax: 5,
               callback: function (value) { if (Number.isInteger(value)) { return value; } },
@@ -161,7 +160,6 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
         scales: {
           yAxes: [{
             ticks: {
-              maxTicksLimit: 4,
               min: 0,
               suggestedMax: 5,
               callback: function (value) { if (Number.isInteger(value)) { return value; } },
@@ -284,7 +282,6 @@ document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
         scales: {
           yAxes: [{
             ticks: {
-              maxTicksLimit: 4,
               min: 0,
               suggestedMax: 5,
               callback: function (value) { if (Number.isInteger(value)) { return value; } },
