@@ -63,6 +63,7 @@ defmodule GrapevineData.Games.Connection do
         |> cast(params, [:url])
         |> validate_required([:url])
         |> validate_format(:url, ~r/^https?:\/\/\w+.\w+/)
+        |> validate_url()
 
       "telnet" ->
         changeset
@@ -78,6 +79,22 @@ defmodule GrapevineData.Games.Connection do
         |> validate_inclusion(:port, 0..65_535)
         |> validate_exclusion(:port, [80, 443])
         |> validate_ceritifcate()
+    end
+  end
+
+  defp validate_url(changeset) do
+    case get_change(changeset, :url) do
+      nil ->
+        changeset
+
+      url ->
+        case String.match?(url, ~r/grapevine\.haus/) do
+          true ->
+            add_error(changeset, :url, "cannot list Grapevine as a web client")
+
+          false ->
+            changeset
+        end
     end
   end
 
