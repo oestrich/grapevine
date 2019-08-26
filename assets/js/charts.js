@@ -212,10 +212,15 @@ document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
     let labels = statistics.avg.map(stat => {
       let hour = moment().
         utcOffset(0).
-        set({hour: stat.hour}).
-        utcOffset(offset);
+        set({hour: stat.hour});
 
-      return hour.format("h A");
+      hour = hour._d.getHours();
+      if (hour >= 12) {
+        hour = hour % 12;
+        return `${hour} PM`;
+      } else {
+        return `${hour} AM`;
+      }
     });
 
     let avgValues = statistics.avg.map(stat => {
