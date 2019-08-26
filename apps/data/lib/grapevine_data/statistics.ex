@@ -164,7 +164,7 @@ defmodule GrapevineData.Statistics do
     end
   end
 
-  defp select_time([], :avg), do: 0
+  defp select_time([], _type), do: 0
 
   defp select_time(values, :avg) when is_list(values) do
     Enum.sum(values) / length(values)
