@@ -23,6 +23,7 @@ defmodule Web.GameStatisticController do
       {:ok, game} ->
         conn
         |> assign(:statistics, Statistics.last_few_days(game))
+        |> put_resp_header("cache-control", "public, max-age=3600")
         |> render("players.json")
 
       {:error, :not_found} ->
@@ -37,6 +38,7 @@ defmodule Web.GameStatisticController do
       {:ok, game} ->
         conn
         |> assign(:statistics, Statistics.last_week(game, stat_type(params)))
+        |> put_resp_header("cache-control", "public, max-age=3600")
         |> render("players.json")
 
       {:error, :not_found} ->
@@ -51,6 +53,7 @@ defmodule Web.GameStatisticController do
       {:ok, game} ->
         conn
         |> assign(:statistics, Statistics.last_week_time_of_day(game, stat_type(params)))
+        |> put_resp_header("cache-control", "public, max-age=3600")
         |> render("players-tod.json")
 
       {:error, :not_found} ->
