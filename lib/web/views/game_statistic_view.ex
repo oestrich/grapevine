@@ -11,4 +11,13 @@ defmodule Web.GameStatisticView do
 
     %{statistics: statistics}
   end
+
+  def render("players-tod.json", %{statistics: statistics}) do
+    statistics =
+      Enum.map(statistics, fn {hour, count} ->
+        %{hour: hour, count: count}
+      end)
+
+    %{statistics: statistics}
+  end
 end

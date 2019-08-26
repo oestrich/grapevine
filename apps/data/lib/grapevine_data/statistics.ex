@@ -175,6 +175,42 @@ defmodule GrapevineData.Statistics do
   defp select_time(values, :min), do: Enum.min(values)
 
   @doc """
+  Get stats by time of day for the last week
+  """
+  def last_week_time_of_day(game, type) do
+    last_few_days =
+      Timex.now()
+      |> Timex.shift(days: -7)
+      |> Timex.set(minute: 0, second: 0)
+      |> DateTime.truncate(:second)
+
+    stats =
+      PlayerStatistic
+      |> where([ps], ps.game_id == ^game.id)
+      |> where([ps], ps.recorded_at >= ^last_few_days)
+      |> Repo.all()
+
+    hours =
+      Enum.into(0..23, %{}, fn hour ->
+        {hour, []}
+      end)
+
+    stats
+    |> Enum.reduce(hours, fn stat, hours ->
+      hour = Map.get(hours, stat.recorded_at.hour)
+      Map.put(hours, stat.recorded_at.hour, [stat | hour])
+    end)
+    |> Enum.map(fn {hour, values} ->
+      value =
+        values
+        |> Enum.map(& &1.player_count)
+        |> select_time(type)
+
+      {hour, value}
+    end)
+  end
+
+  @doc """
   Get the most recent count of a game
 
   Restricting to the last hour

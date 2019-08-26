@@ -46,6 +46,20 @@ defmodule Web.GameStatisticController do
     end
   end
 
+  def players(conn, params = %{"game_id" => short_name, "series" => "tod"}) do
+    case Games.get_by_short(short_name) do
+      {:ok, game} ->
+        conn
+        |> assign(:statistics, Statistics.last_week_time_of_day(game, stat_type(params)))
+        |> render("players-tod.json")
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Could not find that game.")
+        |> redirect(to: page_path(conn, :index))
+    end
+  end
+
   defp stat_type(%{"type" => "avg"}), do: :avg
 
   defp stat_type(%{"type" => "max"}), do: :max

@@ -41,6 +41,15 @@
           <canvas></canvas>
         </div>
       </div>
+
+      <div class="mt-3">
+        <h3>Time of Day</h3>
+        <span>Last 7 days of counts broken up by time of day</span>
+
+        <div id="player-stats-week" class="chart" data-type="tod" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "tod") %>">
+          <canvas></canvas>
+        </div>
+      </div>
     <% end %>
   </div>
 </section>

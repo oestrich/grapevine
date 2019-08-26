@@ -1,4 +1,5 @@
 import Chart from "chart.js";
+import moment from "moment-timezone";
 
 document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement => {
   let ctx = chartElement.querySelector("canvas").getContext('2d');
@@ -90,8 +91,6 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
       })
     });
   }).then(() => {
-    console.log(statistics);
-
     let labels = statistics.avg.map(stat => {
       return stat.time;
     });
@@ -176,6 +175,129 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
               tooltipFormat: "MMM D, YYYY h a"
             },
             type: "time"
+          }]
+        }
+      }
+    });
+  });
+});
+
+document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
+  let ctx = chartElement.querySelector("canvas").getContext('2d');
+
+  let url = new URL(chartElement.dataset.url, window.location.href);
+  let statistics = {};
+
+  let json = ["avg", "max", "min"].map((type) => {
+    url.searchParams.set("type", type);
+
+    return fetch(url.toString()).then(response => {
+      return response.json();
+    }).then(json => {
+      json.type = type;
+      return json;
+    });
+  });
+
+  Promise.all(json).then((values) => {
+    values.map(value => {
+      statistics[value.type] = value.statistics.sort((a, b) => {
+        return a.time < b.time;
+      })
+    });
+  }).then(() => {
+    let timezone = moment.tz.guess();
+    timezone = moment.tz.zone(timezone);
+
+    let offset = timezone.utcOffset(moment());
+
+    let labels = statistics.avg.map(stat => {
+      let hour = moment().
+        utcOffset(0).
+        set({hour: stat.hour}).
+        utcOffset(offset);
+
+      return hour.format("h A");
+    });
+
+    let avgValues = statistics.avg.map(stat => {
+      return Math.round(stat.count);
+    });
+    let maxValues = statistics.max.map(stat => {
+      return stat.count;
+    });
+    let minValues = statistics.min.map(stat => {
+      return stat.count;
+    });
+
+    let chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Minimum",
+            data: minValues,
+            fill: true,
+            lineTension: 0.3,
+            borderColor: "#aa74da",
+            backgroundColor: "hsla(268, 58%, 46%, 1)",
+            pointBackgroundColor: "#aa74da",
+            borderWidth: 1,
+            pointHoverBackgroundColor: "#aa74da",
+            pointRadius: 0,
+            pointHitRadius: 8
+          },
+          {
+            label: "Average",
+            data: avgValues,
+            fill: true,
+            lineTension: 0.3,
+            borderColor: "#aa74da",
+            backgroundColor: "hsla(272, 58%, 65%, 1)",
+            pointBackgroundColor: "#aa74da",
+            borderWidth: 3,
+            pointHoverBackgroundColor: "#aa74da",
+            pointRadius: 0,
+            pointHitRadius: 8
+          },
+          {
+            label: "Maximum",
+            data: maxValues,
+            fill: true,
+            lineTension: 0.3,
+            borderColor: "#aa74da",
+            backgroundColor: "hsla(280, 70%, 84%, 1)",
+            pointBackgroundColor: "#aa74da",
+            borderWidth: 1,
+            pointHoverBackgroundColor: "#aa74da",
+            pointRadius: 0,
+            pointHitRadius: 8
+          }
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        animation: false,
+        legend: { display: false },
+        tooltips: {
+          mode: 'index'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              maxTicksLimit: 4,
+              min: 0,
+              suggestedMax: 5,
+              callback: function (value) { if (Number.isInteger(value)) { return value; } },
+              fontColor: "#BBB",
+            },
+            scaleLabel: { fontSize: 16, fontColor: "#BBB", display: true, labelString: "Concurrent Players" }
+          }],
+          xAxes: [{
+            stacked: true,
+            gridLines: { drawOnChartArea: false },
+            ticks: { fontColor: "#BBB" },
           }]
         }
       }
