@@ -209,18 +209,30 @@ document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
   }).then(() => {
     let offset = (new Date()).getTimezoneOffset();
 
+    let hourTweleve = (hour, period) => {
+      if (hour == 0) {
+        return `12 ${period}`;
+      } else {
+        return `${hour} ${period}`;
+      }
+    }
+
+    let hourFormat = (hour) => {
+      hour = hour.getHours();
+
+      if (hour >= 12) {
+        return hourTweleve(hour % 12, "PM");
+      } else {
+        return hourTweleve(hour, "AM");
+      }
+    }
+
     let labels = statistics.avg.map(stat => {
       let hour = moment().
         utcOffset(0).
         set({hour: stat.hour});
 
-      hour = hour._d.getHours();
-      if (hour >= 12) {
-        hour = hour % 12;
-        return `${hour} PM`;
-      } else {
-        return `${hour} AM`;
-      }
+      return hourFormat(hour._d);
     });
 
     let avgValues = statistics.avg.map(stat => {
