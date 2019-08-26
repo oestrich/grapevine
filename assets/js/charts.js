@@ -1,5 +1,5 @@
 import Chart from "chart.js";
-import moment from "moment-timezone";
+import moment from "moment";
 
 document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement => {
   let ctx = chartElement.querySelector("canvas").getContext('2d');
@@ -96,7 +96,9 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
     });
 
     let avgValues = statistics.avg.map(stat => {
-      return stat.count;
+      if (stat.count) {
+        return Math.round(stat.count);
+      }
     });
     let maxValues = statistics.max.map(stat => {
       return stat.count;
@@ -155,6 +157,7 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
         maintainAspectRatio: false,
         animation: false,
         legend: { display: false },
+        tooltips: { mode: 'index' },
         scales: {
           yAxes: [{
             ticks: {
@@ -206,10 +209,7 @@ document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
       })
     });
   }).then(() => {
-    let timezone = moment.tz.guess();
-    timezone = moment.tz.zone(timezone);
-
-    let offset = timezone.utcOffset(moment());
+    let offset = (new Date()).getTimezoneOffset();
 
     let labels = statistics.avg.map(stat => {
       let hour = moment().
@@ -280,9 +280,7 @@ document.querySelectorAll(".chart[data-type='tod']").forEach(chartElement => {
         maintainAspectRatio: false,
         animation: false,
         legend: { display: false },
-        tooltips: {
-          mode: 'index'
-        },
+        tooltips: { mode: 'index' },
         scales: {
           yAxes: [{
             ticks: {
