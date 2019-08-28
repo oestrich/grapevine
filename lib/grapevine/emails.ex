@@ -42,6 +42,16 @@ defmodule Grapevine.Emails do
     |> text_body(alert.body)
   end
 
+  def connection_failed(game, connection, alert) do
+    base_email()
+    |> to(alert_to())
+    |> subject("Grapevine - Connection failed to #{game.name}")
+    |> assign(:game, game)
+    |> assign(:connection, connection)
+    |> assign(:alert, alert)
+    |> render("connection-failed.html")
+  end
+
   def new_game_registered(game) do
     base_email()
     |> to(alert_to())

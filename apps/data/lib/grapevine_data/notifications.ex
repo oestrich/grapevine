@@ -6,9 +6,9 @@ defmodule GrapevineData.Notifications do
   @doc """
   Notify of a new alert
   """
-  def new_alert(alert) do
+  def new_alert(alert, notification_opts) do
     closest_pid(fn pid ->
-      GenServer.cast(pid, {:new_alert, alert})
+      GenServer.cast(pid, {:new_alert, alert, notification_opts})
     end)
   end
 

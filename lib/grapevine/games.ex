@@ -5,17 +5,29 @@ defmodule Grapevine.Games do
 
   alias GrapevineData.Games
   alias GrapevineData.Repo
+  alias Grapevine.Emails
+  alias Grapevine.Mailer
   alias Grapevine.Telnet
+
+  defdelegate connection_has_mssp(connection), to: Games
+
+  defdelegate connection_has_no_mssp(connection), to: Games
+
+  defdelegate connection_succeeded(connection), to: Games
 
   defdelegate delete_connection(connection), to: Games
 
   defdelegate edit_connection(connection), to: Games
 
-  defdelegate get_connection(id), to: Games
-
   defdelegate get(id), to: Games
 
   defdelegate get(user, game_id), to: Games
+
+  defdelegate get_connection(id), to: Games
+
+  defdelegate record_metadata(game, metadata), to: Games
+
+  defdelegate seen_on_telnet(game), to: Games
 
   defdelegate user_owns_connection?(user, connection), to: Games
 
@@ -39,5 +51,17 @@ defmodule Grapevine.Games do
       _ ->
         :ok
     end
+  end
+
+  @doc """
+  Record a connection failed and send an alert
+  """
+  def connection_failed(connection) do
+    {:ok, alert} = Games.connection_failed(connection, [skip_notify: true])
+    {:ok, game} = get(connection.game_id)
+
+    game
+    |> Emails.connection_failed(connection, alert)
+    |> Mailer.deliver_now()
   end
 end

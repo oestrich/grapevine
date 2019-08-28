@@ -506,8 +506,9 @@ defmodule GrapevineData.Games do
   @doc """
   Mark a connection as ready to poll
   """
-  def connection_failed(connection) do
-    Alerts.create("Connection failed", "Could not connection to game #{connection.game_id}, connection: #{connection.id}")
+  def connection_failed(connection, notification_opts \\ []) do
+    message = "Could not connection to game #{connection.game_id}, connection: #{connection.id}"
+    Alerts.create("Connection failed", message, notification_opts)
   end
 
   @doc """
