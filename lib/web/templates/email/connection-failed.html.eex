@@ -1,0 +1,17 @@
+<p>Connection failed to <%= @game.name %>.</p>
+
+<dl>
+  <dt>Type</dt>
+  <dd><%= @connection.type %></dt>
+
+  <dt>Host</dt>
+  <dd><%= @connection.host %></dd>
+
+  <dt>Port</dt>
+  <dd><%= @connection.port %></dd>
+</dl>
+
+<ul>
+  <li><%= link("View game", to: Routes.game_url(Endpoint, :show, @game.short_name)) %></li>
+  <li><%= link("View alert", to: Routes.admin_alert_url(Endpoint, :show, @alert.id)) %></li>
+</ul>

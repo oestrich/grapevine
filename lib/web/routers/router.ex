@@ -143,7 +143,7 @@ defmodule Web.Router do
 
     get("/", DashboardController, :index)
 
-    resources("/alerts", AlertController, only: [:index])
+    resources("/alerts", AlertController, only: [:index, :show])
 
     resources("/client_sessions", ClientSessionController, only: [:index])
 

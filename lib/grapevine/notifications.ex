@@ -20,8 +20,8 @@ defmodule Grapevine.Notifications do
   end
 
   @impl true
-  def handle_cast({:new_alert, alert}, state) do
-    Implementation.new_alert(alert)
+  def handle_cast({:new_alert, alert, opts}, state) do
+    Implementation.new_alert(alert, opts)
     {:noreply, state}
   end
 
@@ -36,7 +36,17 @@ defmodule Grapevine.Notifications do
     alias Grapevine.Emails
     alias Grapevine.Mailer
 
-    def new_alert(alert) do
+    def new_alert(alert, opts) do
+      case Keyword.get(opts, :skip_notify, false) do
+        true ->
+          :ok
+
+        false ->
+          send_alert(alert)
+      end
+    end
+
+    defp send_alert(alert) do
       alert
       |> Emails.new_alert()
       |> Mailer.deliver_now()
