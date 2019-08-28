@@ -87,6 +87,14 @@
           </div>
         <% end %>
 
+        <div>
+          <%= if @game.send_connection_failure_alerts do %>
+            You <b>will</b> receive emails on connection failures, possibly every hour.
+          <% else %>
+            You <b>will not</b> receive emails on connection failures.
+          <% end %>
+        </div>
+
         <hr />
 
         <div class="form-group">

@@ -3,6 +3,7 @@ defmodule Grapevine.Games do
   A wrapper for GrapevineData.Games to send emails and interact with telnet
   """
 
+  alias GrapevineData.Accounts
   alias GrapevineData.Games
   alias GrapevineData.Repo
   alias Grapevine.Emails
@@ -57,11 +58,23 @@ defmodule Grapevine.Games do
   Record a connection failed and send an alert
   """
   def connection_failed(connection) do
-    {:ok, alert} = Games.connection_failed(connection, [skip_notify: true])
+    {:ok, _alert} = Games.connection_failed(connection, [skip_notify: true])
     {:ok, game} = get(connection.game_id)
 
     game
-    |> Emails.connection_failed(connection, alert)
+    |> Emails.connection_failed(connection)
     |> Mailer.deliver_now()
+
+    case game.send_connection_failure_alerts do
+      true ->
+        {:ok, user} = Accounts.get(game.user_id)
+
+        user
+        |> Emails.connection_failed(game, connection)
+        |> Mailer.deliver_now()
+
+      false ->
+        :ok
+    end
   end
 end

@@ -1,4 +1,6 @@
-<p>Connection failed to <%= @game.name %>.</p>
+<p>Grapevine failed to scrape <%= @game.name %>.</p>
+
+<p>Below is the connection that was attempted.</p>
 
 <dl>
   <dt>Type</dt>
@@ -13,5 +15,4 @@
 
 <ul>
   <li><%= link("View game", to: Routes.game_url(Endpoint, :show, @game.short_name)) %></li>
-  <li><%= link("View alert", to: Routes.admin_alert_url(Endpoint, :show, @alert.id)) %></li>
 </ul>

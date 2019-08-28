@@ -30,6 +30,7 @@ defmodule GrapevineData.Games.Game do
     field(:enable_web_client, :boolean, default: false)
     field(:allow_anonymous_client, :boolean, default: false)
     field(:featured_order, :integer)
+    field(:send_connection_failure_alerts, :boolean, default: false)
 
     field(:last_seen_at, :utc_datetime)
     field(:telnet_last_seen_at, :utc_datetime)
@@ -79,7 +80,8 @@ defmodule GrapevineData.Games.Game do
       :allow_character_registration,
       :enable_web_client,
       :allow_anonymous_client,
-      :discord_invite_url
+      :discord_invite_url,
+      :send_connection_failure_alerts
     ])
     |> validate_required([
       :name,
@@ -89,7 +91,8 @@ defmodule GrapevineData.Games.Game do
       :user_id,
       :allow_character_registration,
       :enable_web_client,
-      :allow_anonymous_client
+      :allow_anonymous_client,
+      :send_connection_failure_alerts
     ])
     |> check_name_against_block_list(:name)
     |> check_name_against_block_list(:short_name)

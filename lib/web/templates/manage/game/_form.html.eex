@@ -65,6 +65,12 @@
     </div>
   <% end %>
 
+  <%= FormView.checkbox_field(f, :send_connection_failure_alerts, label: "Send alerts when Grapevine fails to connect?") do %>
+    <div class="help-block">
+      If enabled, Grapevine will send an email everytime it cannot connect to your game during an hourly scrape for stats. You <b>will</b> receive emails every hour while Grapevine cannot access your telnet port.
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="col-md-9 offset-md-3">
       <%= submit(@submit, class: "btn btn-primary") %>
