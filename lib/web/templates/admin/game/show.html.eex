@@ -129,15 +129,6 @@
             </div>
           </div>
         </div>
-
-        <div class="row mt-3">
-          <div class="col-md-12">
-            <h5>Player Stats</h5>
-            <div id="player-stats" class="chart" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "48-hours") %>">
-              <canvas></canvas>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
