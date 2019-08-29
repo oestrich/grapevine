@@ -23,8 +23,6 @@
         <thead class="hidden">
           <tr>
             <th>Name</th>
-            <th>Short Name</th>
-            <th>Public</th>
             <th>Web Client</th>
             <th>Actions</th>
           </tr>
@@ -32,12 +30,11 @@
         <tbody>
           <%= Enum.map(@games, fn game -> %>
             <tr>
-              <td><%= link(game.name, to: manage_game_path(@conn, :show, game.id)) %></td>
-              <td><%= game.short_name %></td>
-              <td><%= if game.display, do: "Displayed", else: "Hidden"  %></td>
+              <td><%= link(game.name, to: manage_game_path(@conn, :show, game.id)) %> (<%= game.short_name %>)</td>
               <td><%= if game.enable_web_client, do: "Web client enabled", else: "Web client disabled" %></td>
               <td>
-                <%= link("Show", to: game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
+                <%= link("Manage", to: Routes.manage_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
+                <%= link("Profile", to: game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
               </td>
             </tr>
           <% end) %>
