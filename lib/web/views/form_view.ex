@@ -19,7 +19,7 @@ defmodule Web.FormView do
   """
   def text_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :autofocus])
+    text_opts = Keyword.take(opts, [:type, :value, :autofocus])
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [

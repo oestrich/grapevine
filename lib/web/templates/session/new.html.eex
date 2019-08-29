@@ -18,7 +18,7 @@
             <%= label f, :email, "Email" %>
           </div>
           <div class="col-md-9">
-            <%= text_input f, :email, class: "form-control", autofocus: "autofocus" %>
+            <%= text_input f, :email, type: "email", class: "form-control", autofocus: "autofocus" %>
             <%= error_tag f, :email %>
           </div>
         </div>

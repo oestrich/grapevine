@@ -17,7 +17,7 @@
       <%= form_for @changeset, registration_path(@conn, :create), [method: :post], fn (f) -> %>
         <%= FormView.text_field(f, :username, autofocus: "autofocus") %>
 
-        <%= FormView.text_field(f, :email) %>
+        <%= FormView.text_field(f, :email, type: "email") %>
 
         <div class="form-group row">
           <div class="col-md-3">
