@@ -1,16 +1,19 @@
 <div class="col-md-2">
   <ul class="nav flex-column">
     <li class="nav-item">
-      <%= link("Dashboard", to: admin_dashboard_path(@conn, :index), class: "nav-link") %>
+      <%= link("Dashboard", to: Routes.admin_dashboard_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">
-      <%= link("Alerts", to: admin_alert_path(@conn, :index), class: "nav-link") %>
+      <%= link("Alerts", to: Routes.admin_alert_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">
-      <%= link("Client Sessions", to: admin_client_session_path(@conn, :index), class: "nav-link") %>
+      <%= link("Channels", to: Routes.admin_channel_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">
-      <%= link("Games", to: admin_game_path(@conn, :index), class: "nav-link") %>
+      <%= link("Client Sessions", to: Routes.admin_client_session_path(@conn, :index), class: "nav-link") %>
+    </li>
+    <li class="nav-item">
+      <%= link("Games", to: Routes.admin_game_path(@conn, :index), class: "nav-link") %>
     </li>
   </ul>
 </div>

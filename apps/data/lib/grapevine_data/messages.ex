@@ -3,8 +3,20 @@ defmodule GrapevineData.Messages do
   Record messages posted in the chat
   """
 
+  import Ecto.Query
+
   alias GrapevineData.Messages.Message
   alias GrapevineData.Repo
+
+  @doc """
+  Load messages for a channel
+  """
+  def for(channel) do
+    Message
+    |> where([m], m.channel_id == ^channel.id)
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
+  end
 
   @doc """
   Create a message from the socket

@@ -1,0 +1,32 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Channels</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Channels</h3>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <h3 class="name"><%= @channel.name %></h3>
+
+      <div class="chat admin-chat">
+        <div class="terminal" data-pre="nowrap">
+          <%= Enum.map(@messages, fn message -> %>
+            <div>
+              <span class="timestamp"><%= TimeView.time(message.inserted_at) %></span>
+              <span class="player"><%= message.name %>@<%= message.game %></span>: <span class="text"><%= message.text %></span>
+            </div>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
