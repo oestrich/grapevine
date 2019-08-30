@@ -216,8 +216,7 @@ defmodule GrapevineData.Games do
     case changeset |> Repo.insert() do
       {:ok, game} ->
         Notifications.new_game(game)
-
-        {:ok, game}
+        Images.maybe_upload_images(game, params)
 
       {:error, changeset} ->
         {:error, changeset}
