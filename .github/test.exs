@@ -4,7 +4,6 @@ import Config
 config :grapevine_data, GrapevineData.Repo,
   database: "grapevine_test",
   hostname: "localhost",
-  username: "grapevine",
-  password: "password",
-  port: 5433,
+  username: "postgres",
+  password: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
