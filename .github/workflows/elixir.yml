@@ -22,21 +22,18 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - run: cp .github/test.exs config/test.extra.exs
-    - run: mix deps.get
-    - run: mix compile
+    - name: Setup elixir and database
+      run: |
+        cp .github/test.exs config/test.extra.exs
+        mix deps.get
+        mix compile
+        mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
-    - run: mix do ecto.create, ecto.migrate
-      env:
-        MIX_ENV: test
-    - run: mix compile --force --warnings-as-errors
-      env:
-        MIX_ENV: test
-    - run: mix credo
-      env:
-        MIX_ENV: test
-    - run: mix test
+    - run: |
+        mix compile --force --warnings-as-errors
+        mix credo
+        mix test
       env:
         MIX_ENV: test
   build-data:
@@ -60,7 +57,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - run: |
+    - name: Setup elixir and database
+      run: |
         cd apps/data
         cp .github/test.exs config/test.extra.exs
         mix deps.get
@@ -68,7 +66,8 @@ jobs:
         mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
-    - run: |
+    - name: Verify application
+      run: |
         cd apps/data
         mix compile --force --warnings-as-errors
         mix credo
