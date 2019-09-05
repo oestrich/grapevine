@@ -31,8 +31,14 @@ jobs:
       env:
         MIX_ENV: test
     - run: mix compile --force --warnings-as-errors
+      env:
+        MIX_ENV: test
     - run: mix credo
+      env:
+        MIX_ENV: test
     - run: mix test
+      env:
+        MIX_ENV: test
   build-data:
     runs-on: ubuntu-latest
     services:
@@ -54,7 +60,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - run: cp .github/test.exs apps/data/config/test.extra.exs
+    - run: cp .github/test.exs config/test.extra.exs
+      working-directory: apps/data
     - run: mix deps.get
       working-directory: apps/data
     - run: mix compile
@@ -67,7 +74,13 @@ jobs:
         MIX_ENV: test
     - run: mix compile --force --warnings-as-errors
       working-directory: apps/data
+      env:
+        MIX_ENV: test
     - run: mix credo
       working-directory: apps/data
+      env:
+        MIX_ENV: test
     - run: mix test
       working-directory: apps/data
+      env:
+        MIX_ENV: test
