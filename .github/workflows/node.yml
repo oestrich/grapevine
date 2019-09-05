@@ -15,7 +15,9 @@ jobs:
     - name: Setup elixir and database
       run: |
         npm install -g yarn
+        cd assets
         yarn install
     - name: Verify application
       run: |
+        cd assets
         yarn test
