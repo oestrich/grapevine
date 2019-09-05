@@ -30,7 +30,8 @@ jobs:
         mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
-    - run: |
+    - name: Verify application
+      run: |
         mix compile --force --warnings-as-errors
         mix credo
         mix test
