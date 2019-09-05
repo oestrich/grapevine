@@ -22,14 +22,55 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - run: cp .github/test.exs config/test.extra.exs
-    - run: mix deps.get
-    - run: mix compile
+    - name: Setup elixir and database
+      run: |
+        cp .github/test.exs config/test.extra.exs
+        mix deps.get
+        mix compile
+        mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
-    - run: mix do ecto.create, ecto.migrate
+    - run: |
+        mix compile --force --warnings-as-errors
+        mix credo
+        mix test
       env:
         MIX_ENV: test
-    - run: mix compile --force --warnings-as-errors
-    - run: mix credo
-    - run: mix test
+  build-data:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-elixir@v1.0.0
+      with:
+        otp-version: 22.x
+        elixir-version: 1.9.x
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git build-essential
+    - name: Setup elixir and database
+      run: |
+        cd apps/data
+        cp .github/test.exs config/test.extra.exs
+        mix deps.get
+        mix compile
+        mix do ecto.create, ecto.migrate
+      env:
+        MIX_ENV: test
+    - name: Verify application
+      run: |
+        cd apps/data
+        mix compile --force --warnings-as-errors
+        mix credo
+        mix test
+      env:
+        MIX_ENV: test
