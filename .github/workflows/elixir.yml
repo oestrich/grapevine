@@ -3,8 +3,6 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: elixir:1.9.1-slim
     services:
       postgres:
         image: postgres
@@ -16,10 +14,14 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/setup-elixir@v1.0.0
+      with:
+        otp-version: 22.x
+        elixir-version: 1.9.x
     - name: Install Dependencies
       run: |
-        apt-get update
-        apt-get install -y git build-essential
+        sudo apt-get update
+        sudo apt-get install -y git build-essential
     - name: Copy test config
       run: |
         cp .github/test.exs config/test.extra.exs
@@ -28,10 +30,7 @@ jobs:
       run: |
         mix local.rebar --force
         mix local.hex --force
-        mix do deps.get, compile
-        cd apps/data && mix do deps.get, compile && cd ../..
-    - name: Prepare Database
-      run: |
-        mix do ecto.create, ecto.migrate
-    - name: Run Tests
-      run: mix test
+    - run: mix deps.get
+    - run: mix compile
+    - run: mix do ecto.create, ecto.migrate
+    - run: mix test
