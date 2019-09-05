@@ -60,27 +60,18 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - run: cp .github/test.exs config/test.extra.exs
-      working-directory: apps/data
-    - run: mix deps.get
-      working-directory: apps/data
-    - run: mix compile
-      working-directory: apps/data
+    - run: |
+        cd apps/data
+        cp .github/test.exs config/test.extra.exs
+        mix deps.get
+        mix compile
+        mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
-    - run: mix do ecto.create, ecto.migrate
-      working-directory: apps/data
-      env:
-        MIX_ENV: test
-    - run: mix compile --force --warnings-as-errors
-      working-directory: apps/data
-      env:
-        MIX_ENV: test
-    - run: mix credo
-      working-directory: apps/data
-      env:
-        MIX_ENV: test
-    - run: mix test
-      working-directory: apps/data
+    - run: |
+        cd apps/data
+        mix compile --force --warnings-as-errors
+        mix credo
+        mix test
       env:
         MIX_ENV: test
