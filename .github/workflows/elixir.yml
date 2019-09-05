@@ -25,5 +25,9 @@ jobs:
     - run: cp .github/test.exs config/test.extra.exs
     - run: mix deps.get
     - run: mix compile
+      env:
+        MIX_ENV: test
     - run: mix do ecto.create, ecto.migrate
+      env:
+        MIX_ENV: test
     - run: mix test
