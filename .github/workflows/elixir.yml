@@ -1,21 +1,37 @@
 name: Elixir CI
-
 on: push
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     container:
       image: elixir:1.9.1-slim
-
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
     - name: Install Dependencies
       run: |
+        apt-get update
+        apt-get install -y git build-essential
+    - name: Copy test config
+      run: |
+        cp .github/test.exs config/test.extra.exs
+        cp .github/test.exs apps/data/config/test.extra.exs
+    - name: Install Elixir Dependencies
+      run: |
         mix local.rebar --force
         mix local.hex --force
-        mix deps.get
+        mix do deps.get, compile
+        cd apps/data && mix do deps.get, compile && cd ../..
+    - name: Prepare Database
+      run: |
+        mix do ecto.create, ecto.migrate
     - name: Run Tests
       run: mix test
