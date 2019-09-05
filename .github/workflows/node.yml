@@ -1,0 +1,21 @@
+name: Node CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git build-essential
+    - name: Setup elixir and database
+      run: |
+        npm install -g yarn
+        yarn install
+    - name: Verify application
+      run: |
+        yarn test
