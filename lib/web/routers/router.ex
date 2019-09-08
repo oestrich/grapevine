@@ -150,6 +150,8 @@ defmodule Web.Router do
     resources("/client_sessions", ClientSessionController, only: [:index])
 
     resources("/games", GameController, only: [:index, :show])
+
+    resources("/users", UserController, only: [:index, :show])
   end
 
   scope "/", Web do

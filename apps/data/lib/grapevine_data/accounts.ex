@@ -9,6 +9,7 @@ defmodule GrapevineData.Accounts do
   alias GrapevineData.Accounts.User
   alias GrapevineData.Games.Game
   alias GrapevineData.Repo
+  alias Stein.Pagination
 
   @type id :: integer()
   @type user_params :: map()
@@ -88,6 +89,17 @@ defmodule GrapevineData.Accounts do
         |> User.password_changeset(params)
         |> Repo.update()
     end
+  end
+
+  @doc """
+  Get all users
+
+  For admins
+  """
+  def all(opts \\ []) do
+    opts = Enum.into(opts, %{})
+    query = order_by(User, [u], asc: u.username)
+    Pagination.paginate(Repo, query, opts)
   end
 
   @doc """

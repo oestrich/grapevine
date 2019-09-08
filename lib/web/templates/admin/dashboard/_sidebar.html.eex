@@ -15,5 +15,8 @@
     <li class="nav-item">
       <%= link("Games", to: Routes.admin_game_path(@conn, :index), class: "nav-link") %>
     </li>
+    <li class="nav-item">
+      <%= link("Users", to: Routes.admin_user_path(@conn, :index), class: "nav-link") %>
+    </li>
   </ul>
 </div>

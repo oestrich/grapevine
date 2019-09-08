@@ -1,0 +1,44 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Users</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Users</h3>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Verified?</th>
+            <th>Registered at</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@users, fn user -> %>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= if user.email_verified_at, do: "Yes", else: "No" %></td>
+              <td><%= TimeView.time(user.inserted_at) %></td>
+              <td>
+                <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-flat") %>
+              </td>
+            </tr>
+          <% end) %>
+        </tbody>
+      </table>
+
+      <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
+    </div>
+  </div>
+</section>
