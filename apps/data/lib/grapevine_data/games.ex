@@ -55,12 +55,14 @@ defmodule GrapevineData.Games do
   def public(opts) do
     opts = Enum.into(opts, %{})
 
-    Game
-    |> preload([:connections])
-    |> where([g], g.display == true)
-    |> sort_online()
-    |> Filter.filter(opts[:filter], __MODULE__)
-    |> Repo.all()
+    query =
+      Game
+      |> preload([:connections])
+      |> where([g], g.display == true)
+      |> sort_online()
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Stein.Pagination.paginate(Repo, query, opts)
   end
 
   def featured() do

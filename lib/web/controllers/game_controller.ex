@@ -5,21 +5,25 @@ defmodule Web.GameController do
   alias GrapevineData.Games
   alias Grapevine.Presence
 
+  plug(Web.Plugs.FetchPage, [per: 25] when action in [:index])
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params) do
+    %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "games", %{"online" => "yes"})
-    games = Games.public(filter: filter)
+    %{page: games, pagination: pagination} = Games.public(filter: filter, page: page, per: per)
 
     conn
     |> assign(:games, games)
     |> assign(:user_agents, Games.user_agents_in_use())
+    |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:title, "Games on Grapevine")
     |> assign(:open_graph_title, "Games on Grapevine")
     |> assign(:open_graph_description, "View a listing of games that are on the Grapevine network.")
     |> assign(:open_graph_url, game_url(conn, :index))
-    |> render("index.html")
+    |> render(:index)
   end
 
   def show(conn, %{"id" => short_name}) do
@@ -37,7 +41,7 @@ defmodule Web.GameController do
       |> assign(:open_graph_title, game.name)
       |> assign(:open_graph_description, game.description)
       |> assign(:open_graph_url, game_url(conn, :show, game.short_name))
-      |> render("show.html")
+      |> render(:show)
     end
   end
 

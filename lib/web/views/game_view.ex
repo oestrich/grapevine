@@ -6,7 +6,9 @@ defmodule Web.GameView do
   alias GrapevineData.Games.Images
   alias GrapevineData.UserAgents
   alias Stein.Storage
+  alias Web.ConnectionView
   alias Web.EventView
+  alias Web.SharedView
 
   def cover_img_with_default(conn, game) do
     case has_cover?(game) do
@@ -129,6 +131,50 @@ defmodule Web.GameView do
     Enum.any?(game.connections, fn connection ->
       connection.type == "web"
     end)
+  end
+
+  defp show(game) do
+    connections = render_many(game.connections, ConnectionView, "show.json", as: :connection)
+
+    %Representer.Item{
+      data: render("game.json", %{game: game}),
+      embedded: %{connections: connections},
+      links: [
+        %Representer.Link{
+          rel: "self",
+          href: Routes.game_url(Web.Endpoint, :show, game.short_name)
+        }
+      ]
+    }
+  end
+
+  defp index(games, pagination, filter) do
+    games = Enum.map(games, &show/1)
+    self_link = Routes.game_url(Web.Endpoint, :index, filter)
+
+    %Representer.Collection{
+      items: games,
+      pagination: Representer.Pagination.new(self_link, pagination),
+      links: [
+        %Representer.Link{rel: "self", href: self_link}
+      ]
+    }
+  end
+
+  def render("index.json", %{games: games, pagination: pagination, filter: filter}) do
+    games
+    |> index(pagination, filter)
+    |> Representer.transform("json")
+  end
+
+  def render("show.json", %{game: game}) do
+    game
+    |> show()
+    |> Representer.transform("json")
+  end
+
+  def render("game.json", %{game: game}) do
+    Map.take(game, [:name, :short_name, :tagline, :description, :homepage_url, :discord_invite_url])
   end
 
   def render("online.json", %{games: games}) do

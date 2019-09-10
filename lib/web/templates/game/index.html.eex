@@ -67,7 +67,9 @@
         <% end) %>
       </ul>
 
-      <p><%= Enum.count(@games) %> Games</p>
+      <p><%= @pagination.total_count %> Games</p>
+
+      <%= SharedView.pagination(path: Routes.game_path(@conn, :index, games: @filter), pagination: @pagination) %>
     </div>
   </div>
 </section>
