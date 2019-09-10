@@ -108,7 +108,7 @@ defmodule Web.GameView do
   end
 
   def show_play_button?(conn, game) do
-   web_connection?(game) || (client_enabled?(conn, game) && telnet_connection?(game))
+    web_connection?(game) || (client_enabled?(conn, game) && telnet_connection?(game))
   end
 
   defp client_enabled?(conn, game) do
@@ -133,20 +133,27 @@ defmodule Web.GameView do
     end)
   end
 
-  defp show(game) do
+  defp item(game) do
     connections = render_many(game.connections, ConnectionView, "show.json", as: :connection)
 
     %Representer.Item{
       data: render("game.json", %{game: game}),
-      embedded: %{connections: connections},
-      links: [
-        %Representer.Link{
-          rel: "self",
-          href: Routes.game_url(Web.Endpoint, :show, game.short_name)
-        }
-      ]
+      embedded: %{connections: connections}
     }
   end
+
+  defp show(game) do
+    game
+    |> item()
+    |> maybe_link(game.enable_web_client, %Representer.Link{
+      rel: "https://grapevine.haus/client",
+      href: Routes.play_url(Web.Endpoint, :show, game.short_name)
+    })
+  end
+
+  defp maybe_link(item, true, link), do: %{item | links: [link | item.links]}
+
+  defp maybe_link(item, false, _link), do: item
 
   defp index(games, pagination, filter) do
     games = Enum.map(games, &show/1)
@@ -174,7 +181,14 @@ defmodule Web.GameView do
   end
 
   def render("game.json", %{game: game}) do
-    Map.take(game, [:name, :short_name, :tagline, :description, :homepage_url, :discord_invite_url])
+    Map.take(game, [
+      :name,
+      :short_name,
+      :tagline,
+      :description,
+      :homepage_url,
+      :discord_invite_url
+    ])
   end
 
   def render("online.json", %{games: games}) do
@@ -249,10 +263,18 @@ defmodule Web.GameView do
 
         case Timex.before?(mssp_cutoff, game.telnet_last_seen_at) do
           true ->
-            content_tag(:i, "", class: "fa fa-adjust online", alt: "Seen on MSSP", title: "Seen on MSSP")
+            content_tag(:i, "",
+              class: "fa fa-adjust online",
+              alt: "Seen on MSSP",
+              title: "Seen on MSSP"
+            )
 
           _ ->
-            content_tag(:i, "", class: "fa fa-circle offline", alt: "Game Offline", title: "Offline")
+            content_tag(:i, "",
+              class: "fa fa-circle offline",
+              alt: "Game Offline",
+              title: "Offline"
+            )
         end
     end
   end
@@ -263,10 +285,16 @@ defmodule Web.GameView do
         link(connection.url, to: connection.url, target: "_blank")
 
       "telnet" ->
-        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
+        [
+          content_tag(:div, "Host: #{connection.host}"),
+          content_tag(:div, "Port: #{connection.port}")
+        ]
 
       "secure telnet" ->
-        [content_tag(:div, "Host: #{connection.host}"), content_tag(:div, "Port: #{connection.port}")]
+        [
+          content_tag(:div, "Host: #{connection.host}"),
+          content_tag(:div, "Port: #{connection.port}")
+        ]
     end
   end
 end

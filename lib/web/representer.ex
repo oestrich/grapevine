@@ -66,6 +66,9 @@ defmodule Representer do
 
     def maybe_paginate(links, pagination) do
       cond do
+        pagination.total_pages == 0 ->
+          links
+
         pagination.total_pages == 1 ->
           links
 
