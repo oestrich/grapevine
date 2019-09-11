@@ -127,6 +127,15 @@ defmodule Representer do
     end
   end
 
+  @doc """
+  Possibly add a link to an item or collection
+  """
+  def maybe_link(item, true, link) do
+    %{item | links: [link | item.links]}
+  end
+
+  def maybe_link(item, false, _link), do: item
+
   defmodule Adapter do
     @moduledoc """
     Behaviour for representations to implement

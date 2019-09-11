@@ -6,9 +6,18 @@ defmodule Web.GameView do
   alias GrapevineData.Games.Images
   alias GrapevineData.UserAgents
   alias Stein.Storage
-  alias Web.ConnectionView
   alias Web.EventView
   alias Web.SharedView
+
+  def render("index.json", assigns), do: Web.Api.GameView.render("index.json", assigns)
+
+  def render("show.json", assigns), do: Web.Api.GameView.render("show.json", assigns)
+
+  def render("game.json", assigns), do: Web.Api.GameView.render("game.json", assigns)
+
+  def render("online.json", assigns), do: Web.Api.GameView.render("online.json", assigns)
+
+  def render("presence.json", assigns), do: Web.Api.GameView.render("presence.json", assigns)
 
   def cover_img_with_default(conn, game) do
     case has_cover?(game) do
@@ -131,77 +140,6 @@ defmodule Web.GameView do
     Enum.any?(game.connections, fn connection ->
       connection.type == "web"
     end)
-  end
-
-  defp item(game) do
-    connections = render_many(game.connections, ConnectionView, "show.json", as: :connection)
-
-    %Representer.Item{
-      data: render("game.json", %{game: game}),
-      embedded: %{connections: connections}
-    }
-  end
-
-  defp show(game) do
-    game
-    |> item()
-    |> maybe_link(game.enable_web_client, %Representer.Link{
-      rel: "https://grapevine.haus/client",
-      href: Routes.play_url(Web.Endpoint, :show, game.short_name)
-    })
-  end
-
-  defp maybe_link(item, true, link), do: %{item | links: [link | item.links]}
-
-  defp maybe_link(item, false, _link), do: item
-
-  defp index(games, pagination, filter) do
-    games = Enum.map(games, &show/1)
-    self_link = Routes.game_url(Web.Endpoint, :index, filter)
-
-    %Representer.Collection{
-      items: games,
-      pagination: Representer.Pagination.new(self_link, pagination),
-      links: [
-        %Representer.Link{rel: "self", href: self_link}
-      ]
-    }
-  end
-
-  def render("index.json", %{games: games, pagination: pagination, filter: filter}) do
-    games
-    |> index(pagination, filter)
-    |> Representer.transform("json")
-  end
-
-  def render("show.json", %{game: game}) do
-    game
-    |> show()
-    |> Representer.transform("json")
-  end
-
-  def render("game.json", %{game: game}) do
-    Map.take(game, [
-      :name,
-      :short_name,
-      :tagline,
-      :description,
-      :homepage_url,
-      :discord_invite_url
-    ])
-  end
-
-  def render("online.json", %{games: games}) do
-    %{
-      collection: render_many(games, __MODULE__, "presence.json")
-    }
-  end
-
-  def render("presence.json", %{game: game}) do
-    %{
-      game: Map.take(game.game, [:name, :homepage_url]),
-      players: game.players
-    }
   end
 
   def user_agent(game) do
