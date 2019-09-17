@@ -44,6 +44,7 @@
 
     <footer>
       <div class="container">
+        <%= Hosted.GameView.render("connection-info.html", game: @game) %>
         <span class="float-right">Hosted by <%= link("Grapevine", to: "https://grapevine.haus/") %>.</span>
       </div>
     </footer>
