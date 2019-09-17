@@ -14,7 +14,13 @@
       <% end %>
     </div>
     <div class="col-md-6 text-md-left">
-      <%= text_to_html(@game.description) %>
+      <%= if @game.description do %>
+        <%= text_to_html(@game.description) %>
+      <% end %>
+
+      <%= if @game.hosted_settings.welcome_text do %>
+        <%= MarkdownView.parse(@game.hosted_settings.welcome_text) %>
+      <% end %>
     </div>
   </div>
 </section>

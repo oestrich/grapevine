@@ -1,0 +1,34 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Settings", to: manage_setting_path(@conn, :show)) %></li>
+    <li class="breadcrumb-item"><%= link(@game.name, to: manage_game_path(@conn, :show, @game.id)) %></li>
+    <li class="breadcrumb-item active">Hosted Site Configuration</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name"><%= @game.name %>'s Hosted Site</h3>
+  </nav>
+
+  <p class="lead">Customize your hosted site.</p>
+
+  <nav class="header">
+    <h4 name="name">Settings</h4>
+  </nav>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <%= form_for(@changeset, manage_game_hosted_site_path(@conn, :update, @game.id), [method: :put], fn f -> %>
+        <%= FormView.textarea_field(f, :welcome_text, label: "Welcome Text", rows: 10) do %>
+          <div class="help-block">
+            Text to welcome users to your game. This is the landing page. Markdown enabled.
+          </div>
+        <% end %>
+
+        <%= submit("Update", class: "btn btn-primary float-right") %>
+      <% end) %>
+    </div>
+  </div>
+</section>

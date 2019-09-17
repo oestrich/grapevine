@@ -23,6 +23,9 @@
       <%= link("Achievements", to: manage_game_achievement_path(@conn, :index, @game.id), class: "btn btn-flat") %>
       <%= link("Client", to: manage_game_client_path(@conn, :show, @game.id), class: "btn btn-flat") %>
       <%= link("Events", to: manage_game_event_path(@conn, :index, @game.id), class: "btn btn-flat") %>
+      <%= if @game.site_cname do %>
+        <%= link("Hosted Site", to: Routes.manage_game_hosted_site_path(@conn, :show, @game.id), class: "btn btn-flat") %>
+      <% end %>
     </div>
   </nav>
 

@@ -1,9 +1,8 @@
-defmodule Web.Manage.ClientController do
+defmodule Web.Manage.HostedSiteController do
   use Web, :controller
 
   alias GrapevineData.Games
   alias GrapevineData.GameSettings
-  alias GrapevineData.Gauges
 
   def show(conn, %{"game_id" => id}) do
     %{current_user: user} = conn.assigns
@@ -11,20 +10,19 @@ defmodule Web.Manage.ClientController do
     with {:ok, game} <- Games.get(user, id) do
       conn
       |> assign(:game, game)
-      |> assign(:gauges, Gauges.for(game))
-      |> assign(:changeset, GameSettings.edit_client_settings(game))
+      |> assign(:changeset, GameSettings.edit_hosted_settings(game))
       |> render("show.html")
     end
   end
 
-  def update(conn, %{"game_id" => id, "client_settings" => params}) do
+  def update(conn, %{"game_id" => id, "hosted_settings" => params}) do
     %{current_user: user} = conn.assigns
     {:ok, game} = Games.get(user, id)
 
-    with {:ok, _client_settings} <- GameSettings.update_client_settings(game, params) do
+    with {:ok, _hosted_settings} <- GameSettings.update_hosted_settings(game, params) do
       conn
       |> put_flash(:info, "Updated!")
-      |> redirect(to: manage_game_client_path(conn, :show, game.id))
+      |> redirect(to: manage_game_hosted_site_path(conn, :show, game.id))
     else
       {:error, :not_found} ->
         conn
@@ -34,7 +32,6 @@ defmodule Web.Manage.ClientController do
       {:error, changeset} ->
         conn
         |> assign(:game, game)
-        |> assign(:gauges, Gauges.for(game))
         |> assign(:changeset, changeset)
         |> render("show.html")
     end

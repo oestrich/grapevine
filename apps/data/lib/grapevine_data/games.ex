@@ -6,7 +6,6 @@ defmodule GrapevineData.Games do
   alias GrapevineData.Accounts.User
   alias GrapevineData.Alerts
   alias GrapevineData.Filter
-  alias GrapevineData.Games.ClientSettings
   alias GrapevineData.Games.Connection
   alias GrapevineData.Games.Game
   alias GrapevineData.Games.Images
@@ -133,7 +132,7 @@ defmodule GrapevineData.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
+        {:ok, preload(game)}
     end
   end
 
@@ -147,7 +146,7 @@ defmodule GrapevineData.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:client_settings, :connections, :redirect_uris])}
+        {:ok, preload(game)}
     end
   end
 
@@ -160,7 +159,7 @@ defmodule GrapevineData.Games do
         {:error, :not_found}
 
       game ->
-        {:ok, Repo.preload(game, [:client_settings, :connections, :gauges, :redirect_uris])}
+        {:ok, preload(game)}
     end
   end
 
@@ -179,8 +178,9 @@ defmodule GrapevineData.Games do
 
   defp preload(game) do
     game
-    |> Repo.preload([:client_settings, :connections, :gauges, :redirect_uris])
+    |> Repo.preload([:client_settings, :connections, :gauges, :hosted_settings, :redirect_uris])
     |> preload_client_settings()
+    |> preload_hosted_settings()
   end
 
   defp preload_client_settings(game = %{client_settings: nil}) do
@@ -189,6 +189,13 @@ defmodule GrapevineData.Games do
   end
 
   defp preload_client_settings(game), do: game
+
+  defp preload_hosted_settings(game = %{hosted_settings: nil}) do
+    hosted_settings = Ecto.build_assoc(game, :hosted_settings)
+    %{game | hosted_settings: hosted_settings}
+  end
+
+  defp preload_hosted_settings(game), do: game
 
   @doc """
   Get a game by it's CNAME
@@ -602,51 +609,6 @@ defmodule GrapevineData.Games do
       {:error, changeset} ->
         {:error, changeset}
     end
-  end
-
-  @doc """
-  Edit the client settings
-  """
-  def edit_client_settings(game) do
-    game = Repo.preload(game, [:client_settings])
-
-    case is_nil(game.client_settings) do
-      true ->
-        game
-        |> Ecto.build_assoc(:client_settings)
-        |> ClientSettings.changeset(%{})
-
-      false ->
-        ClientSettings.changeset(game.client_settings, %{})
-    end
-  end
-
-  @doc """
-  Update web client settings for the game
-  """
-  def update_client_settings(game, params) do
-    game = Repo.preload(game, [:client_settings])
-
-    case is_nil(game.client_settings) do
-      true ->
-        create_settings(game, params)
-
-      false ->
-        update_settings(game, params)
-    end
-  end
-
-  defp create_settings(game, params) do
-    game
-    |> Ecto.build_assoc(:client_settings)
-    |> ClientSettings.changeset(params)
-    |> Repo.insert()
-  end
-
-  defp update_settings(game, params) do
-    game.client_settings
-    |> ClientSettings.changeset(params)
-    |> Repo.update()
   end
 
   @doc """
