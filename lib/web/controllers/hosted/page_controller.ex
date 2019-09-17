@@ -12,6 +12,7 @@ defmodule Web.Hosted.PageController do
     |> put_layout("hosted.html")
     |> put_view(Hosted.GameView)
     |> assign(:game, game)
+    |> assign(:hosted_settings, game.hosted_settings)
     |> assign(:title, game.name)
     |> assign(:open_graph_title, game.name)
     |> assign(:open_graph_description, "#{game.name} on Grapevine")

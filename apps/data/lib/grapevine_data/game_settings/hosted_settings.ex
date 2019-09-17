@@ -13,6 +13,7 @@ defmodule GrapevineData.GameSettings.HostedSettings do
 
   schema "hosted_settings" do
     field(:welcome_text, :string)
+    field(:display_description_on_homepage, :boolean, default: true)
 
     belongs_to(:game, Game)
 
@@ -20,6 +21,6 @@ defmodule GrapevineData.GameSettings.HostedSettings do
   end
 
   def changeset(struct, params) do
-    cast(struct, params, [:welcome_text])
+    cast(struct, params, [:display_description_on_homepage, :welcome_text])
   end
 end

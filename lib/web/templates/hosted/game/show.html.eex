@@ -14,12 +14,12 @@
       <% end %>
     </div>
     <div class="col-md-6 text-md-left">
-      <%= if @game.description do %>
+      <%= if @game.description && @hosted_settings.display_description_on_homepage do %>
         <%= text_to_html(@game.description) %>
       <% end %>
 
-      <%= if @game.hosted_settings.welcome_text do %>
-        <%= MarkdownView.parse(@game.hosted_settings.welcome_text) %>
+      <%= if @hosted_settings.welcome_text do %>
+        <%= MarkdownView.parse(@hosted_settings.welcome_text) %>
       <% end %>
     </div>
   </div>

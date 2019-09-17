@@ -27,6 +27,8 @@
           </div>
         <% end %>
 
+        <%= FormView.checkbox_field(f, :display_description_on_homepage, label: "Display description on the homepage?") %>
+
         <%= submit("Update", class: "btn btn-primary float-right") %>
       <% end) %>
     </div>
