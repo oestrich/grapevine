@@ -231,6 +231,7 @@ defmodule GrapevineTelnet.WebClient do
   @impl true
   def handle_info({:recv, message}, state) do
     Client.socket_send(message, [])
+    Presence.socket_sent()
     {:noreply, state}
   end
 

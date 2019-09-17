@@ -11,11 +11,12 @@ defmodule Web.Admin.OpenWebClientView do
       <h4>Open Web Clients</h4>
 
       <table class="table">
-        <thead class="hidden">
+        <thead>
           <tr>
             <th>Game</th>
             <th>Player Name</th>
             <th>Open Since</th>
+            <th>Last Send</th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@ defmodule Web.Admin.OpenWebClientView do
               <td><%= link(client.game.name, to: Routes.game_path(@socket, :show, client.game.short_name)) %></td>
               <td><%= client.player_name || "Anonymous Player" %></td>
               <td><%= TimeView.time(client.opened_at) %></td>
+              <td><%= if client.last_sent_at, do: TimeView.time(client.last_sent_at) %></td>
             </tr>
           <% end) %>
         </tbody>

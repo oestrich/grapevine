@@ -17,7 +17,7 @@ defmodule GrapevineTelnet.Presence do
     Struct for tracking open clients
     """
 
-    defstruct [:pid, :sid, :opened_at, :game, :player_name]
+    defstruct [:pid, :sid, :opened_at, :last_sent_at, :game, :player_name]
   end
 
   @doc false
@@ -54,6 +54,13 @@ defmodule GrapevineTelnet.Presence do
   """
   def client_online(sid, opts) do
     GenServer.cast({:global, __MODULE__}, {:client, :online, self(), sid, opts, Timex.now()})
+  end
+
+  @doc """
+  Let the server know a web client came online
+  """
+  def socket_sent() do
+    GenServer.cast({:global, __MODULE__}, {:client, :socket_sent, self(), Timex.now()})
   end
 
   @doc """
@@ -100,6 +107,19 @@ defmodule GrapevineTelnet.Presence do
     broadcast("client/online", open_client)
 
     {:noreply, Map.put(state, :clients, [pid | state.clients])}
+  end
+
+  def handle_cast({:client, :socket_sent, pid, last_sent_at}, state) do
+    case Implementation.fetch_from_ets(pid) do
+      nil ->
+        {:noreply, state}
+
+      open_client ->
+        open_client = %{open_client | last_sent_at: last_sent_at}
+        :ets.insert(@ets_key, {pid, open_client.game.id, open_client})
+        broadcast("client/update", open_client)
+        {:noreply, state}
+    end
   end
 
   def handle_cast({:client, :set_player_name, pid, player_name}, state) do
