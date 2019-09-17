@@ -15,7 +15,7 @@
     <%= render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <%= live_render(@conn, OpenWebClientView, session: [clients: @clients]) %>
+      <%= live_render(@conn, OpenWebClientView) %>
     </div>
   </div>
 </section>
