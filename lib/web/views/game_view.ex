@@ -117,7 +117,9 @@ defmodule Web.GameView do
   end
 
   def show_play_button?(conn, game) do
-    web_connection?(game) || (client_enabled?(conn, game) && telnet_connection?(game))
+    web_connection?(game) ||
+      (client_enabled?(conn, game) &&
+         (telnet_connection?(game) || secure_telnet_connection?(game)))
   end
 
   defp client_enabled?(conn, game) do
@@ -133,6 +135,12 @@ defmodule Web.GameView do
   defp telnet_connection?(game) do
     Enum.any?(game.connections, fn connection ->
       connection.type == "telnet"
+    end)
+  end
+
+  defp secure_telnet_connection?(game) do
+    Enum.any?(game.connections, fn connection ->
+      connection.type == "secure telnet"
     end)
   end
 
