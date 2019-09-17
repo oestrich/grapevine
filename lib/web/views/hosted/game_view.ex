@@ -3,4 +3,5 @@ defmodule Web.Hosted.GameView do
 
   alias Web.GameView
   alias Web.HostedRouter.Helpers, as: Routes
+  alias Web.MarkdownView
 end

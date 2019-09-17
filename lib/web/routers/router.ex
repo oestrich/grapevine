@@ -127,6 +127,8 @@ defmodule Web.Router do
       resources("/gauges", GaugeController, only: [:new, :create])
 
       resources("/redirect-uris", RedirectURIController, only: [:create])
+
+      resources("/site", HostedSiteController, only: [:show, :update], singleton: true)
     end
 
     post("/games/:id/regenerate", GameController, :regenerate)

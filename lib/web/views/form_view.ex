@@ -86,7 +86,7 @@ defmodule Web.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-3"),
+        field_label(form, field, opts),
         content_tag(:div, class: "col-md-9") do
           [
             textarea(form, field, Keyword.merge([class: "form-control"], textarea_opts)),

@@ -46,6 +46,7 @@ defmodule Grapevine.Mixfile do
       {:grapevine_data, path: "./apps/data"},
       {:grapevine_telnet, path: "./apps/telnet/", runtime: false},
       {:hackney, "~> 1.9"},
+      {:html_sanitize_ex, "~> 1.3"},
       {:jason, "~> 1.1"},
       {:libcluster, "~> 3.0"},
       {:logster, "~> 1.0"},

@@ -13,6 +13,7 @@ defmodule GrapevineData.Games.Game do
   alias GrapevineData.Games
   alias GrapevineData.Games.ClientSettings
   alias GrapevineData.Games.Connection
+  alias GrapevineData.Games.HostedSettings
   alias GrapevineData.Games.RedirectURI
   alias GrapevineData.Gauges.Gauge
   alias GrapevineData.Statistics.Session
@@ -56,6 +57,7 @@ defmodule GrapevineData.Games.Game do
     belongs_to(:user, User)
 
     has_one(:client_settings, ClientSettings)
+    has_one(:hosted_settings, HostedSettings)
 
     has_many(:achievements, Achievement)
     has_many(:connections, Connection)
