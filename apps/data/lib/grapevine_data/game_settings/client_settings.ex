@@ -1,4 +1,4 @@
-defmodule GrapevineData.Games.ClientSettings do
+defmodule GrapevineData.GameSettings.ClientSettings do
   @moduledoc """
   Client settings Schema
   """
