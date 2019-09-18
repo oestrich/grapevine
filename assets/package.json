@@ -20,7 +20,7 @@
     "popper.js": "^1.14.7",
     "react": "^16.7.0",
     "react-dom": "^16.5.2",
-    "react-redux": "^6.0.0",
+    "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reduxsauce": "^1.0.1",
