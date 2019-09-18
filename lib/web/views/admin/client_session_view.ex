@@ -3,4 +3,5 @@ defmodule Web.Admin.ClientSessionView do
 
   alias Web.Admin.DashboardView
   alias Web.SharedView
+  alias Web.TimeView
 end

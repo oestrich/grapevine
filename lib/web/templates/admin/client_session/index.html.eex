@@ -27,8 +27,8 @@
           <%= Enum.map(@sessions, fn session -> %>
             <tr>
               <td><%= link(session.game.name, to: Routes.admin_game_path(@conn, :show, session.game_id)) %></td>
-              <td><%= session.started_at %></td>
-              <td><%= session.closed_at %></td>
+              <td><%= TimeView.time(session.started_at) %></td>
+              <td><%= if session.closed_at, do: TimeView.time(session.closed_at) %></td>
             </tr>
           <% end) %>
         </tbody>
