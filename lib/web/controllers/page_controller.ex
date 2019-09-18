@@ -2,12 +2,14 @@ defmodule Web.PageController do
   use Web, :controller
 
   alias GrapevineData.Games
+  alias Grapevine.Statistics
 
   action_fallback(Web.FallbackController)
 
   def index(conn, _params) do
     conn
     |> assign(:games, Games.featured())
+    |> assign(:active_games, Statistics.active_games())
     |> render("index.html")
   end
 

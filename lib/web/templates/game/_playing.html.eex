@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="information">
+    <h4 class="title">
+      <%= link(@game.name, to: Routes.game_path(@conn, :show, @game.short_name)) %>
+    </h4>
+
+    <p class="tagline"><%= @game.tagline %></p>
+  </div>
+</div>
