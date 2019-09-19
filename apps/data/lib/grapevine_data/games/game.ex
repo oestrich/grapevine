@@ -41,6 +41,7 @@ defmodule GrapevineData.Games.Game do
     field(:description, :string)
     field(:homepage_url, :string)
     field(:discord_invite_url, :string)
+    field(:twitter_username, :string)
 
     field(:client_id, Ecto.UUID)
     field(:client_secret, Ecto.UUID)
@@ -83,6 +84,7 @@ defmodule GrapevineData.Games.Game do
       :enable_web_client,
       :allow_anonymous_client,
       :discord_invite_url,
+      :twitter_username,
       :send_connection_failure_alerts
     ])
     |> validate_required([

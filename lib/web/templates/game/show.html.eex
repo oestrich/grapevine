@@ -57,6 +57,16 @@
                   </td>
                 </tr>
               <% end %>
+              <%= if @game.twitter_username do %>
+                <tr>
+                  <th>Twitter</th>
+                  <td>
+                    <%= link(to: "https://twitter.com/#{@game.twitter_username}", target: "_blank", alt: "Twitter user") do %>
+                      @<%=@game.twitter_username %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
               <tr>
                 <th>Grapevine Name</th>
                 <td><%= @game.short_name %></td>

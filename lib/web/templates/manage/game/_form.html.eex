@@ -35,6 +35,8 @@
 
   <%= FormView.text_field(f, :discord_invite_url, label: "Discord Invite URL") %>
 
+  <%= FormView.text_field(f, :twitter_username, label: "Twitter Username") %>
+
   <%= FormView.checkbox_field(f, :display, label: "Display in Connected Games?") do %>
     <div class="help-block">
       If disabled, the game will be hidden from all public views, including the <%= link("Online Game", to: Routes.game_path(@conn, :online), target: "_blank") %> page.
