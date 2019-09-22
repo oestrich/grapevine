@@ -5,6 +5,8 @@ defmodule Grapevine.Featured.Implementation do
 
   import Ecto.Query
 
+  require Logger
+
   alias GrapevineData.Games
   alias GrapevineData.Repo
 
@@ -78,15 +80,15 @@ defmodule Grapevine.Featured.Implementation do
     mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
     limit = Keyword.get(opts, :select, 6)
-    already_picked_games = Keyword.get(opts, :already_picked, [])
+    already_picked_game_ids = Keyword.get(opts, :already_picked, [])
 
     GrapevineData.Statistics.PlayerStatistic
     |> select([ps], ps.game_id)
     |> join(:left, [ps], g in assoc(ps, :game))
     |> where([ps, g], ps.recorded_at >= ^last_few_days)
-    |> where([ps, g], g.display == true and not is_nil(g.cover_key))
+    |> where([ps, g], g.display == true and g.featurable and not is_nil(g.cover_key))
     |> where([ps, g], g.last_seen_at > ^active_cutoff or g.telnet_last_seen_at > ^mssp_cutoff)
-    |> where([ps, g], ps.game_id not in ^already_picked_games)
+    |> where([ps, g], ps.game_id not in ^already_picked_game_ids)
     |> group_by([ps, g], [ps.game_id])
     |> order_by([ps, g], desc: max(ps.player_count))
     |> limit(^limit)
@@ -95,19 +97,20 @@ defmodule Grapevine.Featured.Implementation do
       {:ok, game} = Games.get(game_id)
       game
     end)
+    |> log_games()
   end
 
   def random_games_using_grapevine(opts) do
     active_cutoff = Timex.now() |> Timex.shift(minutes: -3)
 
     limit = Keyword.get(opts, :select, 3)
-    already_picked_games = Keyword.get(opts, :already_picked, [])
+    already_picked_game_ids = Keyword.get(opts, :already_picked, [])
 
     GrapevineData.Games.Game
-    |> where([g], g.display == true and not is_nil(g.cover_key))
+    |> base_query(already_picked_game_ids)
     |> where([g], g.last_seen_at > ^active_cutoff)
-    |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
+    |> log_games()
     |> Enum.shuffle()
     |> Enum.take(limit)
   end
@@ -116,14 +119,27 @@ defmodule Grapevine.Featured.Implementation do
     mssp_cutoff = Timex.now() |> Timex.shift(minutes: -90)
 
     limit = Keyword.get(opts, :select, 3)
-    already_picked_games = Keyword.get(opts, :already_picked, [])
+    already_picked_game_ids = Keyword.get(opts, :already_picked, [])
 
     GrapevineData.Games.Game
-    |> where([g], g.display == true and not is_nil(g.cover_key))
+    |> base_query(already_picked_game_ids)
     |> where([g], g.telnet_last_seen_at > ^mssp_cutoff)
-    |> where([g], g.id not in ^already_picked_games)
     |> Repo.all()
+    |> log_games()
     |> Enum.shuffle()
     |> Enum.take(limit)
+  end
+
+  defp base_query(query, already_picked_game_ids) do
+    query
+    |> where([g], g.display == true and g.featurable and not is_nil(g.cover_key))
+    |> where([g], g.id not in ^already_picked_game_ids)
+  end
+
+  defp log_games(games) do
+    Enum.map(games, fn game ->
+      Logger.info("Picking #{game.name} for featured", type: :featured)
+      game
+    end)
   end
 end
