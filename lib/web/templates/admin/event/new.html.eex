@@ -16,7 +16,7 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <%= render("_form.html", changeset: @changeset, url: Routes.admin_event_path(@conn, :create), submit: "Update") %>
+      <%= render("_form.html", changeset: @changeset, url: Routes.admin_event_path(@conn, :create), submit: "Create") %>
     </div>
   </div>
 </section>

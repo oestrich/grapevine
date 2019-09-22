@@ -44,12 +44,17 @@ defmodule GrapevineData.Events do
   end
 
   @doc """
-  Return a random sample of events from the next month
+  Return a limited set of events from the next month
   """
   def homepage_events() do
-    next_month()
-    |> Enum.shuffle()
-    |> Enum.take(3)
+    last_week = Timex.now() |> Timex.shift(weeks: -1)
+    one_month_out = Timex.now() |> Timex.shift(months: 1)
+
+    Event
+    |> where([e], e.start_date >= ^last_week and e.start_date <= ^one_month_out)
+    |> order_by([e], asc: e.start_date, asc: e.end_date)
+    |> limit(3)
+    |> Repo.all()
   end
 
   @doc """
