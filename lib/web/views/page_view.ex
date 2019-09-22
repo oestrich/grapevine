@@ -7,6 +7,7 @@ defmodule Web.PageView do
   alias Web.CurrentPlayerCountView
   alias Web.DocView
   alias Web.GameView
+  alias Web.TimeView
 
   def render("_conduct.html", _assigns) do
     :grapevine

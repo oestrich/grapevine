@@ -1,6 +1,7 @@
-<section>
-  <div class="position-relative text-center">
-    <div class="col-md-6 mx-auto my-2">
+
+<section class="mt-3">
+  <div class="row text-center">
+    <div class="col-md-6 my-2">
       <h1 class="display-4 font-weight-normal">Grapevine</h1>
       <p class="lead font-weight-normal">The MUD Community Site</p>
       <%= live_render(@conn, CurrentPlayerCountView) %>
@@ -10,6 +11,29 @@
         <% end %>
       </p>
     </div>
+
+    <%= if !Enum.empty?(@events) do %>
+      <div class="col-md-6">
+        <nav>
+          <h5 class="name">
+            Upcoming and Ongoing Events
+          </h5>
+        </nav>
+
+        <div class="list-group">
+          <%= Enum.map(@events, fn event -> %>
+            <div class="list-group-item">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">
+                  <%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %>
+                </h5>
+                <small><%= TimeView.simple_day(event.start_date) %> to <%= TimeView.simple_day(event.end_date) %></small>
+              </div>
+            </div>
+          <% end) %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </section>
 

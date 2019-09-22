@@ -14,4 +14,8 @@ defmodule Web.TimeView do
   def relative(time) do
     Timex.format!(time, "{relative}", :relative)
   end
+
+  def simple_day(date) do
+    Timex.format!(date, "%m/%d", :strftime)
+  end
 end

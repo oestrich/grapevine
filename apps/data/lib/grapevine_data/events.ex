@@ -44,6 +44,15 @@ defmodule GrapevineData.Events do
   end
 
   @doc """
+  Return a random sample of events from the next month
+  """
+  def homepage_events() do
+    next_month()
+    |> Enum.shuffle()
+    |> Enum.take(3)
+  end
+
+  @doc """
   Get recent events for all games
   """
   def next_month() do
