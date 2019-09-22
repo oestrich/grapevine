@@ -1,0 +1,57 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Events</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Events</h3>
+
+    <div class="actions">
+      <%= link("New", to: Routes.admin_event_path(@conn, :new), class: "btn btn-primary") %>
+    </div>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>End End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@events, fn event -> %>
+            <tr>
+              <td>
+                <%= if event.game do %>
+                  <%= link(event.game.name, to: Routes.admin_game_path(@conn, :show, event.game_id)) %>
+                <% else %>
+                  System Event
+                <% end %>
+              </td>
+              <td><%= event.title %></td>
+              <td><%= event.start_date %></td>
+              <td><%= event.end_date %></td>
+              <td>
+                <%= link("View", to: Routes.admin_event_path(@conn, :show, event.uid), class: "btn btn-flat") %>
+                <%= link("Edit", to: Routes.admin_event_path(@conn, :edit, event.uid), class: "btn btn-flat") %>
+              </td>
+            </tr>
+          <% end) %>
+        </tbody>
+      </table>
+
+      <%= SharedView.pagination(path: Routes.admin_client_session_path(@conn, :index), pagination: @pagination) %>
+    </div>
+  </div>
+</section>

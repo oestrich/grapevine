@@ -151,6 +151,8 @@ defmodule Web.Router do
 
     resources("/client_sessions", ClientSessionController, only: [:index])
 
+    resources("/events", EventController)
+
     resources("/games", GameController, only: [:index, :show])
 
     resources("/users", UserController, only: [:index, :show])

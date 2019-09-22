@@ -121,7 +121,7 @@
                 <h5 class="card-title"><%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %></h5>
                 <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
                 <%= if event.description do %>
-                  <p class="card-text"><%= EventView.event_description(event) %></p>
+                  <p class="card-text"><%= EventView.event_description(@conn, event) %></p>
                 <% end %>
               </div>
             </div>

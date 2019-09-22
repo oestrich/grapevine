@@ -22,11 +22,13 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">
-              <%= link(event.game.name, to: game_path(@conn, :show, event.game.short_name)) %> -
+              <%= if event.game do %>
+                <%= link(event.game.name, to: game_path(@conn, :show, event.game.short_name)) %> -
+              <% end %>
               <%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %>
             </h5>
             <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
-            <div class="card-text"><%= event_description(event) %></div>
+            <div class="card-text"><%= event_description(@conn, event) %></div>
           </div>
         </div>
       </div>

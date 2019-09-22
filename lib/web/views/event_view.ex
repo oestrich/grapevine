@@ -1,14 +1,17 @@
 defmodule Web.EventView do
   use Web, :view
 
-  def event_description(event) do
+  alias Web.MarkdownView
+
+  def event_description(conn, event) do
     description =
       event.description
+      |> MarkdownView.strip()
       |> String.split(" ")
       |> Enum.take(50)
       |> Enum.join(" ")
       |> text_to_html()
 
-    [description, "..."]
+    [description, link("...", to: Routes.event_path(conn, :show, event.uid))]
   end
 end

@@ -7,6 +7,14 @@ defmodule GrapevineData.Events do
 
   alias GrapevineData.Events.Event
   alias GrapevineData.Repo
+  alias Stein.Pagination
+
+  @doc """
+  New changeset for an event, without a game
+  """
+  def new() do
+    Event.changeset(%Event{}, %{})
+  end
 
   @doc """
   New changeset for an event
@@ -43,10 +51,24 @@ defmodule GrapevineData.Events do
     one_month_out = Timex.now() |> Timex.shift(months: 1)
 
     Event
-    |> where([e], e.start_date >= ^last_week and e.end_date <= ^one_month_out)
+    |> where([e], e.start_date >= ^last_week and e.start_date <= ^one_month_out)
     |> order_by([e], asc: e.start_date, asc: e.end_date)
     |> preload([:game])
     |> Repo.all()
+  end
+
+  @doc """
+  Fetch all events, ordered by start date
+  """
+  def all(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    query =
+      Event
+      |> preload([:game])
+      |> order_by([e], desc: e.start_date)
+
+    Pagination.paginate(Repo, query, opts)
   end
 
   @doc """
@@ -114,6 +136,23 @@ defmodule GrapevineData.Events do
 
       :error ->
         {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Create a new event
+  """
+  def create(params) do
+    changeset = Event.changeset(%Event{}, params)
+
+    case Repo.insert(changeset) do
+      {:ok, event} ->
+        :telemetry.execute([:grapevine, :game_events, :create, :success], %{count: 1})
+        {:ok, event}
+
+      {:error, changeset} ->
+        :telemetry.execute([:grapevine, :game_events, :create, :failure], %{count: 1})
+        {:error, changeset}
     end
   end
 

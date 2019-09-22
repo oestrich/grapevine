@@ -1,0 +1,52 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Events", to: Routes.admin_event_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active"><%= @event.title %></li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Events</h3>
+
+    <div class="actions">
+      <%= link("Edit", to: Routes.admin_event_path(@conn, :edit, @event.uid), class: "btn btn-flat") %>
+      <%= link("Delete", to: Routes.admin_event_path(@conn, :delete, @event.uid), method: "delete", data: [confirm: "Are you sure?"], class: "btn btn-flat") %>
+    </div>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= @event.id %></td>
+          </tr>
+          <tr>
+            <th>UID</th>
+            <td><%= @event.uid %></td>
+          </tr>
+          <%= if @game do %>
+            <tr>
+              <th>Game</th>
+              <td><%= link(@game.name, to: Routes.admin_game_path(@conn, :show, @game.id)) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <th>Title</th>
+            <td><%= @event.title %></td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td><%= MarkdownView.parse(@event.description) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

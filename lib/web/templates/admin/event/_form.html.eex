@@ -1,9 +1,7 @@
 <%= form_for(@changeset, @url, fn f -> %>
   <%= FormView.text_field(f, :title) %>
 
-  <%= FormView.textarea_field(f, :description, rows: 10) do %>
-    <span class="help-block">Markdown supported.</span>
-  <% end %>
+  <%= FormView.textarea_field(f, :description, rows: 10) %>
 
   <%= FormView.text_field(f, :start_date) do %>
     <span class="help-block">Format: <code>YYYY-MM-DD</code></span>

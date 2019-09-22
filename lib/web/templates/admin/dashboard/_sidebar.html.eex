@@ -13,6 +13,9 @@
       <%= link("Client Sessions", to: Routes.admin_client_session_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">
+      <%= link("Events", to: Routes.admin_event_path(@conn, :index), class: "nav-link") %>
+    </li>
+    <li class="nav-item">
       <%= link("Games", to: Routes.admin_game_path(@conn, :index), class: "nav-link") %>
     </li>
     <li class="nav-item">

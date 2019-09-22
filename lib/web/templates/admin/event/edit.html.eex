@@ -1,0 +1,22 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: Routes.page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Admin", to: Routes.admin_dashboard_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Events", to: Routes.admin_event_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active"><%= @event.title %> Edit</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">Events</h3>
+  </nav>
+
+  <div class="row">
+    <%= DashboardView.render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <%= render("_form.html", changeset: @changeset, url: Routes.admin_event_path(@conn, :update, @event.uid), submit: "Update") %>
+    </div>
+  </div>
+</section>
