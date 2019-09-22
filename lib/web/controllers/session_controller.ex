@@ -7,6 +7,7 @@ defmodule Web.SessionController do
     changeset = Accounts.new()
 
     conn
+    |> assign(:layout_flash, false)
     |> assign(:changeset, changeset)
     |> render("new.html")
   end

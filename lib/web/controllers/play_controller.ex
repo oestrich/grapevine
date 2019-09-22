@@ -7,8 +7,9 @@ defmodule Web.PlayController do
   action_fallback(Web.FallbackController)
 
   def show(conn, %{"game_id" => short_name}) do
-    with {:ok, game} <- Games.get_by_short(short_name, display: true),
-         {:ok, game} <- Games.check_web_client(game),
+    {:ok, game} = Games.get_by_short(short_name, display: true)
+
+    with {:ok, game} <- Games.check_web_client(game),
          {:ok, game} <- check_user_allowed(conn, game) do
       conn
       |> assign(:game, game)
@@ -24,7 +25,7 @@ defmodule Web.PlayController do
 
       {:error, :not_signed_in} ->
         conn
-        |> put_flash(:error, "You must be signed in in order to use the web client for this game.")
+        |> put_flash(:info, "Please sign in to play #{game.name}.")
         |> put_session(:last_path, Routes.play_path(conn, :show, short_name))
         |> redirect(to: Routes.session_path(conn, :new))
 

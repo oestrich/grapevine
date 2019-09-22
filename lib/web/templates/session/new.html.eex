@@ -7,6 +7,17 @@
 
 <div class="row">
   <div class="col-md-6 offset-md-3">
+      <%= if flash = get_flash(@conn, :info) do %>
+        <div class="alert alert-primary" role="alert">
+          <%= flash %>
+        </div>
+      <% end %>
+      <%= if flash = get_flash(@conn, :error) do %>
+        <div class="alert alert-danger" role="alert">
+          <%= flash %>
+        </div>
+      <% end %>
+
     <section>
       <nav>
         <h3 class="name">Sign In</h3>
@@ -35,8 +46,8 @@
 
         <div class="row">
           <div class="col-md-9 offset-md-3">
-            <%= submit("Sign In", class: "btn btn-primary btn-flat") %>
-            <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary btn-flat") %>
+            <%= submit("Sign In", class: "btn btn-primary btn-flat mr-1") %>
+            <%= link("Register", to: registration_path(@conn, :new), class: "btn btn-secondary btn-flat mr-1") %>
             <%= link("Forgot your password?", to: registration_reset_path(@conn, :new), class: "btn btn-flat") %>
           </div>
         </div>
