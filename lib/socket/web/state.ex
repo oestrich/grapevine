@@ -11,6 +11,7 @@ defmodule Socket.Web.State do
   - players: list of connected players
   - debug: if debug mode is on or off
   - hearbeat_count: the count of heartbeats with no response
+  - rate_limits: map of rate limit states
   """
-  defstruct [:status, :game, :supports, :channels, :players, debug: false, heartbeat_count: 0]
+  defstruct [:status, :game, :supports, :channels, :players, debug: false, heartbeat_count: 0, rate_limits: %{}]
 end

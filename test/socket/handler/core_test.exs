@@ -4,6 +4,7 @@ defmodule Socket.Handler.CoreTest do
   alias Socket.Handler.Core
   alias Socket.Handler.Core.Heartbeat
   alias Socket.Presence
+  alias Socket.RateLimit
   alias Socket.Web.Router
   alias Socket.Web.State
 
@@ -194,7 +195,10 @@ defmodule Socket.Handler.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["grapevine"]
+        channels: ["grapevine"],
+        rate_limits: %{
+          "channels/send" => %RateLimit{},
+        }
       }
 
       %{state: state, game: game}
@@ -265,6 +269,41 @@ defmodule Socket.Handler.CoreTest do
         })
 
       assert length(Repo.all(GrapevineData.Messages.Message)) == 1
+    end
+
+    test "records current rate of send", %{state: state} do
+      {:ok, :skip, state} =
+        Router.receive(state, %{
+          "event" => "channels/send",
+          "payload" => %{
+            "channel" => "grapevine",
+            "name" => "Player",
+            "message" => "Hello!"
+          }
+        })
+
+      rate_limit = state.rate_limits["channels/send"]
+      assert rate_limit.current == 1
+      assert rate_limit.last_sent_at
+    end
+
+    test "prevents going over your rate", %{state: state} do
+      rate_limit = %RateLimit{current: 10, limit: 10}
+      rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
+      state = Map.put(state, :rate_limits, rate_limits)
+
+      {:ok, response, _state} =
+        Router.receive(state, %{
+          "event" => "channels/send",
+          "ref" => "channels/send",
+          "payload" => %{
+            "channel" => "grapevine",
+            "name" => "Player",
+            "message" => "Hello!"
+          }
+        })
+
+      assert response["error"] == "rate limit exceeded"
     end
   end
 

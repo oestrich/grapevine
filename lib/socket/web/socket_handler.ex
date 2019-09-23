@@ -8,6 +8,7 @@ defmodule Socket.Web.SocketHandler do
   alias Metrics.Server, as: Metrics
   alias Socket.Handler.Core.Heartbeat
   alias Socket.PubSub
+  alias Socket.RateLimit
   alias Socket.Web.Router
   alias Socket.Web.State
 
@@ -28,7 +29,14 @@ defmodule Socket.Web.SocketHandler do
     # General purpose channels
     PubSub.subscribe("system")
 
-    {:ok, %State{status: "inactive"}}
+    state = %State{
+      status: "inactive",
+      rate_limits: %{
+        "channels/send" => %RateLimit{limit: 10, rate_per_second: 2}
+      }
+    }
+
+    {:ok, state}
   end
 
   def websocket_handle({:text, message}, state) do
