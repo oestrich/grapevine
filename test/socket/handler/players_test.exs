@@ -24,6 +24,23 @@ defmodule Socket.Handler.PlayersTest do
       assert_receive %{event: "players/sign-in"}, 50
     end
 
+    test "new sign in - name required", %{state: state} do
+      state = %{state | supports: ["channels", "players"]}
+      Web.Endpoint.subscribe("players:status")
+
+      frame = %{
+        "event" => "players/sign-in",
+        "ref" => "sign-in",
+        "payload" => %{
+          "name" => ""
+        }
+      }
+
+      assert {:ok, response, state} = Router.receive(state, frame)
+      assert state.players == []
+      assert response["status"] == "failure"
+    end
+
     test "new sign in - game marked as hidden", %{state: state} do
       game = %{state.game | display: false}
       state = %{state | game: game, supports: ["channels", "players"]}

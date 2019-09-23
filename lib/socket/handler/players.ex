@@ -30,6 +30,10 @@ defmodule Socket.Handler.Players do
   @doc """
   Receive a new player sign in, broadcast it
   """
+  def player_sign_in(_state, %{"payload" => %{"name" => ""}}) do
+    {:error, "Name cannot be empty"}
+  end
+
   def player_sign_in(state, %{"payload" => %{"name" => name}}) do
     :telemetry.execute([:grapevine, :events, :players, :sign_in], %{count: 1}, %{name: name})
 

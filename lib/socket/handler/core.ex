@@ -41,7 +41,10 @@ defmodule Socket.Handler.Core do
     :telemetry.execute([:grapevine, :sockets, :heartbeat], %{count: 1}, %{payload: event["payload"]})
 
     payload = Map.get(event, "payload", %{})
-    players = Map.get(payload, "players", [])
+    players =
+      payload
+      |> Map.get("players", [])
+      |> Enum.reject(&(&1 == ""))
 
     state =
       state

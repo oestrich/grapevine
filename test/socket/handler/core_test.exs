@@ -169,6 +169,20 @@ defmodule Socket.Handler.CoreTest do
       assert state.heartbeat_count == 0
       assert state.players == ["player"]
     end
+
+    test "heartbeat filters out empty player names", %{state: state} do
+      frame = %{
+        "event" => "heartbeat",
+        "payload" => %{
+          "players" => ["player", ""]
+        }
+      }
+
+      {:ok, :skip, state} = Router.receive(state, frame)
+
+      assert state.heartbeat_count == 0
+      assert state.players == ["player"]
+    end
   end
 
   describe "post a new message" do
