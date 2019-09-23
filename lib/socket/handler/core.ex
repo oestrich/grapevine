@@ -15,6 +15,7 @@ defmodule Socket.Handler.Core do
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate
   alias Socket.PubSub
+  alias Socket.RateLimit
   alias Socket.Text
 
   @valid_supports ["achievements", "channels", "games", "players", "tells"]
@@ -121,7 +122,8 @@ defmodule Socket.Handler.Core do
 
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
-         {:ok, channel} <- check_channel_subscribed_to(state, channel) do
+         {:ok, channel} <- check_channel_subscribed_to(state, channel),
+         {:ok, state} <- check_rate_limit(state) do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
 
@@ -139,12 +141,28 @@ defmodule Socket.Handler.Core do
 
       {:ok, state}
     else
+      {:error, :limit_exceeded} ->
+        {:error, "rate limit exceeded"}
+
       _ ->
         {:ok, state}
     end
   end
 
   def channel_send(_state, _event), do: :error
+
+  defp check_rate_limit(state) do
+    rate_limit = state.rate_limits["channels/send"]
+
+    case RateLimit.increase(rate_limit) do
+      {:ok, rate_limit} ->
+        rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
+        {:ok, %{state | rate_limits: rate_limits}}
+
+      {:error, :limit_exceeded} ->
+        {:error, :limit_exceeded}
+    end
+  end
 
   def valid_support?(support) do
     Enum.member?(@valid_supports, support)
