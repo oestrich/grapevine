@@ -63,9 +63,10 @@ defmodule GrapevineData.Events do
   def next_month() do
     last_week = Timex.now() |> Timex.shift(weeks: -1)
     one_month_out = Timex.now() |> Timex.shift(months: 1)
+    now = Timex.now()
 
     Event
-    |> where([e], e.start_date >= ^last_week and e.start_date <= ^one_month_out)
+    |> where([e], (e.start_date >= ^last_week and e.start_date <= ^one_month_out) or e.start_date <= ^now and e.end_date >= ^now)
     |> order_by([e], asc: e.start_date, asc: e.end_date)
     |> preload([:game])
     |> Repo.all()

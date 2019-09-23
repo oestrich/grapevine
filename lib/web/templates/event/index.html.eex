@@ -10,28 +10,28 @@
     <h3 class="name">Upcoming Events</h3>
   </nav>
 
-  <div class="row">
+  <div>
     <%= if Enum.empty?(@events) do %>
-      <div class="col-md-12">
-        <p>No events start in the next month. Check back later, or <%= link("add your own.", to: manage_game_path(@conn, :index)) %></p>
-      </div>
+      <p>No events start in the next month. Check back later, or <%= link("add your own.", to: manage_game_path(@conn, :index)) %></p>
     <% end %>
 
-    <%= Enum.map(@events, fn event -> %>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">
-              <%= if event.game do %>
-                <%= link(event.game.name, to: game_path(@conn, :show, event.game.short_name)) %> -
+    <div class="list-group">
+      <%= Enum.map(@events, fn event -> %>
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-1">
+              <%= link(to: Routes.event_path(@conn, :show, event.uid)) do %>
+                <%= if event.game do %>
+                  <%= event.game.name %> -
+                <% end %>
+                <%= event.title %>
               <% end %>
-              <%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %>
             </h5>
-            <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
-            <div class="card-text"><%= event_description(@conn, event) %></div>
+            <small><%= event.start_date %> to <%= event.end_date %></small>
           </div>
+          <%= event_description(event) %>
         </div>
-      </div>
-    <% end) %>
+      <% end) %>
+    </div>
   </div>
 </section>

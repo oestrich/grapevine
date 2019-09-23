@@ -3,15 +3,20 @@ defmodule Web.EventView do
 
   alias Web.MarkdownView
 
-  def event_description(conn, event) do
+  def event_description(event) do
     description =
       event.description
       |> MarkdownView.strip()
       |> String.split(" ")
       |> Enum.take(50)
       |> Enum.join(" ")
-      |> text_to_html()
 
-    [description, link("...", to: Routes.event_path(conn, :show, event.uid))]
+    case String.length(event.description) > String.length(description) do
+      true ->
+        text_to_html(description <> "...")
+
+      false ->
+        text_to_html(description)
+    end
   end
 end

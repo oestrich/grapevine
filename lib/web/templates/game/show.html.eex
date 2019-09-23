@@ -27,7 +27,7 @@
           <%= link("Stats", to: game_statistic_path(@conn, :show, @game.short_name), class: "btn btn-flat") %>
         <% end %>
         <%= if Map.get(assigns, :current_user) && @game.user_id == @current_user.id do %>
-          <%= link("Edit", to: manage_game_path(@conn, :show, @game.id), class: "btn btn-flat") %>
+          <%= link("Manage", to: manage_game_path(@conn, :show, @game.id), class: "btn btn-flat") %>
         <% end %>
         <%= if Achievements.has_achievements?(@game) do %>
           <%= link("Achievements", to: game_achievement_path(@conn, :index, @game.short_name), class: "btn btn-flat") %>
@@ -113,18 +113,16 @@
     <%= unless Enum.empty?(@events) do %>
       <h3>In Game Events</h3>
 
-      <div class="row">
+      <div class="list-group">
         <%= Enum.map(@events, fn event -> %>
-          <div class="col-md-6">
-            <div class="card mt-3">
-              <div class="card-body">
-                <h5 class="card-title"><%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><%= event.start_date %> to <%= event.end_date %></h6>
-                <%= if event.description do %>
-                  <p class="card-text"><%= EventView.event_description(@conn, event) %></p>
-                <% end %>
-              </div>
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <h5 class="mb-1">
+                <%= link(event.title, to: Routes.event_path(@conn, :show, event.uid)) %>
+              </h5>
+              <small><%= event.start_date %> to <%= event.end_date %></small>
             </div>
+            <%= EventView.event_description(event) %>
           </div>
         <% end) %>
       </div>
