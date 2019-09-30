@@ -17,67 +17,67 @@ defmodule Socket.Web.Response do
 
   Response must be wrapped by `wrap/3`
   """
-  def respond_to(response, state) do
-    case response.value do
-      {:ok, :skip, state} ->
-        {:ok, :skip, state}
+  def respond_to(%{value: {:ok, :skip, state}}, _state), do: {:ok, :skip, state}
 
-      {:ok, response, state} ->
-        {:ok, response, state}
+  def respond_to(%{value: {:ok, response, state}}, _state), do: {:ok, response, state}
 
-      {:ok, state} ->
-        response =
-          response.event
-          |> maybe_respond(state)
-          |> succeed_response()
+  def respond_to(response = %{value: {:ok, state}}, _state) do
+    response =
+      response.event
+      |> maybe_respond(state)
+      |> succeed_response()
 
-        {:ok, response, state}
-
-      {:error, :support_missing} ->
-        response =
-          response.event
-          |> maybe_respond(state)
-          |> fail_response(~s(missing support for "#{response.flag}"))
-
-        {:ok, response, state}
-
-      {:error, error, state} ->
-        response =
-          response.event
-          |> maybe_respond(state)
-          |> fail_response(error)
-
-        {:ok, response, state}
-
-      {:error, error} ->
-        response =
-          response.event
-          |> maybe_respond(state)
-          |> fail_response(error)
-
-        {:ok, response, state}
-
-      :error ->
-        response =
-          response.event
-          |> maybe_respond(state)
-          |> fail_response("an error occurred, try again")
-
-        {:ok, response, state}
-
-      {:disconnect, :limit_exceeded} ->
-        response = %{
-          "event" => "authenticate",
-          "status" => "failure",
-          "error" => "disconnected due to rate limit abuse"
-        }
-
-        {:disconnect, response, state}
-
-      {:disconnect, response, state} ->
-        {:disconnect, response, state}
-    end
+    {:ok, response, state}
   end
+
+  def respond_to(response = %{value: {:error, :support_missing}}, state) do
+    response =
+      response.event
+      |> maybe_respond(state)
+      |> fail_response(~s(missing support for "#{response.flag}"))
+
+    {:ok, response, state}
+  end
+
+  def respond_to(response = %{value: {:error, error, state}}, _state) do
+    response =
+      response.event
+      |> maybe_respond(state)
+      |> fail_response(error)
+
+    {:ok, response, state}
+  end
+
+  def respond_to(response = %{value: {:error, error}}, state) do
+    response =
+      response.event
+      |> maybe_respond(state)
+      |> fail_response(error)
+
+    {:ok, response, state}
+  end
+
+  def respond_to(response = %{value: :error}, state) do
+    response =
+      response.event
+      |> maybe_respond(state)
+      |> fail_response("an error occurred, try again")
+
+    {:ok, response, state}
+  end
+
+  def respond_to(%{value: {:disconnect, :limit_exceeded}}, state) do
+    response = %{
+      "event" => "authenticate",
+      "status" => "failure",
+      "error" => "disconnected due to rate limit abuse"
+    }
+
+    {:disconnect, response, state}
+  end
+
+  def respond_to(%{value: {:disconnect, response, state}}, _state),
+    do: {:disconnect, response, state}
 
   defp maybe_respond(event, state) do
     case Map.has_key?(event, "ref") || state.debug do
