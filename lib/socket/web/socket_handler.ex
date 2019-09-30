@@ -32,7 +32,7 @@ defmodule Socket.Web.SocketHandler do
     state = %State{
       status: "inactive",
       rate_limits: %{
-        "channels/send" => %RateLimit{limit: 10, rate_per_second: 2}
+        "channels/send" => %RateLimit{limit: 10, rate_per_second: 2, max_total_limited: 10}
       }
     }
 

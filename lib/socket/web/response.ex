@@ -41,6 +41,14 @@ defmodule Socket.Web.Response do
 
         {:ok, response, state}
 
+      {:error, error, state} ->
+        response =
+          response.event
+          |> maybe_respond(state)
+          |> fail_response(error)
+
+        {:ok, response, state}
+
       {:error, error} ->
         response =
           response.event
@@ -56,6 +64,15 @@ defmodule Socket.Web.Response do
           |> fail_response("an error occurred, try again")
 
         {:ok, response, state}
+
+      {:disconnect, :limit_exceeded} ->
+        response = %{
+          "event" => "authenticate",
+          "status" => "failure",
+          "error" => "disconnected due to rate limit abuse"
+        }
+
+        {:disconnect, response, state}
 
       {:disconnect, response, state} ->
         {:disconnect, response, state}

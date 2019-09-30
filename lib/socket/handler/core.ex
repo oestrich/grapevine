@@ -141,11 +141,17 @@ defmodule Socket.Handler.Core do
 
       {:ok, state}
     else
-      {:error, :limit_exceeded} ->
-        rate_limit = state.rate_limits["channels/send"]
+      {:error, :limit_exceeded, rate_limit} ->
+        rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
+        state = %{state | rate_limits: rate_limits}
+
         metadata = %{game: state.game, channel: payload["channel"]}
         :telemetry.execute([:grapevine, :events, :channels, :rate_limited], rate_limit, metadata)
-        {:error, "rate limit exceeded"}
+
+        {:error, "rate limit exceeded", state}
+
+      {:disconnect, :limit_exceeded} ->
+        {:disconnect, :limit_exceeded}
 
       _ ->
         {:ok, state}
@@ -162,8 +168,11 @@ defmodule Socket.Handler.Core do
         rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
         {:ok, %{state | rate_limits: rate_limits}}
 
-      {:error, :limit_exceeded} ->
-        {:error, :limit_exceeded}
+      {:error, :max_limit_exceeded, _rate_limit} ->
+        {:disconnect, :limit_exceeded}
+
+      {:error, :limit_exceeded, rate_limit} ->
+        {:error, :limit_exceeded, rate_limit}
     end
   end
 
