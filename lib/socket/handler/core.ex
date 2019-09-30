@@ -142,6 +142,9 @@ defmodule Socket.Handler.Core do
       {:ok, state}
     else
       {:error, :limit_exceeded} ->
+        rate_limit = state.rate_limits["channels/send"]
+        metadata = %{game: state.game, channel: payload["channel"]}
+        :telemetry.execute([:grapevine, :events, :channels, :rate_limited], rate_limit, metadata)
         {:error, "rate limit exceeded"}
 
       _ ->
