@@ -37,7 +37,7 @@ game
   type: "telnet",
   host: "localhost",
   port: 5555
-})
+}, fn _connection -> :ok end)
 
 connection
 |> Ecto.Changeset.change(%{supports_mssp: true})
