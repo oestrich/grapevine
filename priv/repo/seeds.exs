@@ -18,7 +18,7 @@ channel
   email: "admin@example.com",
   password: "password",
   password_confirmation: "password",
-})
+}, fn _user -> :ok end)
 
 user
 |> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
