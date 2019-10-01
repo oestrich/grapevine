@@ -39,3 +39,5 @@ npm-debug.log
 /uploads/
 /priv/files/*
 !/priv/files/.gitkeep
+
+.elixir_ls
