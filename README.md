@@ -24,13 +24,14 @@ This is only required to run Grapevine itself, the server. These are not require
 - Elixir 1.9.0
 - Erlang 22.0.4
 - node.js 10.13.0
+- [Yarn](https://yarnpkg.com/en/docs/install)
 
 ### Setup
 
 ```bash
 mix deps.get
 mix compile
-cd assets && npm install -g yarn && yarn install && cd ..
+yarn --cwd assets
 mix ecto.reset
 mix phx.server
 ```

@@ -1,5 +1,4 @@
 alias GrapevineData.Accounts
-alias Grapevine.Applications
 alias GrapevineData.Channels
 alias GrapevineData.Games
 alias GrapevineData.Repo
@@ -13,31 +12,13 @@ channel
 |> Ecto.Changeset.change(%{hidden: false})
 |> Repo.update!()
 
-# Create a known grapevine login
-{:ok, application} = Applications.create(%{name: "Grapevine", short_name: "Grapevine"})
-application
-|> Ecto.Changeset.change(%{
-  client_id: "e16a2503-6153-48a9-9e92-3d087b9cc6d7",
-  client_secret: "3de1854f-6f3a-49f4-a7f2-bc01a18c8369"
-})
-|> Repo.update!()
-
-# Create a known raisin login
-{:ok, application} = Applications.create(%{name: "Raisin", short_name: "Raisin"})
-application
-|> Ecto.Changeset.change(%{
-  client_id: "c922b500-bbf8-4944-8c40-3c5559376c96",
-  client_secret: "b178f27b-df94-4324-abf8-d82be5e91419"
-})
-|> Repo.update!()
-
 # Create a know user and game login
 {:ok, user} = Accounts.register(%{
   username: "player",
   email: "admin@example.com",
   password: "password",
   password_confirmation: "password",
-})
+}, fn _user -> :ok end)
 
 user
 |> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
@@ -56,7 +37,7 @@ game
   type: "telnet",
   host: "localhost",
   port: 5555
-})
+}, fn _connection -> :ok end)
 
 connection
 |> Ecto.Changeset.change(%{supports_mssp: true})
