@@ -58,7 +58,9 @@ defmodule Socket.RateLimitTest do
         rate_per_second: 1
       }
 
-      {:error, :limit_exceeded} = RateLimit.increase(rate_limit, now)
+      {:error, :limit_exceeded, rate_limit} = RateLimit.increase(rate_limit, now)
+
+      assert rate_limit.total_limited == 1
     end
   end
 end

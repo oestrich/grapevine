@@ -8,7 +8,12 @@ defmodule Socket.RateLimit do
   - Handles reducing the current count because of the "leaky bucket"
   """
 
-  defstruct current: 0, last_sent_at: nil, limit: 10, rate_per_second: 1
+  defstruct current: 0,
+            last_sent_at: nil,
+            limit: 10,
+            rate_per_second: 1,
+            total_limited: 0,
+            max_total_limited: 10
 
   @doc """
   Increase the current count for rate limit state
@@ -26,10 +31,31 @@ defmodule Socket.RateLimit do
 
     case rate_limit.current > rate_limit.limit do
       true ->
-        {:error, :limit_exceeded}
+        increase_total_limited(rate_limit)
 
       false ->
         {:ok, rate_limit}
+    end
+  end
+
+  @doc """
+  Increase the total limited count and check for max total limited
+
+    iex> RateLimit.increase_total_limited(%RateLimit{total_limited: 0})
+    {:error, :limit_exceeded, %RateLimit{total_limited: 1}}
+
+    iex> RateLimit.increase_total_limited(%RateLimit{total_limited: 9, max_total_limited: 10})
+    {:error, :max_limit_exceeded, %RateLimit{total_limited: 10, max_total_limited: 10}}
+  """
+  def increase_total_limited(rate_limit) do
+    rate_limit = Map.put(rate_limit, :total_limited, rate_limit.total_limited + 1)
+
+    case rate_limit.total_limited >= rate_limit.max_total_limited do
+      true ->
+        {:error, :max_limit_exceeded, rate_limit}
+
+      false ->
+        {:error, :limit_exceeded, rate_limit}
     end
   end
 

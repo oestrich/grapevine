@@ -305,6 +305,25 @@ defmodule Socket.Handler.CoreTest do
 
       assert response["error"] == "rate limit exceeded"
     end
+
+    test "disconnects you if you get limited too often", %{state: state} do
+      rate_limit = %RateLimit{current: 10, limit: 10, total_limited: 10}
+      rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
+      state = Map.put(state, :rate_limits, rate_limits)
+
+      {:disconnect, response, _state} =
+        Router.receive(state, %{
+          "event" => "channels/send",
+          "ref" => "channels/send",
+          "payload" => %{
+            "channel" => "grapevine",
+            "name" => "Player",
+            "message" => "Hello!"
+          }
+        })
+
+      assert response["error"] == "disconnected due to rate limit abuse"
+    end
   end
 
   describe "changing subscriptions" do
