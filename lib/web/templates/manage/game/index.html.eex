@@ -16,7 +16,7 @@
   </nav>
 
   <div class="row">
-    <%= SettingView.render("_sidebar.html", conn: @conn) %>
+    <%= SettingView.render("_sidebar.html", conn: @conn, games: @games) %>
 
     <div class="col-md-10">
       <table class="table">
