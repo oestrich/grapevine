@@ -21,5 +21,4 @@
       <%= link("Register a game", to: manage_game_path(@conn, :new), class: "nav-link") %>
     </li>
   </ul>
-  
 </div>
