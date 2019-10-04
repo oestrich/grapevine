@@ -91,6 +91,7 @@ defmodule GrapevineData.Games.Game do
     |> validate_required([
       :name,
       :short_name,
+      :description,
       :display,
       :display_players,
       :user_id,
