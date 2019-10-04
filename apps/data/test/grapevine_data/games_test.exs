@@ -11,7 +11,8 @@ defmodule GrapevineData.GamesTest do
       {:ok, game} =
         Games.register(user, %{
           name: "A MUD",
-          short_name: "AM"
+          short_name: "AM",
+          description: "A MUD"
         })
 
       assert game.name == "A MUD"

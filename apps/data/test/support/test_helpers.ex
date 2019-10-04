@@ -64,7 +64,8 @@ defmodule Grapevine.TestHelpers do
     Map.merge(
       %{
         name: "A MUD",
-        short_name: "AM"
+        short_name: "AM",
+        description: "A MUD"
       },
       attributes
     )
