@@ -6,7 +6,6 @@ defmodule Web.Manage.GameView do
   alias Web.FormView
   alias Web.GameView
   alias Web.Manage.ConnectionView
-  alias Web.Manage.SettingView
   alias Web.Manage.RedirectURIView
   alias Web.ReactView
   alias Web.TimeView
