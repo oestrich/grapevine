@@ -6,8 +6,20 @@
     <li class="nav-item">
       <%= link("Characters", to: manage_character_path(@conn, :index), class: "nav-link") %>
     </li>
+  </ul>
+  <h5>Games</h5>
+  <ul class="nav flex-column">
+    <%= Enum.map(@games, fn game -> %>
+      <li class="nav-item">
+        <%= link(game.name, to: manage_game_path(@conn, :show, game.id), class: "nav-link") %>
+      </li>
+    <% end) %>
+  </ul>
+  <hr/>
+  <ul class="nav flex-column">
     <li class="nav-item">
-      <%= link("Games", to: manage_game_path(@conn, :index), class: "nav-link") %>
+      <%= link("Register a game", to: manage_game_path(@conn, :new), class: "nav-link") %>
     </li>
   </ul>
+  
 </div>
