@@ -26,7 +26,7 @@ defmodule GrapevineData.Events.Event do
   def changeset(struct, params) do
     struct
     |> cast(params, [:title, :description, :start_date, :end_date])
-    |> validate_required([:title, :start_date, :end_date])
+    |> validate_required([:title, :description, :start_date, :end_date])
     |> validate_start_before_end()
   end
 
