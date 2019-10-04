@@ -1,0 +1,7 @@
+<div class="col-md-2">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <%= link("Submit News", to: decanter_news_path(@conn, :new), class: "nav-link") %>
+    </li>
+  </ul>
+</div>

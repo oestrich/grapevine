@@ -108,6 +108,28 @@ defmodule Web.Router do
     post("/session_tokens", SessionTokenController, :create)
   end
 
+  scope "/decanter", Web.Decanter, as: :decanter do
+    pipe_through([:browser])
+
+    get("/", NewsController, :index)
+
+    get("/news/:uid", NewsController, :show)
+  end
+
+  scope "/decanter", Web.Decanter, as: :decanter do
+    pipe_through([:browser, :logged_in])
+
+    get("/news/:uid/edit", NewsController, :edit)
+
+    put("/news/:uid", NewsController, :update)
+
+    post("/news/:uid/submit", NewsController, :submit)
+
+    get("/submit", NewsController, :new)
+
+    post("/submit", NewsController, :create)
+  end
+
   scope "/manage", Web.Manage, as: :manage do
     pipe_through([:browser, :logged_in])
 

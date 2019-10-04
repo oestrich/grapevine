@@ -1,0 +1,20 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Decanter", to: decanter_news_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">News</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">The Decanter</h3>
+  </nav>
+
+  <div class="row">
+    <%= render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+    </div>
+  </div>
+</section>

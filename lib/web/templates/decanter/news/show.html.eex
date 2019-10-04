@@ -1,0 +1,34 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Decanter", to: decanter_news_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">News</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">The Decanter</h3>
+  </nav>
+
+  <div class="row">
+    <%= render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <nav>
+        <h4 class="name"><%= @blog_post.title %></h4>
+        
+        <div class="actions">
+          <%= if Map.has_key?(assigns, :current_user) && @current_user.id == @blog_post.user_id do %>
+            <%= link("Edit", to: Routes.decanter_news_path(@conn, :edit, @blog_post.uid), class: "btn btn-primary") %>
+          <% end %>
+        </div>
+      </nav>
+
+      <small class="publish-dated"><%= TimeView.time(@blog_post.inserted_at) %></small>
+      <small class="user"><%= @blog_post.user.username %></small>
+
+      <%= MarkdownView.parse(@blog_post.body) %>
+    </div>
+  </div>
+</section>

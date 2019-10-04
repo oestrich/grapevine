@@ -1,0 +1,13 @@
+<%= form_for(@changeset, @url, fn f -> %>
+  <div class="form-group">
+    <%= label(f, :title) %>
+    <%= text_input(f, :title, class: "form-control") %>
+  </div>
+
+  <div class="form-group">
+    <%= label(f, :body) %>
+    <%= textarea(f, :body, rows: 20, class: "form-control") %>
+  </div>
+
+  <%= submit(@submit, class: "btn btn-primary") %>
+<% end) %>
