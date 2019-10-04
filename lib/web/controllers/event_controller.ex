@@ -16,7 +16,8 @@ defmodule Web.EventController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, event} <- Events.get_uid(id) do
+    with {:ok, event} <- Events.get_uid(id),
+         {:ok, _} <- Events.inc_view_count(event) do
       conn
       |> assign(:event, event)
       |> assign(:game, event.game)

@@ -70,4 +70,22 @@ defmodule GrapevineData.EventsTest do
       {:ok, _event} = Events.delete(event)
     end
   end
+
+  describe "incrementing the view count of an event" do
+    test "successful" do
+      game = create_game(create_user())
+
+      {:ok, event} =
+        Events.create(game, %{
+          title: "Adventuring",
+          description: "Example description.",
+          start_date: "2018-11-21",
+          end_date: "2018-11-23"
+        })
+
+      {:ok, event} = Events.inc_view_count(event)
+
+      assert event.view_count == 1
+    end
+  end
 end
