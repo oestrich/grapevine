@@ -6,14 +6,6 @@ defmodule Web.Manage.GameController do
 
   plug(Web.Plugs.VerifyUser)
 
-  def index(conn, _params) do
-    %{current_user: user} = conn.assigns
-
-    conn
-    |> assign(:games, Games.for_user(user))
-    |> render("index.html")
-  end
-
   def show(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
