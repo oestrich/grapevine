@@ -34,6 +34,15 @@ defmodule GrapevineData.Events do
   end
 
   @doc """
+  Increment view count for event
+  """
+  def inc_view_count(event) do
+    event
+    |> Event.inc_view_count_changeset(%{view_count: 1 + event.view_count})
+    |> Repo.update()
+  end
+
+  @doc """
   Get all events for a game
   """
   def for(game) do

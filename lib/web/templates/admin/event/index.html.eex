@@ -26,6 +26,7 @@
             <th>Title</th>
             <th>Start Date</th>
             <th>End End Date</th>
+            <th>View count</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -42,6 +43,7 @@
               <td><%= event.title %></td>
               <td><%= event.start_date %></td>
               <td><%= event.end_date %></td>
+              <td><%= event.view_count %></td>
               <td>
                 <%= link("View", to: Routes.admin_event_path(@conn, :show, event.uid), class: "btn btn-flat") %>
                 <%= link("Edit", to: Routes.admin_event_path(@conn, :edit, event.uid), class: "btn btn-flat") %>

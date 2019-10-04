@@ -17,6 +17,7 @@ defmodule GrapevineData.Events.Event do
     field(:description, :string)
     field(:start_date, :date)
     field(:end_date, :date)
+    field(:view_count, :integer, default: 0)
 
     belongs_to(:game, Game)
 
@@ -26,8 +27,13 @@ defmodule GrapevineData.Events.Event do
   def changeset(struct, params) do
     struct
     |> cast(params, [:title, :description, :start_date, :end_date])
-    |> validate_required([:title, :start_date, :end_date])
+    |> validate_required([:title, :description, :start_date, :end_date])
     |> validate_start_before_end()
+  end
+
+  def inc_view_count_changeset(struct, params) do
+    struct
+    |> cast(params, [:view_count])
   end
 
   defp validate_start_before_end(changeset) do

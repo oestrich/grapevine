@@ -42,6 +42,10 @@
             <td><%= @event.title %></td>
           </tr>
           <tr>
+            <th>View count</th>
+            <td><%= @event.view_count %></td>
+          </tr>
+          <tr>
             <th>Description</th>
             <td><%= MarkdownView.parse(@event.description) %></td>
           </tr>
