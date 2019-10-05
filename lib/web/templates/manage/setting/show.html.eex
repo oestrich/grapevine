@@ -14,7 +14,7 @@
   <div class="row">
     <%= render("_sidebar.html", conn: @conn, games: @games) %>
 
-    <div class="col-md-3 offset-md-1">
+    <div class="col-md-4">
       <%= form_for @changeset, manage_setting_path(@conn, :update), [method: :put], fn f -> %>
         <div class="form-group">
           <%= label f, :username %>
@@ -38,7 +38,7 @@
       <% end %>
     </div>
 
-    <div class="col-md-4 offset-md-1">
+    <div class="col-md-4">
       <%= form_tag(manage_setting_path(@conn, :update), [method: :put]) do %>
         <div class="form-group">
           <%= label :user, :current_password %>

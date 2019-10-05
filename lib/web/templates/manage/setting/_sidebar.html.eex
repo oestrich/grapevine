@@ -1,4 +1,5 @@
-<div class="col-md-2">
+<div class="col-md-3">
+  <h5>Settings</h5>
   <ul class="nav flex-column">
     <li class="nav-item">
       <%= link("Account", to: manage_setting_path(@conn, :show), class: "nav-link") %>
@@ -18,7 +19,9 @@
   <hr/>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <%= link("Register a game", to: manage_game_path(@conn, :new), class: "nav-link") %>
+      <%= link(to: manage_game_path(@conn, :new), class: "nav-link") do %>
+        <i class="fa fa-plus"></i> Register Game
+      <% end %>
     </li>
   </ul>
 </div>

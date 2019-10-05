@@ -14,7 +14,7 @@
   <div class="row">
     <%= SettingView.render("_sidebar.html", conn: @conn, games: @games) %>
 
-    <div class="col-md-10">
+    <div class="col-md-9">
       <%= if Enum.empty?(@characters) do %>
         <p>You haven't registered a character yet.</p>
       <% end %>
