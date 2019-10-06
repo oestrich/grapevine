@@ -59,7 +59,7 @@ defmodule Web.Manage.GameController do
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Could not find that game.")
-        |> redirect(to: manage_game_path(conn, :index))
+        |> redirect(to: manage_setting_path(conn, :show))
     end
   end
 
@@ -95,7 +95,7 @@ defmodule Web.Manage.GameController do
       {:error, _} ->
         conn
         |> put_flash(:error, "An error occurred, please try again.")
-        |> redirect(to: manage_game_path(conn, :index))
+        |> redirect(to: manage_setting_path(conn, :show))
     end
   end
 end

@@ -12,7 +12,7 @@
 
   <div>
     <%= if Enum.empty?(@events) do %>
-      <p>No events start in the next month. Check back later, or <%= link("add your own.", to: manage_game_path(@conn, :index)) %></p>
+      <p>No events start in the next month. Check back later, or <%= link("add your own.", to: manage_setting_path(@conn, :show)) %></p>
     <% end %>
 
     <div class="list-group">

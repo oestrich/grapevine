@@ -36,7 +36,7 @@ defmodule Web.Manage.ConnectionController do
       _ ->
         conn
         |> put_flash(:error, "Could not edit the connection!")
-        |> redirect(to: manage_game_path(conn, :index))
+        |> redirect(to: manage_setting_path(conn, :show))
     end
   end
 
@@ -70,7 +70,7 @@ defmodule Web.Manage.ConnectionController do
       _ ->
         conn
         |> put_flash(:error, "Could not delete the connection!")
-        |> redirect(to: manage_game_path(conn, :index))
+        |> redirect(to: manage_setting_path(conn, :show))
     end
   end
 end
