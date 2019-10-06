@@ -253,7 +253,7 @@
 <ul>
   <li><code>supports</code> is required. This is an array of features the connecting game supports. It must contain at least <code>channels</code>. Extra unknown options will result in the socket being disconnected.</li>
   <li><code>channels</code> is optional. This is an array of channels you wish to subscribe to on start. See the <%= link("list of channels", to: chat_path(@conn, :index)) %> for available channels you can subscribe to.</li>
-  <li><code>user_agent</code> is optional but suggested. If present, this will show on the <%= link("Games", to: manage_game_path(@conn, :index)) %> page.</li>
+  <li><code>user_agent</code> is optional but suggested.</li>
   <li><code>version</code> is optional but suggested. This is highest version number that you as a client know of. As Grapevine updates, it will be able to alert you that there are new features available. If not present, then a default of <code>1.0.0</code> is used.</li>
 </ul>
 
