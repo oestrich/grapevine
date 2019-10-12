@@ -24,7 +24,7 @@ user
 |> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
 |> Repo.update!()
 
-{:ok, game} = Games.register(user, %{name: "Development Game", short_name: "DevGame"})
+{:ok, game} = Games.register(user, %{name: "Development Game", short_name: "DevGame", description: "Description for Development Game"})
 game
 |> Ecto.Changeset.change(%{
   enable_web_client: true,
