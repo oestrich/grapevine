@@ -13,8 +13,8 @@ defmodule Web.Oauth.AuthorizationController do
          {:ok, authorization} <- Authorizations.start_auth(user, game, params) do
       case authorization.active do
         true ->
-         {:ok, uri} = Authorizations.authorized_redirect_uri(authorization)
-         conn |> redirect(external: uri)
+          {:ok, uri} = Authorizations.authorized_redirect_uri(authorization)
+          conn |> redirect(external: uri)
 
         false ->
           conn

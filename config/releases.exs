@@ -2,7 +2,11 @@ import Config
 
 config(:logger, :console, metadata: [:type])
 
-config(:grapevine, Grapevine.Mailer, adapter: Bamboo.SMTPAdapter, server: "smtp.mailgun.org", port: 587)
+config(:grapevine, Grapevine.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp.mailgun.org",
+  port: 587
+)
 
 config(:grapevine, Web.Endpoint,
   http: [port: 4100],

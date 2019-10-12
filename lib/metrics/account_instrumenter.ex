@@ -12,7 +12,7 @@ defmodule Metrics.AccountInstrumenter do
     events = [
       [:create],
       [:session, :login],
-      [:session, :logout],
+      [:session, :logout]
     ]
 
     Enum.each(events, &setup_event/1)

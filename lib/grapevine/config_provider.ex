@@ -33,7 +33,12 @@ defmodule Grapevine.ConfigProvider do
         {:socket, [tls: json["socket_tls"]]},
         {:topologies, topologies(json)},
         {:web, [analytics_id: json["web_analytics_id"]]},
-        {Grapevine.Mailer, [alert_to: json["email_alert_to"], username: json["email_smtp_username"], password: ["email_smpt_password"]]},
+        {Grapevine.Mailer,
+         [
+           alert_to: json["email_alert_to"],
+           username: json["email_smtp_username"],
+           password: ["email_smpt_password"]
+         ]},
         {Web.Endpoint, [secret_key_base: json["web_secret_key_base"]]}
       ],
       grapevine_data: [

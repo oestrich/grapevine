@@ -20,7 +20,7 @@ defmodule Grapevine.Statistics do
     Session
     |> distinct([s], s.game_id)
     |> where([s], s.started_at > ^time_limit)
-    |> order_by([s], [desc: s.closed_at])
+    |> order_by([s], desc: s.closed_at)
     |> subquery()
     |> order_by([s], desc_nulls_first: s.closed_at)
     |> limit(3)

@@ -14,27 +14,27 @@ defmodule Web.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-    plug Web.Plugs.FetchUser, api: true
+    plug(Web.Plugs.FetchUser, api: true)
   end
 
   pipeline :api_authenticated do
-    plug Web.Plugs.EnsureUser, api: true
+    plug(Web.Plugs.EnsureUser, api: true)
   end
 
   pipeline :logged_in do
-    plug Web.Plugs.EnsureUser
+    plug(Web.Plugs.EnsureUser)
   end
 
   pipeline :admin do
-    plug Web.Plugs.EnsureAdmin
+    plug(Web.Plugs.EnsureAdmin)
   end
 
   pipeline :verified do
-    plug Web.Plugs.EnsureUserVerified
+    plug(Web.Plugs.EnsureUserVerified)
   end
 
   pipeline :session_token do
-    plug Web.Plugs.SessionToken
+    plug(Web.Plugs.SessionToken)
   end
 
   scope "/", Web do

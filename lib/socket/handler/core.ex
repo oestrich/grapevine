@@ -39,9 +39,12 @@ defmodule Socket.Handler.Core do
   Event: "heartbeat"
   """
   def heartbeat(state, event) do
-    :telemetry.execute([:grapevine, :sockets, :heartbeat], %{count: 1}, %{payload: event["payload"]})
+    :telemetry.execute([:grapevine, :sockets, :heartbeat], %{count: 1}, %{
+      payload: event["payload"]
+    })
 
     payload = Map.get(event, "payload", %{})
+
     players =
       payload
       |> Map.get("players", [])
@@ -71,7 +74,10 @@ defmodule Socket.Handler.Core do
 
       Presence.update_game(state)
 
-      :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel.name})
+      :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{
+        channel: channel.name
+      })
+
       PubSub.subscribe("channels:#{channel.name}")
 
       {:ok, state}
@@ -100,7 +106,10 @@ defmodule Socket.Handler.Core do
 
       Presence.update_game(state)
 
-      :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{channel: channel.name})
+      :telemetry.execute([:grapevine, :events, :channels, :unsubscribe], %{count: 1}, %{
+        channel: channel.name
+      })
+
       PubSub.unsubscribe("channels:#{channel.name}")
 
       {:ok, state}
@@ -215,7 +224,10 @@ defmodule Socket.Handler.Core do
   end
 
   def subscribe_channel({:ok, channel}) do
-    :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{channel: channel.name})
+    :telemetry.execute([:grapevine, :events, :channels, :subscribe], %{count: 1}, %{
+      channel: channel.name
+    })
+
     PubSub.subscribe("channels:#{channel.name}")
   end
 

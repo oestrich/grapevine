@@ -65,7 +65,7 @@ defmodule Grapevine.Mixfile do
       {:telemetry_poller, "~> 0.2"},
       {:telnet, git: "https://github.com/oestrich/telnet-elixir.git"},
       {:timber, "~> 3.0"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.1"}
     ]
   end
 
@@ -93,7 +93,7 @@ defmodule Grapevine.Mixfile do
           runtime_tools: :permanent
         ],
         config_providers: [{Grapevine.ConfigProvider, "/etc/grapevine/config.exs"}]
-      ],
+      ]
     ]
   end
 end

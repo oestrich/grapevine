@@ -3,7 +3,10 @@ defmodule Web.Endpoint do
   use Plug.ErrorHandler
   use Sentry.Plug
 
-  socket("/websocket", Web.UserSocket, websocket: [check_origin: false, connect_info: [:peer_data, :x_headers]])
+  socket("/websocket", Web.UserSocket,
+    websocket: [check_origin: false, connect_info: [:peer_data, :x_headers]]
+  )
+
   socket("/live", Phoenix.LiveView.Socket)
 
   # Serve at "/" the static files from "priv/static" directory.
@@ -17,7 +20,7 @@ defmodule Web.Endpoint do
     only: ~w(css fonts images js favicon.ico robots.txt)
   )
 
-  if Mix.env == :dev do
+  if Mix.env() == :dev do
     plug(Plug.Static, at: "/uploads", from: "uploads/files")
   end
 

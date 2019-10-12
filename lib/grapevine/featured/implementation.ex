@@ -15,7 +15,7 @@ defmodule Grapevine.Featured.Implementation do
   """
   def calculate_next_cycle_delay(now) do
     now
-    |> Timex.set([hour: 6, minute: 0, second: 0])
+    |> Timex.set(hour: 6, minute: 0, second: 0)
     |> maybe_shift_a_day(now)
     |> Timex.diff(now, :milliseconds)
   end

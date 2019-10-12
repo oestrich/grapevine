@@ -197,7 +197,7 @@ defmodule Socket.Handler.CoreTest do
         game: game,
         channels: ["grapevine"],
         rate_limits: %{
-          "channels/send" => %RateLimit{},
+          "channels/send" => %RateLimit{}
         }
       }
 

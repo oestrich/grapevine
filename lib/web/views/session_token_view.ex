@@ -9,7 +9,7 @@ defmodule Web.SessionTokenView do
 
   def show(token) do
     %Representer.Item{
-      data: %{token: token},
+      data: %{token: token}
     }
   end
 end

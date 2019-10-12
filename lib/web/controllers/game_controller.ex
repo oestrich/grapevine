@@ -21,7 +21,10 @@ defmodule Web.GameController do
     |> assign(:filter, filter)
     |> assign(:title, "Games on Grapevine")
     |> assign(:open_graph_title, "Games on Grapevine")
-    |> assign(:open_graph_description, "View a listing of games that are on the Grapevine network.")
+    |> assign(
+      :open_graph_description,
+      "View a listing of games that are on the Grapevine network."
+    )
     |> assign(:open_graph_url, game_url(conn, :index))
     |> render(:index)
   end

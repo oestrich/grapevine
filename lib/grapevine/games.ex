@@ -58,7 +58,7 @@ defmodule Grapevine.Games do
   Record a connection failed and send an alert
   """
   def connection_failed(connection) do
-    {:ok, _alert} = Games.connection_failed(connection, [skip_notify: true])
+    {:ok, _alert} = Games.connection_failed(connection, skip_notify: true)
     {:ok, game} = get(connection.game_id)
 
     game
