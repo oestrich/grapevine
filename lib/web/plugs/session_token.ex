@@ -9,6 +9,11 @@ defmodule Web.Plugs.SessionToken do
 
   def init(default), do: default
 
+  def call(conn, [api: true]) do
+    token = UUID.uuid4()
+    assign(conn, :session_token, sign_token(conn, token))
+  end
+
   def call(conn, _opts) do
     case get_session(conn, :session_token) do
       nil ->

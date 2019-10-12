@@ -1,9 +1,11 @@
 defmodule Web.SessionTokenController do
   use Web, :controller
 
-  def create(conn = %{assigns: %{session_token: token}}, _params) do
+  plug Web.Plugs.SessionToken, api: true
+
+  def create(conn, _params) do
     conn
     |> put_status(201)
-    |> json(%{session_token: token})
+    |> render("token.json")
   end
 end

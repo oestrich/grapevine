@@ -34,7 +34,6 @@ defmodule Web.Router do
   end
 
   pipeline :session_token do
-    plug(:fetch_session)
     plug Web.Plugs.SessionToken
   end
 
@@ -101,6 +100,12 @@ defmodule Web.Router do
     pipe_through([:browser, :session_token])
 
     get("/games/:game_id/play", PlayController, :show)
+  end
+
+  scope "/", Web do
+    pipe_through([:api])
+
+    post("/session_tokens", SessionTokenController, :create)
   end
 
   scope "/manage", Web.Manage, as: :manage do
@@ -179,12 +184,6 @@ defmodule Web.Router do
     pipe_through([:api])
 
     post("/token", TokenController, :create)
-  end
-
-  scope "/", Web do
-    pipe_through([:api, :session_token])
-
-    post("/session_tokens", SessionTokenController, :create)
   end
 
   if Mix.env() == :dev do
