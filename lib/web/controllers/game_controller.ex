@@ -53,6 +53,32 @@ defmodule Web.GameController do
     |> render(:online)
   end
 
+  def surprise(conn, %{"play" => "true"}) do
+    case Presence.random_online_web_game() do
+      [] ->
+        conn
+        |> put_flash(:error, "There are no online web games.")
+        |> redirect(to: game_path(conn, :index))
+
+      [connection] ->
+        conn
+        |> redirect(external: connection.url)
+    end
+  end
+
+  def surprise(conn, _params) do
+    case Presence.random_online_game() do
+      [] ->
+        conn
+        |> put_flash(:error, "There are no online games.")
+        |> redirect(to: game_path(conn, :index))
+
+      [game] ->
+        conn
+        |> redirect(to: game_path(conn, :show, game.short_name))
+    end
+  end
+
   defp players(nil), do: []
   defp players(%{players: players}), do: players
 end

@@ -65,6 +65,8 @@ defmodule Web.Router do
 
     get("/games/online", GameController, :online)
 
+    get("/games/surprise", GameController, :surprise)
+
     resources("/events", EventController, only: [:index, :show])
 
     resources("/games", GameController, only: [:index, :show]) do
