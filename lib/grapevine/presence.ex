@@ -15,6 +15,20 @@ defmodule Grapevine.Presence do
     Client.online_games()
   end
 
+  def random_online_game() do
+    online_games()
+    |> Enum.shuffle()
+    |> Enum.take(1)
+  end
+
+  def random_online_web_game() do
+    online_games()
+    |> Enum.shuffle()
+    |> Stream.flat_map(& &1.connections)
+    |> Stream.filter(&(&1.type == "web"))
+    |> Enum.take(1)
+  end
+
   def init(_) do
     Client.create_table()
     {:ok, %{}, {:continue, :subscribe}}
