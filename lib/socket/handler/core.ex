@@ -15,7 +15,7 @@ defmodule Socket.Handler.Core do
   alias Socket.Presence
   alias Socket.Handler.Core.Authenticate
   alias Socket.PubSub
-  alias Socket.RateLimit
+  alias Socket.RateLimit.Limiter, as: RateLimiter
   alias Socket.Text
 
   @valid_supports ["achievements", "channels", "games", "players", "tells"]
@@ -69,7 +69,8 @@ defmodule Socket.Handler.Core do
   def channel_subscribe(state, %{"payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
-         {:error, :not_subscribed} <- check_channel_subscribed_to(state, channel) do
+         {:error, :not_subscribed} <- check_channel_subscribed_to(state, channel),
+         {:ok, state} <- RateLimiter.check_rate_limit(state, "channels/subscribe") do
       state = Map.put(state, :channels, [channel.name | state.channels])
 
       Presence.update_game(state)
@@ -84,6 +85,16 @@ defmodule Socket.Handler.Core do
     else
       {:error, name} ->
         {:error, ~s(Could not subscribe to "#{name}")}
+
+      {:error, :limit_exceeded, rate_limit} ->
+        metadata = %{game: state.game, channel: payload["channel"]}
+        :telemetry.execute([:grapevine, :events, :channels, :rate_limited], rate_limit, metadata)
+
+        state = RateLimiter.update_rate_limit(state, "channels/subscribe", rate_limit)
+        {:error, "rate limit exceeded", state}
+
+      {:disconnect, :limit_exceeded, rate_limit} ->
+        {:disconnect, :limit_exceeded, rate_limit}
 
       _ ->
         {:ok, state}
@@ -100,7 +111,8 @@ defmodule Socket.Handler.Core do
   def channel_unsubscribe(state, %{"payload" => payload}) do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
-         {:ok, channel} <- check_channel_subscribed_to(state, channel) do
+         {:ok, channel} <- check_channel_subscribed_to(state, channel),
+         {:ok, state} <- RateLimiter.check_rate_limit(state, "channels/unsubscribe") do
       channels = List.delete(state.channels, channel.name)
       state = Map.put(state, :channels, channels)
 
@@ -114,6 +126,16 @@ defmodule Socket.Handler.Core do
 
       {:ok, state}
     else
+      {:error, :limit_exceeded, rate_limit} ->
+        metadata = %{game: state.game, channel: payload["channel"]}
+        :telemetry.execute([:grapevine, :events, :channels, :rate_limited], rate_limit, metadata)
+
+        state = RateLimiter.update_rate_limit(state, "channels/unsubscribe", rate_limit)
+        {:error, "rate limit exceeded", state}
+
+      {:disconnect, :limit_exceeded, rate_limit} ->
+        {:disconnect, :limit_exceeded, rate_limit}
+
       _ ->
         {:ok, state}
     end
@@ -132,7 +154,7 @@ defmodule Socket.Handler.Core do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
          {:ok, channel} <- check_channel_subscribed_to(state, channel),
-         {:ok, state} <- check_rate_limit(state) do
+         {:ok, state} <- RateLimiter.check_rate_limit(state, "channels/send") do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
 
@@ -151,16 +173,14 @@ defmodule Socket.Handler.Core do
       {:ok, state}
     else
       {:error, :limit_exceeded, rate_limit} ->
-        rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
-        state = %{state | rate_limits: rate_limits}
-
         metadata = %{game: state.game, channel: payload["channel"]}
         :telemetry.execute([:grapevine, :events, :channels, :rate_limited], rate_limit, metadata)
 
+        state = RateLimiter.update_rate_limit(state, "global", rate_limit)
         {:error, "rate limit exceeded", state}
 
-      {:disconnect, :limit_exceeded} ->
-        {:disconnect, :limit_exceeded}
+      {:disconnect, :limit_exceeded, rate_limit} ->
+        {:disconnect, :limit_exceeded, rate_limit}
 
       _ ->
         {:ok, state}
@@ -168,22 +188,6 @@ defmodule Socket.Handler.Core do
   end
 
   def channel_send(_state, _event), do: :error
-
-  defp check_rate_limit(state) do
-    rate_limit = state.rate_limits["channels/send"]
-
-    case RateLimit.increase(rate_limit) do
-      {:ok, rate_limit} ->
-        rate_limits = Map.put(state.rate_limits, "channels/send", rate_limit)
-        {:ok, %{state | rate_limits: rate_limits}}
-
-      {:error, :max_limit_exceeded, _rate_limit} ->
-        {:disconnect, :limit_exceeded}
-
-      {:error, :limit_exceeded, rate_limit} ->
-        {:error, :limit_exceeded, rate_limit}
-    end
-  end
 
   def valid_support?(support) do
     Enum.member?(@valid_supports, support)
