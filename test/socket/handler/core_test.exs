@@ -326,7 +326,7 @@ defmodule Socket.Handler.CoreTest do
     end
   end
 
-  describe "changing subscriptions" do
+  describe "subscribing" do
     setup do
       user = create_user()
       game = create_game(user)
@@ -335,7 +335,10 @@ defmodule Socket.Handler.CoreTest do
         status: "active",
         supports: ["channels"],
         game: game,
-        channels: ["grapevine"]
+        channels: ["grapevine"],
+        rate_limits: %{
+          "channels/subscribe" => %RateLimit{}
+        }
       }
 
       %{state: state, game: game}
@@ -382,6 +385,40 @@ defmodule Socket.Handler.CoreTest do
       assert response["error"] == ~s(Could not subscribe to "bad channel")
     end
 
+    test "records current rate of subscribe", %{state: state} do
+      frame = %{
+        "event" => "channels/subscribe",
+        "payload" => %{
+          "channel" => "general"
+        }
+      }
+
+      {:ok, :skip, state} = Router.receive(state, frame)
+
+      rate_limit = state.rate_limits["channels/subscribe"]
+      assert rate_limit.current == 1
+      assert rate_limit.last_sent_at
+    end
+  end
+
+  describe "unsubscribing" do
+    setup do
+      user = create_user()
+      game = create_game(user)
+
+      state = %State{
+        status: "active",
+        supports: ["channels"],
+        game: game,
+        channels: ["grapevine"],
+        rate_limits: %{
+          "channels/unsubscribe" => %RateLimit{}
+        }
+      }
+
+      %{state: state, game: game}
+    end
+
     test "unsubscribe to a channel", %{state: state} do
       frame = %{
         "event" => "channels/unsubscribe",
@@ -416,6 +453,21 @@ defmodule Socket.Handler.CoreTest do
 
       assert {:ok, :skip, state} = Router.receive(state, frame)
       assert state.channels == ["grapevine"]
+    end
+
+    test "records current rate of unsubscribe", %{state: state} do
+      frame = %{
+        "event" => "channels/unsubscribe",
+        "payload" => %{
+          "channel" => "grapevine"
+        }
+      }
+
+      {:ok, :skip, state} = Router.receive(state, frame)
+
+      rate_limit = state.rate_limits["channels/unsubscribe"]
+      assert rate_limit.current == 1
+      assert rate_limit.last_sent_at
     end
   end
 

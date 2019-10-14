@@ -8,6 +8,7 @@ defmodule Socket.Web.Router do
   require Logger
 
   alias Socket.Handler.Core
+  alias Socket.RateLimit.Limiter, as: RateLimiter
 
   import Socket.Web.RouterMacro
 
@@ -61,5 +62,23 @@ defmodule Socket.Web.Router do
     })
 
     {:ok, %{status: "failure", error: "unknown"}, state}
+  end
+
+  @doc """
+  Process incoming text through a global rate limit
+  """
+  def process(state, frame) do
+    with {:ok, state} <- RateLimiter.check_rate_limit(state, "global") do
+      __MODULE__.receive(state, frame)
+    else
+      {:disconnect, :limit_exceeded, rate_limit} ->
+        :telemetry.execute([:grapevine, :events, :rate_limited], rate_limit)
+        {:disconnect, %{status: "failure", error: "rate limit exceeded, goodbye"}, state}
+
+      {:error, :limit_exceeded, rate_limit} ->
+        state = RateLimiter.update_rate_limit(state, "global", rate_limit)
+        :telemetry.execute([:grapevine, :events, :rate_limited], rate_limit)
+        {:ok, %{status: "failure", error: "rate limit exceeded"}, state}
+    end
   end
 end
