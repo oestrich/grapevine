@@ -25,8 +25,8 @@ defmodule Grapevine.Presence do
   def random_online_game() do
     game =
       online_games()
-      |> Enum.shuffle()
       |> Enum.map(& &1.game)
+      |> Enum.shuffle()
       |> List.first()
 
     case is_nil(game) do
@@ -44,9 +44,9 @@ defmodule Grapevine.Presence do
   def random_online_web_game() do
     game =
       online_games()
-      |> Enum.shuffle()
       |> Enum.map(& &1.game)
       |> Enum.filter(&web_client_enabled?/1)
+      |> Enum.shuffle()
       |> List.first()
 
     case is_nil(game) do
