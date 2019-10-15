@@ -29,6 +29,10 @@ defmodule Web.Router do
     plug(Web.Plugs.EnsureAdmin)
   end
 
+  pipeline :editor do
+    plug(Web.Plugs.EnsureEditor)
+  end
+
   pipeline :verified do
     plug(Web.Plugs.EnsureUserVerified)
   end
@@ -128,6 +132,18 @@ defmodule Web.Router do
     get("/submit", NewsController, :new)
 
     post("/submit", NewsController, :create)
+  end
+
+  scope "/decanter/manage", Web.Decanter.Manage, as: :decanter do
+    pipe_through([:browser, :logged_in, :editor])
+
+    get("/queue", QueueController, :index)
+
+    get("/queue/:uid/edit", QueueController, :edit)
+
+    put("/queue/:uid", QueueController, :update)
+
+    post("/queue/:uid/publish", QueueController, :publish)
   end
 
   scope "/manage", Web.Manage, as: :manage do

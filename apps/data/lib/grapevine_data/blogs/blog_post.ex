@@ -16,6 +16,7 @@ defmodule GrapevineData.Blogs.BlogPost do
     field(:status, :string, read_after_writes: true)
     field(:title, :string)
     field(:body, :string)
+    field(:published_at, :utc_datetime)
 
     belongs_to(:user, User)
 
@@ -35,6 +36,12 @@ defmodule GrapevineData.Blogs.BlogPost do
     struct
     |> cast(params, [:title, :body])
     |> put_change(:status, "draft")
+    |> validate_required([:title, :body, :user_id])
+  end
+
+  def editor_changeset(struct, params) do
+    struct
+    |> cast(params, [:title, :body])
     |> validate_required([:title, :body, :user_id])
   end
 end

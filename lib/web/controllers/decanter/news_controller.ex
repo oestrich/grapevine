@@ -45,11 +45,18 @@ defmodule Web.Decanter.NewsController do
     user = Map.get(conn.assigns, :current_user, nil)
 
     with {:ok, blog_post} <- Blogs.get(uid),
+         {:ok, blog_post} <- Blogs.check_edit_status(blog_post),
          {:ok, blog_post} <- Blogs.check_permission_to_read(user, blog_post) do
       conn
       |> assign(:blog_post, blog_post)
       |> assign(:changeset, Blogs.edit_post(blog_post))
       |> render("edit.html")
+    else
+      {:error, :locked} ->
+        {:error, :not_found}
+
+      {:error, :not_found} ->
+        {:error, :not_found}
     end
   end
 
@@ -57,6 +64,7 @@ defmodule Web.Decanter.NewsController do
     %{current_user: user} = conn.assigns
 
     with {:ok, blog_post} <- Blogs.get(uid),
+         {:ok, blog_post} <- Blogs.check_edit_status(blog_post),
          {:ok, blog_post} <- Blogs.check_permission_to_read(user, blog_post) do
       case Blogs.update(blog_post, params) do
         {:ok, blog_post} ->
@@ -68,6 +76,12 @@ defmodule Web.Decanter.NewsController do
           |> assign(:changeset, changeset)
           |> render("edit.html")
       end
+    else
+      {:error, :locked} ->
+        {:error, :not_found}
+
+      {:error, :not_found} ->
+        {:error, :not_found}
     end
   end
 

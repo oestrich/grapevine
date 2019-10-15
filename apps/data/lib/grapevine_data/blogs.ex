@@ -3,6 +3,8 @@ defmodule GrapevineData.Blogs do
   Context for blogs
   """
 
+  import Ecto.Query
+
   alias GrapevineData.Blogs.BlogPost
   alias GrapevineData.Repo
 
@@ -30,6 +32,17 @@ defmodule GrapevineData.Blogs do
   end
 
   @doc """
+  Return a list of all submitted blog posts for publication
+  """
+  def submitted_posts() do
+    BlogPost
+    |> where([bp], bp.status == "submitted")
+    |> order_by([bp], bp.inserted_at)
+    |> preload([:user])
+    |> Repo.all()
+  end
+
+  @doc """
   Check if a user can read the blog post
 
       iex> Blogs.check_permission_to_read(%{id: 10}, %{status: "published"})
@@ -39,6 +52,9 @@ defmodule GrapevineData.Blogs do
       {:ok, %{status: "published"}}
 
       iex> Blogs.check_permission_to_read(%{id: 10, role: "admin"}, %{status: "draft"})
+      {:ok, %{status: "draft"}}
+
+      iex> Blogs.check_permission_to_read(%{id: 10, role: "editor"}, %{status: "draft"})
       {:ok, %{status: "draft"}}
 
       iex> Blogs.check_permission_to_read(%{id: 10}, %{status: "draft", user_id: 10})
@@ -53,9 +69,22 @@ defmodule GrapevineData.Blogs do
 
   def check_permission_to_read(_user = %{role: "admin"}, blog_post), do: {:ok, blog_post}
 
+  def check_permission_to_read(_user = %{role: "editor"}, blog_post), do: {:ok, blog_post}
+
   def check_permission_to_read(_user = %{id: user_id}, blog_post = %{user_id: user_id}), do: {:ok, blog_post}
 
   def check_permission_to_read(_user, _blog_post), do: {:error, :not_found}
+
+  @doc """
+  Check if a blog post is editable by the author
+
+  Pre-published states only
+  """
+  def check_edit_status(blog_post = %{status: "draft"}), do: {:ok, blog_post}
+
+  def check_edit_status(blog_post = %{status: "submitted"}), do: {:ok, blog_post}
+
+  def check_edit_status(_), do: {:error, :locked}
 
   @doc """
   Create a new blog post written by a user
@@ -79,10 +108,11 @@ defmodule GrapevineData.Blogs do
   @doc """
   Publish a blog post
   """
-  def publish(blog_post) do
+  def publish(blog_post, now \\ Timex.now()) do
     blog_post
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "published")
+    |> Ecto.Changeset.put_change(:published_at, DateTime.truncate(now, :second))
     |> Repo.update()
   end
 
@@ -92,6 +122,15 @@ defmodule GrapevineData.Blogs do
   def update(blog_post, params) do
     blog_post
     |> BlogPost.update_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
+  Update a blog post, from an editor
+  """
+  def editor_update(blog_post, params) do
+    blog_post
+    |> BlogPost.editor_changeset(params)
     |> Repo.update()
   end
 end

@@ -1,0 +1,40 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Decanter", to: decanter_news_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">News</li>
+  </ol>
+</nav>
+
+<section>
+  <nav class="header">
+    <h3 class="name">The Decanter - Management</h3>
+  </nav>
+
+  <div class="row">
+    <%= render("_sidebar.html", conn: @conn) %>
+
+    <div class="col-md-10">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= Enum.map(@blog_posts, fn blog_post -> %>
+            <tr>
+              <td><%= blog_post.title %></td>
+              <td><%= blog_post.user.username %></td>
+              <td><%= TimeView.time(blog_post.updated_at) %></td>
+              <td><%= link("View", to: Routes.decanter_news_path(@conn, :show, blog_post.uid), class: "btn btn-flat") %></td>
+            </tr>
+          <% end) %>
+        </tbody>
+      <table>
+    </div>
+  </div>
+</section>

@@ -37,6 +37,13 @@ defmodule GrapevineData.Accounts do
   def is_admin?(_), do: false
 
   @doc """
+  Check for admin status on a editor
+  """
+  def is_editor?(%{role: "editor"}), do: true
+
+  def is_editor?(_), do: false
+
+  @doc """
   Register a new user
   """
   def register(params, fun) do
