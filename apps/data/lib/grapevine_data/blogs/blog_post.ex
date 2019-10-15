@@ -22,17 +22,19 @@ defmodule GrapevineData.Blogs.BlogPost do
     timestamps()
   end
 
-  def changeset(struct, user, params) do
+  def create_changeset(struct, user, params) do
     struct
     |> cast(params, [:title, :body])
+    |> put_change(:status, "draft")
     |> put_change(:user_id, user.id)
     |> validate_required([:title, :body, :user_id])
     |> foreign_key_constraint(:user_id)
   end
 
-  def changeset(struct, params) do
+  def update_changeset(struct, params) do
     struct
     |> cast(params, [:title, :body])
+    |> put_change(:status, "draft")
     |> validate_required([:title, :body, :user_id])
   end
 end

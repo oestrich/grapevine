@@ -70,4 +70,14 @@ defmodule Web.Decanter.NewsController do
       end
     end
   end
+
+  def submit(conn, %{"uid" => uid}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, blog_post} <- Blogs.get(uid),
+         {:ok, blog_post} <- Blogs.check_permission_to_read(user, blog_post) do
+      {:ok, blog_post} = Blogs.submit(blog_post)
+      redirect(conn, to: Routes.decanter_news_path(conn, :show, blog_post.uid))
+    end
+  end
 end

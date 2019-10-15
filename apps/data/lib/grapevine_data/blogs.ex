@@ -62,7 +62,7 @@ defmodule GrapevineData.Blogs do
   """
   def create(user, params) do
     %BlogPost{}
-    |> BlogPost.changeset(user, params)
+    |> BlogPost.create_changeset(user, params)
     |> Repo.insert()
   end
 
@@ -91,7 +91,7 @@ defmodule GrapevineData.Blogs do
   """
   def update(blog_post, params) do
     blog_post
-    |> BlogPost.changeset(params)
+    |> BlogPost.update_changeset(params)
     |> Repo.update()
   end
 end

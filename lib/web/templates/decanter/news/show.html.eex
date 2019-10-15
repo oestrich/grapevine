@@ -17,10 +17,18 @@
     <div class="col-md-10">
       <nav>
         <h4 class="name"><%= @blog_post.title %></h4>
+          <%= if blog_post_owned_by_user?(assigns, @blog_post) do %>
+            <span class="badge badge-secondary mr-3"><%= status(@blog_post) %></span>
+          <% end %>
         
         <div class="actions">
-          <%= if Map.has_key?(assigns, :current_user) && @current_user.id == @blog_post.user_id do %>
-            <%= link("Edit", to: Routes.decanter_news_path(@conn, :edit, @blog_post.uid), class: "btn btn-primary") %>
+
+          <%= if blog_post_owned_by_user?(assigns, @blog_post) do %>
+            <%= link("Edit", to: Routes.decanter_news_path(@conn, :edit, @blog_post.uid), class: "btn btn-secondary") %>
+          <% end %>
+
+          <%= if blog_post_owned_by_user?(assigns, @blog_post) && draft_post?(@blog_post) do %>
+            <%= link("Submit", to: Routes.decanter_news_path(@conn, :submit, @blog_post.uid), method: "post", class: "btn btn-primary") %>
           <% end %>
         </div>
       </nav>
