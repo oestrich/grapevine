@@ -9,6 +9,12 @@ defmodule Web.MarkdownView do
     |> Phoenix.HTML.raw()
   end
 
+  def parse(text, raw: false) do
+    text
+    |> Earmark.as_html!()
+    |> HtmlSanitizeEx.markdown_html()
+  end
+
   @doc """
   Strip all tags from the markdown
   """

@@ -17,6 +17,17 @@ defmodule Web.Decanter.NewsController do
     |> render("index.html")
   end
 
+  def feed(conn, _params) do
+    %{page: blog_posts} = Blogs.published_posts(page: 1, per: 20)
+
+    conn
+    |> assign(:blog_posts, blog_posts)
+    |> assign(:now, Timex.now())
+    |> put_layout(false)
+    |> put_resp_header("content-type", "application/atom+xml")
+    |> render("feed.html")
+  end
+
   def show(conn, %{"uid" => uid}) do
     user = Map.get(conn.assigns, :current_user, nil)
 

@@ -117,6 +117,8 @@ defmodule Web.Router do
 
     get("/", NewsController, :index)
 
+    get("/atom", NewsController, :feed)
+
     get("/news/:uid", NewsController, :show)
   end
 
