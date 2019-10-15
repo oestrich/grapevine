@@ -4,7 +4,8 @@ defmodule Web.Decanter.NewsView do
   alias Web.MarkdownView
   alias Web.TimeView
 
-  def blog_post_owned_by_user?(%{current_user: current_user}, blog_post) when current_user != nil do
+  def blog_post_owned_by_user?(%{current_user: current_user}, blog_post)
+      when current_user != nil do
     current_user.id == blog_post.user_id
   end
 

@@ -3,7 +3,7 @@ defmodule Web.Decanter.NewsController do
 
   alias GrapevineData.Blogs
 
-  action_fallback Web.FallbackController
+  action_fallback(Web.FallbackController)
 
   def index(conn, _params) do
     conn
