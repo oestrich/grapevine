@@ -3,5 +3,11 @@
     <li class="nav-item">
       <%= link("Submit News", to: decanter_news_path(@conn, :new), class: "nav-link") %>
     </li>
+
+    <%= if editor_or_admin?(assigns) do %>
+      <li class="nav-item">
+        <%= link("Manage", to: decanter_queue_path(@conn, :index), class: "nav-link") %>
+      </li>
+    <% end %>
   </ul>
 </div>

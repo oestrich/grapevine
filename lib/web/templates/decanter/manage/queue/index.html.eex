@@ -2,7 +2,8 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
     <li class="breadcrumb-item"><%= link("Decanter", to: decanter_news_path(@conn, :index)) %></li>
-    <li class="breadcrumb-item active">News</li>
+    <li class="breadcrumb-item"><%= link("Manage", to: decanter_queue_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Queue</li>
   </ol>
 </nav>
 
