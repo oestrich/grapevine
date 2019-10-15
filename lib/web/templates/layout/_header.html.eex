@@ -15,9 +15,11 @@
               <%= link("Chat", to: chat_path(@conn, :index), class: "nav-link") %>
             </li>
           <% end %>
-          <li class="nav-item">
-            <%= link("Decanter", to: decanter_news_path(@conn, :index), class: "nav-link") %>
-          </li>
+          <%= if decanter_enabled?() do %>
+            <li class="nav-item">
+              <%= link("Decanter", to: decanter_news_path(@conn, :index), class: "nav-link") %>
+            </li>
+          <% end %>
           <li class="nav-item">
             <%= link("Events", to: event_path(@conn, :index), class: "nav-link") %>
           </li>

@@ -2,6 +2,8 @@ import Config
 
 config(:grapevine, namespace: Web, ecto_repos: [GrapevineData.Repo])
 
+config(:grapevine, :decanter, enabled: true)
+
 config :grapevine, Web.Endpoint,
   secret_key_base: "Pqncs1RkrPq/7DiOEo/7U0DGsm503zjPQMerRQO3YVFUtOXpDq6PKI5xBfwBCWmB",
   live_view: [signing_salt: "SWvL1X6M5XJHDfJjnWxhzUU4P5wwzIjR"],

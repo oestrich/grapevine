@@ -41,6 +41,10 @@ defmodule Web.Router do
     plug(Web.Plugs.SessionToken)
   end
 
+  pipeline :decanter do
+    plug(Web.Plugs.EnsureDecanterEnabled)
+  end
+
   scope "/", Web do
     pipe_through([:browser])
 
@@ -113,7 +117,7 @@ defmodule Web.Router do
   end
 
   scope "/decanter", Web.Decanter, as: :decanter do
-    pipe_through([:browser])
+    pipe_through([:browser, :decanter])
 
     get("/", NewsController, :index)
 
@@ -123,7 +127,7 @@ defmodule Web.Router do
   end
 
   scope "/decanter", Web.Decanter, as: :decanter do
-    pipe_through([:browser, :logged_in])
+    pipe_through([:browser, :decanter, :logged_in])
 
     get("/news/:uid/edit", NewsController, :edit)
 
@@ -137,7 +141,7 @@ defmodule Web.Router do
   end
 
   scope "/decanter/manage", Web.Decanter.Manage, as: :decanter do
-    pipe_through([:browser, :logged_in, :editor])
+    pipe_through([:browser, :decanter, :logged_in, :editor])
 
     get("/queue", QueueController, :index)
 
