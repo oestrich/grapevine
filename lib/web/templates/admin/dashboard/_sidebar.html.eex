@@ -1,25 +1,27 @@
 <div class="col-md-2">
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <%= link("Dashboard", to: Routes.admin_dashboard_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Alerts", to: Routes.admin_alert_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Channels", to: Routes.admin_channel_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Client Sessions", to: Routes.admin_client_session_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Events", to: Routes.admin_event_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Games", to: Routes.admin_game_path(@conn, :index), class: "nav-link") %>
-    </li>
-    <li class="nav-item">
-      <%= link("Users", to: Routes.admin_user_path(@conn, :index), class: "nav-link") %>
-    </li>
-  </ul>
+  <div class="sidebar">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%= link("Dashboard", to: Routes.admin_dashboard_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Alerts", to: Routes.admin_alert_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Channels", to: Routes.admin_channel_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Client Sessions", to: Routes.admin_client_session_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Events", to: Routes.admin_event_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Games", to: Routes.admin_game_path(@conn, :index), class: "nav-link") %>
+      </li>
+      <li class="nav-item">
+        <%= link("Users", to: Routes.admin_user_path(@conn, :index), class: "nav-link") %>
+      </li>
+    </ul>
+  </div>
 </div>

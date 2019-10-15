@@ -1,0 +1,7 @@
+<div class="post">
+  <h4><%= link(@blog_post.title, to: Routes.decanter_news_path(@conn, :show, @blog_post.uid)) %></h4>
+  <small class="publish-dated"><%= TimeView.time(@blog_post.inserted_at) %></small>
+  <small class="user"><%= @blog_post.user.username %></small>
+
+  <%= MarkdownView.parse(@blog_post.body) %>
+</div>

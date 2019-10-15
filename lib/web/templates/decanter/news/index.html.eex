@@ -11,16 +11,12 @@
     <h3 class="name">The Decanter</h3>
   </nav>
 
-  <div class="row">
+  <div class="row mt-3">
     <%= render("_sidebar.html", assigns) %>
 
-    <div class="col-md-10">
+    <div class="col-md-9 posts list">
       <%= Enum.map(@blog_posts, fn blog_post -> %>
-        <h4><%= link(blog_post.title, to: Routes.decanter_news_path(@conn, :show, blog_post.uid)) %></h4>
-        <small class="publish-dated"><%= TimeView.time(blog_post.inserted_at) %></small>
-        <small class="user"><%= blog_post.user.username %></small>
-
-        <%= MarkdownView.parse(blog_post.body) %>
+        <%= render("_post.html", conn: @conn, blog_post: blog_post) %>
       <% end) %>
 
       <%= SharedView.pagination(path: Routes.decanter_news_path(@conn, :index), pagination: @pagination) %>

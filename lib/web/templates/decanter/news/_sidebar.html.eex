@@ -1,17 +1,27 @@
-<div class="col-md-2">
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <%= link("Submit News", to: Routes.decanter_news_path(@conn, :new), class: "nav-link") %>
-    </li>
-
-    <li class="nav-item">
-      <%= link("My News", to: Routes.decanter_draft_path(@conn, :index), class: "nav-link") %>
-    </li>
-
-    <%= if editor_or_admin?(assigns) do %>
+<div class="col-md-3">
+  <div class="sidebar">
+    <ul class="nav flex-column">
       <li class="nav-item">
-        <%= link("Manage", to: Routes.decanter_queue_path(@conn, :index), class: "nav-link") %>
+        <%= link("Current News", to: Routes.decanter_news_path(@conn, :index), class: "nav-link") %>
       </li>
-    <% end %>
-  </ul>
+
+      <%= if editor_or_admin?(assigns) do %>
+        <li class="nav-item">
+          <%= link("Manage", to: Routes.decanter_queue_path(@conn, :index), class: "nav-link") %>
+        </li>
+      <% end %>
+
+      <%= if Map.has_key?(assigns, :current_user) do %>
+        <li class="nav-item">
+          <%= link("My News", to: Routes.decanter_draft_path(@conn, :index), class: "nav-link") %>
+        </li>
+      <% end %>
+
+      <li class="nav-item">
+        <%= link(to: Routes.decanter_news_path(@conn, :new), class: "nav-link") do %>
+          <i class="fa fa-plus"></i> Submit News
+        <% end %>
+      </li>
+    </ul>
+  </div>
 </div>

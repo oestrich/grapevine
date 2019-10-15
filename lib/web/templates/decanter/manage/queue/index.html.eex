@@ -15,27 +15,29 @@
   <div class="row">
     <%= render("_sidebar.html", conn: @conn) %>
 
-    <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Last Updated</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@blog_posts, fn blog_post -> %>
+    <div class="col-md-9">
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= blog_post.title %></td>
-              <td><%= blog_post.user.username %></td>
-              <td><%= TimeView.time(blog_post.updated_at) %></td>
-              <td><%= link("View", to: Routes.decanter_news_path(@conn, :show, blog_post.uid), class: "btn btn-flat") %></td>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@blog_posts, fn blog_post -> %>
+              <tr>
+                <td><%= blog_post.title %></td>
+                <td><%= blog_post.user.username %></td>
+                <td><%= TimeView.time(blog_post.updated_at) %></td>
+                <td><%= link("View", to: Routes.decanter_news_path(@conn, :show, blog_post.uid), class: "btn btn-flat") %></td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

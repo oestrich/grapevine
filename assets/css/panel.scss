@@ -27,3 +27,15 @@ section {
     }
   }
 }
+
+.panel {
+  background-color: $white;
+  border: 2px solid $grey;
+  border-radius: 4px;
+
+  padding: 16px;
+
+  @media only screen and (max-device-width: 736px) {
+    margin-bottom: 24px;
+  }
+}

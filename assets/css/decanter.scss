@@ -1,0 +1,12 @@
+@import "colors";
+
+.posts.list {
+  .post {
+    background-color: $white;
+    border: 2px solid $grey;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 16px;
+    align-items: center;
+  }
+}
