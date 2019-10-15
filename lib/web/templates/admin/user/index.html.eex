@@ -15,30 +15,32 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Verified?</th>
-            <th>Registered at</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@users, fn user -> %>
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= user.username %></td>
-              <td><%= if user.email_verified_at, do: "Yes", else: "No" %></td>
-              <td><%= TimeView.time(user.inserted_at) %></td>
-              <td>
-                <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-flat") %>
-              </td>
+              <th>Name</th>
+              <th>Verified?</th>
+              <th>Registered at</th>
+              <th>Actions</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@users, fn user -> %>
+              <tr>
+                <td><%= user.username %></td>
+                <td><%= if user.email_verified_at, do: "Yes", else: "No" %></td>
+                <td><%= TimeView.time(user.inserted_at) %></td>
+                <td>
+                  <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-flat") %>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
 
-      <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
+        <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
+      </div>
     </div>
   </div>
 </section>

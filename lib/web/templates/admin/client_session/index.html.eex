@@ -15,26 +15,28 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@sessions, fn session -> %>
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= link(session.game.name, to: Routes.admin_game_path(@conn, :show, session.game_id)) %></td>
-              <td><%= TimeView.time(session.started_at) %></td>
-              <td><%= if session.closed_at, do: TimeView.time(session.closed_at) %></td>
+              <th>Game</th>
+              <th>Start Time</th>
+              <th>End Time</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@sessions, fn session -> %>
+              <tr>
+                <td><%= link(session.game.name, to: Routes.admin_game_path(@conn, :show, session.game_id)) %></td>
+                <td><%= TimeView.time(session.started_at) %></td>
+                <td><%= if session.closed_at, do: TimeView.time(session.closed_at) %></td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
 
-      <%= SharedView.pagination(path: Routes.admin_client_session_path(@conn, :index), pagination: @pagination) %>
+        <%= SharedView.pagination(path: Routes.admin_client_session_path(@conn, :index), pagination: @pagination) %>
+      </div>
     </div>
   </div>
 </section>

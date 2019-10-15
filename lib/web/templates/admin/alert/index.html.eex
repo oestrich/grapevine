@@ -15,15 +15,17 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <ul>
-        <%= Enum.map(@alerts, fn alert -> %>
-          <li>
-            <h5><%= alert.title %></h5>
-            <%= TimeView.time(alert.inserted_at) %>
-            <p><%= alert.body %></p>
-          </li>
-        <% end) %>
-      </ul>
+      <div class="panel">
+        <ul>
+          <%= Enum.map(@alerts, fn alert -> %>
+            <li>
+              <h5><%= alert.title %></h5>
+              <%= TimeView.time(alert.inserted_at) %>
+              <p><%= alert.body %></p>
+            </li>
+          <% end) %>
+        </ul>
+      </div>
     </div>
   </div>
 </section>

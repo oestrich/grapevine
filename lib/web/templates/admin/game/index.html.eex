@@ -15,31 +15,33 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Short Name</th>
-            <th>Display?</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@games, fn game -> %>
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= game.id %></td>
-              <td><%= game.name %></td>
-              <td><%= game.short_name %></td>
-              <td><%= game.display %></td>
-              <td>
-                <%= link("View", to: Routes.admin_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
-                <%= link("Profile", to: Routes.game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
-              </td>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Short Name</th>
+              <th>Display?</th>
+              <th>Actions</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@games, fn game -> %>
+              <tr>
+                <td><%= game.id %></td>
+                <td><%= game.name %></td>
+                <td><%= game.short_name %></td>
+                <td><%= game.display %></td>
+                <td>
+                  <%= link("View", to: Routes.admin_game_path(@conn, :show, game.id), class: "btn btn-flat") %>
+                  <%= link("Profile", to: Routes.game_path(@conn, :show, game.short_name), class: "btn btn-flat") %>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

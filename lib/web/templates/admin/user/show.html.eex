@@ -15,34 +15,36 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <td><%= @user.id %></td>
-          </tr>
-          <tr>
-            <th>UID</th>
-            <td><%= @user.uid %></td>
-          </tr>
-          <tr>
-            <th>Username</th>
-            <td><%= @user.username %></td>
-          </tr>
-          <tr>
-            <th>Email</th>
-            <td><%= @user.email %></td>
-          </tr>
-          <tr>
-            <th>Email verified?</th>
-            <td><%= if @user.email_verified_at, do: "Yes", else: "No" %></td>
-          </tr>
-          <tr>
-            <th>Signed up at</th>
-            <td><%= TimeView.time(@user.inserted_at) %></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="panel">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <td><%= @user.id %></td>
+            </tr>
+            <tr>
+              <th>UID</th>
+              <td><%= @user.uid %></td>
+            </tr>
+            <tr>
+              <th>Username</th>
+              <td><%= @user.username %></td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td><%= @user.email %></td>
+            </tr>
+            <tr>
+              <th>Email verified?</th>
+              <td><%= if @user.email_verified_at, do: "Yes", else: "No" %></td>
+            </tr>
+            <tr>
+              <th>Signed up at</th>
+              <td><%= TimeView.time(@user.inserted_at) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

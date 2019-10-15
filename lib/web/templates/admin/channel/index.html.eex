@@ -15,26 +15,28 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Public?</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@channels, fn channel -> %>
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= channel.name %></td>
-              <td><%= if !channel.hidden, do: "Yes", else: "No" %></td>
-              <td>
-                <%= link("View", to: Routes.admin_channel_path(@conn, :show, channel.name), class: "btn btn-flat") %>
-              </td>
+              <th>Name</th>
+              <th>Public?</th>
+              <th>Actions</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@channels, fn channel -> %>
+              <tr>
+                <td><%= channel.name %></td>
+                <td><%= if !channel.hidden, do: "Yes", else: "No" %></td>
+                <td>
+                  <%= link("View", to: Routes.admin_channel_path(@conn, :show, channel.name), class: "btn btn-flat") %>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

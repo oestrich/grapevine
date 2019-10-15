@@ -19,41 +19,42 @@
     <%= DashboardView.render("_sidebar.html", conn: @conn) %>
 
     <div class="col-md-10">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Title</th>
-            <th>Start Date</th>
-            <th>End End Date</th>
-            <th>View count</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= Enum.map(@events, fn event -> %>
+      <div class="panel">
+        <table class="table">
+          <thead>
             <tr>
-              <td>
-                <%= if event.game do %>
-                  <%= link(event.game.name, to: Routes.admin_game_path(@conn, :show, event.game_id)) %>
-                <% else %>
-                  System Event
-                <% end %>
-              </td>
-              <td><%= event.title %></td>
-              <td><%= event.start_date %></td>
-              <td><%= event.end_date %></td>
-              <td><%= event.view_count %></td>
-              <td>
-                <%= link("View", to: Routes.admin_event_path(@conn, :show, event.uid), class: "btn btn-flat") %>
-                <%= link("Edit", to: Routes.admin_event_path(@conn, :edit, event.uid), class: "btn btn-flat") %>
-              </td>
+              <th>Game</th>
+              <th>Title</th>
+              <th>Start Date</th>
+              <th>End End Date</th>
+              <th>View count</th>
+              <th>Actions</th>
             </tr>
-          <% end) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <%= Enum.map(@events, fn event -> %>
+              <tr>
+                <td>
+                  <%= if event.game do %>
+                    <%= link(event.game.name, to: Routes.admin_game_path(@conn, :show, event.game_id)) %>
+                  <% else %>
+                    System Event
+                  <% end %>
+                </td>
+                <td><%= event.title %></td>
+                <td><%= event.start_date %></td>
+                <td><%= event.end_date %></td>
+                <td><%= event.view_count %></td>
+                <td>
+                  <%= link("View", to: Routes.admin_event_path(@conn, :show, event.uid), class: "btn btn-flat") %>
+                </td>
+              </tr>
+            <% end) %>
+          </tbody>
+        </table>
 
-      <%= SharedView.pagination(path: Routes.admin_client_session_path(@conn, :index), pagination: @pagination) %>
+        <%= SharedView.pagination(path: Routes.admin_client_session_path(@conn, :index), pagination: @pagination) %>
+      </div>
     </div>
   </div>
 </section>
