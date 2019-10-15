@@ -29,12 +29,20 @@ defmodule Web.Router do
     plug(Web.Plugs.EnsureAdmin)
   end
 
+  pipeline :editor do
+    plug(Web.Plugs.EnsureEditor)
+  end
+
   pipeline :verified do
     plug(Web.Plugs.EnsureUserVerified)
   end
 
   pipeline :session_token do
     plug(Web.Plugs.SessionToken)
+  end
+
+  pipeline :decanter do
+    plug(Web.Plugs.EnsureDecanterEnabled)
   end
 
   scope "/", Web do
@@ -106,6 +114,44 @@ defmodule Web.Router do
     pipe_through([:api])
 
     post("/session_tokens", SessionTokenController, :create)
+  end
+
+  scope "/decanter", Web.Decanter, as: :decanter do
+    pipe_through([:browser, :decanter, :logged_in])
+
+    get("/news/mine", DraftController, :index)
+
+    get("/news/:uid/edit", NewsController, :edit)
+
+    put("/news/:uid", NewsController, :update)
+
+    post("/news/:uid/submit", NewsController, :submit)
+
+    get("/submit", NewsController, :new)
+
+    post("/submit", NewsController, :create)
+  end
+
+  scope "/decanter", Web.Decanter, as: :decanter do
+    pipe_through([:browser, :decanter])
+
+    get("/", NewsController, :index)
+
+    get("/atom", NewsController, :feed)
+
+    get("/news/:uid", NewsController, :show)
+  end
+
+  scope "/decanter/manage", Web.Decanter.Manage, as: :decanter do
+    pipe_through([:browser, :decanter, :logged_in, :editor])
+
+    get("/queue", QueueController, :index)
+
+    get("/queue/:uid/edit", QueueController, :edit)
+
+    put("/queue/:uid", QueueController, :update)
+
+    post("/queue/:uid/publish", QueueController, :publish)
   end
 
   scope "/manage", Web.Manage, as: :manage do

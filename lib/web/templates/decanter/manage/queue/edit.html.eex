@@ -1,0 +1,19 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link("Home", to: page_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item"><%= link("Decanter", to: decanter_news_path(@conn, :index)) %></li>
+    <li class="breadcrumb-item active">Submit News</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <section>
+      <h3>Edit News</h3>
+
+      <p class="lead">Submit your game updates, client updates, and anything else related to text gaming to The Decanter.</p>
+
+      <%= NewsView.render("_form.html", conn: @conn, changeset: @changeset, url: Routes.decanter_queue_path(@conn, :update, @blog_post.uid), submit: "Update") %>
+    </section>
+  </div>
+</div>

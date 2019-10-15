@@ -32,6 +32,7 @@ jobs:
         MIX_ENV: test
     - name: Verify application
       run: |
+        mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo
         mix test
