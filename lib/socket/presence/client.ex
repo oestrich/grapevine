@@ -28,14 +28,13 @@ defmodule Socket.Presence.Client do
   end
 
   defp append_grapevine(games) do
-    grapevine_presence =
-      %Socket.Presence.State{
-        game: %GrapevineApplication{},
-        players: ["system"],
-        channels: [],
-        supports: ["channels", "players", "tells"],
-        timestamp: Timex.now()
-      }
+    grapevine_presence = %Socket.Presence.State{
+      game: %GrapevineApplication{},
+      players: ["system"],
+      channels: [],
+      supports: ["channels", "players", "tells"],
+      timestamp: Timex.now()
+    }
 
     [grapevine_presence | games]
   end

@@ -1,7 +1,7 @@
 defmodule Web.SessionTokenController do
   use Web, :controller
 
-  plug Web.Plugs.SessionToken, api: true
+  plug(Web.Plugs.SessionToken, api: true)
 
   def create(conn, _params) do
     conn

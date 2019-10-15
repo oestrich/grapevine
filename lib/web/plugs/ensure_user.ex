@@ -11,7 +11,7 @@ defmodule Web.Plugs.EnsureUser do
 
   def init(default), do: default
 
-  def call(conn, [api: true]) do
+  def call(conn, api: true) do
     case conn.assigns do
       %{current_user: current_user} when current_user != nil ->
         conn

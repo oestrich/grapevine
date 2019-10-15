@@ -5,7 +5,7 @@ defmodule Web.ErrorViewTest do
   import Phoenix.View
 
   test "renders 404.html", %{conn: conn} do
-    assert render_to_string(Web.ErrorView, "404.html", [conn: conn]) =~ ~r/Not Found/
+    assert render_to_string(Web.ErrorView, "404.html", conn: conn) =~ ~r/Not Found/
   end
 
   test "renders 500.html" do

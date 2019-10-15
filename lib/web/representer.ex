@@ -4,7 +4,7 @@ defmodule Representer do
   """
 
   @extensions [
-    "json",
+    "json"
   ]
 
   defguard known_extension?(extension) when extension in @extensions

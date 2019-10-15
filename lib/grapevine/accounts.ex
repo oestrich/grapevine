@@ -8,7 +8,6 @@ defmodule Grapevine.Accounts do
   alias Grapevine.Emails
   alias Grapevine.Mailer
 
-
   defdelegate change_password(user, current_password, params), to: Accounts
 
   defdelegate edit(user), to: Accounts

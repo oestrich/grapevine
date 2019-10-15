@@ -66,7 +66,9 @@ defmodule Socket.Web.Response do
     {:ok, response, state}
   end
 
-  def respond_to(%{value: {:disconnect, :limit_exceeded}}, state) do
+  def respond_to(%{value: {:disconnect, :limit_exceeded, rate_limit}}, state) do
+    :telemetry.execute([:grapevine, :events, :rate_limited], rate_limit)
+
     response = %{
       "event" => "authenticate",
       "status" => "failure",

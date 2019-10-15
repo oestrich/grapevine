@@ -10,7 +10,7 @@ defmodule Web.Plugs.FetchUser do
 
   def init(default), do: default
 
-  def call(conn, [api: true]) do
+  def call(conn, api: true) do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> token] ->
         with {:ok, access_token} <- Authorizations.get_token(token),

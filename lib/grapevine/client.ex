@@ -15,7 +15,8 @@ defmodule Grapevine.Client do
   @doc """
   Send a tell to a player
   """
-  @callback send_tell(to_game :: String.t(), to_player :: String.t(), message :: String.t()) :: :ok
+  @callback send_tell(to_game :: String.t(), to_player :: String.t(), message :: String.t()) ::
+              :ok
 
   @client Application.get_env(:grapevine, :modules)[:client]
 

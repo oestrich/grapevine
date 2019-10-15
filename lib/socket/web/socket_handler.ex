@@ -32,7 +32,10 @@ defmodule Socket.Web.SocketHandler do
     state = %State{
       status: "inactive",
       rate_limits: %{
-        "channels/send" => %RateLimit{limit: 10, rate_per_second: 2, max_total_limited: 10}
+        "global" => %RateLimit{limit: 100, rate_per_second: 20},
+        "channels/send" => %RateLimit{limit: 10, rate_per_second: 2},
+        "channels/subscribe" => %RateLimit{limit: 5, rate_per_second: 1},
+        "channels/unsubscribe" => %RateLimit{limit: 5, rate_per_second: 1}
       }
     }
 
@@ -43,7 +46,7 @@ defmodule Socket.Web.SocketHandler do
     Logger.debug(message, type: :socket)
 
     with {:ok, message} <- Jason.decode(message),
-         {:ok, response, state} <- Router.receive(state, message) do
+         {:ok, response, state} <- Router.process(state, message) do
       respond(state, response)
     else
       {:ok, state} ->

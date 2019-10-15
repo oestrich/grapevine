@@ -3,5 +3,5 @@ defmodule Socket.Presence.GrapevineApplication do
   A struct resembling a Game
   """
 
-  defstruct [id: -1, name: "Grapevine", short_name: "grapevine", display: false]
+  defstruct id: -1, name: "Grapevine", short_name: "grapevine", display: false
 end

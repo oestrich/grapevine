@@ -115,25 +115,31 @@ defmodule Grapevine.TestHelpers do
   end
 
   def create_authorization(user, game) do
-    {:ok, authorization} = Authorizations.start_auth(user, game, %{
-      "state" => "my+state",
-      "redirect_uri" => "https://example.com/oauth/callback",
-      "scope" => "profile"
-    })
+    {:ok, authorization} =
+      Authorizations.start_auth(user, game, %{
+        "state" => "my+state",
+        "redirect_uri" => "https://example.com/oauth/callback",
+        "scope" => "profile"
+      })
+
     {:ok, authorization} = Authorizations.authorize(authorization)
 
     authorization
   end
 
   def create_gauge(game, attributes) do
-    attributes = Map.merge(%{
-      name: "HP",
-      package: "Char 1",
-      message: "Char.Vitals",
-      value: "hp",
-      max: "maxhp",
-      color: "red"
-    }, attributes)
+    attributes =
+      Map.merge(
+        %{
+          name: "HP",
+          package: "Char 1",
+          message: "Char.Vitals",
+          value: "hp",
+          max: "maxhp",
+          color: "red"
+        },
+        attributes
+      )
 
     {:ok, gauge} = Gauges.create(game, attributes)
     gauge

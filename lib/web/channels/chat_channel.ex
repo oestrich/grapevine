@@ -38,7 +38,7 @@ defmodule Web.ChatChannel do
     message = %Broadcast{
       channel: channel,
       user: user,
-      message: message,
+      message: message
     }
 
     Client.broadcast(message)

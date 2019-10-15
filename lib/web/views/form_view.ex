@@ -128,7 +128,7 @@ defmodule Web.FormView do
         field_label(form, field, opts),
         content_tag(:div, class: "col-md-9") do
           [
-            file_input(form, field, [class: "form-control"]),
+            file_input(form, field, class: "form-control"),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
