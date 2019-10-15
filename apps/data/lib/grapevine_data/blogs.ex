@@ -38,7 +38,7 @@ defmodule GrapevineData.Blogs do
   def submitted_posts() do
     BlogPost
     |> where([bp], bp.status == "submitted")
-    |> order_by([bp], bp.inserted_at)
+    |> order_by([bp], desc: bp.inserted_at)
     |> preload([:user])
     |> Repo.all()
   end
