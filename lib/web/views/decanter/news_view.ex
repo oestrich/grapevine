@@ -3,6 +3,7 @@ defmodule Web.Decanter.NewsView do
 
   alias GrapevineData.Accounts
   alias Web.MarkdownView
+  alias Web.SharedView
   alias Web.TimeView
 
   def blog_post_owned_by_user?(%{current_user: user}, blog_post) when user != nil do

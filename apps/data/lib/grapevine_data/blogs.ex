@@ -7,6 +7,7 @@ defmodule GrapevineData.Blogs do
 
   alias GrapevineData.Blogs.BlogPost
   alias GrapevineData.Repo
+  alias Stein.Pagination
 
   @doc """
   Changeset for a new blog post
@@ -40,6 +41,21 @@ defmodule GrapevineData.Blogs do
     |> order_by([bp], bp.inserted_at)
     |> preload([:user])
     |> Repo.all()
+  end
+
+  @doc """
+  Return a list of all submitted blog posts for publication
+  """
+  def published_posts(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    query =
+      BlogPost
+      |> where([bp], bp.status == "published")
+      |> order_by([bp], desc: bp.inserted_at)
+      |> preload([:user])
+
+    Pagination.paginate(Repo, query, opts)
   end
 
   @doc """

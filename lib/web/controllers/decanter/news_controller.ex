@@ -5,8 +5,15 @@ defmodule Web.Decanter.NewsController do
 
   action_fallback(Web.FallbackController)
 
+  plug(Web.Plugs.FetchPage when action in [:index])
+
   def index(conn, _params) do
+    %{page: page, per: per} = conn.assigns
+    %{page: blog_posts, pagination: pagination} = Blogs.published_posts(page: page, per: per)
+
     conn
+    |> assign(:blog_posts, blog_posts)
+    |> assign(:pagination, pagination)
     |> render("index.html")
   end
 
