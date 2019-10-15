@@ -59,6 +59,17 @@ defmodule GrapevineData.Blogs do
   end
 
   @doc """
+  Return a list of all submitted blog posts for publication
+  """
+  def posts_for(user) do
+    BlogPost
+    |> where([bp], bp.user_id == ^user.id)
+    |> order_by([bp], desc: bp.inserted_at)
+    |> preload([:user])
+    |> Repo.all()
+  end
+
+  @doc """
   Check if a user can read the blog post
 
       iex> Blogs.check_permission_to_read(%{id: 10}, %{status: "published"})

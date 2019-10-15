@@ -117,17 +117,9 @@ defmodule Web.Router do
   end
 
   scope "/decanter", Web.Decanter, as: :decanter do
-    pipe_through([:browser, :decanter])
-
-    get("/", NewsController, :index)
-
-    get("/atom", NewsController, :feed)
-
-    get("/news/:uid", NewsController, :show)
-  end
-
-  scope "/decanter", Web.Decanter, as: :decanter do
     pipe_through([:browser, :decanter, :logged_in])
+
+    get("/news/mine", DraftController, :index)
 
     get("/news/:uid/edit", NewsController, :edit)
 
@@ -138,6 +130,16 @@ defmodule Web.Router do
     get("/submit", NewsController, :new)
 
     post("/submit", NewsController, :create)
+  end
+
+  scope "/decanter", Web.Decanter, as: :decanter do
+    pipe_through([:browser, :decanter])
+
+    get("/", NewsController, :index)
+
+    get("/atom", NewsController, :feed)
+
+    get("/news/:uid", NewsController, :show)
   end
 
   scope "/decanter/manage", Web.Decanter.Manage, as: :decanter do
