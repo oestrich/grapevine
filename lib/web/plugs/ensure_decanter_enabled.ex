@@ -6,6 +6,7 @@ defmodule Web.Plugs.EnsureDecanterEnabled do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias GrapevineData.Accounts
   alias Web.ErrorView
   alias Web.LayoutView
 
@@ -14,7 +15,7 @@ defmodule Web.Plugs.EnsureDecanterEnabled do
   def init(default), do: default
 
   def call(conn, _opts) do
-    case @decanter_enabled do
+    case editor_or_admin?(conn.assigns) || @decanter_enabled do
       true ->
         conn
 
@@ -27,4 +28,10 @@ defmodule Web.Plugs.EnsureDecanterEnabled do
         |> halt()
     end
   end
+
+  def editor_or_admin?(%{current_user: user}) when user != nil do
+    Accounts.is_admin?(user) || Accounts.is_editor?(user)
+  end
+
+  def editor_or_admin?(_), do: false
 end
