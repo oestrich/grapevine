@@ -1,11 +1,13 @@
 admin
 administrator
 chat
+decanter
 games
 grapevine
 grapevine
 imm
 immortal
+news
 register
 root
 sign-in
