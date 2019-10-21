@@ -150,6 +150,7 @@
 <p>The following servers/frameworks have built-in support or a library to import for Grapevine support:</p>
 
 <ul>
+  <li><%= link("C#", to: "https://github.com/swiftausterity/grapenet") %></li>
   <li><%= link("CircleMUD (C++)", to: "https://github.com/halimcme/worldofpain") %></li>
   <li><%= link("Crystal", to: "https://github.com/proxima/gossip-crystal") %></li>
   <li><%= link("Elixir", to: "https://github.com/oestrich/gossip-elixir") %></li>
