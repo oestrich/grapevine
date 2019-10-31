@@ -21,7 +21,8 @@ defmodule Web.EventController do
       conn
       |> assign(:event, event)
       |> assign(:game, event.game)
-      |> assign(:title, "Event - Grapevine")
+      |> assign(:title, "#{event.name} - Grapevine")
+      |> assign(:open_graph_title, event.name)
       |> assign(:open_graph_url, Routes.event_url(conn, :show, event.uid))
       |> render("show.html")
     end
