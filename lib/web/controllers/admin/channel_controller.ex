@@ -6,7 +6,7 @@ defmodule Web.Admin.ChannelController do
 
   def index(conn, _params) do
     conn
-    |> assign(:channels, Channels.all())
+    |> assign(:channels, Channels.all(include_hidden: true))
     |> render("index.html")
   end
 
