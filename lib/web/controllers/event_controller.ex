@@ -21,10 +21,14 @@ defmodule Web.EventController do
       conn
       |> assign(:event, event)
       |> assign(:game, event.game)
-      |> assign(:title, "#{event.name} - Grapevine")
-      |> assign(:open_graph_title, event.name)
+      |> assign(:title, "#{event.title} - Grapevine")
+      |> assign(:open_graph_title, open_graph_title(event))
       |> assign(:open_graph_url, Routes.event_url(conn, :show, event.uid))
       |> render("show.html")
     end
   end
+
+  def open_graph_title(%{game: nil, title: title}), do: title
+
+  def open_graph_title(%{game: game, title: title}), do: "#{game.name} - #{title}"
 end
