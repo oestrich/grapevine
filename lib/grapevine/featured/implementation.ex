@@ -50,6 +50,7 @@ defmodule Grapevine.Featured.Implementation do
     |> Enum.reduce(multi, fn {game, order}, multi ->
       changeset =
         game
+        |> Map.put(:featured_order, nil)
         |> Ecto.Changeset.change()
         |> Ecto.Changeset.put_change(:featured_order, order)
 
@@ -97,7 +98,6 @@ defmodule Grapevine.Featured.Implementation do
       {:ok, game} = Games.get(game_id)
       game
     end)
-    |> log_games()
   end
 
   def random_games_using_grapevine(opts) do
@@ -110,7 +110,6 @@ defmodule Grapevine.Featured.Implementation do
     |> base_query(already_picked_game_ids)
     |> where([g], g.last_seen_at > ^active_cutoff)
     |> Repo.all()
-    |> log_games()
     |> Enum.shuffle()
     |> Enum.take(limit)
   end
@@ -125,7 +124,6 @@ defmodule Grapevine.Featured.Implementation do
     |> base_query(already_picked_game_ids)
     |> where([g], g.telnet_last_seen_at > ^mssp_cutoff)
     |> Repo.all()
-    |> log_games()
     |> Enum.shuffle()
     |> Enum.take(limit)
   end
@@ -134,12 +132,5 @@ defmodule Grapevine.Featured.Implementation do
     query
     |> where([g], g.display == true and g.featurable and not is_nil(g.cover_key))
     |> where([g], g.id not in ^already_picked_game_ids)
-  end
-
-  defp log_games(games) do
-    Enum.map(games, fn game ->
-      Logger.info("Picking #{game.name} for featured", type: :featured)
-      game
-    end)
   end
 end
