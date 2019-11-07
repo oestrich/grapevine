@@ -10,3 +10,9 @@ mix compile --force --warnings-as-errors
 mix test
 mix credo
 cd ../..
+
+cd apps/socket
+mix compile --force --warnings-as-errors
+mix test
+mix credo
+cd ../..

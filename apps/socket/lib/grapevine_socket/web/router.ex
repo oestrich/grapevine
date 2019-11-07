@@ -68,9 +68,10 @@ defmodule GrapevineSocket.Web.Router do
   Process incoming text through a global rate limit
   """
   def process(state, frame) do
-    with {:ok, state} <- RateLimiter.check_rate_limit(state, "global") do
-      __MODULE__.receive(state, frame)
-    else
+    case  RateLimiter.check_rate_limit(state, "global") do
+      {:ok, state} ->
+        __MODULE__.receive(state, frame)
+
       {:disconnect, :limit_exceeded, rate_limit} ->
         :telemetry.execute([:grapevine, :events, :rate_limited], rate_limit)
         {:disconnect, %{status: "failure", error: "rate limit exceeded, goodbye"}, state}

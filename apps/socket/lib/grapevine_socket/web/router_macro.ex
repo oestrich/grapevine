@@ -57,12 +57,13 @@ defmodule GrapevineSocket.Web.RouterMacro do
   def parse_event(module, flag, {:event, _, [event, fun]}) do
     quote do
       def receive(state = %{status: "active"}, event = %{"event" => unquote(event)}) do
-        with {:ok, :support_present} <- Request.check_support_flag(state, unquote(flag)) do
-          state
-          |> unquote(module).unquote(fun)(event)
-          |> Response.wrap(event, unquote(flag))
-          |> Response.respond_to(state)
-        else
+        case Request.check_support_flag(state, unquote(flag)) do
+          {:ok, :support_present} ->
+            state
+            |> unquote(module).unquote(fun)(event)
+            |> Response.wrap(event, unquote(flag))
+            |> Response.respond_to(state)
+
           {:error, :support_missing} ->
             {:error, :support_missing}
             |> Response.wrap(event, unquote(flag))

@@ -27,6 +27,7 @@ defmodule GrapevineSocket.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:grapevine_data, path: "../data"},
       {:jason, "~> 1.1"},
