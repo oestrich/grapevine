@@ -1,5 +1,7 @@
 import Config
 
+config :grapevine_socket, http: [port: 4111]
+
 config :bcrypt_elixir, :log_rounds, 4
 config :logger, level: :warn
 

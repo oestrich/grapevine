@@ -5,7 +5,7 @@ defmodule Metrics.GameInstrumenter do
 
   use Prometheus.Metric
 
-  alias Socket.Presence
+  alias GrapevineSocket.Presence
 
   @doc false
   def setup() do
