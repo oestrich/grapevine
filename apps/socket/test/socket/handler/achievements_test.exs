@@ -1,5 +1,5 @@
 defmodule Socket.Handler.AchievementsTest do
-  use Grapevine.DataCase
+  use GrapevineSocket.DataCase
 
   alias Socket.Handler.Achievements
   alias Socket.Web.State

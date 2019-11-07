@@ -19,7 +19,7 @@ config(:grapevine, Grapevine.Mailer, alert_to: [])
 
 config(:grapevine, :errors, report: false)
 
-config(:grapevine, :socket, tls: false)
+config(:grapevine_socket, tls: false)
 
 # Configures Elixir's Logger
 config(:bamboo, :json_library, Jason)

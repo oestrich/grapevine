@@ -1,5 +1,5 @@
 defmodule Socket.PresenceTest do
-  use Grapevine.DataCase
+  use GrapevineSocket.DataCase
 
   alias Socket.Presence
 

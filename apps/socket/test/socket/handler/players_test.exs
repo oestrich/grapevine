@@ -1,5 +1,5 @@
 defmodule Socket.Handler.PlayersTest do
-  use Grapevine.DataCase
+  use GrapevineSocket.DataCase
 
   alias Socket.Presence
   alias Socket.Web.Router

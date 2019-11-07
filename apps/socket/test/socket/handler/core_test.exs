@@ -1,5 +1,5 @@
 defmodule Socket.Handler.CoreTest do
-  use Grapevine.DataCase
+  use GrapevineSocket.DataCase
 
   alias Socket.Handler.Core
   alias Socket.Handler.Core.Heartbeat

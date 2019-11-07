@@ -44,6 +44,7 @@ defmodule Grapevine.Mixfile do
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:gettext, "~> 0.11"},
       {:grapevine_data, path: "./apps/data"},
+      {:grapevine_socket, path: "./apps/socket"},
       {:grapevine_telnet, path: "./apps/telnet/", runtime: false},
       {:hackney, "~> 1.9"},
       {:html_sanitize_ex, "~> 1.3"},

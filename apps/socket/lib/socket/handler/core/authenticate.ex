@@ -90,7 +90,7 @@ defmodule Socket.Handler.Core.Authenticate do
       status: "success",
       payload: %{
         unicode: "✔️",
-        version: Grapevine.version()
+        version: GrapevineSocket.version()
       }
     }
 

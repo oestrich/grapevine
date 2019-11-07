@@ -152,8 +152,6 @@ defmodule Socket.Handler.Achievements do
     Helps contain what each event looks look as a response
     """
 
-    alias Web.ErrorHelpers
-
     def event("delete", %{ref: ref, achievement: achievement}) do
       %{
         "event" => "achievements/delete",
@@ -166,7 +164,12 @@ defmodule Socket.Handler.Achievements do
     end
 
     def event("errors", %{ref: ref, event: event, changeset: changeset}) do
-      errors = Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
+      errors =
+        Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+          Enum.reduce(opts, msg, fn {key, value}, acc ->
+            String.replace(acc, "%{#{key}}", to_string(value))
+          end)
+        end)
 
       %{
         "event" => event,

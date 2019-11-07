@@ -1,5 +1,5 @@
 defmodule Socket.Web.SocketHandlerTest do
-  use Grapevine.DataCase
+  use GrapevineSocket.DataCase
 
   alias Socket.RateLimit
   alias Socket.Web.SocketHandler

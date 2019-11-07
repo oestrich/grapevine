@@ -13,7 +13,6 @@ defmodule Grapevine.Application do
     children = [
       cluster_supervisor(),
       supervisor(Web.Endpoint, []),
-      {Socket.Application, [name: Socket.Application]},
       {Grapevine.Presence, [name: Grapevine.Presence]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
