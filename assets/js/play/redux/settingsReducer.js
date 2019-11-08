@@ -7,6 +7,7 @@ const INITITAL_STATE = {
   open: false,
   font: "Monaco",
   fontSize: 16,
+  lineHeight: 1.5,
 }
 
 export const settingsSetFont = (state, action) => {
@@ -17,6 +18,10 @@ export const settingsSetFontSize = (state, action) => {
   return {...state, fontSize: parseInt(action.fontSize)};
 };
 
+export const settingsSetLineHeight = (state, action) => {
+  return {...state, lineHeight: parseFloat(action.lineHeight)};
+};
+
 export const settingsToggle = (state, action) => {
   return {...state, open: !state.open};
 };
@@ -24,6 +29,7 @@ export const settingsToggle = (state, action) => {
 export const HANDLERS = {
   [Types.SETTINGS_SET_FONT]: settingsSetFont,
   [Types.SETTINGS_SET_FONT_SIZE]: settingsSetFontSize,
+  [Types.SETTINGS_SET_LINE_HEIGHT]: settingsSetLineHeight,
   [Types.SETTINGS_TOGGLE]: settingsToggle,
 }
 

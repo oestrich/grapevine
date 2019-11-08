@@ -25,4 +25,12 @@ describe("settings reducer", () => {
 
     expect(state).toEqual({fontSize: 20});
   });
+
+  test("sets the line height", () => {
+    let state = {lineHeight: 24};
+
+    state = settingsReducer(state, Creators.settingsSetLineHeight("0.75"));
+
+    expect(state).toEqual({lineHeight: 0.75});
+  });
 });
