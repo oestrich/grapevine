@@ -96,7 +96,7 @@ class FontSettings extends React.Component {
           <select id="settings-font-size" className="form-control" value={lineHeight} onChange={this.lineHeightOnChange}>
             {_.map(lineHeights, size => {
               return (
-                <option key={size} value={size}>{size}x</option>
+                <option key={size} value={size}>{size}x ({size * fontSize}px)</option>
               );
             })}
           </select>
