@@ -13,6 +13,8 @@
 
   <%= if Enum.empty?(@games) do %>
     <p>No games are online currently</p>
+  <% else %>
+    <p class="lead">There are <%= Enum.count(@games) %> games connected to Grapevine currently.</p>
   <% end %>
 
   <div class="card-columns games online">
