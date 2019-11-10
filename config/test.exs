@@ -11,7 +11,7 @@ config :grapevine, Web.Endpoint,
   url: [host: "localhost"],
   server: false
 
-config :grapevine, :socket, http: [port: 4111]
+config :grapevine_socket, http: [port: 4111]
 
 config :logger, level: :error
 

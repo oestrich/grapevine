@@ -8,10 +8,13 @@ defmodule Grapevine.Statistics.Server do
   alias GrapevineData.Statistics
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: {:global, Grapevine.Statistics})
+    GenServer.start_link(__MODULE__, [])
   end
 
   def init(_) do
+    :ok = :pg2.create(Grapevine.Statistics)
+    :ok = :pg2.join(Grapevine.Statistics, self())
+
     {:ok, %{}}
   end
 
