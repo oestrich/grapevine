@@ -18,7 +18,7 @@ defmodule GrapevineSocket.Presence do
   @type players :: [String.t()]
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+    GenServer.start_link(__MODULE__, [], name: {:global, __MODULE__})
   end
 
   @doc """
@@ -26,22 +26,20 @@ defmodule GrapevineSocket.Presence do
   """
   @spec update_game(GrapevineSocket.state()) :: :ok
   def update_game(state) do
-    GenServer.call(
-      __MODULE__,
-      {:update, state.game, state.supports, state.channels, state.players}
-    )
+    message = {:update, state.game, state.supports, state.channels, state.players}
+    GenServer.call({:global, __MODULE__}, message)
   end
 
   @spec track(GrapevineSocket.state()) :: :ok
   def track(state) do
     message = {:track, self(), state.game, state.supports, state.channels, state.players}
-    GenServer.call(__MODULE__, message)
+    GenServer.call({:global, __MODULE__}, message)
   end
 
   @doc false
   def delay_disconnect(game_id) do
     Process.send_after(
-      __MODULE__,
+      {:global, __MODULE__},
       {:disconnected, game_id},
       :timer.seconds(Client.timeout_seconds())
     )
@@ -50,7 +48,7 @@ defmodule GrapevineSocket.Presence do
   # for tests
   @doc false
   def reset() do
-    GenServer.call(__MODULE__, {:reset})
+    GenServer.call({:global, __MODULE__}, {:reset})
   end
 
   @doc """
