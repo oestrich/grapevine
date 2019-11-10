@@ -9,6 +9,7 @@ export const {Types, Creators} = createActions({
   promptHistoryScrollForward: ["message"],
   settingsSetFont: ["font"],
   settingsSetFontSize: ["fontSize"],
+  settingsSetLineHeight: ["lineHeight"],
   settingsToggle: null,
   socketConnected: null,
   socketDisconnected: null,

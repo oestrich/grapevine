@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {
   getSettingsFont,
   getSettingsFontSize,
+  getSettingsLineHeight,
   getSocketLines
 } from "../redux/store";
 
@@ -153,10 +154,12 @@ class Terminal extends React.Component {
 
     let fontFamily = this.props.font;
     let fontSize = this.props.fontSize;
+    let lineHeight = this.props.lineHeight;
 
     const style = {
       fontFamily: `${fontFamily}, monospace`,
-      fontSize
+      fontSize,
+      lineHeight: `${fontSize * lineHeight}px`,
     };
 
     return (
@@ -173,10 +176,12 @@ class Terminal extends React.Component {
 }
 
 let mapStateToProps = (state) => {
-  const lines = getSocketLines(state);
   const font = getSettingsFont(state);
   const fontSize = getSettingsFontSize(state);
-  return {font, fontSize, lines};
+  const lineHeight = getSettingsLineHeight(state);
+  const lines = getSocketLines(state);
+
+  return {font, fontSize, lineHeight, lines};
 };
 
 export default Terminal = connect(mapStateToProps)(Terminal);

@@ -32,6 +32,10 @@ export const getSettingsFontSize = (state) => {
   return getSettingsState(state).fontSize;
 };
 
+export const getSettingsLineHeight = (state) => {
+  return getSettingsState(state).lineHeight;
+};
+
 export const getSettingsOpen = (state) => {
   return getSettingsState(state).open;
 };

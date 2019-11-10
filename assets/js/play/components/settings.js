@@ -10,6 +10,7 @@ import {
 import {
   getSettingsFont,
   getSettingsFontSize,
+  getSettingsLineHeight,
   getSettingsOpen,
   getVoiceSynthesisPresent,
   getVoiceCurrentVoice,
@@ -17,6 +18,7 @@ import {
 } from "../redux/store";
 
 const fontSizes = [10, 12, 14, 16, 18, 20, 22, 24];
+const lineHeights = [1.0, 1.25, 1.5];
 
 class SettingsToggle extends React.Component {
   constructor(props) {
@@ -42,6 +44,7 @@ class FontSettings extends React.Component {
 
     this.fontOnChange = this.fontOnChange.bind(this);
     this.fontSizeOnChange = this.fontSizeOnChange.bind(this);
+    this.lineHeightOnChange = this.lineHeightOnChange.bind(this);
   }
 
   fontOnChange(e) {
@@ -52,9 +55,14 @@ class FontSettings extends React.Component {
     this.props.setFontSize(e.target.value);
   }
 
+  lineHeightOnChange(e) {
+    this.props.setLineHeight(e.target.value);
+  }
+
   render() {
     let font = this.props.font;
     let fontSize = this.props.fontSize;
+    let lineHeight = this.props.lineHeight;
 
     return (
       <Fragment>
@@ -81,6 +89,18 @@ class FontSettings extends React.Component {
               );
             })}
           </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="settings-font-size">Line Height</label>
+          <select id="settings-font-size" className="form-control" value={lineHeight} onChange={this.lineHeightOnChange}>
+            {_.map(lineHeights, size => {
+              return (
+                <option key={size} value={size}>{size}x ({size * fontSize}px)</option>
+              );
+            })}
+          </select>
+          <span className="help-block">Ratio of font size to line height</span>
         </div>
       </Fragment>
     );
@@ -171,13 +191,15 @@ Settings.contextTypes = {
 let mapStateToProps = (state) => {
   let font = getSettingsFont(state);
   let fontSize = getSettingsFontSize(state);
+  let lineHeight = getSettingsLineHeight(state);
 
-  return {font, fontSize};
+  return {font, fontSize, lineHeight};
 };
 
 FontSettings = connect(mapStateToProps, {
   setFont: Creators.settingsSetFont,
   setFontSize: Creators.settingsSetFontSize,
+  setLineHeight: Creators.settingsSetLineHeight,
 })(FontSettings);
 
 mapStateToProps = (state) => {
