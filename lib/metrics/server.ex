@@ -6,11 +6,7 @@ defmodule Metrics.Server do
   use GenServer
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: {:global, pid()})
-  end
-
-  defp pid() do
-    {:grapevine, :metrics}
+    GenServer.start_link(__MODULE__, [])
   end
 
   @doc """
@@ -18,7 +14,13 @@ defmodule Metrics.Server do
   """
   @spec online_sockets() :: integer()
   def online_sockets() do
-    GenServer.call({:global, pid()}, {:sockets, :online})
+    case :pg2.get_closest_pid(Grapevine.Metrics) do
+      {:error, _reason} ->
+        0
+
+      pid ->
+        GenServer.call(pid, {:sockets, :online})
+    end
   end
 
   @doc """
@@ -26,25 +28,21 @@ defmodule Metrics.Server do
   """
   @spec online_clients() :: integer()
   def online_clients() do
-    GenServer.call({:global, pid()}, {:clients, :online})
-  end
+    case :pg2.get_closest_pid(Grapevine.Metrics) do
+      {:error, _reason} ->
+        0
 
-  @doc """
-  Let the server know a socket came online
-  """
-  def socket_online() do
-    GenServer.cast({:global, pid()}, {:socket, :online, self()})
-  end
-
-  @doc """
-  Let the server know a web client came onlin
-  """
-  def client_online() do
-    GenServer.cast({:global, pid()}, {:client, :online, self()})
+      pid ->
+        GenServer.call(pid, {:clients, :online})
+    end
   end
 
   def init(_) do
     Process.flag(:trap_exit, true)
+
+    :ok = :pg2.create(Grapevine.Metrics)
+    :ok = :pg2.join(Grapevine.Metrics, self())
+
     {:ok, %{sockets: [], clients: []}}
   end
 

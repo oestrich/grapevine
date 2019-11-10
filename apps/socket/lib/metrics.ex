@@ -7,10 +7,12 @@ defmodule Metrics do
   Let the server know a socket came online
   """
   def socket_online() do
-    GenServer.cast({:global, pid()}, {:socket, :online, self()})
-  end
+    case :pg2.get_closest_pid(Grapevine.Metrics) do
+      {:error, _reason} ->
+        :error
 
-  defp pid() do
-    {:grapevine, :metrics}
+      pid ->
+        GenServer.cast(pid, {:socket, :online, self()})
+    end
   end
 end
