@@ -23,6 +23,8 @@ erl_crash.dump
 
 apps/data/_build
 apps/data/deps
+apps/socket/_build
+apps/socket/deps
 apps/telnet/_build
 apps/telnet/deps
 assets/node_modules/

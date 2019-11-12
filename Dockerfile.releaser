@@ -4,6 +4,7 @@ RUN mix local.rebar --force && \
 WORKDIR /app
 ENV MIX_ENV=prod
 COPY apps/data/mix.* /app/apps/data/
+COPY apps/socket/mix.* /app/apps/socket/
 COPY mix.* /app/
 RUN mix deps.get --only prod
 RUN mix deps.compile
