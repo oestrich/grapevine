@@ -31,6 +31,8 @@ defmodule GrapevineSocket.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:grapevine_data, path: "../data"},
       {:jason, "~> 1.1"},
+      {:libcluster, "~> 3.0"},
+      {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:telemetry, "~> 0.4"},

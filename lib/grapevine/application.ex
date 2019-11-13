@@ -33,7 +33,7 @@ defmodule Grapevine.Application do
       Logger.add_backend(Sentry.LoggerBackend)
     end
 
-    start_telnet_application()
+    start_sub_applications()
 
     children = Enum.reject(children, &is_nil/1)
     opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
@@ -64,10 +64,11 @@ defmodule Grapevine.Application do
     ]
   end
 
-  # Start the telnet application in development mode
-  defp start_telnet_application() do
+  # Start the telnet and socket applications in development mode
+  defp start_sub_applications() do
     if @env == :dev do
       :application.start(:telnet)
+      :application.start(:grapevine_socket)
       :application.start(:grapevine_telnet)
     end
   end

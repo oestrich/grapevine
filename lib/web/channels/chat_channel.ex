@@ -45,4 +45,9 @@ defmodule Web.ChatChannel do
 
     {:noreply, socket}
   end
+
+  def handle_out(event, message, socket) do
+    push(socket, event, message)
+    {:noreply, socket}
+  end
 end

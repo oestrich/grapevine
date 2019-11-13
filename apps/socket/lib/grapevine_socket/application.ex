@@ -14,6 +14,7 @@ defmodule GrapevineSocket.Application do
     config = Keyword.merge(@default_config, config)
 
     children = [
+      cluster_supervisor(),
       {GrapevineSocket.Presence, []},
       phoenix_pubsub(),
       Plug.Cowboy.child_spec(
@@ -37,6 +38,14 @@ defmodule GrapevineSocket.Application do
 
     if pubsub[:start] do
       {Phoenix.PubSub.PG2, [name: Grapevine.PubSub]}
+    end
+  end
+
+  defp cluster_supervisor() do
+    topologies = Application.get_env(:grapevine_socket, :topologies)
+
+    if topologies && Code.ensure_compiled?(Cluster.Supervisor) do
+      {Cluster.Supervisor, [topologies, [name: GrapevineSocket.ClusterSupervisor]]}
     end
   end
 end
