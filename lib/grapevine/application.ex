@@ -55,7 +55,7 @@ defmodule Grapevine.Application do
   defp telemetry_opts() do
     [
       measurements: [
-        {Metrics.GameInstrumenter, :dispatch_game_count, []},
+        {Metrics.GameInstrumenter, :dispatch_game_count, []}
       ],
       name: Grapevine.Poller,
       period: 10_000
