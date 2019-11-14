@@ -1,4 +1,4 @@
-defmodule Metrics.SocketInstrumenter do
+defmodule GrapevineSocket.Metrics.SocketInstrumenter do
   @moduledoc """
   Instrumentation for sockets
   """
@@ -7,7 +7,7 @@ defmodule Metrics.SocketInstrumenter do
 
   require Logger
 
-  alias Metrics.Server
+  alias GrapevineSocket.Metrics.Server
 
   @doc false
   def setup() do

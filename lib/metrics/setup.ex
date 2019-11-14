@@ -13,7 +13,6 @@ defmodule Metrics.Setup do
     Metrics.GameEventInstrumenter.setup()
     Metrics.GameInstrumenter.setup()
     Metrics.OAuthInstrumenter.setup()
-    Metrics.SocketInstrumenter.setup()
     Metrics.StatisticsInstrumenter.setup()
 
     Metrics.PlugExporter.setup()

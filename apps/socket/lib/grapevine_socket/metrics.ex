@@ -1,4 +1,4 @@
-defmodule Metrics do
+defmodule GrapevineSocket.Metrics do
   @moduledoc """
   Client to the main metrics server
   """
@@ -7,7 +7,7 @@ defmodule Metrics do
   Let the server know a socket came online
   """
   def socket_online() do
-    case :pg2.get_closest_pid(Grapevine.Metrics) do
+    case :pg2.get_closest_pid(GrapevineSocket.Metrics) do
       {:error, _reason} ->
         :error
 

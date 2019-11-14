@@ -16,7 +16,6 @@ defmodule Grapevine.Application do
       {Grapevine.Presence, [name: Grapevine.Presence]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
-      {Metrics.Server, []},
       {:telemetry_poller, telemetry_opts()},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
@@ -57,7 +56,6 @@ defmodule Grapevine.Application do
     [
       measurements: [
         {Metrics.GameInstrumenter, :dispatch_game_count, []},
-        {Metrics.SocketInstrumenter, :dispatch_socket_count, []}
       ],
       name: Grapevine.Poller,
       period: 10_000

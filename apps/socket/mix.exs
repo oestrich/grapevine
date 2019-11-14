@@ -35,7 +35,10 @@ defmodule GrapevineSocket.MixProject do
       {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:prometheus_ex, "~> 3.0"},
+      {:prometheus_plugs, "~> 1.1.1"},
       {:telemetry, "~> 0.4"},
+      {:telemetry_poller, "~> 0.2"},
       {:timex, "~> 3.1"}
     ]
   end

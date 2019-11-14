@@ -17,12 +17,16 @@ defmodule GrapevineSocket.Application do
       cluster_supervisor(),
       {GrapevineSocket.Presence, []},
       phoenix_pubsub(),
+      {GrapevineSocket.Metrics.Server, []},
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: GrapevineSocket.Endpoint,
         options: [port: config[:port], dispatch: dispatch()]
-      )
+      ),
+      {:telemetry_poller, telemetry_opts()}
     ]
+
+    GrapevineSocket.Metrics.Setup.setup()
 
     children = Enum.reject(children, &is_nil/1)
     opts = [strategy: :one_for_one, name: GrapevineSocket.Supervisor]
@@ -30,7 +34,23 @@ defmodule GrapevineSocket.Application do
   end
 
   defp dispatch() do
-    [{:_, [{"/socket", GrapevineSocket.Web.SocketHandler, []}]}]
+    [
+      {:_,
+       [
+         {"/socket", GrapevineSocket.Web.SocketHandler, []},
+         {:_, Plug.Cowboy.Handler, {GrapevineSocket.Endpoint, []}}
+       ]}
+    ]
+  end
+
+  defp telemetry_opts() do
+    [
+      measurements: [
+        {GrapevineSocket.Metrics.SocketInstrumenter, :dispatch_socket_count, []}
+      ],
+      name: GrapevineSocket.Poller,
+      period: 10_000
+    ]
   end
 
   defp phoenix_pubsub() do
