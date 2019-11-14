@@ -47,7 +47,7 @@ defmodule Web.ChatChannel do
     {:noreply, socket}
   end
 
-  def handle_info(%Phoenix.Socket.Broadcast{event: "channels/broadcast", payload: payload}, socket) do
+  def handle_info(%{event: "channels/broadcast", payload: payload}, socket) do
     push(socket, "broadcast", payload)
     {:noreply, socket}
   end
