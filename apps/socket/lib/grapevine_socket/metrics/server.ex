@@ -23,7 +23,6 @@ defmodule GrapevineSocket.Metrics.Server do
     end
   end
 
-
   def init(_) do
     Process.flag(:trap_exit, true)
 

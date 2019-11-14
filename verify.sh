@@ -1,6 +1,7 @@
 set -e
 
 mix compile --force --warnings-as-errors
+mix format --check-formatted
 mix test
 mix credo
 cd assets && yarn test && cd ..
@@ -13,6 +14,7 @@ cd ../..
 
 cd apps/socket
 mix compile --force --warnings-as-errors
+mix format --check-formatted
 mix test
 mix credo
 cd ../..

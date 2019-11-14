@@ -68,7 +68,7 @@ defmodule GrapevineSocket.Web.Router do
   Process incoming text through a global rate limit
   """
   def process(state, frame) do
-    case  RateLimiter.check_rate_limit(state, "global") do
+    case RateLimiter.check_rate_limit(state, "global") do
       {:ok, state} ->
         __MODULE__.receive(state, frame)
 

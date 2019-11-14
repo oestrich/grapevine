@@ -40,7 +40,11 @@ defmodule GrapevineSocket.Presence do
   def delay_disconnect(game_id) do
     case :global.whereis_name(__MODULE__) do
       pid when is_pid(pid) ->
-        Process.send_after(pid, {:disconnected, game_id}, :timer.seconds(Client.timeout_seconds()))
+        Process.send_after(
+          pid,
+          {:disconnected, game_id},
+          :timer.seconds(Client.timeout_seconds())
+        )
 
       _ ->
         raise "Can't find the presence server. This is bad"
