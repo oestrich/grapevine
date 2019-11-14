@@ -24,6 +24,7 @@ defmodule Web.ChatChannel do
     case Channels.get(channel) do
       {:ok, channel} ->
         socket = assign(socket, :channel, channel)
+        Web.Endpoint.subscribe("channels:#{channel.name}")
 
         {:ok, socket}
 
@@ -46,8 +47,8 @@ defmodule Web.ChatChannel do
     {:noreply, socket}
   end
 
-  def handle_out(event, message, socket) do
-    push(socket, event, message)
+  def handle_info(%Phoenix.Socket.Broadcast{event: "channels/broadcast", payload: payload}, socket) do
+    push(socket,"broadcast", payload)
     {:noreply, socket}
   end
 end

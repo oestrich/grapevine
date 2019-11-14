@@ -33,13 +33,6 @@ defmodule Grapevine.Client.Server do
       "message" => message
     })
 
-    Web.Endpoint.broadcast("chat:#{channel.name}", "broadcast", %{
-      "channel" => channel.name,
-      "game" => "Grapevine",
-      "name" => user.username,
-      "message" => message
-    })
-
     Messages.record_web(channel, user, message)
 
     :ok

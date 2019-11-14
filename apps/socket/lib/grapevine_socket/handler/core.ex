@@ -167,8 +167,6 @@ defmodule GrapevineSocket.Handler.Core do
       |> assign(:message, message)
       |> payload("send")
       |> broadcast("channels:#{channel.name}", "channels/broadcast")
-      |> payload("send-chat")
-      |> broadcast("chat:#{channel.name}", "broadcast")
 
       {:ok, state}
     else
@@ -255,15 +253,6 @@ defmodule GrapevineSocket.Handler.Core do
         "channel" => channel,
         "game" => game.short_name,
         "game_id" => game.client_id,
-        "name" => name,
-        "message" => message
-      }
-    end
-
-    def payload("send-chat", %{channel: channel, game: game, name: name, message: message}) do
-      %{
-        "channel" => channel,
-        "game" => game.short_name,
         "name" => name,
         "message" => message
       }
