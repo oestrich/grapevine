@@ -115,6 +115,7 @@ jobs:
     - name: Verify application
       run: |
         cd apps/socket
+        mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo
         mix test
