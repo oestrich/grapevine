@@ -3,6 +3,7 @@ defmodule GrapevineSocket.PresenceTest do
 
   alias GrapevineSocket.Presence
 
+  @tag :presence
   describe "updating presence of a game" do
     test "on update the game is shown as online" do
       user = create_user()

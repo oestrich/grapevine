@@ -8,6 +8,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
   alias GrapevineSocket.Web.Router
   alias GrapevineSocket.Web.State
 
+  @tag :presence
   describe "authenticating" do
     setup do
       %{state: %State{status: "inactive"}, game: create_game(create_user())}
@@ -142,6 +143,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
     end
   end
 
+  @tag :presence
   describe "heartbeats" do
     setup [:basic_setup]
 
@@ -186,6 +188,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
     end
   end
 
+  @tag :presence
   describe "post a new message" do
     setup do
       user = create_user()
@@ -326,6 +329,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
     end
   end
 
+  @tag :presence
   describe "subscribing" do
     setup do
       user = create_user()
@@ -401,6 +405,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
     end
   end
 
+  @tag :presence
   describe "unsubscribing" do
     setup do
       user = create_user()

@@ -35,6 +35,10 @@ defmodule GrapevineSocket.DataCase do
       Ecto.Adapters.SQL.Sandbox.mode(GrapevineData.Repo, {:shared, self()})
     end
 
+    if tags[:presence] do
+      Test.PlayerPresence.connect()
+    end
+
     :ok
   end
 

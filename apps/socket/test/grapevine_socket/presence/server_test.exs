@@ -5,6 +5,7 @@ defmodule GrapevineSocket.Presence.ServerTest do
   alias GrapevineSocket.Presence.Server
   alias GrapevineData.Statistics
 
+  @tag :presence
   describe "recording online game stats" do
     test "saves state" do
       game = create_game(create_user())
