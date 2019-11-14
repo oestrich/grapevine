@@ -8,7 +8,6 @@ defmodule GrapevineSocket.Handler.TellsTest do
 
   doctest Tells
 
-  @tag :presence
   describe "tells" do
     setup [:basic_setup]
 
@@ -224,7 +223,6 @@ defmodule GrapevineSocket.Handler.TellsTest do
     end
   end
 
-  @tag :presence
   describe "validate a send payload" do
     test "all valid" do
       payload = %{

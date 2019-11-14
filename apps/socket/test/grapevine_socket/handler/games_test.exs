@@ -5,7 +5,6 @@ defmodule GrapevineSocket.Handler.GamesTest do
   alias GrapevineSocket.Web.Router
   alias GrapevineSocket.Web.State
 
-  @tag :presence
   describe "games" do
     setup [:basic_setup, :status_updates]
 

@@ -5,7 +5,6 @@ defmodule GrapevineSocket.Handler.PlayersTest do
   alias GrapevineSocket.Web.Router
   alias GrapevineSocket.Web.State
 
-  @tag :presence
   describe "player status" do
     setup [:basic_setup]
 
@@ -203,7 +202,6 @@ defmodule GrapevineSocket.Handler.PlayersTest do
     end
   end
 
-  @tag :presence
   describe "player status udpates" do
     setup [:basic_setup, :status_updates]
 
