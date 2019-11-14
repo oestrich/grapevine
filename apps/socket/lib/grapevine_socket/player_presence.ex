@@ -7,6 +7,14 @@ defmodule GrapevineSocket.PlayerPresence do
   Follows the same cast as `Grapevine.PlayerPresence.update_count/2`
   """
   def update_count(game_id, count) do
-    GenServer.cast(Grapevine.PlayerPresence, {:update_count, game_id, count})
+    case :pg2.get_members(Grapevine.PlayerPresence) do
+      members when is_list(members) ->
+        Enum.each(members, fn pid ->
+          GenServer.cast(pid, {:update_count, game_id, count})
+        end)
+
+      {:error, {:no_such_group, Grapevine.PlayerPresence}} ->
+        raise "Issue broadcasting to the player presence servers"
+    end
   end
 end
