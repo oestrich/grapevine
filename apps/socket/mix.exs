@@ -8,7 +8,8 @@ defmodule GrapevineSocket.MixProject do
       elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -40,6 +41,18 @@ defmodule GrapevineSocket.MixProject do
       {:telemetry, "~> 0.4"},
       {:telemetry_poller, "~> 0.2"},
       {:timex, "~> 3.1"}
+    ]
+  end
+
+  defp releases() do
+    [
+      grapevine_socket: [
+        include_executables_for: [:unix],
+        applications: [
+          runtime_tools: :permanent
+        ],
+        config_providers: [{GrapevineSocket.ConfigProvider, "/etc/grapevine_socket/config.exs"}]
+      ]
     ]
   end
 end

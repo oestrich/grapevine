@@ -1,0 +1,17 @@
+data/_build
+data/deps
+data/erl_crash.dump
+data/test
+
+socket/_build
+socket/deps
+socket/erl_crash.dump
+socket/test
+socket/tmp
+
+telnet/_build
+telnet/deploy
+telnet/deps
+telnet/erl_crash.dump
+telnet/test
+telnet/tmp
