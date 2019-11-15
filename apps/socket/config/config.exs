@@ -2,6 +2,7 @@ import Config
 
 config :grapevine_socket, ecto_repos: [GrapevineData.Repo]
 config :grapevine_socket, :pubsub, start: true
+config :grapevine_socket, :errors, report: false
 
 config :phoenix, :json_library, Jason
 

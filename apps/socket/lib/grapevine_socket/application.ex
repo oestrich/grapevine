@@ -26,6 +26,12 @@ defmodule GrapevineSocket.Application do
       {:telemetry_poller, telemetry_opts()}
     ]
 
+    report_errors = Application.get_env(:grapevine_socket, :errors)[:report]
+
+    if report_errors do
+      {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
+    end
+
     GrapevineSocket.Metrics.Setup.setup()
 
     children = Enum.reject(children, &is_nil/1)
