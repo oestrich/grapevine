@@ -23,3 +23,6 @@ erl_crash.dump
 grapevine_socket-*.tar
 
 tmp
+
+/env.sh
+/scp.sh
