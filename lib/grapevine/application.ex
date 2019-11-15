@@ -16,7 +16,6 @@ defmodule Grapevine.Application do
       {Grapevine.Presence, [name: Grapevine.Presence]},
       {Grapevine.PlayerPresence, [name: Grapevine.PlayerPresence]},
       {Grapevine.Client.Server, [name: Grapevine.Client.Server]},
-      {Metrics.Server, []},
       {:telemetry_poller, telemetry_opts()},
       {Grapevine.Telnet.Worker, [name: Grapevine.Telnet.Worker]},
       {Grapevine.CNAMEs, [name: Grapevine.CNAMEs]},
@@ -33,7 +32,7 @@ defmodule Grapevine.Application do
       Logger.add_backend(Sentry.LoggerBackend)
     end
 
-    start_telnet_application()
+    start_sub_applications()
 
     children = Enum.reject(children, &is_nil/1)
     opts = [strategy: :one_for_one, name: Grapevine.Supervisor]
@@ -56,18 +55,18 @@ defmodule Grapevine.Application do
   defp telemetry_opts() do
     [
       measurements: [
-        {Metrics.GameInstrumenter, :dispatch_game_count, []},
-        {Metrics.SocketInstrumenter, :dispatch_socket_count, []}
+        {Metrics.GameInstrumenter, :dispatch_game_count, []}
       ],
       name: Grapevine.Poller,
       period: 10_000
     ]
   end
 
-  # Start the telnet application in development mode
-  defp start_telnet_application() do
+  # Start the telnet and socket applications in development mode
+  defp start_sub_applications() do
     if @env == :dev do
       :application.start(:telnet)
+      :application.start(:grapevine_socket)
       :application.start(:grapevine_telnet)
     end
   end

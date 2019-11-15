@@ -8,7 +8,8 @@ defmodule GrapevineSocket.MixProject do
       elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -31,10 +32,28 @@ defmodule GrapevineSocket.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:grapevine_data, path: "../data"},
       {:jason, "~> 1.1"},
+      {:libcluster, "~> 3.0"},
+      {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:prometheus_ex, "~> 3.0"},
+      {:prometheus_plugs, "~> 1.1.1"},
+      {:sentry, "~> 7.0"},
       {:telemetry, "~> 0.4"},
+      {:telemetry_poller, "~> 0.2"},
       {:timex, "~> 3.1"}
+    ]
+  end
+
+  defp releases() do
+    [
+      grapevine_socket: [
+        include_executables_for: [:unix],
+        applications: [
+          runtime_tools: :permanent
+        ],
+        config_providers: [{GrapevineSocket.ConfigProvider, "/etc/grapevine_socket/config.exs"}]
+      ]
     ]
   end
 end

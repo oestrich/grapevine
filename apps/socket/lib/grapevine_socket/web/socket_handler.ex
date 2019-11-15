@@ -6,6 +6,7 @@ defmodule GrapevineSocket.Web.SocketHandler do
   @behaviour :cowboy_websocket
 
   alias GrapevineSocket.Handler.Core.Heartbeat
+  alias GrapevineSocket.Metrics
   alias GrapevineSocket.PubSub
   alias GrapevineSocket.RateLimit
   alias GrapevineSocket.Web.Router
