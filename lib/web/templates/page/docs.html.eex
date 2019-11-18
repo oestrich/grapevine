@@ -761,6 +761,7 @@
       {"type": "web", "url": "https://example.com/play"}
     ],
     "supports": ["channels", "players", "tells", "games"],
+    "channels": ["gossip"],
     "players_online_count": 3
   }
 }</pre>
@@ -773,6 +774,7 @@
   <li><code>user_agent_repo_url</code> is a source code repository for the user agent. May not be present.</li>
   <li><code>connections</code> is an array of connection objects. See below for more about <%= link("connections", to: "#game-connections") %>. May not be present</li>
   <li><code>supports</code> if the game is currently connected, this is an array of what the socket supports. May not be present.</li>
+  <li><code>channels</code> if the game is currently connected, this is an array of what channels the game is listening to. May not be present.</li>
   <li><code>players_online_count</code> if the game is currently connected, the number of players that are online. May not be present.</li>
   <li>See <%= link("Common Vocabulary", to: "#common-vocabulary") %> for payload data.</li>
 </ul>
