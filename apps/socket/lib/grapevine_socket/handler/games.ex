@@ -5,6 +5,7 @@ defmodule GrapevineSocket.Handler.Games do
 
   use GrapevineSocket.Web.Module
 
+  alias GrapevineData.Channels
   alias GrapevineData.Games
   alias GrapevineSocket.Handler.Core
   alias GrapevineSocket.Presence
@@ -74,8 +75,16 @@ defmodule GrapevineSocket.Handler.Games do
     token()
     |> assign(:ref, ref)
     |> assign(:presence, presence)
+    |> assign(:channels, public_channels(presence))
     |> event("game")
     |> relay()
+  end
+
+  defp public_channels(presence) do
+    Enum.reject(presence.channels, fn channel ->
+      {:ok, channel} = Channels.get(channel)
+      channel.hidden
+    end)
   end
 
   @doc """
@@ -124,13 +133,13 @@ defmodule GrapevineSocket.Handler.Games do
       }
     end
 
-    def event("game", %{ref: ref, presence: presence}) do
+    def event("game", %{ref: ref, presence: presence, channels: channels}) do
       game_payload = GameView.render("status.json", %{game: presence.game})
 
       payload =
         Map.merge(game_payload, %{
           supports: presence.supports,
-          channels: presence.channels,
+          channels: channels,
           player_online_count: length(presence.players)
         })
 

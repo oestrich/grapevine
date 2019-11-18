@@ -83,10 +83,15 @@ defmodule GrapevineSocket.Handler.GamesTest do
     game3 = create_game(user, %{name: "ExVenture 2", short_name: "EVTwo"})
     game4 = create_game(user, %{name: "ExVenture 3", short_name: "EVThree", display: false})
 
-    Presence.update_game(presence_state(game1, %{players: ["Player1"]}))
-    Presence.update_game(presence_state(game2, %{players: ["Player2"]}))
-    Presence.update_game(presence_state(game3, %{players: ["Player3"]}))
-    Presence.update_game(presence_state(game4, %{players: ["Player4"]}))
+    %{name: "gossip"}
+    |> create_channel()
+    |> Ecto.Changeset.change(%{hidden: false})
+    |> Repo.update()
+
+    Presence.update_game(presence_state(game1, %{players: ["Player1"], channels: ["gossip"]}))
+    Presence.update_game(presence_state(game2, %{players: ["Player2"], channels: ["gossip"]}))
+    Presence.update_game(presence_state(game3, %{players: ["Player3"], channels: ["gossip"]}))
+    Presence.update_game(presence_state(game4, %{players: ["Player4"], channels: ["gossip"]}))
 
     %{state: state}
   end
