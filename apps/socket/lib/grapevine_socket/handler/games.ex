@@ -130,6 +130,7 @@ defmodule GrapevineSocket.Handler.Games do
       payload =
         Map.merge(game_payload, %{
           supports: presence.supports,
+          channels: presence.channels,
           player_online_count: length(presence.players)
         })
 
