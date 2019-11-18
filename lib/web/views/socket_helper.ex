@@ -20,7 +20,7 @@ defmodule Web.SocketHelper do
   end
 
   defp scheme() do
-    case Application.get_env(:grapevine_socket, :tls) do
+    case Application.get_env(:grapevine, :socket)[:tls] do
       true ->
         "wss"
 

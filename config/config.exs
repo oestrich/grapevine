@@ -19,6 +19,9 @@ config(:grapevine, Grapevine.Mailer, alert_to: [])
 
 config(:grapevine, :errors, report: false)
 
+# For docs
+config(:grapevine, :socket, tls: false)
+# For dev socket application
 config(:grapevine_socket, tls: false)
 
 # Configures Elixir's Logger
