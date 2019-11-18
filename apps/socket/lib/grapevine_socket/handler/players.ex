@@ -59,7 +59,7 @@ defmodule GrapevineSocket.Handler.Players do
   end
 
   defp maybe_broadcast_signin(state, name) do
-    case display?(state.game) do
+    case display?(state.game) && display_players?(state.game) do
       true ->
         token()
         |> assign(:game, state.game)
@@ -100,7 +100,7 @@ defmodule GrapevineSocket.Handler.Players do
   end
 
   defp maybe_broadcast_signout(state, name) do
-    case display?(state.game) do
+    case display?(state.game) && display_players?(state.game) do
       true ->
         token()
         |> assign(:game, state.game)
@@ -144,9 +144,9 @@ defmodule GrapevineSocket.Handler.Players do
     state.game.short_name == name
   end
 
-  defp display?(game) do
-    game.display && game.display_players
-  end
+  defp display?(game), do: game.display
+
+  defp display_players?(game), do: game.display_players
 
   defp maybe_relay_state(nil, ref) do
     token()
