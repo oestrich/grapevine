@@ -14,33 +14,27 @@ config :grapevine, :modules,
   telnet: Grapevine.Telnet.Worker,
   client: Grapevine.Client.Server
 
+#
 # runtime
-config(:grapevine, Grapevine.Mailer, alert_to: [])
+#
 
+config(:grapevine, Grapevine.Mailer, alert_to: [])
 config(:grapevine, :errors, report: false)
+config(:grapevine, :recaptcha, enabled: false)
 
 # For docs
 config(:grapevine, :socket, tls: false)
 # For dev socket application
 config(:grapevine_socket, tls: false)
 
-# Configures Elixir's Logger
 config(:bamboo, :json_library, Jason)
-
 config(:ecto_sql, :json_library, Jason)
-
 config(:logger, :console, format: "$time $metadata[$level] $message\n", metadata: [:user_id])
-
 config(:phoenix, :json_library, Jason)
-
 config(:phoenix, template_engines: [leex: Phoenix.LiveView.Engine])
-
 config(:porcelain, driver: Porcelain.Driver.Basic)
-
 config(:postgrex, :json_library, Jason)
-
 config(:sentry, filter: Grapevine.SentryFilter, json_library: Jason)
-
 config(:stein, :storage, backend: :file)
 
 # Import environment specific config. This must remain at the bottom

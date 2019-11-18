@@ -4,6 +4,7 @@ defmodule Web.LayoutView do
   alias GrapevineData.Accounts
   alias Web.HostedRouter.Helpers, as: HostedRoutes
   alias Web.Hosted
+  alias Web.RecaptchaView
 
   @config Application.get_env(:grapevine, :web)[:url]
   @decanter_enabled Application.get_env(:grapevine, :decanter)[:enabled]

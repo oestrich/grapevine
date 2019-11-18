@@ -39,6 +39,8 @@
           </div>
         </div>
 
+        <%= render(RecaptchaView, "_captcha.html") %>
+
         <div class="row">
           <div class="col-md-9 offset-md-3">
             <%= submit "Register", class: "btn btn-primary btn-flat" %>

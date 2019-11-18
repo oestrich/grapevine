@@ -3,4 +3,5 @@ defmodule Web.RegistrationView do
 
   alias Web.FormView
   alias Web.GameView
+  alias Web.RecaptchaView
 end
