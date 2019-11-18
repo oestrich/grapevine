@@ -188,6 +188,59 @@ defmodule GrapevineSocket.Handler.TellsTest do
       assert response["error"] == "not supported"
     end
 
+    test "receiving game does not display players", %{state: state, user: user} do
+      state = %{state | supports: ["channels", "tells"]}
+
+      user
+      |> create_game(%{name: "ExVenture 1", short_name: "EVOne", display_players: false})
+      |> presence_state(%{supports: ["channels", "tells"], players: ["Player1"]})
+      |> Presence.update_game()
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        }
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "receiving player offline"
+    end
+
+    test "sending game does not display players", %{state: state, user: user} do
+      game = %{state.game | display_players: false}
+      state = %{state | supports: ["channels", "tells"], game: game}
+
+      Presence.update_game(state)
+
+      user
+      |> create_game(%{name: "ExVenture 1", short_name: "EVOne"})
+      |> presence_state(%{supports: ["channels", "tells"], players: ["eric"]})
+      |> Presence.update_game()
+
+      frame = %{
+        "event" => "tells/send",
+        "ref" => "ref",
+        "payload" => %{
+          "from_name" => "Player",
+          "to_game" => "EVOne",
+          "to_name" => "eric",
+          "sent_at" => "2018-07-17T13:12:28Z",
+          "message" => "hi"
+        }
+      }
+
+      assert {:ok, response, _state} = Router.receive(state, frame)
+      assert response["ref"] == "ref"
+      assert response["error"] == "sending player offline"
+    end
+
     test "does not support the tells feature - no ref", %{state: state} do
       frame = %{
         "event" => "tells/send",

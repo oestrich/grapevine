@@ -84,7 +84,7 @@ defmodule GrapevineSocket.Handler.Tells do
   defp check_sending_player_online(presence, payload) do
     players = Enum.map(presence.players, &String.downcase/1)
 
-    case String.downcase(payload["from_name"]) in players do
+    case display?(presence) && String.downcase(payload["from_name"]) in players do
       true ->
         :ok
 
@@ -96,7 +96,7 @@ defmodule GrapevineSocket.Handler.Tells do
   defp check_receiving_player_online(presence, payload) do
     players = Enum.map(presence.players, &String.downcase/1)
 
-    case String.downcase(payload["to_name"]) in players do
+    case display?(presence) && String.downcase(payload["to_name"]) in players do
       true ->
         :ok
 
@@ -104,6 +104,8 @@ defmodule GrapevineSocket.Handler.Tells do
         {:error, "receiving player offline"}
     end
   end
+
+  defp display?(presence), do: presence.game.display_players
 
   @doc """
   Check if the socket supports tells
