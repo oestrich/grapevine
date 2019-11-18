@@ -253,6 +253,46 @@ defmodule GrapevineSocket.Handler.PlayersTest do
     end
   end
 
+  describe "player status udpates (no setup)" do
+    test "request game status updates for a single game and players are hidden" do
+      user = create_user()
+      game = create_game(user)
+      state = setup_state(game)
+
+      game2 =
+        create_game(user, %{
+          name: "ExVenture 2",
+          short_name: "EVTwo",
+          display_players: false
+        })
+
+      Presence.reset()
+      Presence.update_game(presence_state(game2, %{players: ["Player2"]}))
+
+      frame = %{
+        "event" => "players/status",
+        "ref" => UUID.uuid4(),
+        "payload" => %{
+          "game" => "EVTwo"
+        }
+      }
+
+      assert {:ok, :skip, _state} = Router.receive(state, frame)
+
+      assert_receive {:broadcast, event}, 50
+      %{"event" => "players/status", "payload" => %{"game" => "EVTwo", "players" => []}} = event
+    end
+  end
+
+  def setup_state(game) do
+    %State{
+      status: "active",
+      supports: ["channels", "players"],
+      players: [],
+      game: game
+    }
+  end
+
   def basic_setup(_) do
     user = create_user()
     game = create_game(user)
@@ -281,6 +321,6 @@ defmodule GrapevineSocket.Handler.PlayersTest do
     Presence.update_game(presence_state(game3, %{players: ["Player3"]}))
     Presence.update_game(presence_state(game4, %{players: ["Player4"]}))
 
-    %{state: state}
+    %{state: state, game2: game2, game3: game3}
   end
 end

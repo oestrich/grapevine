@@ -161,9 +161,19 @@ defmodule GrapevineSocket.Handler.Players do
     token()
     |> assign(:ref, ref)
     |> assign(:game, state.game)
-    |> assign(:players, state.players)
+    |> assign(:players, maybe_filter_players(state))
     |> event("status")
     |> relay()
+  end
+
+  defp maybe_filter_players(%{game: game, players: players}) do
+    case game.display_players do
+      true ->
+        players
+
+      false ->
+        []
+    end
   end
 
   defmodule View do
