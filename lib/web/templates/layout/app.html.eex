@@ -7,16 +7,18 @@
 
     <main>
       <div class="container">
-        <%= if (flash = get_flash(@conn, :info)) && Map.get(assigns, :layout_flash, true) do %>
-          <div class="alert alert-primary" role="alert">
-            <%= flash %>
-          </div>
-        <% end %>
-        <%= if (flash = get_flash(@conn, :error)) && Map.get(assigns, :layout_flash, true) do %>
-          <div class="alert alert-danger" role="alert">
-            <%= flash %>
-          </div>
-        <% end %>
+        <div class="alerts">
+          <%= if (flash = get_flash(@conn, :info)) && Map.get(assigns, :layout_flash, true) do %>
+            <div class="alert alert-primary" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
+          <%= if (flash = get_flash(@conn, :error)) && Map.get(assigns, :layout_flash, true) do %>
+            <div class="alert alert-danger" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
+        </div>
 
         <%= render @view_module, @view_template, assigns %>
       </div>

@@ -3,8 +3,9 @@ import "../css/app.scss";
 import "phoenix_html";
 import Sizzle from "sizzle";
 
-import "./charts"
-import "./live"
+import "./charts";
+import "./live";
+import "./versioning";
 import {Client as ChatClient} from "./chat/client";
 import {Client as PlayClient} from "./play/client";
 

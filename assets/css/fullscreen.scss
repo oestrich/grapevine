@@ -1,0 +1,16 @@
+.fullscreen {
+  .alerts {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: 100;
+
+    .alert {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 0;
+      height: 60px;
+    }
+  }
+}

@@ -17,4 +17,11 @@ defmodule Web.PageView do
     |> Earmark.as_html!()
     |> raw()
   end
+
+  def render("version.json", %{assets: assets, version: version}) do
+    %{
+      assets: assets,
+      version: version
+    }
+  end
 end

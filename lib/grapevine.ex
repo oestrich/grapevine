@@ -11,10 +11,20 @@ defmodule Grapevine do
   Get the loaded version of Grapevine, to send when connecting.
   """
   def version() do
-    to_string(
-      elem(Enum.find(:application.loaded_applications(), &(elem(&1, 0) == :grapevine)), 2)
-    )
+    {:grapevine, _, version} =
+      Enum.find(:application.loaded_applications(), fn {app, _, _version} ->
+        app == :grapevine
+      end)
+
+    to_string(version)
   end
+
+  @doc """
+  Version number for assets
+
+  Bumping this will force a page reload of open browser tabs
+  """
+  def asset_versions(), do: 1
 
   @doc """
   Push a restart event to sockets

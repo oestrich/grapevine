@@ -46,4 +46,11 @@ defmodule Web.PageController do
   def colors(conn, _params) do
     render(conn, "colors.html")
   end
+
+  def version(conn, _params) do
+    conn
+    |> assign(:assets, Grapevine.asset_versions())
+    |> assign(:version, Grapevine.version())
+    |> render("version.json")
+  end
 end

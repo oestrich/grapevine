@@ -2,8 +2,10 @@
 <html lang="en">
   <%= render("_head.html", assigns) %>
 
-  <body id="body" data-user-token="<%= user_token(@conn) %>" data-session-token="<%= session_token(@conn) %>">
+  <body id="body" class="fullscreen" data-user-token="<%= user_token(@conn) %>" data-session-token="<%= session_token(@conn) %>">
     <%= render("_header.html", assigns) %>
+
+    <div class="alerts"></div>
 
     <%= render @view_module, @view_template, assigns %>
 
