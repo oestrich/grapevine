@@ -9,7 +9,7 @@ defmodule Web.SharedView do
     query =
       uri.query
       |> decode_query()
-      |> Map.put(:page, page)
+      |> Map.put("page", page)
       |> URI.encode_query()
 
     %{uri | query: query}

@@ -16,6 +16,11 @@
 
     <div class="col-md-10">
       <div class="panel">
+        <div>
+          <%= link("All", to: Routes.admin_user_path(@conn, :index), class: "btn btn-default") %>
+          <%= link("Unvierifed", to: Routes.admin_user_path(@conn, :index, unverified: true), class: "btn btn-default") %>
+        </div>
+
         <table class="table">
           <thead>
             <tr>
@@ -29,17 +34,20 @@
             <%= Enum.map(@users, fn user -> %>
               <tr>
                 <td><%= user.username %></td>
-                <td><%= if user.email_verified_at, do: "Yes", else: "No" %></td>
+                <td><%= if user.email_verified_at, do: "Yes", else: content_tag(:div, "No", class: "alert alert-danger") %></td>
                 <td><%= TimeView.time(user.inserted_at) %></td>
                 <td>
                   <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-flat") %>
+                  <%= unless user.email_verified_at do %>
+                    <%= link("Remove", to: Routes.admin_user_path(@conn, :delete, user.id, back: "unverified"), class: "btn btn-flat", method: :delete, data: [confirm: "Are you sure?"]) %>
+                  <% end %>
                 </td>
               </tr>
             <% end) %>
           </tbody>
         </table>
 
-        <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
+        <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index, @conn.params), pagination: @pagination) %>
       </div>
     </div>
   </div>

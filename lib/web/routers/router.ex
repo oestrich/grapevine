@@ -211,7 +211,7 @@ defmodule Web.Router do
 
     resources("/games", GameController, only: [:index, :show])
 
-    resources("/users", UserController, only: [:index, :show])
+    resources("/users", UserController, only: [:index, :show, :delete])
   end
 
   scope "/", Web do

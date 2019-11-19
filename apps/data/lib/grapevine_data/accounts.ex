@@ -105,14 +105,47 @@ defmodule GrapevineData.Accounts do
   end
 
   @doc """
+  Delete a user from the system
+  """
+  def delete(%{email_verified_at: verified_at}) when verified_at != nil, do: {:error, :verified}
+
+  def delete(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.foreign_key_constraint(:id, name: :games_user_id_fkey)
+    |> Repo.delete()
+    |> convert_delete_error()
+  end
+
+  defp convert_delete_error({:ok, user}), do: {:ok, user}
+
+  defp convert_delete_error({:error, _changeset}), do: {:error, :owns_game}
+
+  @doc """
   Get all users
 
   For admins
   """
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
-    query = order_by(User, [u], asc: u.username)
+    query =
+      User
+      |> order_by([u], asc: u.username)
+      |> maybe_filter(opts[:filter])
+
     Pagination.paginate(Repo, query, opts)
+  end
+
+  defp maybe_filter(query, nil), do: query
+
+  defp maybe_filter(query, filter) do
+    case Map.get(filter, "unverified", "false") do
+      "true" ->
+        where(query, [u], is_nil(u.email_verified_at))
+
+      "false" ->
+        query
+    end
   end
 
   @doc """
