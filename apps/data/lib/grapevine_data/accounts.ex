@@ -8,6 +8,7 @@ defmodule GrapevineData.Accounts do
 
   alias GrapevineData.Accounts.User
   alias GrapevineData.Games.Game
+  alias GrapevineData.Notifications
   alias GrapevineData.Repo
   alias Stein.Pagination
 
@@ -52,12 +53,17 @@ defmodule GrapevineData.Accounts do
     case Repo.insert(changeset) do
       {:ok, user} ->
         :telemetry.execute([:grapevine, :accounts, :create], %{count: 1})
-        fun.(user)
+        registration_callbacks(user, fun)
         {:ok, user}
 
       {:error, changeset} ->
         {:error, changeset}
     end
+  end
+
+  defp registration_callbacks(user, fun) do
+    Notifications.new_user(user)
+    fun.(user)
   end
 
   @doc """

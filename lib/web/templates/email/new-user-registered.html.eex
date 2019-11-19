@@ -1,0 +1,6 @@
+<p>A new user registered</p>
+
+<p>Username: <%= @user.username %></p>
+<p>Email: <%= @user.email %></p>
+
+<%= link("View on Grapevine.", to: Routes.admin_user_url(Endpoint, :show, @user.id)) %>

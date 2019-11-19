@@ -21,6 +21,15 @@ defmodule GrapevineData.Notifications do
     end)
   end
 
+  @doc """
+  Notify of a new user
+  """
+  def new_user(user) do
+    closest_pid(fn pid ->
+      GenServer.cast(pid, {:new_user, user})
+    end)
+  end
+
   defp closest_pid(fun) do
     case :pg2.get_closest_pid(Grapevine.Notifications) do
       pid when is_pid(pid) ->

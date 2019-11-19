@@ -68,6 +68,14 @@ defmodule Grapevine.Emails do
     |> render("new-game-registered.html")
   end
 
+  def new_user_registered(user) do
+    base_email()
+    |> to(alert_to())
+    |> subject("Grapevine - New user registered")
+    |> assign(:user, user)
+    |> render("new-user-registered.html")
+  end
+
   def base_email() do
     new_email()
     |> from("no-reply@mg.grapevine.haus")

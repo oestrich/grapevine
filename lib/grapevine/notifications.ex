@@ -30,6 +30,11 @@ defmodule Grapevine.Notifications do
     {:noreply, state}
   end
 
+  def handle_cast({:new_user, user}, state) do
+    Implementation.new_user(user)
+    {:noreply, state}
+  end
+
   defmodule Implementation do
     @moduledoc false
 
@@ -57,6 +62,12 @@ defmodule Grapevine.Notifications do
 
       game
       |> Emails.new_game_registered()
+      |> Mailer.deliver_now()
+    end
+
+    def new_user(user) do
+      user
+      |> Emails.new_user_registered()
       |> Mailer.deliver_now()
     end
   end
