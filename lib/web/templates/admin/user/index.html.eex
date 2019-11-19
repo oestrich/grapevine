@@ -39,7 +39,7 @@
                 <td>
                   <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-flat") %>
                   <%= unless user.email_verified_at do %>
-                    <%= link("Remove", to: Routes.admin_user_path(@conn, :delete, user.id, back: "unverified"), class: "btn btn-flat", method: :delete, data: [confirm: "Are you sure?"]) %>
+                    <%= link("Remove", to: Routes.admin_user_path(@conn, :delete, user.id, back: "unverified"), class: "btn btn-flat", method: :delete, data: [confirm: "Are you sure you want to delete #{user.username}?"]) %>
                   <% end %>
                 </td>
               </tr>
