@@ -45,8 +45,8 @@ defmodule Web.Admin.UserController do
     end
   end
 
-  defp delete_redirect_path(conn, %{"back" => "unverified"}) do
-    Routes.admin_user_path(conn, :index, unverified: true)
+  defp delete_redirect_path(conn, %{"back" => "unverified", "page" => page}) do
+    Routes.admin_user_path(conn, :index, unverified: true, page: page)
   end
 
   defp delete_redirect_path(conn, _params) do
