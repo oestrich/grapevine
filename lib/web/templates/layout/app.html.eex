@@ -35,7 +35,7 @@
         <%= link("Docs", to: page_path(@conn, :docs)) %>
         |
         <%= link("MSSP Check", to: mssp_path(@conn, :index)) %>
-        <%= link(to: "https://www.patreon.com/exventure", target: "_blank", class: "mb-4 float-right") do %>
+        <%= link(to: "https://www.patreon.com/ericoestrich", target: "_blank", class: "mb-4 float-right") do %>
           <%= img_tag("/images/patron.png", alt: "Patreon") %>
         <% end %>
       </div>
