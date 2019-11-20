@@ -149,6 +149,15 @@ defmodule GrapevineData.Accounts do
   end
 
   @doc """
+  Get a list of all (decanter) editors
+  """
+  def editors() do
+    User
+    |> where([u], u.role == "editor" or u.role == "admin")
+    |> Repo.all()
+  end
+
+  @doc """
   Get a user by id
   """
   @spec get(id()) :: {:ok, User.t()} | {:error, :not_found}

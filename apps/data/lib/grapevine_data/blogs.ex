@@ -6,6 +6,7 @@ defmodule GrapevineData.Blogs do
   import Ecto.Query
 
   alias GrapevineData.Blogs.BlogPost
+  alias GrapevineData.Notifications
   alias GrapevineData.Repo
   alias Stein.Pagination
 
@@ -117,9 +118,16 @@ defmodule GrapevineData.Blogs do
   Create a new blog post written by a user
   """
   def create(user, params) do
-    %BlogPost{}
-    |> BlogPost.create_changeset(user, params)
-    |> Repo.insert()
+    changeset = BlogPost.create_changeset(%BlogPost{}, user, params)
+
+    case Repo.insert(changeset) do
+      {:ok, blog_post} ->
+        Notifications.new_blog_post(blog_post)
+        {:ok, blog_post}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

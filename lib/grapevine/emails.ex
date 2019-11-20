@@ -60,6 +60,14 @@ defmodule Grapevine.Emails do
     |> render("connection-failed.html")
   end
 
+  def new_blog_post(blog_post, editors) do
+    base_email()
+    |> to(Enum.map(editors, & &1.email))
+    |> subject("Grapevine - New blog post")
+    |> assign(:blog_post, blog_post)
+    |> render("new-blog-post.html")
+  end
+
   def new_game_registered(game) do
     base_email()
     |> to(alert_to())

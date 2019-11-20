@@ -1,0 +1,5 @@
+<p>A new blog post was created <em>but not submitted</em> to Decanter</p>
+
+<p>Title: <%= @blog_post.title %></p>
+
+<%= link("View on Grapevine.", to: Routes.decanter_news_url(Endpoint, :show, @blog_post.id)) %>

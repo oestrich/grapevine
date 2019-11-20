@@ -25,6 +25,11 @@ defmodule Grapevine.Notifications do
     {:noreply, state}
   end
 
+  def handle_cast({:new_blog_post, blog_post}, state) do
+    Implementation.new_blog_post(blog_post)
+    {:noreply, state}
+  end
+
   def handle_cast({:new_game, game}, state) do
     Implementation.new_game(game)
     {:noreply, state}
@@ -38,6 +43,7 @@ defmodule Grapevine.Notifications do
   defmodule Implementation do
     @moduledoc false
 
+    alias GrapevineData.Accounts
     alias Grapevine.Emails
     alias Grapevine.Mailer
 
@@ -54,6 +60,12 @@ defmodule Grapevine.Notifications do
     defp send_alert(alert) do
       alert
       |> Emails.new_alert()
+      |> Mailer.deliver_now()
+    end
+
+    def new_blog_post(blog_post) do
+      blog_post
+      |> Emails.new_blog_post(Accounts.editors())
       |> Mailer.deliver_now()
     end
 

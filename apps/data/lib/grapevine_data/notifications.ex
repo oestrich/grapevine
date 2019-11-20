@@ -13,6 +13,15 @@ defmodule GrapevineData.Notifications do
   end
 
   @doc """
+  Notify of a new blog post
+  """
+  def new_blog_post(blog_post) do
+    closest_pid(fn pid ->
+      GenServer.cast(pid, {:new_blog_post, blog_post})
+    end)
+  end
+
+  @doc """
   Notify of a new game that registered
   """
   def new_game(game) do
