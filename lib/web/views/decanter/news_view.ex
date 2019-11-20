@@ -16,6 +16,8 @@ defmodule Web.Decanter.NewsView do
 
   def submitted_post?(blog_post), do: blog_post.status == "submitted"
 
+  def archived_post?(blog_post), do: blog_post.status == "archived"
+
   def editable?(blog_post) do
     draft_post?(blog_post) || submitted_post?(blog_post)
   end
@@ -25,6 +27,8 @@ defmodule Web.Decanter.NewsView do
   def status(%{status: "submitted"}), do: "Submitted"
 
   def status(%{status: "published"}), do: "Published"
+
+  def status(%{status: "archived"}), do: "Archived"
 
   def editor_or_admin?(%{current_user: user}) when user != nil do
     Accounts.is_admin?(user) || Accounts.is_editor?(user)

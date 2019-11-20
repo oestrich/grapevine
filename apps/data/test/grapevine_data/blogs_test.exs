@@ -67,4 +67,22 @@ defmodule GrapevineData.BlogsTest do
       assert blog_post.status == "published"
     end
   end
+
+  describe "archiving a post" do
+    test "hide a post from the site and prevent re-submit" do
+      user = create_user()
+
+      {:ok, blog_post} =
+        Blogs.create(user, %{
+          title: "Updates for my Game",
+          body: "Some _markdown_ text"
+        })
+
+      assert blog_post.status == "draft"
+
+      {:ok, blog_post} = Blogs.archive(blog_post)
+
+      assert blog_post.status == "archived"
+    end
+  end
 end

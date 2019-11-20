@@ -153,7 +153,11 @@ defmodule Web.Router do
 
     put("/queue/:uid", QueueController, :update)
 
+    post("/queue/:uid/submit", QueueController, :submit)
+
     post("/queue/:uid/publish", QueueController, :publish)
+
+    post("/queue/:uid/archive", QueueController, :archive)
   end
 
   scope "/manage", Web.Manage, as: :manage do

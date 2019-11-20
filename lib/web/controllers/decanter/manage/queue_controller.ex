@@ -39,4 +39,18 @@ defmodule Web.Decanter.Manage.QueueController do
       redirect(conn, to: Routes.decanter_news_path(conn, :show, blog_post.uid))
     end
   end
+
+  def archive(conn, %{"uid" => uid}) do
+    with {:ok, blog_post} <- Blogs.get(uid) do
+      {:ok, blog_post} = Blogs.archive(blog_post)
+      redirect(conn, to: Routes.decanter_news_path(conn, :show, blog_post.uid))
+    end
+  end
+
+  def submit(conn, %{"uid" => uid}) do
+    with {:ok, blog_post} <- Blogs.get(uid) do
+      {:ok, blog_post} = Blogs.submit(blog_post)
+      redirect(conn, to: Routes.decanter_news_path(conn, :show, blog_post.uid))
+    end
+  end
 end

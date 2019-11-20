@@ -144,6 +144,16 @@ defmodule GrapevineData.Blogs do
   end
 
   @doc """
+  Archive a blog post
+  """
+  def archive(blog_post) do
+    blog_post
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "archived")
+    |> Repo.update()
+  end
+
+  @doc """
   Update a blog post
   """
   def update(blog_post, params) do

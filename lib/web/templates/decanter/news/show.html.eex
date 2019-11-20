@@ -18,7 +18,7 @@
       <div class="panel">
         <nav>
           <h4 class="name"><%= @blog_post.title %></h4>
-          <%= if blog_post_owned_by_user?(assigns, @blog_post) do %>
+          <%= if blog_post_owned_by_user?(assigns, @blog_post) || editor_or_admin?(assigns) do %>
             <span class="badge badge-secondary mr-3"><%= status(@blog_post) %></span>
           <% end %>
 
@@ -32,11 +32,20 @@
             <% end %>
 
             <%= if editor_or_admin?(assigns) do %>
+              |
               <%= link("Edit (Editor)", to: Routes.decanter_queue_path(@conn, :edit, @blog_post.uid), class: "btn btn-primary") %>
             <% end %>
 
             <%= if editor_or_admin?(assigns) && submitted_post?(@blog_post) do %>
               <%= link("Publish", to: Routes.decanter_queue_path(@conn, :publish, @blog_post.uid), method: "post", class: "btn btn-primary") %>
+            <% end %>
+
+            <%= if editor_or_admin?(assigns) && !submitted_post?(@blog_post) do %>
+              <%= link("Re-submit", to: Routes.decanter_queue_path(@conn, :submit, @blog_post.uid), method: "post", class: "btn btn-light", data: [confirm: "Are you sure?"]) %>
+            <% end %>
+
+            <%= if editor_or_admin?(assigns) && !archived_post?(@blog_post) do %>
+              <%= link("Archive", to: Routes.decanter_queue_path(@conn, :archive, @blog_post.uid), method: "post", class: "btn btn-light", data: [confirm: "Are you sure?"]) %>
             <% end %>
           </div>
         </nav>
