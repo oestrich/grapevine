@@ -14,3 +14,10 @@
   border-radius: 4px;
   color: $grey-2;
 }
+
+.admin-chat {
+  .terminal {
+    height: 600px;
+    overflow-y: scroll;
+  }
+}

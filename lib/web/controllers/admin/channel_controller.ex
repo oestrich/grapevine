@@ -12,10 +12,12 @@ defmodule Web.Admin.ChannelController do
 
   def show(conn, %{"id" => id}) do
     with {:ok, channel} <- Channels.get(id) do
+      messages = Messages.for(channel)
+
       conn
       |> assign(:channel, channel)
-      |> assign(:messages, Messages.for(channel))
-      |> render("show.html")
+      |> assign(:messages, messages)
+      |> render(:show)
     end
   end
 end

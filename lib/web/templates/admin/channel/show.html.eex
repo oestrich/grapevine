@@ -19,7 +19,7 @@
 
       <div class="chat admin-chat">
         <div class="terminal" data-pre="nowrap">
-          <%= Enum.map(@messages, fn message -> %>
+          <%= Enum.map(Enum.reverse(@messages), fn message -> %>
             <div>
               <span class="timestamp"><%= TimeView.time(message.inserted_at) %></span>
               <span class="player"><%= message.name %>@<%= message.game %></span>: <span class="text"><%= message.text %></span>
@@ -30,3 +30,10 @@
     </div>
   </div>
 </section>
+
+<script type="application/javascript">
+document.addEventListener("DOMContentLoaded", () => {
+  let terminal = document.querySelector(".terminal");
+  terminal.scrollTop = terminal.scrollHeight;
+});
+</script>
