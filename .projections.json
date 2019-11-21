@@ -1,7 +1,42 @@
 {
   "priv/repo/migrations": { "type": "migration" },
-  "lib/*.ex": { "alternate": "test/{}_test.exs" },
-  "test/*_test.exs": { "alternate": "lib/{}.ex" },
+  "lib/*.ex": {
+    "alternate": "test/{}_test.exs",
+    "type": "source",
+    "template": [
+      "defmodule {camelcase|capitalize|dot} do",
+      "end"
+    ]
+  },
+  "test/*_test.exs": {
+    "alternate": "lib/{}.ex",
+    "type": "test",
+    "template": [
+      "defmodule {camelcase|capitalize|dot}Test do",
+      "  use Grapevine.DataCase",
+      "",
+      "  alias {camelcase|capitalize|dot}",
+      "end"
+    ]
+  },
+  "lib/web/controllers/*_controller.ex": {
+    "type": "controller",
+    "alternate": "test/web/controllers/{basename}_controller_test.exs",
+    "template": [
+      "defmodule Web.{basename|camelcase|capitalize}Controller do",
+      "  use Web, :controller",
+      "end"
+    ]
+  },
+  "test/web/controllers/*_controller_test.exs": {
+    "alternate": "lib/web/controllers/{basename}_controller.ex",
+    "type": "test",
+    "template": [
+      "defmodule Web.{basename|camelcase|capitalize}ControllerTest do",
+      "  use Web.ConnCase, async: true",
+      "end"
+    ]
+  },
   "assets/js/*.js": { "alternate": "assets/js/{}.test.js" },
   "assets/js/*.test.js": { "alternate": "assets/js/{}.js" }
 }
