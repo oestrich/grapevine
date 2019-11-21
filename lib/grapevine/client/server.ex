@@ -25,15 +25,15 @@ defmodule Grapevine.Client.Server do
   def broadcast(message) do
     %{channel: channel, user: user, message: message} = message
 
-    Web.Endpoint.broadcast("channels:#{channel.name}", "channels/broadcast", %{
-      "channel" => channel.name,
-      "game" => "Grapevine",
-      "game_id" => @client_id,
-      "name" => user.username,
-      "message" => message
-    })
+    {:ok, message} = Messages.record_web(channel, user, message)
 
-    Messages.record_web(channel, user, message)
+    Web.Endpoint.broadcast("channels:#{channel.name}", "channels/broadcast", %{
+      "channel" => message.channel,
+      "game" => message.game,
+      "game_id" => @client_id,
+      "name" => message.name,
+      "message" => message.text
+    })
 
     :ok
   end

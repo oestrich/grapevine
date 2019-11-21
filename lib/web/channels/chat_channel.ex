@@ -48,6 +48,7 @@ defmodule Web.ChatChannel do
   end
 
   def handle_info(%{event: "channels/broadcast", payload: payload}, socket) do
+    payload = Map.merge(payload, %{"inserted_at" => Timex.now()})
     push(socket, "broadcast", payload)
     {:noreply, socket}
   end

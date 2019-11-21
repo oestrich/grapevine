@@ -1,6 +1,7 @@
 import _ from "underscore";
 import React from "react";
 import {connect} from 'react-redux';
+import moment from 'moment';
 
 import {getSocketMessages} from "../redux/selectors";
 
@@ -13,6 +14,15 @@ class SystemMessage extends React.Component {
 }
 
 class TextMessage extends React.Component {
+  timestamp() {
+    let insertedAt = moment(this.props.insertedAt);
+    let timestamp = insertedAt.format("YYYY-MM-DD hh:mm A");
+
+    return (
+      <span className="timestamp">{timestamp}</span>
+    );
+  }
+
   channel() {
     let channel = this.props.channel;
 
@@ -40,7 +50,7 @@ class TextMessage extends React.Component {
 
   render() {
     return (
-      <div>{this.channel()} {this.name()}: {this.text()}</div>
+      <div>{this.timestamp()} {this.channel()} {this.name()}: {this.text()}</div>
     );
   }
 }
@@ -55,7 +65,12 @@ class Terminal extends React.Component {
 
       case "broadcast":
         return (
-          <TextMessage key={i} channel={message.channel} game={message.game} name={message.name} message={message.message} />
+          <TextMessage key={i}
+            insertedAt={message.inserted_at}
+            channel={message.channel}
+            game={message.game}
+            name={message.name}
+            message={message.message} />
         );
     }
   }
