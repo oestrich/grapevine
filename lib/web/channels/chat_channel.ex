@@ -33,6 +33,7 @@ defmodule Web.ChatChannel do
           channel
           |> Messages.for(limit: @initial_replay_count)
           |> Enum.map(&Map.take(&1, [:inserted_at, :name, :game, :text]))
+          |> Enum.map(&convert_message_to_utc/1)
           |> Enum.reverse()
 
         {:ok, %{messages: messages}, socket}
@@ -40,6 +41,10 @@ defmodule Web.ChatChannel do
       {:error, :not_found} ->
         {:error, %{reason: "no such channel"}}
     end
+  end
+
+  defp convert_message_to_utc(message) do
+    Map.put(message, :inserted_at, Timex.Timezone.convert(message.inserted_at, "UTC"))
   end
 
   def handle_in("send", %{"message" => message}, socket) do
