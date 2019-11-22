@@ -1,6 +1,7 @@
 import {createActions, createReducer} from "reduxsauce";
 
 export const {Types: SocketTypes, Creators: SocketCreators} = createActions({
+  socketChannelsConnected: ["channelCount"],
   socketConnected: null,
   socketDisconnected: null,
   socketReceiveBroadcast: ["message"],
@@ -11,6 +12,12 @@ SocketCreators.socketSubscribeChannel = (socket, channelName) => {
   return (dispatch) => {
     socket.connectChannel(channelName);
     dispatch(SocketCreators.socketSubscribedChannel(channelName));
+  };
+};
+
+SocketCreators.socketChannelsConnected = (socket, channelCount) => {
+  return (dispatch) => {
+    socket.channelsConnected(channelCount);
   };
 };
 

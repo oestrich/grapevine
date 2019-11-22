@@ -17,15 +17,15 @@ export class Client extends React.Component {
     super(props);
 
     this.store = makeStore();
-  }
 
-  componentWillMount() {
     this.socket = new ClientSocket(this.store, userToken);
     this.socket.join();
 
     this.props.channels.map(channelName => {
       this.store.dispatch(SocketCreators.socketSubscribeChannel(this.socket, channelName));
     });
+
+    this.store.dispatch(SocketCreators.socketChannelsConnected(this.socket, this.props.channels.length));
   }
 
   render() {

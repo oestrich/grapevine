@@ -6,8 +6,11 @@ defmodule Web.ChatChannel do
   use Web, :channel
 
   alias GrapevineData.Channels
+  alias GrapevineData.Messages
   alias Grapevine.Client
   alias Grapevine.Client.Broadcast
+
+  @initial_replay_count 25
 
   def join("chat:" <> channel, _message, socket) do
     case Map.has_key?(socket.assigns, :user) do
@@ -26,7 +29,13 @@ defmodule Web.ChatChannel do
         socket = assign(socket, :channel, channel)
         Web.Endpoint.subscribe("channels:#{channel.name}")
 
-        {:ok, socket}
+        messages =
+          channel
+          |> Messages.for(limit: @initial_replay_count)
+          |> Enum.map(&Map.take(&1, [:inserted_at, :name, :game, :text]))
+          |> Enum.reverse()
+
+        {:ok, %{messages: messages}, socket}
 
       {:error, :not_found} ->
         {:error, %{reason: "no such channel"}}
@@ -48,7 +57,11 @@ defmodule Web.ChatChannel do
   end
 
   def handle_info(%{event: "channels/broadcast", payload: payload}, socket) do
-    payload = Map.merge(payload, %{"inserted_at" => Timex.now()})
+    payload =
+      payload
+      |> Map.put("inserted_at", Timex.now())
+      |> Map.delete("game_id")
+
     push(socket, "broadcast", payload)
     {:noreply, socket}
   end

@@ -70,7 +70,7 @@ class Terminal extends React.Component {
             channel={message.channel}
             game={message.game}
             name={message.name}
-            message={message.message} />
+            message={message.message || message.text} />
         );
     }
   }
@@ -80,12 +80,10 @@ class Terminal extends React.Component {
   }
 
   componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
-  componentWillUpdate() {
     let visibleBottom = this.terminal.scrollTop + this.terminal.clientHeight;
     this.triggerScroll = !(visibleBottom + 250 < this.terminal.scrollHeight);
+
+    this.scrollToBottom();
   }
 
   scrollToBottom() {
