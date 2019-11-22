@@ -107,7 +107,8 @@ class ClientSocket {
     if (this.channelCount == this.connectedChannels.length) {
       let messages = this.connectedChannels.flatMap(({messages}) => { return messages; });
       messages.sort((a, b) => (a.inserted_at > b.inserted_at) ? 1 : -1)
-      messages.slice(0, 30).forEach((message) => {
+      let sliceFrom = Math.max(messages.length - 30, 0);
+      messages.slice(sliceFrom).forEach((message) => {
         this.receiveBroadcast(message);
       });
     }
