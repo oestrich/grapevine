@@ -23,7 +23,7 @@ defmodule GrapevineData.Messages.Message do
     belongs_to(:game_record, Game, foreign_key: :game_id)
     belongs_to(:user_record, User, foreign_key: :user_id)
 
-    timestamps(updated_at: false)
+    timestamps(updated_at: false, type: :utc_datetime_usec)
   end
 
   def create_socket_changeset(struct, game, channel, params) do
