@@ -37,6 +37,7 @@ defmodule GrapevineData.Games.Game do
     field(:telnet_last_seen_at, :utc_datetime)
     field(:display_player_graph, :boolean, default: false)
     field(:featurable, :boolean)
+    field(:can_broadcast, :boolean, read_after_writes: true)
 
     field(:tagline, :string)
     field(:description, :string)

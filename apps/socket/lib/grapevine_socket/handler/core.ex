@@ -154,6 +154,7 @@ defmodule GrapevineSocket.Handler.Core do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
          {:ok, channel} <- check_channel_subscribed_to(state, channel),
+         {:ok, state} <- check_can_broadcast(state),
          {:ok, state} <- RateLimiter.check_rate_limit(state, "channels/send") do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
@@ -198,6 +199,16 @@ defmodule GrapevineSocket.Handler.Core do
 
       false ->
         {:error, :not_subscribed}
+    end
+  end
+
+  defp check_can_broadcast(state) do
+    case state.game.can_broadcast do
+      true ->
+        {:ok, state}
+
+      false ->
+        {:error, :silenced}
     end
   end
 
