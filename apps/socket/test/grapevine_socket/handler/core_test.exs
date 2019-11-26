@@ -325,15 +325,15 @@ defmodule GrapevineSocket.Handler.CoreTest do
       assert response["error"] == "disconnected due to rate limit abuse"
     end
 
-    test "silenced games do not broadcast", %{state: state, game: game} do
-      state = %{state | game: %{game | can_broadcast: false}}
-
-      GrapevineSocket.PubSub.subscribe("channels:grapevine")
+    test "paused channels do not broadcast", %{state: state, game: game} do
+      channel_name = UUID.uuid4()
+      GrapevineSocket.PubSub.broadcast("system:channels", "pause", %{channel: channel_name, minutes: 10})
+      GrapevineSocket.PubSub.subscribe("channels:#{channel_name}")
 
       frame = %{
         "event" => "channels/send",
         "payload" => %{
-          "channel" => "grapevine",
+          "channel" => channel_name,
           "name" => "Player",
           "message" => "Hello!"
         }
@@ -342,7 +342,7 @@ defmodule GrapevineSocket.Handler.CoreTest do
       assert {:ok, :skip, _state} = Router.receive(state, frame)
 
       game_name = game.short_name
-      refute_receive %{payload: %{"channel" => "grapevine", "game" => ^game_name}}
+      refute_receive %{payload: %{"channel" => ^channel_name, "game" => ^game_name}}
     end
   end
 

@@ -25,17 +25,27 @@ defmodule Grapevine.Client.Server do
   def broadcast(message) do
     %{channel: channel, user: user, message: message} = message
 
-    {:ok, message} = Messages.record_web(channel, user, message)
+    with {:ok, channel} <- check_channel_paused(channel) do
+      {:ok, message} = Messages.record_web(channel, user, message)
 
-    Web.Endpoint.broadcast("channels:#{channel.name}", "channels/broadcast", %{
-      "channel" => message.channel,
-      "game" => message.game,
-      "game_id" => @client_id,
-      "name" => message.name,
-      "message" => message.text
-    })
+      Web.Endpoint.broadcast("channels:#{channel.name}", "channels/broadcast", %{
+        "channel" => message.channel,
+        "game" => message.game,
+        "game_id" => @client_id,
+        "name" => message.name,
+        "message" => message.text
+      })
+    end
+  end
 
-    :ok
+  defp check_channel_paused(channel) do
+    case GrapevineSocket.Channels.paused?(channel.name) do
+      true ->
+        {:error, :silenced}
+
+      false ->
+        {:ok, channel}
+    end
   end
 
   @impl true

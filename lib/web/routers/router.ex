@@ -209,6 +209,8 @@ defmodule Web.Router do
 
     resources("/channels", ChannelController, only: [:index, :show])
 
+    post("/channels/:id/pause", ChannelController, :pause)
+
     resources("/client_sessions", ClientSessionController, only: [:index])
 
     resources("/events", EventController)
