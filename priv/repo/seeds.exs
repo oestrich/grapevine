@@ -13,15 +13,16 @@ channel
 |> Repo.update!()
 
 # Create a know user and game login
-{:ok, user} = Accounts.register(%{
-  username: "player",
-  email: "admin@example.com",
-  password: "password",
-  password_confirmation: "password",
-}, fn _user -> :ok end)
+{:ok, user} =
+  Accounts.register(%{
+    username: "gvadmin",
+    email: "admin@example.com",
+    password: "password",
+    password_confirmation: "password",
+  }, fn _user -> :ok end)
 
 user
-|> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
+|> Ecto.Changeset.change(%{role: "admin", email_verified_at: DateTime.truncate(Timex.now(), :second)})
 |> Repo.update!()
 
 {:ok, game} = Games.register(user, %{name: "Development Game", short_name: "DevGame", description: "Description for Development Game"})
@@ -36,9 +37,21 @@ game
 {:ok, connection} = Games.create_connection(game, %{
   type: "telnet",
   host: "localhost",
-  port: 5555
+  port: 4444
 }, fn _connection -> :ok end)
 
 connection
 |> Ecto.Changeset.change(%{supports_mssp: true})
 |> Repo.update()
+
+{:ok, user} =
+  Accounts.register(%{
+    username: "player",
+    email: "player@example.com",
+    password: "password",
+    password_confirmation: "password",
+  }, fn _user -> :ok end)
+
+user
+|> Ecto.Changeset.change(%{email_verified_at: DateTime.truncate(Timex.now(), :second)})
+|> Repo.update!()
