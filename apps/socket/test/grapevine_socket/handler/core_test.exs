@@ -327,7 +327,12 @@ defmodule GrapevineSocket.Handler.CoreTest do
 
     test "paused channels do not broadcast", %{state: state, game: game} do
       channel_name = UUID.uuid4()
-      GrapevineSocket.PubSub.broadcast("system:channels", "pause", %{channel: channel_name, minutes: 10})
+
+      GrapevineSocket.PubSub.broadcast("system:channels", "pause", %{
+        channel: channel_name,
+        minutes: 10
+      })
+
       GrapevineSocket.PubSub.subscribe("channels:#{channel_name}")
 
       frame = %{
