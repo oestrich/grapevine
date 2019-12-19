@@ -12,6 +12,7 @@ defmodule GrapevineSocket.Handler.Core do
   alias GrapevineData.Channels
   alias GrapevineData.Games
   alias GrapevineData.Messages
+  alias GrapevineSocket.Channels, as: LocalChannels
   alias GrapevineSocket.Presence
   alias GrapevineSocket.Handler.Core.Authenticate
   alias GrapevineSocket.PubSub
@@ -154,7 +155,7 @@ defmodule GrapevineSocket.Handler.Core do
     with {:ok, channel} <- Map.fetch(payload, "channel"),
          {:ok, channel} <- Channels.ensure_channel(channel),
          {:ok, channel} <- check_channel_subscribed_to(state, channel),
-         {:ok, state} <- check_can_broadcast(state),
+         {:ok, channel} <- check_channel_paused(channel),
          {:ok, state} <- RateLimiter.check_rate_limit(state, "channels/send") do
       name = Text.clean(Map.get(payload, "name", ""))
       message = Text.clean(Map.get(payload, "message", ""))
@@ -202,13 +203,13 @@ defmodule GrapevineSocket.Handler.Core do
     end
   end
 
-  defp check_can_broadcast(state) do
-    case state.game.can_broadcast do
+  defp check_channel_paused(channel) do
+    case LocalChannels.paused?(channel.name) do
       true ->
-        {:ok, state}
+        {:error, :silenced}
 
       false ->
-        {:error, :silenced}
+        {:ok, channel}
     end
   end
 

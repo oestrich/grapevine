@@ -10,20 +10,14 @@ defmodule GrapevineSocket.Application do
   @default_config [port: 4110]
 
   def start(_type, _args) do
-    config = Application.get_env(:grapevine_socket, :http, [])
-    config = Keyword.merge(@default_config, config)
-
     children = [
       cluster_supervisor(),
-      {GrapevineSocket.Presence, []},
       phoenix_pubsub(),
+      {GrapevineSocket.Presence, []},
       {GrapevineSocket.Metrics.Server, []},
-      Plug.Cowboy.child_spec(
-        scheme: :http,
-        plug: GrapevineSocket.Endpoint,
-        options: [port: config[:port], dispatch: dispatch()]
-      ),
-      {:telemetry_poller, telemetry_opts()}
+      endpoint(),
+      {:telemetry_poller, telemetry_opts()},
+      {GrapevineSocket.Channels, []}
     ]
 
     report_errors = Application.get_env(:grapevine_socket, :errors)[:report]
@@ -73,5 +67,16 @@ defmodule GrapevineSocket.Application do
     if topologies && Code.ensure_compiled?(Cluster.Supervisor) do
       {Cluster.Supervisor, [topologies, [name: GrapevineSocket.ClusterSupervisor]]}
     end
+  end
+
+  defp endpoint() do
+    config = Application.get_env(:grapevine_socket, :http, [])
+    config = Keyword.merge(@default_config, config)
+
+    Plug.Cowboy.child_spec(
+      scheme: :http,
+      plug: GrapevineSocket.Endpoint,
+      options: [port: config[:port], dispatch: dispatch()]
+    )
   end
 end

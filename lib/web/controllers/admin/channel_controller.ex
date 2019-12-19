@@ -1,7 +1,7 @@
 defmodule Web.Admin.ChannelController do
   use Web, :controller
 
-  alias GrapevineData.Channels
+  alias Grapevine.Channels
   alias GrapevineData.Messages
 
   def index(conn, _params) do
@@ -18,6 +18,16 @@ defmodule Web.Admin.ChannelController do
       |> assign(:channel, channel)
       |> assign(:messages, messages)
       |> render(:show)
+    end
+  end
+
+  def pause(conn, %{"id" => id}) do
+    with {:ok, channel} <- Channels.get(id) do
+      Channels.pause(channel.name)
+
+      conn
+      |> put_flash(:info, "Channel was paused")
+      |> redirect(to: Routes.admin_channel_path(conn, :show, id))
     end
   end
 end
