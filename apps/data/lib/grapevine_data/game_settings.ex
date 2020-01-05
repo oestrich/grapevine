@@ -30,7 +30,7 @@ defmodule GrapevineData.GameSettings do
   def update_client_settings(game, params) do
     game = Repo.preload(game, [:client_settings])
 
-    case is_nil(game.client_settings) do
+    case is_nil(game.client_settings) || is_nil(game.client_settings.id) do
       true ->
         game
         |> Ecto.build_assoc(:client_settings)
