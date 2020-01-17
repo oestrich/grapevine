@@ -93,12 +93,14 @@
     position: absolute;
     top: 12px;
     width: 256px;
-    right: 12px;
+    right: 64px;
+    z-index: 3;
 
     .gauges {
       display: flex;
       flex-direction: column;
       height: auto;
+      background-color: transparent;
     }
   }
 
