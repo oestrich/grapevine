@@ -108,6 +108,7 @@ class Prompt extends React.Component {
           onKeyDown={this.onKeyDown}
           autoCorrect="off"
           autoCapitalize="off"
+          autoComplete="off"
           spellCheck="false"
           ref={el => { this.prompt = el; }} />
         <button id="send" className="btn btn-primary" onClick={this.buttonSendMessage}>Send</button>
