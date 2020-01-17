@@ -222,7 +222,7 @@ defmodule GrapevineTelnet.WebClient do
 
     buffer =
       buffer
-      |> Enum.take(-20)
+      |> Enum.take(-500)
       |> Enum.join("\n")
 
     {:noreply, %{state | channel_buffer: buffer}}
