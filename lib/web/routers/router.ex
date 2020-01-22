@@ -171,6 +171,12 @@ defmodule Web.Router do
       post("/deny", CharacterController, :deny, as: :action)
     end
 
+    resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
+  end
+
+  scope "/manage", Web.Manage, as: :manage do
+    pipe_through([:browser, :logged_in, :verified])
+
     resources("/connections", ConnectionController, only: [:edit, :update, :delete])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
@@ -196,8 +202,6 @@ defmodule Web.Router do
     resources("/gauges", GaugeController, only: [:edit, :update, :delete])
 
     resources("/redirect-uris", RedirectURIController, only: [:delete])
-
-    resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
   end
 
   scope "/admin", Web.Admin, as: :admin do
