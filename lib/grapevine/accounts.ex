@@ -25,6 +25,16 @@ defmodule Grapevine.Accounts do
     Accounts.register(params, &deliver_verify_email/1)
   end
 
+  @doc """
+  Reset the verification token and resend the email
+  """
+  def reset_email_verification(user) do
+    case Accounts.reset_email_verification(user) do
+      {:ok, user} ->
+        deliver_verify_email(user)
+    end
+  end
+
   defp deliver_verify_email(user) do
     :telemetry.execute([:grapevine, :accounts, :email, :send_verify], %{count: 1})
 

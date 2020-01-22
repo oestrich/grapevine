@@ -163,8 +163,6 @@ defmodule Web.Router do
   scope "/manage", Web.Manage, as: :manage do
     pipe_through([:browser, :logged_in])
 
-    resources("/achievements", AchievementController, only: [:edit, :update, :delete])
-
     resources("/characters", CharacterController, only: [:index]) do
       post("/approve", CharacterController, :approve, as: :action)
 
@@ -172,10 +170,14 @@ defmodule Web.Router do
     end
 
     resources("/settings", SettingController, only: [:show, :edit, :update], singleton: true)
+
+    post("/settings/verify", SettingController, :verify)
   end
 
   scope "/manage", Web.Manage, as: :manage do
     pipe_through([:browser, :logged_in, :verified])
+
+    resources("/achievements", AchievementController, only: [:edit, :update, :delete])
 
     resources("/connections", ConnectionController, only: [:edit, :update, :delete])
 

@@ -46,4 +46,16 @@ defmodule Web.Manage.SettingController do
         |> redirect(to: manage_setting_path(conn, :show))
     end
   end
+
+  def verify(conn, _params) do
+    %{current_user: user} = conn.assigns
+
+    Accounts.reset_email_verification(user)
+
+    notice = "Verification email sent. Please check your mailbox to confirm your email address."
+
+    conn
+    |> put_flash(:info, notice)
+    |> redirect(to: Routes.page_path(conn, :index))
+  end
 end

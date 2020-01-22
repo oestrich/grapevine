@@ -8,6 +8,12 @@
     <main>
       <div class="container">
         <div class="alerts">
+          <%= if show_verification_push?(Map.get(assigns, :current_user, nil)) do %>
+            <div class="alert alert-danger" role="alert">
+              Please verify your email address. <%= link("You can re-send this by clicking here.", to: Routes.manage_setting_path(@conn, :verify), method: :post) %>
+            </div>
+          <% end %>
+
           <%= if (flash = get_flash(@conn, :info)) && Map.get(assigns, :layout_flash, true) do %>
             <div class="alert alert-primary" role="alert">
               <%= flash %>

@@ -64,7 +64,7 @@ defmodule GrapevineData.Accounts.User do
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:username)
     |> unique_constraint(:email)
-    |> reset_email_verification()
+    |> maybe_reset_email_verification()
   end
 
   def update_without_username_changeset(struct, params) do
@@ -73,7 +73,7 @@ defmodule GrapevineData.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email)
-    |> reset_email_verification()
+    |> maybe_reset_email_verification()
   end
 
   def password_changeset(struct, params) do
@@ -105,6 +105,13 @@ defmodule GrapevineData.Accounts.User do
     struct
     |> change()
     |> put_change(:registration_key, UUID.uuid4())
+  end
+
+  def reset_email_verification(struct) do
+    struct
+    |> change()
+    |> put_change(:email_verification_token, UUID.uuid4())
+    |> put_change(:email_verified_at, nil)
   end
 
   defp username_validation(changeset) do
@@ -140,7 +147,7 @@ defmodule GrapevineData.Accounts.User do
     end
   end
 
-  defp reset_email_verification(changeset) do
+  defp maybe_reset_email_verification(changeset) do
     case get_change(changeset, :email) do
       nil ->
         changeset

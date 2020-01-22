@@ -29,4 +29,13 @@ defmodule Web.LayoutView do
   end
 
   def decanter_enabled?(), do: @decanter_enabled
+
+  @doc """
+  Show the verification alert if the user hasn't verified and is older than a day old.
+  """
+  def show_verification_push?(nil), do: false
+
+  def show_verification_push?(user) do
+    !Accounts.email_verified?(user) && Timex.diff(Timex.now(), user.inserted_at, :days) >= 1
+  end
 end

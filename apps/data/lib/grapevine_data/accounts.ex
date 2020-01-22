@@ -88,6 +88,15 @@ defmodule GrapevineData.Accounts do
   end
 
   @doc """
+  Reset the email verification token
+  """
+  def reset_email_verification(user) do
+    user
+    |> User.reset_email_verification()
+    |> Repo.update()
+  end
+
+  @doc """
   Change a user's password
 
   Validates the password before changing
