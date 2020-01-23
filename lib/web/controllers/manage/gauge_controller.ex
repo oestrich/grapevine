@@ -19,11 +19,12 @@ defmodule Web.Manage.GaugeController do
     %{current_user: user} = conn.assigns
     {:ok, game} = Games.get(user, game_id)
 
-    with {:ok, _gauge} <- Gauges.create(game, params) do
-      conn
-      |> put_flash(:info, "Gauge created!")
-      |> redirect(to: manage_game_client_path(conn, :show, game.id))
-    else
+    case Gauges.create(game, params) do
+      {:ok, _gauge} ->
+        conn
+        |> put_flash(:info, "Gauge created!")
+        |> redirect(to: manage_game_client_path(conn, :show, game.id))
+
       {:error, changeset} ->
         conn
         |> assign(:game, game)
@@ -49,11 +50,12 @@ defmodule Web.Manage.GaugeController do
     %{current_user: user} = conn.assigns
     {:ok, gauge} = Gauges.get(user, id)
 
-    with {:ok, gauge} <- Gauges.update(gauge, params) do
-      conn
-      |> put_flash(:info, "Gauge updated")
-      |> redirect(to: manage_game_client_path(conn, :show, gauge.game_id))
-    else
+    case Gauges.update(gauge, params) do
+      {:ok, gauge} ->
+        conn
+        |> put_flash(:info, "Gauge updated")
+        |> redirect(to: manage_game_client_path(conn, :show, gauge.game_id))
+
       {:error, changeset} ->
         conn
         |> assign(:gauge, gauge)

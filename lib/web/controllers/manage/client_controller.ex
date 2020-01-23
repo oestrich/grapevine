@@ -21,11 +21,12 @@ defmodule Web.Manage.ClientController do
     %{current_user: user} = conn.assigns
     {:ok, game} = Games.get(user, id)
 
-    with {:ok, _client_settings} <- GameSettings.update_client_settings(game, params) do
-      conn
-      |> put_flash(:info, "Updated!")
-      |> redirect(to: manage_game_client_path(conn, :show, game.id))
-    else
+    case GameSettings.update_client_settings(game, params) do
+      {:ok, _client_settings} ->
+        conn
+        |> put_flash(:info, "Updated!")
+        |> redirect(to: manage_game_client_path(conn, :show, game.id))
+
       {:error, :not_found} ->
         conn
         |> put_flash(:info, "Updated!")

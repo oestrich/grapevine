@@ -31,9 +31,10 @@ defmodule Web.Admin.EventController do
   end
 
   def create(conn, %{"event" => params}) do
-    with {:ok, event} <- Events.create(params) do
-      redirect(conn, to: Routes.admin_event_path(conn, :show, event.uid))
-    else
+    case Events.create(params) do
+      {:ok, event} ->
+        redirect(conn, to: Routes.admin_event_path(conn, :show, event.uid))
+
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)

@@ -19,11 +19,12 @@ defmodule Web.Manage.HostedSiteController do
     %{current_user: user} = conn.assigns
     {:ok, game} = Games.get(user, id)
 
-    with {:ok, _hosted_settings} <- GameSettings.update_hosted_settings(game, params) do
-      conn
-      |> put_flash(:info, "Updated!")
-      |> redirect(to: manage_game_hosted_site_path(conn, :show, game.id))
-    else
+    case GameSettings.update_hosted_settings(game, params) do
+      {:ok, _hosted_settings} ->
+        conn
+        |> put_flash(:info, "Updated!")
+        |> redirect(to: manage_game_hosted_site_path(conn, :show, game.id))
+
       {:error, :not_found} ->
         conn
         |> put_flash(:info, "Updated!")

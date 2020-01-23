@@ -48,8 +48,8 @@ defmodule Web.Manage.AchievementController do
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, achievement} = Achievements.get(user, id),
-         {:ok, game} = Games.get(user, achievement.game_id) do
+    with {:ok, achievement} <- Achievements.get(user, id),
+         {:ok, game} <- Games.get(user, achievement.game_id) do
       conn
       |> assign(:achievement, achievement)
       |> assign(:game, game)

@@ -48,8 +48,8 @@ defmodule Web.Manage.EventController do
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, event} = Events.get(user, id),
-         {:ok, game} = Games.get(user, event.game_id) do
+    with {:ok, event} <- Events.get(user, id),
+         {:ok, game} <- Games.get(user, event.game_id) do
       conn
       |> assign(:event, event)
       |> assign(:game, game)
