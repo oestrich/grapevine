@@ -26,20 +26,21 @@ ENV MIX_ENV=prod
 COPY --from=frontend /priv/static /app/priv/static
 COPY . /app/
 RUN mix phx.digest
+ARG WEB_HOST
+ARG WEB_PORT
+ARG WEB_SCHEME
 RUN mix release
 
-FROM alpine:3.9
+FROM alpine:3.11
 ENV LANG=C.UTF-8
 RUN apk update && \
   apk add -U bash openssl imagemagick && \
   rm -rf /var/cache/apk/*
 WORKDIR /opt/app
 COPY --from=releaser /app/_build/prod/rel/grapevine /opt/app/
-COPY config/prod.docker.exs /etc/grapevine/config.exs
 
 ENV MIX_ENV=prod
 EXPOSE 4100
-EXPOSE 4110
 
 ENTRYPOINT ["bin/grapevine"]
 CMD ["start"]

@@ -24,9 +24,19 @@ defmodule Grapevine.ReleaseTasks do
     # Run migrations
     Enum.each(@apps, &run_migrations_for/1)
 
-    # Signal shutdown
     IO.puts("Success!")
-    :init.stop()
+  end
+
+  def seed() do
+    startup()
+
+    seeds_file = Path.join(:code.priv_dir(:grapevine), "repo/seeds.exs")
+
+    if File.exists?(seeds_file) do
+      Code.eval_file(seeds_file)
+    end
+
+    IO.puts("Success!")
   end
 
   defp startup() do

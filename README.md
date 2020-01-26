@@ -67,6 +67,48 @@ config :grapevine,
   ]
 ```
 
+### Docker Compose
+
+To run a production like system locally, you can use [docker-compose](https://docs.docker.com/compose/).
+
+The following commands will get a system running locally at `http://grapevine.local`. This also assumes you have something listening locally (such as nginx) that will proxy port 80 traffic to port 4100.
+
+```bash
+docker-compose build
+docker-compose up -d postgres
+docker-compose up -d socket
+docker-compose up -d telnet
+docker-compose run --rm web eval "Grapevine.ReleaseTasks.migrate()"
+docker-compose run --rm web eval "Grapevine.ReleaseTasks.seed()"
+docker-compose up web
+```
+
+#### Simple nginx config
+
+This nginx config will configure your server to listen for `grapevine.local` and forward to either a local development server or the docker-compose setup from above.
+
+```nginx
+    upstream grapevine {
+            server localhost:4100;
+    }
+
+    server {
+            listen 80;
+            server_name grapevine.local;
+
+            location / {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass http://grapevine;
+            }
+    }
+```
+
 ## Setting up a new Play CNAME
 
 - Game sets the CNAME to `client.grapevine.haus`
