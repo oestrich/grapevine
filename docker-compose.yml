@@ -1,0 +1,60 @@
+# https://docs.docker.com/compose/compose-file/
+version: '3.6'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WEB_HOST: "grapevine.local"
+        WEB_PORT: "80"
+        WEB_SCHEME: "http"
+    environment:
+      HOST: web
+      RELEASE_COOKIE: "ytZN0dOMjY5Nmwxckk3ZnppZy9WaHVxd0R2dHFndFZiZ240Y2hDY"
+    depends_on:
+      - socket
+      - telnet
+      - postgres
+    ports:
+      - 4100:4100
+    volumes:
+      - ./docker-config/grapevine:/etc/grapevine
+
+  socket:
+    build:
+      context: apps/
+      dockerfile: socket/Dockerfile
+    environment:
+      HOST: socket
+      RELEASE_COOKIE: "ytZN0dOMjY5Nmwxckk3ZnppZy9WaHVxd0R2dHFndFZiZ240Y2hDY"
+    depends_on:
+      - postgres
+    ports:
+      - 4110:4110
+    volumes:
+      - ./docker-config/socket:/etc/grapevine_socket
+
+  telnet:
+    build:
+      context: apps/
+      dockerfile: telnet/Dockerfile
+    environment:
+      HOST: telnet
+      RELEASE_COOKIE: "ytZN0dOMjY5Nmwxckk3ZnppZy9WaHVxd0R2dHFndFZiZ240Y2hDY"
+    depends_on:
+      - postgres
+    volumes:
+      - ./docker-config/telnet:/etc/telnet
+
+  postgres:
+    image: postgres:12.1-alpine
+    environment:
+      POSTGRES_DB: grapevine
+      POSTGRES_PASSWORD: grapevine
+      POSTGRES_USER: grapevine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data: {}

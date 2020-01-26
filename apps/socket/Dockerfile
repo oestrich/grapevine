@@ -5,16 +5,16 @@ RUN apk update && \
   apk add --no-cache gcc git make musl-dev && \
   mix local.rebar --force && \
   mix local.hex --force
-WORKDIR /apps/telnet/
+WORKDIR /apps/socket/
 ENV MIX_ENV=prod
 COPY data/mix.* /apps/data/
-COPY telnet/mix.* /apps/telnet/
+COPY socket/mix.* /apps/socket/
 RUN mix deps.get --only prod && \
   mix deps.compile
 
 FROM builder as releaser
 COPY data /apps/data/
-COPY telnet /apps/telnet/
+COPY socket /apps/socket/
 RUN mix release
 
 FROM alpine:3.11
@@ -24,9 +24,9 @@ RUN apk update && \
   apk add -U bash openssl && \
   rm -rf /var/cache/apk/*
 WORKDIR /app
-COPY --from=releaser /apps/telnet/_build/prod/rel/telnet /app
+COPY --from=releaser /apps/socket/_build/prod/rel/grapevine_socket /app
 
 ENV MIX_ENV=prod
 
-ENTRYPOINT ["bin/telnet"]
+ENTRYPOINT ["bin/grapevine_socket"]
 CMD ["start"]
