@@ -144,13 +144,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git build-essential
-    - name: Setup elixir and database
+    - name: Setup elixir
       working-directory: apps/telnet
       run: |
-        cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
-        mix do ecto.create, ecto.migrate
       env:
         MIX_ENV: test
     - name: Verify application
