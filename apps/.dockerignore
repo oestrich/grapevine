@@ -4,21 +4,25 @@ data/erl_crash.dump
 data/test
 data/tmp
 
+grapevine/assets/node_modules/
 grapevine/_build
+grapevine/config/dev.local.exs
+grapevine/config/prod.secret.exs
 grapevine/deps
 grapevine/erl_crash.dump
-grapevine/assets/node_modules/
+grapevine/priv/files/
 grapevine/priv/static/
-grapevine/config/prod.secret.exs
-grapevine/config/dev.local.exs
 grapevine/test
 grapevine/tmp
+grapevine/uploads
+grapevine/*.sh
 
 socket/_build
 socket/deps
 socket/erl_crash.dump
 socket/test
 socket/tmp
+socket/*.sh
 
 telnet/_build
 telnet/deploy
@@ -26,3 +30,4 @@ telnet/deps
 telnet/erl_crash.dump
 telnet/test
 telnet/tmp
+telnet/*.sh
