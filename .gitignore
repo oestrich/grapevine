@@ -34,6 +34,7 @@ scp.sh
 /deploy/group_vars/*
 /.vagrant
 tmp/
+.deploy.env.sh
 
 /apps/grapevine/uploads/
 /apps/grapevine/priv/files/*
