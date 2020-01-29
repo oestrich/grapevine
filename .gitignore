@@ -1,7 +1,6 @@
 # App artifacts
-/_build
-/db
-/deps
+_build
+deps
 /*.ez
 
 # Generated on crash by the VM
@@ -11,12 +10,12 @@ erl_crash.dump
 npm-debug.log
 
 # Static artifacts
-/assets/node_modules
+/apps/grapevine/assets/node_modules
 
 # Since we are building assets from assets/,
 # we ignore priv/static. You may want to comment
 # this depending on your deployment strategy.
-/priv/static/
+/apps/grapevine/priv/static/
 
 # Files matching config/*.secret.exs pattern contain sensitive
 # data and you should not commit them into version control.
@@ -24,20 +23,20 @@ npm-debug.log
 # Alternatively, you may comment the line below and commit the
 # secrets files as long as you replace their contents by environment
 # variables.
-/config/*.secret.exs
-/config/*.local.exs
+config/*.secret.exs
+/apps/grapevine/config/*.local.exs
 
 /backups/
-/env.sh
-/scp.sh
+env.sh
+scp.sh
 *.sql
 /deploy/hosts_*
 /deploy/group_vars/*
 /.vagrant
-/tmp/
+tmp/
 
-/uploads/
-/priv/files/*
-!/priv/files/.gitkeep
+/apps/grapevine/uploads/
+/apps/grapevine/priv/files/*
+!/apps/grapevine/priv/files/.gitkeep
 
 .elixir_ls

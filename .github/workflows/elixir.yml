@@ -7,7 +7,7 @@ on:
     branches:
       - "*"
 jobs:
-  build:
+  grapevine:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -29,6 +29,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/grapevine
       run: |
         cp .github/test.exs config/test.extra.exs
         mix deps.get
@@ -37,6 +38,7 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/grapevine
       run: |
         mix format --check-formatted
         mix compile --force --warnings-as-errors
@@ -44,7 +46,7 @@ jobs:
         mix test
       env:
         MIX_ENV: test
-  build-data:
+  grapevine-data:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -66,8 +68,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/data
       run: |
-        cd apps/data
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -75,14 +77,14 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/data
       run: |
-        cd apps/data
         mix compile --force --warnings-as-errors
         mix credo
         mix test
       env:
         MIX_ENV: test
-  build-socket:
+  grapevine-socket:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -104,8 +106,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/socket
       run: |
-        cd apps/socket
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -113,8 +115,45 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/socket
       run: |
-        cd apps/socket
+        mix format --check-formatted
+        mix compile --force --warnings-as-errors
+        mix credo
+        mix test
+      env:
+        MIX_ENV: test
+  grapevine-telnet:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-elixir@v1.0.0
+      with:
+        otp-version: 22.x
+        elixir-version: 1.9.x
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git build-essential
+    - name: Setup elixir
+      working-directory: apps/telnet
+      run: |
+        mix deps.get
+        mix compile
+      env:
+        MIX_ENV: test
+    - name: Verify application
+      working-directory: apps/telnet
+      run: |
         mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo

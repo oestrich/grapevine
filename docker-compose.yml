@@ -3,8 +3,8 @@ version: '3.6'
 services:
   web:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: apps/
+      dockerfile: grapevine/Dockerfile
       args:
         WEB_HOST: "grapevine.local"
         WEB_PORT: "80"

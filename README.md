@@ -29,6 +29,7 @@ This is only required to run Grapevine itself, the server. These are not require
 ### Setup
 
 ```bash
+cd apps/grapevine
 mix deps.get
 mix compile
 yarn --cwd assets
