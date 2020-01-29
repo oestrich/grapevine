@@ -1,0 +1,14 @@
+name: Docker Builds
+on:
+  push:
+    branches:
+      - master
+jobs:
+  grapevine:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      working-directory: apps
+      run: |
+        docker build -f grapevine/Dockerfile -t grapevinehaus/grapevine:${GITHUB_SHA} .
