@@ -2,6 +2,17 @@ data/_build
 data/deps
 data/erl_crash.dump
 data/test
+data/tmp
+
+grapevine/_build
+grapevine/deps
+grapevine/erl_crash.dump
+grapevine/assets/node_modules/
+grapevine/priv/static/
+grapevine/config/prod.secret.exs
+grapevine/config/dev.local.exs
+grapevine/test
+grapevine/tmp
 
 socket/_build
 socket/deps

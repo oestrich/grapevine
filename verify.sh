@@ -1,20 +1,31 @@
 set -e
 
+cd apps/
+
+cd grapevine
 mix compile --force --warnings-as-errors
 mix format --check-formatted
 mix test
 mix credo
 cd assets && yarn test && cd ..
+cd ..
 
-cd apps/data
+cd data
 mix compile --force --warnings-as-errors
 mix test
 mix credo
-cd ../..
+cd ..
 
-cd apps/socket
+cd socket
 mix compile --force --warnings-as-errors
 mix format --check-formatted
 mix test
 mix credo
-cd ../..
+cd ..
+
+cd telnet
+mix compile --force --warnings-as-errors
+mix format --check-formatted
+mix test
+mix credo
+cd ..

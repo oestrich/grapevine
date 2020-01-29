@@ -1,1 +1,1 @@
-priv/pages/CODE_OF_CONDUCT.md
+apps/grapevine/priv/pages/CODE_OF_CONDUCT.md

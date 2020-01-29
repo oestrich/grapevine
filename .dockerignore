@@ -1,47 +1,5 @@
-# Below content based on .gitignore, without leading slashes
-
-# The directory Mix will write compiled artifacts to.
-_build
-
-# If you run "mix test --cover", coverage assets end up here.
-cover
-
-# The directory Mix downloads your dependencies sources to.
-deps
-
-# Where 3rd-party dependencies like ExDoc output generated docs.
-doc
-
-# Ignore .fetch files in case you like to edit your project deps locally.
-.fetch
-
-# If the VM crashes, it generates a dump, let's ignore it too.
-erl_crash.dump
-
-# Also ignore archive artifacts (built via "mix archive.build").
-*.ez
-
-apps/data/_build
-apps/data/deps
-apps/socket/_build
-apps/socket/deps
-apps/telnet/_build
-apps/telnet/deps
-assets/node_modules/
-priv/static/
-.tool-versions
-docs/site
-backups
-schema.sql
-config/prod.secret.exs
-config/dev.local.exs
-
 # Ignores for Docker context only below
 .git
 Dockerfile
-contrib
 docker-compose.yml
-docs
-tmp
-
-test
+backups
