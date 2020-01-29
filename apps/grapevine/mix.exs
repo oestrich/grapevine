@@ -35,7 +35,7 @@ defmodule Grapevine.Mixfile do
   defp deps do
     [
       {:bamboo, "~> 1.1"},
-      {:bamboo_smtp, "~> 1.5"},
+      {:bamboo_smtp, "~> 2.0"},
       {:cowboy, "~> 2.0"},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.2"},
