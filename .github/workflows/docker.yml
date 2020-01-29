@@ -12,3 +12,21 @@ jobs:
       working-directory: apps
       run: |
         docker build -f grapevine/Dockerfile -t grapevinehaus/grapevine:${GITHUB_SHA} .
+
+  grapevine_socket:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      working-directory: apps
+      run: |
+        docker build -f socket/Dockerfile -t grapevinehaus/grapevine_socket:${GITHUB_SHA} .
+
+  grapevine_telnet:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      working-directory: apps
+      run: |
+        docker build -f telnet/Dockerfile -t grapevinehaus/grapevine_telnet:${GITHUB_SHA} .
