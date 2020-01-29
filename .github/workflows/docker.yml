@@ -10,8 +10,13 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build docker image
       working-directory: apps
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
+        echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
         docker build -f grapevine/Dockerfile -t grapevinehaus/grapevine:${GITHUB_SHA} .
+        docker push grapevinehaus/grapevine:${GITHUB_SHA}
 
   grapevine_socket:
     runs-on: ubuntu-latest
