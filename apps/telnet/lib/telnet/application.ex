@@ -32,7 +32,7 @@ defmodule GrapevineTelnet.Application do
   defp cluster_supervisor() do
     topologies = Application.get_env(:grapevine_telnet, :topologies)
 
-    if topologies && Code.ensure_compiled?(Cluster.Supervisor) do
+    if topologies do
       {Cluster.Supervisor, [topologies, [name: GrapevineTelnet.ClusterSupervisor]]}
     end
   end
