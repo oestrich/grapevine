@@ -7,6 +7,8 @@ RUN apk update && \
 WORKDIR /apps/grapevine
 ENV MIX_ENV=prod
 COPY data/mix.* /apps/data/
+COPY socket/mix.* /apps/socket/
+COPY telnet/mix.* /apps/telnet/
 COPY grapevine/mix.* /apps/grapevine/
 RUN mix deps.get --only prod
 RUN mix deps.compile
@@ -24,10 +26,10 @@ RUN yarn run deploy
 FROM builder as releaser
 ENV MIX_ENV=prod
 COPY --from=frontend /priv/static /apps/grapevine/priv/static
-COPY data /apps/data/
-COPY socket /apps/socket/
-COPY telnet /apps/telnet/
-COPY grapevine/ /apps/grapevine/
+COPY data /apps/data
+COPY socket /apps/socket
+COPY telnet /apps/telnet
+COPY grapevine/ /apps/grapevine
 RUN mix phx.digest
 ARG WEB_HOST
 ARG WEB_PORT

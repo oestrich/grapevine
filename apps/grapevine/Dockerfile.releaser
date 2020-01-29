@@ -6,6 +6,7 @@ WORKDIR /apps/grapevine
 ENV MIX_ENV=prod
 COPY data/mix.* /apps/data/
 COPY socket/mix.* /apps/socket/
+COPY telnet/mix.* /apps/telnet/
 COPY grapevine/mix.* /apps/grapevine/
 RUN mix deps.get --only prod
 RUN mix deps.compile
