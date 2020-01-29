@@ -29,8 +29,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/grapevine
       run: |
-        cd apps/grapevine
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -38,8 +38,8 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/grapevine
       run: |
-        cd apps/grapevine
         mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo
@@ -68,8 +68,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/data
       run: |
-        cd apps/data
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -77,8 +77,8 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/data
       run: |
-        cd apps/data
         mix compile --force --warnings-as-errors
         mix credo
         mix test
@@ -106,8 +106,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/socket
       run: |
-        cd apps/socket
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -115,8 +115,8 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/socket
       run: |
-        cd apps/socket
         mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo
@@ -145,8 +145,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git build-essential
     - name: Setup elixir and database
+      working-directory: apps/telnet
       run: |
-        cd apps/telnet
         cp .github/test.exs config/test.extra.exs
         mix deps.get
         mix compile
@@ -154,8 +154,8 @@ jobs:
       env:
         MIX_ENV: test
     - name: Verify application
+      working-directory: apps/telnet
       run: |
-        cd apps/telnet
         mix format --check-formatted
         mix compile --force --warnings-as-errors
         mix credo
