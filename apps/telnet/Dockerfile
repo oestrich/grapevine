@@ -27,6 +27,7 @@ WORKDIR /app
 COPY --from=releaser /apps/telnet/_build/prod/rel/telnet /app
 
 ENV MIX_ENV=prod
+EXPOSE 4101
 
 ENTRYPOINT ["bin/telnet"]
 CMD ["start"]
