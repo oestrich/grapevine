@@ -1,0 +1,14 @@
+image:
+  repository: grapevinehaus/grapevine_telnet
+  # tag:
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+secrets:
+  telnetConfig: "telnet-config"
+
+resources: {}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "grapevine-telnet.fullname" . }}
+  labels:
+    {{- include "grapevine-telnet.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: {{ include "grapevine-telnet.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: telnet

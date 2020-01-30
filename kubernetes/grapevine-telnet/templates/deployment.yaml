@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "grapevine-telnet.fullname" . }}
+  labels:
+    {{- include "grapevine-telnet.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "grapevine-telnet.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "grapevine-telnet.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "grapevine-telnet.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: telnet-config
+              mountPath: "/etc/telnet"
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 4101
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 4101
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: telnet-config
+          secret:
+            secretName: {{ .Values.secrets.telnetConfig }}
