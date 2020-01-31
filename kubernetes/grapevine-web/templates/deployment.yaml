@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "grapevine-web.fullname" . }}
+  labels:
+    {{- include "grapevine-web.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "grapevine-web.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "grapevine-web.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: "HOST"
+              valueFrom:
+                fieldRef:
+                  fieldPath: "status.podIP"
+            - name: RELEASE_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.webConfig }}
+                  key: releaseCookie
+          ports:
+            - name: phoenix
+              containerPort: 4100
+              protocol: TCP
+          volumeMounts:
+            - name: web-config
+              mountPath: "/etc/grapevine"
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 4100
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.web.host }}
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 4100
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.web.host }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: web-config
+          secret:
+            secretName: {{ .Values.secrets.webConfig }}

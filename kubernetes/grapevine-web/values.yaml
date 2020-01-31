@@ -1,0 +1,12 @@
+image:
+  repository: grapevinehaus/grapevine
+  # tag:
+  pullPolicy: IfNotPresent
+
+web:
+  host: "grapevine.haus"
+
+secrets:
+  webConfig: "web-config"
+
+resources: {}
