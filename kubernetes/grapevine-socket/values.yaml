@@ -1,0 +1,9 @@
+image:
+  repository: grapevinehaus/grapevine_socket
+  # tag:
+  pullPolicy: IfNotPresent
+
+secrets:
+  socketConfig: "socket-config"
+
+resources: {}

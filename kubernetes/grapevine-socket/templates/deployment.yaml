@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "grapevine-socket.fullname" . }}
+  labels:
+    {{- include "grapevine-socket.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "grapevine-socket.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "grapevine-socket.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: "HOST"
+              valueFrom:
+                fieldRef:
+                  fieldPath: "status.podIP"
+            - name: RELEASE_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.socketConfig }}
+                  key: releaseCookie
+          volumeMounts:
+            - name: socket-config
+              mountPath: "/etc/grapevine_socket"
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 4110
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 4110
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: socket-config
+          secret:
+            secretName: {{ .Values.secrets.socketConfig }}
