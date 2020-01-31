@@ -31,9 +31,6 @@ COPY socket /apps/socket
 COPY telnet /apps/telnet
 COPY grapevine/ /apps/grapevine
 RUN mix phx.digest
-ARG WEB_HOST
-ARG WEB_PORT
-ARG WEB_SCHEME
 RUN mix release
 
 FROM alpine:3.11

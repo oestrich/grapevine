@@ -12,6 +12,8 @@ config :grapevine, Web.Endpoint,
   url: [host: "grapevine.local", port: 80, scheme: "http"],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+config :grapevine, :web, url: [host: "grapevine.local", scheme: "http", port: 80]
+
 config :grapevine,
   topologies: [
     local: [

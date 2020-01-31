@@ -6,7 +6,6 @@ defmodule Web.LayoutView do
   alias Web.Hosted
   alias Web.RecaptchaView
 
-  @config Application.get_env(:grapevine, :web)[:url]
   @decanter_enabled Application.get_env(:grapevine, :decanter)[:enabled]
 
   def user_token(%{assigns: %{user_token: token}}), do: token
@@ -24,7 +23,8 @@ defmodule Web.LayoutView do
   end
 
   def grapevine_url() do
-    uri = %URI{scheme: @config[:scheme], host: @config[:host], port: @config[:port]}
+    config = Application.get_env(:grapevine, :web)[:url]
+    uri = %URI{scheme: config[:scheme], host: config[:host], port: config[:port]}
     Routes.page_url(uri, :index)
   end
 

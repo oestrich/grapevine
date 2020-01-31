@@ -5,10 +5,6 @@ services:
     build:
       context: apps/
       dockerfile: grapevine/Dockerfile
-      args:
-        WEB_HOST: "grapevine.local"
-        WEB_PORT: "80"
-        WEB_SCHEME: "http"
     environment:
       HOST: web
       RELEASE_COOKIE: "ytZN0dOMjY5Nmwxckk3ZnppZy9WaHVxd0R2dHFndFZiZ240Y2hDY"

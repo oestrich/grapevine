@@ -3,8 +3,6 @@ defmodule Web.Plugs.ValidateHost do
   Validate the host matches the configured grapevine host
   """
 
-  @config Application.get_env(:grapevine, :web)[:url]
-
   import Plug.Conn
   import Phoenix.Controller
 
@@ -13,7 +11,9 @@ defmodule Web.Plugs.ValidateHost do
   def init(default), do: default
 
   def call(conn, _opts) do
-    case conn.host == @config[:host] do
+    config = Application.get_env(:grapevine, :web)[:url]
+
+    case conn.host == config[:host] do
       true ->
         conn
 

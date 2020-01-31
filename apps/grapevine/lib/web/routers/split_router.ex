@@ -9,12 +9,12 @@ defmodule Web.SplitRouter do
   alias Grapevine.CNAMEs
   alias GrapevineData.Games
 
-  @config Application.get_env(:grapevine, :web)[:url]
-
   def init(default), do: default
 
   def call(conn, _opts) do
-    case conn.host == @config[:host] do
+    config = Application.get_env(:grapevine, :web)[:url]
+
+    case conn.host == config[:host] do
       true ->
         Web.Router.call(conn, %{})
 
