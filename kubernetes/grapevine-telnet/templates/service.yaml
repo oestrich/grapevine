@@ -7,6 +7,4 @@ metadata:
 spec:
   clusterIP: None
   selector:
-    app.kubernetes.io/name: {{ include "grapevine-telnet.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    component: telnet
+    {{- include "grapevine-telnet.selectorLabels" . | nindent 4 }}

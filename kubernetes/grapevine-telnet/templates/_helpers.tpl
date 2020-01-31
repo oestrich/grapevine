@@ -49,15 +49,5 @@ Selector labels
 {{- define "grapevine-telnet.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "grapevine-telnet.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "grapevine-telnet.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "grapevine-telnet.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
+component: telnet
 {{- end -}}
