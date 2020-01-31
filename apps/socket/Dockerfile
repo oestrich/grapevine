@@ -27,6 +27,7 @@ WORKDIR /app
 COPY --from=releaser /apps/socket/_build/prod/rel/grapevine_socket /app
 
 ENV MIX_ENV=prod
+EXPOSE 4110
 
 ENTRYPOINT ["bin/grapevine_socket"]
 CMD ["start"]
