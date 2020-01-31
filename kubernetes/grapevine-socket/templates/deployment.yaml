@@ -6,6 +6,8 @@ metadata:
     {{- include "grapevine-socket.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    type: "Recreate"
   selector:
     matchLabels:
       {{- include "grapevine-socket.selectorLabels" . | nindent 6 }}
@@ -19,6 +21,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: "RELEASE_DISTRIBUTION"
+              value: "name"
             - name: "HOST"
               valueFrom:
                 fieldRef:
