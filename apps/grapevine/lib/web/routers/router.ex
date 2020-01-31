@@ -66,6 +66,8 @@ defmodule Web.Router do
 
     get("/version", PageController, :version)
 
+    get("/_health", PageController, :health)
+
     if Mix.env() == :dev do
       get("/colors", PageController, :colors)
     end

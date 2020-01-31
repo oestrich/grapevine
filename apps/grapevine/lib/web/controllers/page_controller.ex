@@ -53,4 +53,8 @@ defmodule Web.PageController do
     |> assign(:version, Grapevine.version())
     |> render("version.json")
   end
+
+  def health(conn, _params) do
+    send_resp(conn, 200, "")
+  end
 end
