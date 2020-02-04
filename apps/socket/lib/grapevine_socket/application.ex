@@ -17,7 +17,7 @@ defmodule GrapevineSocket.Application do
       {GrapevineSocket.Metrics.Server, []},
       endpoint(),
       {:telemetry_poller, telemetry_opts()},
-      {GrapevineSocket.Channels, []}
+      {GrapevineSocket.Channels, [name: {:global, GrapevineSocket.Channels}]}
     ]
 
     report_errors = Application.get_env(:grapevine_socket, :errors)[:report]

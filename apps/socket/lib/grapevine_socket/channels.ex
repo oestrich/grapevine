@@ -12,13 +12,7 @@ defmodule GrapevineSocket.Channels do
   Check if a channel is paused
   """
   def paused?(channel) do
-    case :ets.lookup(__MODULE__, channel) do
-      [{^channel, metadata}] ->
-        Timex.before?(Timex.now(), metadata.paused_until)
-
-      [] ->
-        false
-    end
+    GenServer.call({:global, __MODULE__}, {:paused?, channel})
   end
 
   def start_link(opts) do
@@ -44,6 +38,19 @@ defmodule GrapevineSocket.Channels do
     Implementation.pause_channel(payload)
 
     {:noreply, state}
+  end
+
+  def handle_call({:paused?, channel}, _from, state) do
+    paused? =
+      case :ets.lookup(__MODULE__, channel) do
+        [{^channel, metadata}] ->
+          Timex.before?(Timex.now(), metadata.paused_until)
+
+        [] ->
+          false
+      end
+
+    {:reply, paused?, state}
   end
 
   defp create_table() do
