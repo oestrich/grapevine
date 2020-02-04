@@ -91,6 +91,7 @@ defmodule Grapevine.Mixfile do
       grapevine: [
         include_executables_for: [:unix],
         applications: [
+          grapevine_socket: :none,
           grapevine_telnet: :none,
           runtime_tools: :permanent
         ],

@@ -1,5 +1,4 @@
-FROM elixir:1.9-alpine as builder
-ENV MIX_ENV=prod
+FROM grapevinehaus/elixir:1.9.4-alpine-1 as builder
 RUN apk update && \
   apk upgrade --no-cache && \
   apk add --no-cache gcc git make musl-dev && \
@@ -15,11 +14,12 @@ RUN mix deps.get --only prod && \
 FROM builder as releaser
 COPY data /apps/data/
 COPY socket /apps/socket/
-RUN mix release
+# run mix deps.get again because the timestamp on the lock files changed
+RUN mix deps.get --only prod && \
+  mix release
 
 FROM alpine:3.11
 ENV LANG=C.UTF-8
-ENV MIX_ENV=prod
 RUN apk update && \
   apk add -U bash openssl && \
   rm -rf /var/cache/apk/*

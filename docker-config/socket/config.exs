@@ -9,7 +9,7 @@ config :grapevine_data, GrapevineData.Repo,
   password: "grapevine",
   pool_size: 10
 
-config :grapevine,
+config :grapevine_socket,
   topologies: [
     local: [
       strategy: Cluster.Strategy.Epmd,

@@ -1,4 +1,4 @@
-FROM elixir:1.9-alpine as builder
+FROM grapevinehaus/elixir:1.9.4-alpine-1 as builder
 RUN apk update && \
       apk upgrade --no-cache && \
       apk add --no-cache gcc git make musl-dev && \
@@ -24,14 +24,15 @@ COPY grapevine/assets /app
 RUN yarn run deploy
 
 FROM builder as releaser
-ENV MIX_ENV=prod
 COPY --from=frontend /priv/static /apps/grapevine/priv/static
 COPY data /apps/data
 COPY socket /apps/socket
 COPY telnet /apps/telnet
 COPY grapevine/ /apps/grapevine
-RUN mix phx.digest
-RUN mix release
+# run mix deps.get again because the timestamp on the lock files changed
+RUN mix deps.get --only prod && \
+  mix phx.digest && \
+  mix release
 
 FROM alpine:3.11
 ENV LANG=C.UTF-8

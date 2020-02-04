@@ -2,7 +2,7 @@ import Config
 
 config :grapevine_telnet, :pubsub, start: true
 
-config :grapevine,
+config :grapevine_telnet,
   topologies: [
     local: [
       strategy: Cluster.Strategy.Epmd,
