@@ -121,3 +121,12 @@ This nginx config will configure your server to listen for `grapevine.local` and
 - Refresh CNAMEs in ETS `Grapevine.CNAMEs.reload()`
 
 [websocket-docs]: https://grapevine.haus/docs
+
+## Kubernetes
+
+Some notes on installing into kubernetes:
+
+```bash
+# Set up nginx ingress
+helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true
+```

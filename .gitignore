@@ -41,3 +41,6 @@ tmp/
 !/apps/grapevine/priv/files/.gitkeep
 
 .elixir_ls
+
+/kubernetes/*.yml
+/kubernetes/*.yaml
