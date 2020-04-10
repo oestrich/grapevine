@@ -14,9 +14,7 @@ RUN mix deps.get --only prod && \
 FROM builder as releaser
 COPY data /apps/data/
 COPY socket /apps/socket/
-# run mix deps.get again because the timestamp on the lock files changed
-RUN mix deps.get --only prod && \
-  mix release
+RUN mix release
 
 FROM alpine:3.11
 ENV LANG=C.UTF-8

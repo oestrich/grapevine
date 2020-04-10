@@ -29,9 +29,7 @@ COPY data /apps/data
 COPY socket /apps/socket
 COPY telnet /apps/telnet
 COPY grapevine/ /apps/grapevine
-# run mix deps.get again because the timestamp on the lock files changed
-RUN mix deps.get --only prod && \
-  mix phx.digest && \
+RUN mix phx.digest && \
   mix release
 
 FROM alpine:3.11
