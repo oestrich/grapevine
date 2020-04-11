@@ -1,56 +1,50 @@
-import {Filter, Media} from "./mediaReducer";
+import {
+  Filter,
+  Media,
+  validKey,
+  validName,
+  validPriority,
+  validTag,
+  validType,
+  validUrl,
+} from "./mediaReducer";
 
-describe("filtering", () => {
+describe("validating", () => {
   test("validates name", () => {
-    let filter = new Filter({name: "file.mp3"});
-    expect(filter.name).toEqual("file.mp3");
-
-    filter = new Filter({name: "file.ogg"});
-    expect(filter.name).toEqual(undefined);
-
-    filter = new Filter({name: "anything else"});
-    expect(filter.name).toEqual(undefined);
+    expect(validName("file.mp3")).toEqual(true);
+    expect(validName("file.ogg")).toEqual(false);
+    expect(validName("anything else")).toEqual(false);
   });
 
   test("validates type", () => {
-    let filter = new Filter({type: "music"});
-    expect(filter.type).toEqual("music");
-
-    filter = new Filter({type: "sound"});
-    expect(filter.type).toEqual("sound");
-
-    filter = new Filter({type: "anything else"});
-    expect(filter.type).toEqual(undefined);
+    expect(validType("music")).toEqual(true);
+    expect(validType("sound")).toEqual(true);
+    expect(validType("anything else")).toEqual(false);
   });
 
   test("validates tag", () => {
-    let filter = new Filter({tag: "combat"});
-    expect(filter.tag).toEqual("combat");
-
-    filter = new Filter({tag: 10});
-    expect(filter.tag).toEqual(undefined);
+    expect(validTag("combat")).toEqual(true);
+    expect(validTag(10)).toEqual(false);
   });
 
   test("validates priority", () => {
-    let filter = new Filter({priority: 50});
-    expect(filter.priority).toEqual(50);
-
-    filter = new Filter({priority: 1});
-    expect(filter.priority).toEqual(1);
-
-    filter = new Filter({priority: -1});
-    expect(filter.priority).toEqual(undefined);
-
-    filter = new Filter({priority: "anything else"});
-    expect(filter.priority).toEqual(undefined);
+    expect(validPriority(50)).toEqual(true);
+    expect(validPriority(1)).toEqual(true);
+    expect(validPriority(100)).toEqual(true);
+    expect(validPriority(-1)).toEqual(false);
+    expect(validPriority("anything else")).toEqual(false);
   });
 
   test("validates key", () => {
-    let filter = new Filter({key: "a key"});
-    expect(filter.key).toEqual("a key");
+    expect(validKey("a key")).toEqual(true);
+    expect(validKey(1)).toEqual(false);
+  });
 
-    filter = new Filter({key: 1});
-    expect(filter.key).toEqual(undefined);
+  test("validates url", () => {
+    expect(validUrl("http://example.com/")).toEqual(true);
+    expect(validUrl("https://example.com/")).toEqual(true);
+    expect(validUrl("ftp://example.com/")).toEqual(false);
+    expect(validUrl("anything else")).toEqual(false);
   });
 });
 
@@ -127,5 +121,11 @@ describe("media class - file url", () => {
   test("uses the specific url if provided", () => {
     let media = new Media({name: "file.mp3", url: "https://example.com"});
     expect(media.url).toEqual("https://example.com/file.mp3");
+  });
+
+  test("ignores invalid urls", () => {
+    expect(() => {
+      new Media({name: "file.mp3"}, {url: "ftp://example.com/"});
+    }).toThrowError(/Music/);
   });
 });

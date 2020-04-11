@@ -4,25 +4,53 @@ import _ from "underscore";
 
 import {Types} from "./actions";
 
+/*
+ * Validations
+ */
+
+export const validKey = (key) => {
+  return typeof key == "string";
+}
+
+export const validName = (name) => {
+  return typeof name == "string" && name.endsWith(".mp3");
+}
+
+export const validPriority = (priority) => {
+  return typeof priority == "number" && priority >= 1 && priority <= 100;
+}
+
+export const validTag = (tag) => {
+  return typeof tag == "string";
+}
+
+export const validType = (type) => {
+  return type == "music" || type == "sound";
+}
+
+export const validUrl = (url) => {
+  return typeof url == "string" && (url.startsWith("http://") || url.startsWith("https://"));
+}
+
 export class Filter {
   constructor(attrs) {
-    if (this.validName(attrs.name)) {
+    if (validName(attrs.name)) {
       this.name = attrs.name;
     }
 
-    if (this.validType(attrs.type)) {
+    if (validType(attrs.type)) {
       this.type = attrs.type;
     }
 
-    if (this.validTag(attrs.tag)) {
+    if (validTag(attrs.tag)) {
       this.tag = attrs.tag;
     }
 
-    if (this.validPriority(attrs.priority)) {
+    if (validPriority(attrs.priority)) {
       this.priority = attrs.priority;
     }
 
-    if (this.validKey(attrs.key)) {
+    if (validKey(attrs.key)) {
       this.key = attrs.key;
     }
   }
@@ -59,26 +87,6 @@ export class Filter {
     }
 
     return false;
-  }
-
-  validKey(key) {
-    return typeof key == "string";
-  }
-
-  validName(name) {
-    return typeof name == "string" && name.endsWith(".mp3");
-  }
-
-  validPriority(priority) {
-    return typeof priority == "number" && priority >= 1 && priority <= 100;
-  }
-
-  validTag(tag) {
-    return typeof tag == "string";
-  }
-
-  validType(type) {
-    return type == "music" || type == "sound";
   }
 }
 
@@ -121,9 +129,9 @@ export class Player {
 const baseUrl = (attrs, defaults) => {
   let url;
 
-  if ("url" in attrs) {
+  if ("url" in attrs && validUrl(attrs.url)) {
     url = attrs.url;
-  } else if ("url" in defaults) {
+  } else if ("url" in defaults && validUrl(defaults.url)) {
     url = defaults.url;
   }
 
@@ -138,13 +146,17 @@ export class Media {
   constructor(attrs, defaults = {}) {
     this.filter = new Filter(attrs);
 
-    this.type = attrs.type;
-    this.key = attrs.key;
-    this.priority = attrs.priority;
-    this.tag = attrs.tag;
-    this.name = attrs.name;
+    this.type = this.filter.type;
+    this.key = this.filter.key;
+    this.priority = this.filter.priority;
+    this.tag = this.filter.tag;
+    this.name = this.filter.name;
 
-    this.url = baseUrl(attrs, defaults) + attrs.name;
+    if (baseUrl(attrs, defaults)) {
+      this.url = baseUrl(attrs, defaults) + this.filter.name;
+    } else {
+      throw "Invalid URL! Music cannot be played";
+    }
 
     this.howler = new Howl({
       src: [this.url],
