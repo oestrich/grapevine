@@ -193,7 +193,13 @@ export const mediaReceiveGMCP = (state, action) => {
 
   switch (action.message) {
     case "Client.Media.Default":
-      return {...state, defaults: action.data};
+      let defaults = {};
+
+      if (validUrl(action.data.url)) {
+        defaults.url = action.data.url;
+      }
+
+      return {...state, defaults: defaults};
 
     case "Client.Media.Play":
       console.log("Want to play music...");
