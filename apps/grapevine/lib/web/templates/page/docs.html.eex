@@ -125,7 +125,7 @@
 
 <p>A valid channel name must be between 3 and 15 characters (inclusive), letters (<code>a-zA-Z</code>), <code>_</code>, and <code>-</code> only.</p>
 
-<p>You will only recieve messages for channels you are subscribed to.</p>
+<p>You will only receive messages for channels you are subscribed to.</p>
 
 <h4 id="channels-language">
   <%= link(to: "#channels-language") do %>
