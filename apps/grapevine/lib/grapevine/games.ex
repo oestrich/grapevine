@@ -61,10 +61,6 @@ defmodule Grapevine.Games do
     {:ok, _alert} = Games.connection_failed(connection, skip_notify: true)
     {:ok, game} = get(connection.game_id)
 
-    game
-    |> Emails.connection_failed(connection)
-    |> Mailer.deliver_now()
-
     case game.send_connection_failure_alerts do
       true ->
         {:ok, user} = Accounts.get(game.user_id)

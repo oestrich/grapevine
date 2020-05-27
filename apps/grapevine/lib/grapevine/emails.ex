@@ -28,7 +28,7 @@ defmodule Grapevine.Emails do
   def contacted(name, email, body) do
     base_email()
     |> to(alert_to())
-    |> subject("Graepvine - New contact submission")
+    |> subject("Grapevine - New contact submission")
     |> assign(:name, name)
     |> assign(:email, email)
     |> assign(:body, body)
