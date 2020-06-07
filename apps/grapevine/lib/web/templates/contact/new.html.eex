@@ -21,6 +21,8 @@
 
         <%= FormView.textarea_field(f, :body, rows: 10) %>
 
+        <%= render(RecaptchaView, "_captcha.html") %>
+
         <div class="row">
           <div class="col-md-9 offset-md-3">
             <%= submit("Send", class: "btn btn-primary") %>
