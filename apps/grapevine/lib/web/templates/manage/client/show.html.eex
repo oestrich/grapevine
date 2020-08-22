@@ -65,7 +65,7 @@
   <div class="row">
     <%= if Enum.empty?(@gauges) do %>
       <div class="col-md-12">
-        <p>No guages. Add some.</p>
+        <p>No gauges. Add some.</p>
       </div>
     <% end %>
 

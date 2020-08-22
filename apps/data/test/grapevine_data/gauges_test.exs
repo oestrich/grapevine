@@ -68,7 +68,7 @@ defmodule GrapevineData.GaugesTest do
     end
   end
 
-  describe "deleting a guage" do
+  describe "deleting a gauge" do
     test "successul" do
       game = create_game(create_user())
       gauge = create_gauge(game, %{name: "HP"})

@@ -84,7 +84,7 @@
         <li>
           <%= link("Web Client", to: "#web-client") %>
           <ul>
-            <li><%= link("Gauges", to: "#guages") %></li>
+            <li><%= link("Gauges", to: "#gauges") %></li>
           </ul>
         </li>
       </ul>
@@ -1174,21 +1174,21 @@ Accept: application/json
 
 <p>Grapevine allows you to turn on a web client for you game. You can do this from the settings for your game.</p>
 
-<p>Once enabled you can adjust some settings for your game that will add guages, see which players are currently signed in, and more.</p>
+<p>Once enabled you can adjust some settings for your game that will add gauges, see which players are currently signed in, and more.</p>
 
 <h4 id="gauges">
-  <%= link(to: "#guages") do %>
+  <%= link(to: "#gauges") do %>
     Gauges
     <i class="fas fa-link"></i>
   <% end %>
 </h4>
 
-<p>The web client can be configured to display guages based on GMCP messages.</p>
+<p>The web client can be configured to display gauges based on GMCP messages.</p>
 
 <p>Each gauge requires the following information:</p>
 
 <ul>
-  <li><code>Name</code>, display name for the guage, example: "HP"</li>
+  <li><code>Name</code>, display name for the gauge, example: "HP"</li>
   <li><code>Package</code>, GMCP package that needs to be enabled. This takes the format of <code>Package[.SubPackage] VersionNumber</code>, example "Char 1"
   </li>
   <li><code>Message</code>, this is the GMCP message that the gauge will use, example "Char.Vitals"</li>
@@ -1198,7 +1198,7 @@ Accept: application/json
   <li><code>Docked</code>, docked gauges are above the prompt, undocked gauges float in the top right</li>
 </ul>
 
-<p>Each time a message is received that the guage is configured for it will update the values in the gauge. Each message <em>must</em> contain both the value and the max value for the gauge to work.</p>
+<p>Each time a message is received that the gauge is configured for it will update the values in the gauge. Each message <em>must</em> contain both the value and the max value for the gauge to work.</p>
 
 <p>Multiple gauges can be configured to use the same GMCP message. For instance, if you have HP and SP in the same message, you can configure both gauges to use this message.</p>
 
