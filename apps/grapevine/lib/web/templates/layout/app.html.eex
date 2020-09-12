@@ -8,7 +8,7 @@
     <main>
       <div class="container">
         <div class="alerts">
-          <%= if show_verification_push?(Map.get(assigns, :current_user, nil)) do %>
+          <%= if Map.get(assigns, :show_verify_link, true) && show_verification_push?(Map.get(assigns, :current_user, nil)) do %>
             <div class="alert alert-danger" role="alert">
               Please verify your email address. <%= link("You can re-send this by clicking here.", to: Routes.manage_setting_path(@conn, :verify), method: :post) %>
             </div>

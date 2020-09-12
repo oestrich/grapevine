@@ -41,6 +41,7 @@ defmodule Web.RegistrationController do
   def finalize(conn, _params) do
     conn
     |> assign(:games, Games.featured())
+    |> assign(:show_verify_link, false)
     |> render("finalize.html")
   end
 end
