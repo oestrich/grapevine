@@ -36,6 +36,6 @@ defmodule Web.LayoutView do
   def show_verification_push?(nil), do: false
 
   def show_verification_push?(user) do
-    !Accounts.email_verified?(user) && Timex.diff(Timex.now(), user.inserted_at, :days) >= 1
+    !Accounts.email_verified?(user)
   end
 end
