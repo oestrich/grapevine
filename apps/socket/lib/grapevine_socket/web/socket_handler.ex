@@ -66,6 +66,10 @@ defmodule GrapevineSocket.Web.SocketHandler do
     {:reply, {:pong, message}, state}
   end
 
+  def websocket_handle(:ping, state) do
+    {:reply, :pong, state}
+  end
+
   def websocket_info({:broadcast, event}, state) do
     {:reply, {:text, Jason.encode!(event)}, state}
   end
