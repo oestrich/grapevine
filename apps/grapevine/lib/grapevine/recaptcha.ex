@@ -13,7 +13,7 @@ defmodule Grapevine.Recaptcha do
         valid_token?(config, Map.get(params, "g-recaptcha-response"))
 
       false ->
-        true
+        Keyword.get(config, :disabled_response, true)
     end
   end
 

@@ -20,7 +20,7 @@ config :grapevine, :modules,
 
 config(:grapevine, Grapevine.Mailer, alert_to: [])
 config(:grapevine, :errors, report: false)
-config(:grapevine, :recaptcha, enabled: false)
+config(:grapevine, :recaptcha, enabled: false, disabled_response: true)
 
 # For docs
 config(:grapevine, :socket, tls: false)
