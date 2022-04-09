@@ -11,7 +11,7 @@
     "@grapevine/ansi": "^1.0.0",
     "chart.js": "^2.7.3",
     "jquery": "^3.3.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.26",
     "node-sass": "^4.11.0",
     "phoenix": "file:../deps/phoenix",
