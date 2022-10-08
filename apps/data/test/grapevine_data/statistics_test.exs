@@ -36,7 +36,7 @@ defmodule GrapevineData.StatisticsTest do
         {:ok, _stats} = Statistics.record_socket_players(game, ["Guard", "Bandit"], now)
       end)
 
-      stats = Statistics.last_few_days(game)
+      stats = Statistics.player_statistics(game, :max, 2, 1)
 
       stats =
         stats
