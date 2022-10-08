@@ -18,7 +18,7 @@ defmodule Web.GameStatisticController do
     end
   end
 
-  def players(conn, %{"game_id" => short_name}) do
+  def players(conn, params = %{"game_id" => short_name}) do
     case Games.get_by_short(short_name) do
       {:ok, game} ->
         conn
