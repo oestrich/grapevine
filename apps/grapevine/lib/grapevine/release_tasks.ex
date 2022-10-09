@@ -7,7 +7,8 @@ defmodule Grapevine.ReleaseTasks do
     :ssl,
     :postgrex,
     :ecto,
-    :ecto_sql
+    :ecto_sql,
+    :timex
   ]
 
   @apps [
