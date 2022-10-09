@@ -52,7 +52,7 @@ document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement =
           }],
           xAxes: [{
             gridLines: { drawOnChartArea: false },
-            ticks: { fontColor: "#BBB" },
+            ticks: { fontColor: "#BBB", source: "data" },
             time: {
               displayFormats: { hour: "MMM D, h a" },
               unit: "hour",
@@ -169,7 +169,7 @@ document.querySelectorAll(".chart[data-type='some-time']").forEach(chartElement 
           }],
           xAxes: [{
             gridLines: { drawOnChartArea: false },
-            ticks: { fontColor: "#BBB" },
+            ticks: { fontColor: "#BBB", source: "data" },
             time: {
               displayFormats: { hour: "MMM D, h a" },
               unit: "hour",
