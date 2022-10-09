@@ -18,21 +18,6 @@ defmodule Web.GameStatisticController do
     end
   end
 
-  def players(conn, params = %{"game_id" => short_name}) do
-    case Games.get_by_short(short_name) do
-      {:ok, game} ->
-        conn
-        |> assign(:statistics, Statistics.player_statistics(game, stat_type(params), series_days(params), series_step(params)))
-        |> put_resp_header("cache-control", "public, max-age=3600")
-        |> render("players.json")
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Could not find that game.")
-        |> redirect(to: page_path(conn, :index))
-    end
-  end
-
   def players(conn, params = %{"game_id" => short_name, "series" => "tod"}) do
     case Games.get_by_short(short_name) do
       {:ok, game} ->
@@ -48,12 +33,24 @@ defmodule Web.GameStatisticController do
     end
   end
 
+  def players(conn, params = %{"game_id" => short_name}) do
+    case Games.get_by_short(short_name) do
+      {:ok, game} ->
+        conn
+        |> assign(:statistics, Statistics.player_statistics(game, stat_type(params), series_days(params), series_step(params)))
+        |> put_resp_header("cache-control", "public, max-age=3600")
+        |> render("players.json")
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Could not find that game.")
+        |> redirect(to: page_path(conn, :index))
+    end
+  end
+
   defp stat_type(%{"type" => "avg"}), do: :avg
-
   defp stat_type(%{"type" => "max"}), do: :max
-
   defp stat_type(%{"type" => "min"}), do: :min
-
   defp stat_type(_), do: :max
 
   # Values for different data series
