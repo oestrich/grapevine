@@ -1,5 +1,10 @@
-FROM grapevinehaus/elixir:1.10 as builder
+FROM hexpm/elixir:1.10.0-erlang-22.2.3-ubuntu-focal-20200423 as builder
 
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+ && rm -rf /var/lib/apt/lists/*
 RUN mix local.rebar --force && \
     mix local.hex --force
 WORKDIR /apps/grapevine
