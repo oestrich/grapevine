@@ -8,7 +8,7 @@ on:
       - "*"
 jobs:
   grapevine:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     services:
       postgres:
         image: postgres
@@ -47,7 +47,7 @@ jobs:
       env:
         MIX_ENV: test
   grapevine-data:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     services:
       postgres:
         image: postgres
@@ -85,7 +85,7 @@ jobs:
       env:
         MIX_ENV: test
   grapevine-socket:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     services:
       postgres:
         image: postgres
@@ -124,7 +124,7 @@ jobs:
       env:
         MIX_ENV: test
   grapevine-telnet:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     services:
       postgres:
         image: postgres
