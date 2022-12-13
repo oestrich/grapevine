@@ -20,7 +20,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/setup-elixir@v1.0.0
+    - uses: erlef/setup-beam@v1
       with:
         otp-version: 22.x
         elixir-version: 1.9.x
@@ -59,7 +59,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/setup-elixir@v1.0.0
+    - uses: erlef/setup-beam@v1
       with:
         otp-version: 22.x
         elixir-version: 1.9.x
@@ -97,7 +97,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/setup-elixir@v1.0.0
+    - uses: erlef/setup-beam@v1
       with:
         otp-version: 22.x
         elixir-version: 1.9.x
@@ -136,7 +136,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/setup-elixir@v1.0.0
+    - uses: erlef/setup-beam@v1
       with:
         otp-version: 22.x
         elixir-version: 1.9.x

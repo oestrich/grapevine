@@ -37,12 +37,30 @@
         <h3>Last Week of Players</h3>
         <span>Every 4 Hours</span>
 
-        <div id="player-stats-week" class="chart" data-type="week" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "week") %>">
+        <div id="player-stats-week" class="chart" data-type="some-time" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "week") %>">
           <canvas></canvas>
         </div>
       </div>
 
-      <div class="mt-3">
+    <div class="mt-3">
+      <h3>Last Month of Players</h3>
+      <span>Every Day</span>
+
+      <div id="player-stats-month" class="chart" data-type="some-time" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "month") %>">
+        <canvas></canvas>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <h3>Last Year of Players</h3>
+      <span>Every Week</span>
+
+      <div id="player-stats-year" class="chart" data-type="some-time" data-url="<%= game_statistic_path(@conn, :players, @game.short_name, series: "year") %>">
+        <canvas></canvas>
+      </div>
+    </div>
+
+    <div class="mt-3">
         <h3>Time of Day</h3>
         <span>Last 7 days of counts broken up by time of day</span>
 

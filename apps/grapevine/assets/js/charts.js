@@ -52,7 +52,7 @@ document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement =
           }],
           xAxes: [{
             gridLines: { drawOnChartArea: false },
-            ticks: { fontColor: "#BBB" },
+            ticks: { fontColor: "#BBB", source: "data" },
             time: {
               displayFormats: { hour: "MMM D, h a" },
               unit: "hour",
@@ -66,7 +66,7 @@ document.querySelectorAll(".chart[data-type='48-hours']").forEach(chartElement =
   });
 });
 
-document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
+document.querySelectorAll(".chart[data-type='some-time']").forEach(chartElement => {
   let ctx = chartElement.querySelector("canvas").getContext('2d');
 
   let url = new URL(chartElement.dataset.url, window.location.href);
@@ -169,7 +169,7 @@ document.querySelectorAll(".chart[data-type='week']").forEach(chartElement => {
           }],
           xAxes: [{
             gridLines: { drawOnChartArea: false },
-            ticks: { fontColor: "#BBB" },
+            ticks: { fontColor: "#BBB", source: "data" },
             time: {
               displayFormats: { hour: "MMM D, h a" },
               unit: "hour",
