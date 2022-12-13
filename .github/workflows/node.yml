@@ -8,13 +8,13 @@ on:
       - "*"
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v1
     - uses: erlef/setup-beam@v1
       with:
-        otp-version: 22.x
-        elixir-version: 1.9.x
+        otp-version: 22.2
+        elixir-version: 1.9.4
     - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
