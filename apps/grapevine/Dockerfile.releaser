@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.10.0-erlang-22.2.3-ubuntu-focal-20200423 as builder
+FROM hexpm/elixir:1.10.0-erlang-22.2.3-ubuntu-bionic-20200219 as builder
 
 RUN apt-get update && apt-get install -y \
     build-essential \
