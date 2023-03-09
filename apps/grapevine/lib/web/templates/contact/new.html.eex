@@ -12,23 +12,7 @@
         <h2>Contact Grapevine</h2>
       </nav>
 
-      <p class="lead">Please fill out the form below and we'll get back to you as soon as possible.</p>
-
-      <%= form_for(@conn, Routes.contact_path(@conn, :create), [as: :contact], fn f -> %>
-        <%= FormView.text_field(f, :name) %>
-
-        <%= FormView.text_field(f, :email) %>
-
-        <%= FormView.textarea_field(f, :body, rows: 10) %>
-
-        <%= render(RecaptchaView, "_captcha.html") %>
-
-        <div class="row">
-          <div class="col-md-9 offset-md-3">
-            <%= submit("Send", class: "btn btn-primary") %>
-          </div>
-        </div>
-      <% end) %>
+      <p class="lead">Please send an email to eric [at] grapevine.haus and we'll get back to you as soon as possible.</p>
     </section>
   </div>
 </div>
