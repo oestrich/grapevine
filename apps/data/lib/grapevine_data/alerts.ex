@@ -23,15 +23,8 @@ defmodule GrapevineData.Alerts do
   Create a new alert
   """
   def create(title, body, notification_opts \\ []) do
-    changeset = Alert.changeset(%Alert{}, title, body)
-
-    case Repo.insert(changeset) do
-      {:ok, alert} ->
-        Notifications.new_alert(alert, notification_opts)
-        {:ok, alert}
-
-      {:error, changeset} ->
-        {:error, changeset}
-    end
+    %Alert{}
+    |> Alert.changeset(title, body)
+    |> Repo.insert()
   end
 end
