@@ -1,6 +1,6 @@
 FROM hexpm/elixir:1.10.0-erlang-22.2.3-ubuntu-focal-20200423 as builder
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     build-essential \
     curl \
     git \
